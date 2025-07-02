@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-boilerplate",
-  "description": "A foundation for scalable desktop apps",
+  "name": "archive-5",
+  "description": "archive software for the deserning researcher.",
   "keywords": [
     "electron",
     "boilerplate",
@@ -22,9 +22,9 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "gblekkenhorst",
+    "email": "gillian@blekkenhorst.ca",
+    "url": "http://github.com/ameinias/archive-5"
   },
   "contributors": [
     {
@@ -102,10 +102,14 @@
   },
   "dependencies": {
     "@electron/notarize": "^3.0.0",
+    "dexie": "^4.0.11",
+    "dexie-react-hooks": "^1.1.7",
     "electron-debug": "^4.1.0",
     "electron-log": "^5.3.2",
+    "electron-store": "^10.1.0",
     "electron-updater": "^6.3.9",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0"
   },
@@ -120,6 +124,7 @@
     "@types/node": "22.13.10",
     "@types/react": "^19.0.11",
     "@types/react-dom": "^19.0.4",
+    "@types/react-router-dom": "^5.3.3",
     "@types/react-test-renderer": "^19.0.0",
     "@types/webpack-bundle-analyzer": "^4.7.0",
     "@typescript-eslint/eslint-plugin": "^8.26.1",

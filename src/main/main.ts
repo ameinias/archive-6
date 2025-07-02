@@ -14,6 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import fs from 'fs';
+import os from 'os';
 
 class AppUpdater {
   constructor() {
@@ -56,6 +58,24 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
+const WINDOW_STATE_PATH = path.join(app.getPath('userData'), 'window-state.json');
+
+function loadWindowState() {
+  try {
+    const data = fs.readFileSync(WINDOW_STATE_PATH, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    // Default window state
+    return { width: 555, height: 555 };
+  }
+}
+
+function saveWindowState(window: BrowserWindow) {
+  if (!window) return;
+  const bounds = window.getBounds();
+  fs.writeFileSync(WINDOW_STATE_PATH, JSON.stringify(bounds));
+}
+
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
@@ -69,10 +89,15 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  // Load previous window state
+  const windowState = loadWindowState();
+
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: windowState.width || 555,
+    height: windowState.height || 555,
+    x: windowState.x,
+    y: windowState.y,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -96,6 +121,10 @@ const createWindow = async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  mainWindow.on('close', () => {
+    saveWindowState(mainWindow!);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -135,3 +164,15 @@ app
     });
   })
   .catch(console.log);
+
+
+//   // db.js
+// import Dexie from 'dexie';
+
+// export const db = new Dexie('game-db');
+// db.version(1).stores({
+//   friends: '++id, title, description,catagory' // Primary key and indexed props
+// });
+
+// db.ts
+// db.ts

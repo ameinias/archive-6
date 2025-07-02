@@ -1,3 +1,24 @@
+
+
+# archive-5
+Based on Electron-react-Boilerplate with Dexie db.  
+
+Updating from archive-BERJ. Wish me luck. 
+
+## todo
+[] Populate SingleItem from edit button
+[] Make delete item work
+[] (Wishlist) format JSON new entry
+[] search function 
+[] Display Media
+[] Form upload media
+[] Add Child Report to entry
+[] Display child report
+[] Auth route
+[] textbox edit based on auth route
+[x] change new item to a form
+[] https://stackoverflow.com/questions/33211672/how-to-submit-a-form-using-enter-key-in-react-js
+
 <img src=".erb/img/erb-banner.svg" width="100%" />
 
 <br>
