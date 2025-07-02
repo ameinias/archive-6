@@ -17,7 +17,7 @@ const UserProfile = () => {
     </Link>
 
     <h2>Add Friend</h2>
-    <AddFriendForm defaultAge={21} />
+    <AddFriendForm defaultCat={'Object'} />
 
     <h2>Friend List</h2>
     <FriendList />
