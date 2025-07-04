@@ -28,6 +28,7 @@ export function FriendList() {
   return (
     <div className="List">
       <table>
+        <tbody>
         {friends?.map((item) => (
           <tr key={item.id}>
             <td>
@@ -46,6 +47,7 @@ export function FriendList() {
             </td>
           </tr>
         ))}
+        </tbody>
       </table>
     </div>
   );

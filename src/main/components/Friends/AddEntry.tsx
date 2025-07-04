@@ -6,7 +6,6 @@ const SingleItem = () => {
 
   return (
     <>
-      <h2>Edit</h2>
               {id ? (
       <AddFriendForm itemID={id} />
     ) : (
