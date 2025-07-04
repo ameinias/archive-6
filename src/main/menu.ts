@@ -96,7 +96,7 @@ export default class MenuBuilder {
         {
           label: 'Select All',
           accelerator: 'Command+A',
-          selector: 'selectAll:',
+          selector: 'selectAll:', 
         },
       ],
     };

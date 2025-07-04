@@ -1,5 +1,6 @@
 {
   "name": "archive-5",
+  "version": "0.5.1",
   "description": "archive software for the deserning researcher.",
   "keywords": [
     "electron",
@@ -102,6 +103,8 @@
   },
   "dependencies": {
     "@electron/notarize": "^3.0.0",
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
     "electron-debug": "^4.1.0",
@@ -111,6 +114,8 @@
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.0.0",
+    "react-files": "^3.0.3",
+    "react-fontawesome": "^1.7.1",
     "react-router-dom": "^7.3.0"
   },
   "devDependencies": {

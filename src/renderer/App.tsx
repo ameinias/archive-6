@@ -3,40 +3,17 @@ import icon from '../../assets/icon.svg';
 import './App.css';
 import Home from '../main/components/Home';
 import UserProfile from '../main/components/UserProfile';
+import NavBar from '../main/components/NavBar';
+import AddEntry from '../main/components/Friends/AddEntry';
+import ImportExport from '../main/components/ImportExport';
+import ShowSingle from '../main/components/Friends/ShowSingle';
 
 function Hello() {
   return (
     <div>
-      <div className="Hello">
-        <img width="200" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="folded hands">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
+      <h1>Hello, World!</h1>
+      <img src={icon} alt="Icon" />
+      <p>This is a simple React application.</p>
     </div>
   );
 }
@@ -44,10 +21,17 @@ function Hello() {
 export default function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/user-profile" element={<UserProfile />} />
-      </Routes>
+      <NavBar />
+      <h3>archive software</h3>
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/edit-item/:id" element={<AddEntry />} />
+          <Route path="/import-export" element={<ImportExport />} />
+          <Route path="/entry/:id" element={<ShowSingle />} />
+        </Routes>
+      </div>
     </Router>
   );
 }

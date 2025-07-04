@@ -18,6 +18,7 @@ Updating from archive-BERJ. Wish me luck.
 [] textbox edit based on auth route
 [x] change new item to a form
 [] https://stackoverflow.com/questions/33211672/how-to-submit-a-form-using-enter-key-in-react-js
+[]https://codepen.io/dfahlander/pen/RqwoaB/ 
 
 <img src=".erb/img/erb-banner.svg" width="100%" />
 

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import Home from "./Home"
 import List from "./List"
 import NavBar from "./NavBar"
-import SingleItem from "./SingleItem"
+import SingleItem from "./Friends/AddEntry"
 // import '../css/style.css';
 
 const Routes = () => {
