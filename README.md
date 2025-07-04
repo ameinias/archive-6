@@ -3,11 +3,18 @@
 # archive-5
 Based on Electron-react-Boilerplate with Dexie db.  
 
-Updating from archive-BERJ. Wish me luck. 
+## how to update thje db scheme
+* get it working in AddEntryBit
+* Might want it in ShopwSingle (Might nuke this though? hmm)
+* define things in utils/db.ts
+* catagory drop down options in constants.ts
 
 ## todo
-[] Populate SingleItem from edit button
-[] Make delete item work
+[x] Populate SingleItem from edit button
+[] bool for "start state" JSON
+[] button switch between admin and player mode
+[] 
+[x] Make delete item work
 [] (Wishlist) format JSON new entry
 [] search function 
 [] Display Media

@@ -1,6 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import InputGroup from "react-bootstrap/InputGroup";
 import React from 'react';
+import { db } from '../../utils/db'; // import the database
+import { useLiveQuery } from 'dexie-react-hooks';
 
 const { ipcRenderer } = require("electron");
 const { HANDLE_FETCH_DATA, HANDLE_SAVE_DATA, HANDLE_REMOVE_DATA, HANDLE_EDIT_DATA } = require("../../utils/constants")
@@ -21,8 +23,8 @@ const Search = ({itemsToTrack}) => {
 // deal with search later, electron-json-storage
 return(
  <InputGroup className="searchBar">
-        {/* <input type="text" onChange={handleChange} value={val} /> */}
-        {/* <Button variant="outline-primary" onClick={() => searchItem(val)}>Search</Button> */}
+        <input type="text" onChange={handleChange} value={val} /> }
+        { <Button variant="outline-primary" onClick={() => searchItem(val)}>Search</Button>
       </InputGroup>
 )
 

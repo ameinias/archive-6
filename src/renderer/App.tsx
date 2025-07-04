@@ -22,7 +22,6 @@ export default function App() {
   return (
     <Router>
       <NavBar />
-      <h3>archive software</h3>
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />

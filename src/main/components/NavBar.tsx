@@ -7,7 +7,7 @@ const NavBar = () => {
   // const [itemsToTrack, setItems] = useState([]);
 
   return (
-    <div>
+    <div className="NavBar">
       <Link to="/">
         <Button variant="outline-primary">Home</Button>
       </Link>{' '}

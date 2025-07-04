@@ -8,11 +8,11 @@ body {
   height: 100vh;
   background: whitesmoke;
   font-family: sans-serif;
-  overflow-y: hidden;
-  display: flex;
+  /* overflow-y: hidden; */
+  /* display: flex; */
   /* justify-content: center;
   align-items: center; */
-  padding: 1em;
+  padding: 0em 1em;
 }
 
 button {
@@ -74,6 +74,8 @@ select[multiple] option:checked {
   flex-direction: column;
   align-items: center;
   border: 1px blue solid;
+  /* leaves room for the menu bar */
+  padding-top: 3.5em;  
   /* //display: flex; */
 }
 #app{
@@ -88,4 +90,13 @@ select[multiple] option:checked {
   position: fixed;
   height: 100%;
   overflow: auto;
+}
+
+.NavBar
+ {
+    position: fixed;
+    color: whitesmoke;
+    background: whitesmoke;
+    border-bottom: 1px solid darkgrey;
+    width: 100%;
 }
