@@ -31,18 +31,16 @@ export function FriendList() {
         <tbody>
         {friends?.map((item) => (
           <tr key={item.id}>
-            <td>
-              <Link to={`/entry/${item.id}`}>
+            <td width="80%">
+              <Link to={`/edit-item/${item.id}`}>
                {item.fauxID} : {item.title}</Link>
             </td>
-            <td>
+            <td >
               {' '}
               <Button variant="outline-danger" onClick={() => removeItem(item)}>
                 R
               </Button>
-          <Button variant="outline-warning" onClick={() => editItem(item)}>
-            E
-          </Button>
+
 
             </td>
           </tr>

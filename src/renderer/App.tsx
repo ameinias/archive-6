@@ -1,4 +1,5 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import icon from '../../assets/icon.svg';
 import './App.css';
 import Home from '../main/components/Home';

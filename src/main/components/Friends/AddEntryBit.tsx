@@ -3,7 +3,11 @@ import { db } from '../../utils/db'; // import the database
 import { categories, subCategories } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 
-export function AddFriendForm({ itemID }: { itemID?: string }) {
+export function AddFriendForm({ itemID, parentID, isSubEntry }: {
+  itemID?: string;
+  parentID?: string;
+  isSubEntry?: boolean;
+}) {
   const [status, setStatus] = useState('');
   const [title, setName] = useState('');
   const navigate = useNavigate();
@@ -22,7 +26,6 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
     title: '',
     description: '',
     category: 'Object',
-    subItems: [],
     date: new Date(),
     entryDate: new Date(),
   };
@@ -40,7 +43,12 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
       const entry = await db.friends.get(Number(itemID));
       if (entry) {
         setFormValue({
-          ...entry,
+          fauxID: entry.fauxID,
+          title: entry.title,
+          description: entry.description,
+          category: entry.category,
+          date: entry.date || new Date(), // Handle optional date
+          entryDate: entry.entryDate,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -70,39 +78,35 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
         return;
       }
 
-      // // Update the entry in the database
-      // await db.friends.update(savedID, {
-      //   title: formValues.title,
-      //   fauxID: formValues.fauxID,
-      //   hexHash: '',
-      //   description: formValues.description,
-      //   thumbnail: '',
-      //   category: formValues.category,
-      //   subItems: formValues.subItems,
-      //   date: formValues.date,
-      //   entryDate: formValues.entryDate,
-      // }).then(function (updated);
+
       let idNumber = Number(itemID);
-      if (isNaN(idNumber)) {  
+      if (isNaN(idNumber)) {
         setStatus (savedID + "is not a number");
         return; }
 
-      db.friends.update(idNumber, {title: formValues.title}).then(function (updated) {
-  if (updated)
-    setStatus (idNumber + " was updated to " + formValues.title);
-  else
-    setStatus("Nothing was updated - no key:" + idNumber);
-});
+      db.friends.update(idNumber, {
+        title: formValues.title,
+        fauxID: formValues.fauxID,
+        description: formValues.description,
+        category: formValues.category,
+        date: formValues.date,
+        entryDate: formValues.entryDate,
+      }).then(function (updated) {
+        if (updated)
+          setStatus(idNumber + " was updated to " + formValues.title);
+        else
+          setStatus("Nothing was updated - no key:" + idNumber);
+      });
 
-      
+
      // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
       setStatus(`Failed to edit ${title}  & ${formValues.title}: ${error}`);
       return;
-    } 
+    }
     setStatus(`Entry ${title} & ${formValues.title} successfully updated.`);
-    
+
   }
 
   // Add the entry to the database
@@ -123,7 +127,6 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
         description: formValues.description,
         thumbnail: '',
         category: formValues.category,
-        subItems: formValues.subItems,
         date: formValues.date,
         entryDate: formValues.entryDate,
       });
@@ -137,6 +140,43 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
       setStatus(`Failed to add ${title}: ${error}`);
     }
   }
+
+
+
+  async function addSubEntry() {
+    try {
+      const title = formValues.title || 'Untitled';
+      if (!title) {
+        setStatus('Title is required');
+        return;
+      }
+
+      // Ensure we have a valid parent ID
+      const parentId = parentID ? Number(parentID) : Number(itemID);
+      if (isNaN(parentId)) {
+        setStatus('Invalid parent ID for subentry');
+        return;
+      }
+
+      const id = await db.subentries.add({
+        title: formValues.title,
+        fauxID: formValues.fauxID,
+        hexHash: '', // Add the missing hexHash field
+        description: formValues.description,
+        media: '',
+        subCategory: subCategories[0], // Default to first subcategory
+        date: formValues.date,
+        entryDate: formValues.entryDate,
+        parentId: parentId, // Link to the main entry
+      });
+
+      setStatus(`Subentry ${title} successfully added to parent ${parentId}. Got id ${id}`);
+      setFormValue(defaultFormValue);
+    } catch (error) {
+      setStatus(`Failed to add subentry ${title}: ${error}`);
+    }
+  }
+
 
   // Manage state and input field
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -152,7 +192,7 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
       <div className="Single">
                  {isNewEntry
                 ?         <h2>Add New Entry</h2>
-                :         <h2>Edit Entry</h2> 
+                :         <h2>Edit Entry</h2>
                  }
         <p>{status}</p>
         <div className="row">
@@ -223,6 +263,13 @@ export function AddFriendForm({ itemID }: { itemID?: string }) {
         </button>}
 
 
+
+        {/* Only show Add Subentry button when editing an existing main entry */}
+        {!isNewEntry && !isSubEntry && (
+          <button className="outline-success" onClick={addSubEntry}>
+            Add Subentry
+          </button>
+        )}
 
       </div>
     </>
