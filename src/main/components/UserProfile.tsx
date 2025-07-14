@@ -5,12 +5,21 @@ import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
+  const [restoreLastRoute, setRestoreLastRoute] = useState(true); // default true
 
 
     return (
           <>
-<span> User profile.</span>
-  </>
+            <h1>User profile.</h1>
+            <span>Who are you? </span>
+            {/*  Not working - not needed probably.
+            <p>Restore last route: {restoreLastRoute ? "Enabled" : "Disabled"}</p>
+            <Button variant="outline-primary" onClick={() => setRestoreLastRoute(!restoreLastRoute)}>
+              Toggle Restore Last Route
+            </Button> */}
+            <br />
+
+          </>
     )
 
 }

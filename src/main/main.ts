@@ -16,6 +16,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
 import os from 'os';
+import { ipcRenderer } from 'electron';
 
 class AppUpdater {
   constructor() {
@@ -127,6 +128,7 @@ const createWindow = async () => {
     saveWindowState(mainWindow!);
   });
 
+
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -166,13 +168,4 @@ app
   .catch(console.log);
 
 
-//   // db.js
-// import Dexie from 'dexie';
 
-// export const db = new Dexie('game-db');
-// db.version(1).stores({
-//   friends: '++id, title, description,catagory' // Primary key and indexed props
-// });
-
-// db.ts
-// db.ts

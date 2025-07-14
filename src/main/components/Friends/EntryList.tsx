@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function FriendList() {
   const friends = useLiveQuery(() => db.friends.toArray());
+  const subentries = useLiveQuery(() => db.subentries.toArray());
   // const [friends, delEntry] = useState([]);
     const navigate = useNavigate();
 
@@ -32,8 +33,30 @@ export function FriendList() {
         {friends?.map((item) => (
           <tr key={item.id}>
             <td width="80%">
-              <Link to={`/edit-item/${item.id}`}>
+              {item.id}: <Link to={`/edit-item/${item.id}`}>
                {item.fauxID} : {item.title}</Link>
+            </td>
+            <td >
+              {' '}
+              <Button variant="outline-danger" onClick={() => removeItem(item)}>
+                R
+              </Button>
+
+
+            </td>
+          </tr>
+        ))}
+        </tbody>
+      </table>
+
+      Subentries:
+       <table>
+        <tbody>
+        {subentries?.map((item) => (
+          <tr key={item.id}>
+            <td width="80%">
+              {item.id}: <Link to={`/edit-subitem/${item.id}`}>
+               {item.fauxID} : {item.title}</Link> Parent: {item.parentId }
             </td>
             <td >
               {' '}

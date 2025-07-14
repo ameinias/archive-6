@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import { GameLogic } from '../utils/gamelogic';
 
 const NavBar = () => {
-  // const [val, setVal] = useState("");
-  // const [itemsToTrack, setItems] = useState([]);
+  const { isAdmin, toggleAdmin } = GameLogic();
+
 
   return (
     // <div className="NavBar">
@@ -21,11 +22,17 @@ const NavBar = () => {
         <Button variant="outline-primary">New Entry</Button>
       </Link> |{' '}
       <Link to="/import-export">
-        <Button variant="outline-primary">ImportExport</Button>
+        <Button variant="outline-primary">Admin</Button>
       </Link>
-        </div>
+      <div>
+        Logged in as: {isAdmin ? 'Admin' : 'User'}{' '}
+        <Button variant="outline-secondary" onClick={toggleAdmin}>
+          {isAdmin ? 'Switch' : 'Switch'}
+        </Button>
+      </div>
+      </div>
 </nav>
-    // </div>
+
   );
 };
 

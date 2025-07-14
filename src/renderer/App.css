@@ -66,11 +66,21 @@ select[multiple] option:checked {
 
 .form-control {
   width: 100%;
-  padding: 10px;
+
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
   margin-bottom:10px;
+}
+
+.form-control-dropdown {
+  padding: none;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom:10px;
+  appearance: auto;
+  width: 50%;
 }
 
 .container {
@@ -122,4 +132,20 @@ table
 .databasetable
 {
   margin-top: 20px;
+}
+
+.adminOnly
+{
+    border: 2px dotted #bbb;
+  border-radius: 10px;
+  padding: 35px;
+  color: #bbb;
+  text-align: center;
+
+}
+
+.SubEntry{
+border: 1px solid black;
+    padding: 13px;
+
 }

@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom';
 import Dexie from 'dexie';
 import { db } from '../utils/db'; // import the database
 import 'dexie-export-import'; // Import the export/import addon
+import { GameLogic } from '../utils/gamelogic';
 
-
+const notHookedUp = () => {
+  console.log("This feature is not hooked up yet. Please check back later.");
+}
 
 const handleExport = async () => {
   try {
@@ -87,18 +90,39 @@ const handleDrop = async (event) => {
 
 
 function ImportExport() {
-
+  const { isAdmin, toggleAdmin } = GameLogic();
 
   return (
     <>
       <h3>Database Info</h3>
-      <span>Various database related tasks.
-      </span>
-      <br/>
+      <span>Various database related tasks.</span>
+      <br />
       <div className="row align-items-start databasetable">
+        <div className="col"><b>Admin: </b>{isAdmin ? "Yes" : "No"}</div>
         <div className="col"><b>Current Database: </b>{db.name}</div>
         <div className="col"><b>Version:</b> {db.verno}</div>
       </div>
+
+      <div className="row align-items-start databasetable">
+        <div className="col">
+          These currently do not work. They will be upgrades as they work.
+                   {isAdmin
+                ?          <> <Button variant="primary" onClick={toggleAdmin}>
+          Switch Start Database
+        </Button>
+        <Button variant="primary" onClick={notHookedUp}>
+          Export Start Database From Full
+        </Button> <Button variant="primary" onClick={notHookedUp}>
+          Export Start New Game
+        </Button>
+        </>
+                :       <>  <Button variant="primary" onClick={toggleAdmin}>
+          Switch Full Database
+        </Button>
+ </>}
+          </div>
+      </div>
+
       <div className="row align-items-start databasetable">
         <div className="col">
 

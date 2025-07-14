@@ -7,8 +7,13 @@
     "tables": [
       {
         "name": "friends",
-        "schema": "++id,title,description,thumbnail,category,subItems,date,entryDate",
-        "rowCount": 9
+        "schema": "++id,fauxID,title,description,thumbnail,category,date,entryDate,available,availableOnStart",
+        "rowCount": 11
+      },
+      {
+        "name": "subentries",
+        "schema": "++id,fauxID,title,description,media,subCategory,date,entryDate,researcherID,parentId,available,availableOnStart",
+        "rowCount": 0
       }
     ],
     "data": [{
@@ -167,7 +172,68 @@
             "date": "date",
             "entryDate": "date"
           }
+        },
+        {
+          "title": "try again sam",
+          "fauxID": "MX5416",
+          "hexHash": "",
+          "description": "yes this one",
+          "thumbnail": "",
+          "category": "Document",
+          "date": 1752528834753,
+          "entryDate": 1752528834753,
+          "available": "on",
+          "availableOnStart": "on",
+          "id": 10,
+          "$types": {
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "sfsafas",
+          "fauxID": "MX2550",
+          "hexHash": "",
+          "description": "asfdasfsd",
+          "thumbnail": "",
+          "category": "Object",
+          "date": 1752528846065,
+          "entryDate": 1752528846065,
+          "available": false,
+          "availableOnStart": false,
+          "id": 11,
+          "$types": {
+            "date": "date",
+            "entryDate": "date"
+          }
         }
+      ]
+    },{
+      "tableName": "subentries",
+      "inbound": true,
+      "rows": [
+        {
+          "title": "a fake subentry",
+          "fauxID": "MX7190-f",
+          "hexHash": "",
+          "description": "bla bla bla",
+          "media": "",
+          "subCategory": "Object",
+          "subItems": [],
+          "date": 1752450906220,
+          "entryDate": 1752450906220,
+          "researcherID":"EC",
+          "parentId": 0,
+          "available": "on",
+          "availableOnStart": "on",
+          "id": 1,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        }
+
       ]
     }]
   }
