@@ -44,7 +44,7 @@ a {
   text-decoration: none;
   height: fit-content;
   width: fit-content;
-  margin: 10px;
+
 }
 
 a:hover {
@@ -140,7 +140,7 @@ table
   border-radius: 10px;
   padding: 35px;
   color: #bbb;
-  text-align: center;
+
 
 }
 

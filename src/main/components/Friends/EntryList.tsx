@@ -28,12 +28,13 @@ export function FriendList() {
 
   return (
     <div className="List">
+            <h3>Entries:</h3>
       <table>
         <tbody>
         {friends?.map((item) => (
           <tr key={item.id}>
             <td width="80%">
-              {item.id}: <Link to={`/edit-item/${item.id}`}>
+              <Link to={`/edit-item/${item.id}`}>
                {item.fauxID} : {item.title}</Link>
             </td>
             <td >
@@ -49,14 +50,14 @@ export function FriendList() {
         </tbody>
       </table>
 
-      Subentries:
+      <h3>Subentries:</h3>
        <table>
         <tbody>
         {subentries?.map((item) => (
           <tr key={item.id}>
             <td width="80%">
-              {item.id}: <Link to={`/edit-subitem/${item.id}`}>
-               {item.fauxID} : {item.title}</Link> Parent: {item.parentId }
+              <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+               {item.fauxID} : {item.title}</Link>
             </td>
             <td >
               {' '}

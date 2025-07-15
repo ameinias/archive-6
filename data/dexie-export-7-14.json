@@ -1,0 +1,50 @@
+{
+  "formatName": "dexie",
+  "formatVersion": 1,
+  "data": {
+    "databaseName": "gb-current",
+    "databaseVersion": 1,
+    "tables": [
+      {
+        "name": "friends",
+        "schema": "++id,fauxID,title,description,thumbnail,category,date,entryDate,available,availableOnStart",
+        "rowCount": 1
+      },
+      {
+        "name": "subentries",
+        "schema": "++id,fauxID,title,description,media,subCategory,date,entryDate,researcherID,parentId,available,availableOnStart",
+        "rowCount": 10
+      }
+    ],
+    "data": [{
+      "tableName": "friends",
+      "inbound": true,
+      "rows": [
+        {
+          "title": "the balloon",
+          "fauxID": "MX3953",
+          "hexHash": "",
+          "description": "doing many ballooney things",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752450925359,
+          "entryDate": 1752450925359,
+          "id": 2,
+          "availableOnStart": false,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        }
+      ]
+    },{
+      "tableName": "subentries",
+      "inbound": true,
+      "rows": [
+
+      ]
+    }]
+  }
+}

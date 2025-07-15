@@ -4,7 +4,7 @@ import { categories, subCategories, researcherIDs } from '../../utils/constants'
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
 import { ListSubEntries } from './ListSubEntries';
-import { AddSubEntryForm } from './AddSubEntryFunc';
+
 import { Network } from 'inspector/promises';
 
 export function AddFriendForm({
@@ -21,7 +21,7 @@ export function AddFriendForm({
   const navigate = useNavigate();
   let savedID: number = 0;
   const [isNewEntry, setNewEntry] = useState(false);
-  const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
+
   const { isAdmin, toggleAdmin } = GameLogic();
 
   const NewID = () => {
@@ -288,14 +288,9 @@ export function AddFriendForm({
         {/* Only show Add Subentry button when not already a subentry. */}
         {!isSubEntry ? (
           <>
-          {itemID}
+
             <ListSubEntries itemID={itemID} />
-            <button className="outline-success" onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}>
-              Add Subentry
-            </button>
-            {toggleShowNewSubEntry && (
-              <AddSubEntryForm itemID="new" parentID={itemID} isSubEntry={true} />
-            )}
+
           </>
         ) : (
          <></>

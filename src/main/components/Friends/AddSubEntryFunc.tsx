@@ -7,11 +7,9 @@ import { GameLogic } from '../../utils/gamelogic';
 export function AddSubEntryForm({
   itemID,
   parentID,
-  isSubEntry,
 }: {
   itemID?: string;
   parentID?: string;
-  isSubEntry?: boolean;
 }) {
   const [status, setStatus] = useState('');
   const [title, setName] = useState('');
@@ -148,7 +146,7 @@ export function AddSubEntryForm({
         subCategory: subCategories[0], // Default to first subcategory
         date: formValues.date,
         entryDate: formValues.entryDate,
-        parentId: parentId, // Link to the main entry
+        parentId: Number(parentID), // Link to the main entry
         available: formValues.availableOnStart,
         availableOnStart: formValues.availableOnStart,
         researcherID: researcherIDs[0], // researcher who added the entry
@@ -162,10 +160,11 @@ export function AddSubEntryForm({
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
-      setStatus(`Failed to edit ${title}  & ${formValues.title}: ${error}`);
+      setStatus(`Failed to edit ${title} : ${error}`);
       return;
     }
-    setStatus(`Entry ${title} & ${formValues.title} successfully updated.`);
+    setStatus(`Entry ${title} successfully updated.`);
+    navigate(`/edit-item/${Number(parentID)}`);
   }
 
 
@@ -179,8 +178,8 @@ export function AddSubEntryForm({
       }
 
       // Ensure we have a valid parent ID
-      const parentId = parentID ? Number(parentID) : Number(itemID);
-      if (isNaN(parentId)) {
+      const parentIdCast = parentID ? Number(parentID) : Number(itemID);
+      if (isNaN(parentIdCast)) {
         setStatus('Invalid parent ID for subentry');
         return;
       }
@@ -194,19 +193,20 @@ export function AddSubEntryForm({
         subCategory: subCategories[0], // Default to first subcategory
         date: formValues.date,
         entryDate: formValues.entryDate,
-        parentId: parentId, // Link to the main entry
+        parentId: parentIdCast, // Link to the main entry
         available: formValues.availableOnStart,
         availableOnStart: formValues.availableOnStart,
         researcherID: researcherIDs[0], // researcher who added the entry
       });
 
       setStatus(
-        `Subentry ${title} successfully added to parent ${parentId}. Got id ${id}`,
+        `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
       );
       setFormValue(defaultFormValue);
     } catch (error) {
       setStatus(`Failed to add subentry ${title}: ${error}`);
     }
+navigate(`/edit-item/${Number(parentID)}`);
   }
 
   // Manage state and input field
@@ -286,7 +286,7 @@ export function AddSubEntryForm({
             </option>
           ))}
         </select>{' '}
-        {isAdmin && <div className="adminOnly">"is admin"
+        {isAdmin && <div className="adminOnly">
           <input type="checkbox" checked={formValues.availableOnStart} onChange={handleChange} name="availableOnStart" />
           <label>available on start</label>
           <br />
@@ -296,13 +296,8 @@ export function AddSubEntryForm({
           </div>}
 
         {/* Only show Add Subentry button when not already a subentry. */}
-        {!isSubEntry ? (
-          <button className="outline-success" onClick={addSubEntry}>
-            Add Subentry
-          </button>
-        ) : (
-          <>
-            <div>
+
+
               Researcher:
               <select className="form-control form-control-dropdown"
                 multiple={false} value={formValues.researcherID}
@@ -315,11 +310,10 @@ export function AddSubEntryForm({
           ))}
         </select>
           <br />
-                </div>
-           </>
-        )
 
-        }
+
+
+
 
               {isNewEntry ? (
           <button className="outline-primary" onClick={addSubEntry}>

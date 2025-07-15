@@ -23,9 +23,8 @@ const Home: React.FC = () => {
     <div>
 
 
-      
+
       <div>
-        <h2>Friend List</h2>
         <FriendList />
       </div>
     </div>

@@ -74,7 +74,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/edit-item/:id" element={<AddEntry />} />
-          <Route path="/edit-subitem/:id" element={<AddSubEntry />} />
+          <Route path="/add-subitem/:parentID" element={<AddSubEntry />} />
+          <Route path="/edit-subitem/:parentID/:itemID" element={<AddSubEntry />} />
           <Route path="/import-export" element={<ImportExport />} />
           <Route path="/entry/:id" element={<ShowSingle />} />
         </Routes>
