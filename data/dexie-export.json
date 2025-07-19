@@ -1,0 +1,240 @@
+{
+  "formatName": "dexie",
+  "formatVersion": 1,
+  "data": {
+    "databaseName": "gb-current",
+    "databaseVersion": 1,
+    "tables": [
+      {
+        "name": "friends",
+        "schema": "++id,fauxID,title,description,thumbnail,category,date,entryDate,available,availableOnStart",
+        "rowCount": 11
+      },
+      {
+        "name": "subentries",
+        "schema": "++id,fauxID,title,description,media,subCategory,date,entryDate,researcherID,parentId,available,availableOnStart",
+        "rowCount": 0
+      }
+    ],
+    "data": [{
+      "tableName": "friends",
+      "inbound": true,
+      "rows": [
+        {
+          "title": "a fake article",
+          "fauxID": "MX7190",
+          "hexHash": "",
+          "description": "bla bla bla",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752450906220,
+          "entryDate": 1752450906220,
+          "id": 1,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "another fake object",
+          "fauxID": "MX3953",
+          "hexHash": "",
+          "description": "ha hah ha ",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752450925359,
+          "entryDate": 1752450925359,
+          "id": 2,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "sdf asf",
+          "fauxID": "MX7857",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454144671,
+          "entryDate": 1752454144671,
+          "id": 3,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "a sdffasf as f",
+          "fauxID": "MX3503",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454147017,
+          "entryDate": 1752454147017,
+          "id": 4,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "",
+          "fauxID": "MX2073",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454149496,
+          "entryDate": 1752454149496,
+          "id": 5,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "sfasf sadfas",
+          "fauxID": "MX2648",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454149904,
+          "entryDate": 1752454149904,
+          "id": 6,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "",
+          "fauxID": "MX4357",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454151599,
+          "entryDate": 1752454151599,
+          "id": 7,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": " sadfasd sdf ",
+          "fauxID": "MX7837",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454151937,
+          "entryDate": 1752454151937,
+          "id": 8,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "",
+          "fauxID": "MX2239",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1752454153623,
+          "entryDate": 1752454153623,
+          "id": 9,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "try again sam",
+          "fauxID": "MX5416",
+          "hexHash": "",
+          "description": "yes this one",
+          "thumbnail": "",
+          "category": "Document",
+          "date": 1752528834753,
+          "entryDate": 1752528834753,
+          "available": "on",
+          "availableOnStart": "on",
+          "id": 10,
+          "$types": {
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "sfsafas",
+          "fauxID": "MX2550",
+          "hexHash": "",
+          "description": "asfdasfsd",
+          "thumbnail": "",
+          "category": "Object",
+          "date": 1752528846065,
+          "entryDate": 1752528846065,
+          "available": false,
+          "availableOnStart": false,
+          "id": 11,
+          "$types": {
+            "date": "date",
+            "entryDate": "date"
+          }
+        }
+      ]
+    },{
+      "tableName": "subentries",
+      "inbound": true,
+      "rows": [
+        {
+          "title": "a fake subentry",
+          "fauxID": "MX7190-f",
+          "hexHash": "",
+          "description": "bla bla bla",
+          "media": "",
+          "subCategory": "Object",
+          "subItems": [],
+          "date": 1752450906220,
+          "entryDate": 1752450906220,
+          "researcherID":"EC",
+          "parentId": 0,
+          "available": "on",
+          "availableOnStart": "on",
+          "id": 1,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        }
+
+      ]
+    }]
+  }
+}

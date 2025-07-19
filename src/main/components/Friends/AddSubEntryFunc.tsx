@@ -3,35 +3,49 @@ import { db } from '../../utils/db'; // import the database
 import { categories, subCategories, researcherIDs } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
-import { ListSubEntries } from './ListSubEntries';
 
-import { Network } from 'inspector/promises';
-
-export function AddFriendForm({
+export function AddSubEntryForm({
   itemID,
   parentID,
-  isSubEntry,
 }: {
   itemID?: string;
   parentID?: string;
-  isSubEntry?: boolean;
 }) {
   const [status, setStatus] = useState('');
   const [title, setName] = useState('');
   const navigate = useNavigate();
   let savedID: number = 0;
   const [isNewEntry, setNewEntry] = useState(false);
-
   const { isAdmin, toggleAdmin } = GameLogic();
+   const [parentFauxID, setparentFauxID] = useState('');
 
-  const NewID = () => {
-    // TODO: Calculate a new ID based on the existing items in storage
-    // For now, just return a random number
-    return 'MX' + Math.floor(Math.random() * 10000);
-  };
+
+
+    // Create async function to generate new ID
+  async function generateNewID(): Promise<string> {
+
+    // TODO: Make this alpha numeric someday
+    // https://stackoverflow.com/questions/36129721/convert-number-to-alphabet-letter
+
+    if (!parentID) return 'NEW-001';
+
+    try {
+      const parent = await db.friends.get(Number(parentID));
+      const parentFauxID = parent?.fauxID || '';
+      const lengthOfSiblings = await db.subentries.where('parentId').equals(Number(parentID)).toArray();
+
+
+      const incrementNumber = lengthOfSiblings.length + 1;;
+      return `${parentFauxID || 'PARENT'}-${incrementNumber || 1}`;
+    } catch (error) {
+      console.error('Error generating ID:', error);
+      return 'ERROR-001';
+    }
+  }
+
 
   const defaultFormValue = {
-    fauxID: NewID(),
+    fauxID: 'loading',
     title: '',
     description: '',
     category: 'Object',
@@ -40,6 +54,21 @@ export function AddFriendForm({
     availableOnStart: false, // Default to false
     researcherID: researcherIDs[0],
   };
+
+    // Generate the fauxID when component mounts or parentID changes
+  useEffect(() => {
+    async function setupNewEntry() {
+      if (isNewEntry && parentID) {
+        const newFauxID = await generateNewID();
+        setFormValue(prev => ({
+          ...prev,
+          fauxID: newFauxID
+        }));
+      }
+    }
+
+    setupNewEntry();
+  }, [isNewEntry, parentID]);
 
   // Initialize form values - if an ID came through, get that. If not, default empty.
   useEffect(() => {
@@ -51,13 +80,13 @@ export function AddFriendForm({
         return;
       }
 
-      const entry = await db.friends.get(Number(itemID));
+      const entry = await db.subentries.get(Number(itemID));
       if (entry) {
         setFormValue({
           fauxID: entry.fauxID,
           title: entry.title,
           description: entry.description,
-          category: entry.category,
+          category: entry.subCategory,
           date: entry.date || new Date(), // Handle optional date
           entryDate: entry.entryDate,
           availableOnStart: entry.availableOnStart || false,
@@ -93,7 +122,7 @@ export function AddFriendForm({
 
   const [formValues, setFormValue] = useState(defaultFormValue);
 
-  async function updateEntry() {
+  async function updateSubEntry() {
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
@@ -107,15 +136,20 @@ export function AddFriendForm({
         return;
       }
 
-      db.friends
+      db.subentries
         .update(idNumber, {
-          title: formValues.title,
-          fauxID: formValues.fauxID,
-          description: formValues.description,
-          category: formValues.category,
-          date: formValues.date,
-          entryDate: formValues.entryDate,
-          availableOnStart: formValues.availableOnStart,
+                  title: formValues.title,
+        fauxID: formValues.fauxID,
+        hexHash: '', // Add the missing hexHash field
+        description: formValues.description,
+        media: '',
+        subCategory: subCategories[0], // Default to first subcategory
+        date: formValues.date,
+        entryDate: formValues.entryDate,
+        parentId: Number(parentID), // Link to the main entry
+        available: formValues.availableOnStart,
+        availableOnStart: formValues.availableOnStart,
+        researcherID: researcherIDs[0], // researcher who added the entry
         })
         .then(function (updated) {
           if (updated)
@@ -126,43 +160,14 @@ export function AddFriendForm({
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
-      setStatus(`Failed to edit ${title}  & ${formValues.title}: ${error}`);
+      setStatus(`Failed to edit ${title} : ${error}`);
       return;
     }
-    setStatus(`Entry ${title} & ${formValues.title} successfully updated.`);
+    setStatus(`Entry ${title} successfully updated.`);
+    navigate(`/edit-item/${Number(parentID)}`);
   }
 
-  // Add the entry to the database
-  async function addEntry() {
-    try {
-      const title = formValues.title || 'Untitled';
-      if (!title) {
-        setStatus('Title is required');
-        return;
-      }
 
-      const id = await db.friends.add({
-        title: formValues.title,
-        fauxID: formValues.fauxID,
-        hexHash: '',
-        description: formValues.description,
-        thumbnail: '',
-        category: formValues.category,
-        date: formValues.date,
-        entryDate: formValues.entryDate,
-        available: formValues.availableOnStart,
-        availableOnStart: formValues.availableOnStart,
-      });
-
-      setStatus(`Entry ${title} successfully added. Got id ${id}`);
-      // setName('');
-      // setCat(defaultCat);
-      // navigate('/'); // <-- Go to Home
-      setFormValue(defaultFormValue);
-    } catch (error) {
-      setStatus(`Failed to add ${title}: ${error}`);
-    }
-  }
 
   async function addSubEntry() {
     try {
@@ -173,8 +178,8 @@ export function AddFriendForm({
       }
 
       // Ensure we have a valid parent ID
-      const parentId = parentID ? Number(parentID) : Number(itemID);
-      if (isNaN(parentId)) {
+      const parentIdCast = parentID ? Number(parentID) : Number(itemID);
+      if (isNaN(parentIdCast)) {
         setStatus('Invalid parent ID for subentry');
         return;
       }
@@ -188,19 +193,20 @@ export function AddFriendForm({
         subCategory: subCategories[0], // Default to first subcategory
         date: formValues.date,
         entryDate: formValues.entryDate,
-        parentId: parentId, // Link to the main entry
+        parentId: parentIdCast, // Link to the main entry
         available: formValues.availableOnStart,
         availableOnStart: formValues.availableOnStart,
         researcherID: researcherIDs[0], // researcher who added the entry
       });
 
       setStatus(
-        `Subentry ${title} successfully added to parent ${parentId}. Got id ${id}`,
+        `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
       );
       setFormValue(defaultFormValue);
     } catch (error) {
       setStatus(`Failed to add subentry ${title}: ${error}`);
     }
+navigate(`/edit-item/${Number(parentID)}`);
   }
 
   // Manage state and input field
@@ -214,10 +220,14 @@ export function AddFriendForm({
 
   return (
     <>
-      <div className="Single">
-        {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
+      <div className="SubEntry">
+        {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>}
         <p>{status}</p>
         <div className="row">
+          <div className="col-3">
+            Parent ID: {parentID}
+
+          </div>
           <div className="col-3">
             ID:
             {isNewEntry || isAdmin ? (
@@ -276,7 +286,7 @@ export function AddFriendForm({
             </option>
           ))}
         </select>{' '}
-        {isAdmin && <div className="adminOnly">"is admin"
+        {isAdmin && <div className="adminOnly">
           <input type="checkbox" checked={formValues.availableOnStart} onChange={handleChange} name="availableOnStart" />
           <label>available on start</label>
           <br />
@@ -286,24 +296,31 @@ export function AddFriendForm({
           </div>}
 
         {/* Only show Add Subentry button when not already a subentry. */}
-        {!isSubEntry ? (
-          <>
 
-            <ListSubEntries itemID={itemID} />
 
-          </>
-        ) : (
-         <></>
-        )
+              Researcher:
+              <select className="form-control form-control-dropdown"
+                multiple={false} value={formValues.researcherID}
+          onChange={handleChange} name="researcherID"
+        >
+          {researcherIDs.map((sub, i) => (
+            <option key={i} value={sub}>
+              {sub}
+            </option>
+          ))}
+        </select>
+          <br />
 
-        }
+
+
+
 
               {isNewEntry ? (
-          <button className="outline-primary" onClick={addEntry}>
+          <button className="outline-primary" onClick={addSubEntry}>
             Add
           </button>
         ) : (
-          <button className="outline-warning" onClick={updateEntry}>
+          <button className="outline-warning" onClick={updateSubEntry}>
             Save
           </button>
         )}

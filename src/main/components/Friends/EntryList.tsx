@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function FriendList() {
   const friends = useLiveQuery(() => db.friends.toArray());
+  const subentries = useLiveQuery(() => db.subentries.toArray());
   // const [friends, delEntry] = useState([]);
     const navigate = useNavigate();
 
@@ -27,22 +28,43 @@ export function FriendList() {
 
   return (
     <div className="List">
+            <h3>Entries:</h3>
       <table>
         <tbody>
         {friends?.map((item) => (
           <tr key={item.id}>
-            <td>
-              <Link to={`/entry/${item.id}`}>
+            <td width="80%">
+              <Link to={`/edit-item/${item.id}`}>
                {item.fauxID} : {item.title}</Link>
             </td>
-            <td>
+            <td >
               {' '}
               <Button variant="outline-danger" onClick={() => removeItem(item)}>
                 R
               </Button>
-          <Button variant="outline-warning" onClick={() => editItem(item)}>
-            E
-          </Button>
+
+
+            </td>
+          </tr>
+        ))}
+        </tbody>
+      </table>
+
+      <h3>Subentries:</h3>
+       <table>
+        <tbody>
+        {subentries?.map((item) => (
+          <tr key={item.id}>
+            <td width="80%">
+              <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+               {item.fauxID} : {item.title}</Link>
+            </td>
+            <td >
+              {' '}
+              <Button variant="outline-danger" onClick={() => removeItem(item)}>
+                R
+              </Button>
+
 
             </td>
           </tr>

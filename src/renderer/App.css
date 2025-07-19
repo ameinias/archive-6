@@ -1,7 +1,10 @@
+
+
 /*
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+
 body {
   position: relative;
   color: black;
@@ -12,7 +15,7 @@ body {
   /* display: flex; */
   /* justify-content: center;
   align-items: center; */
-  padding: 0em 1em;
+  padding: 80px 1em 0 1em;
 }
 
 button {
@@ -41,7 +44,7 @@ a {
   text-decoration: none;
   height: fit-content;
   width: fit-content;
-  margin: 10px;
+
 }
 
 a:hover {
@@ -63,19 +66,29 @@ select[multiple] option:checked {
 
 .form-control {
   width: 100%;
-  padding: 10px;
+
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
   margin-bottom:10px;
 }
 
+.form-control-dropdown {
+  padding: none;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom:10px;
+  appearance: auto;
+  width: 50%;
+}
+
 .container {
   flex-direction: column;
   align-items: center;
-  border: 1px blue solid;
+  /* border: 1px blue solid; */
   /* leaves room for the menu bar */
-  padding-top: 3.5em;  
+  /* padding-top: 80px; */
   /* //display: flex; */
 }
 #app{
@@ -99,4 +112,40 @@ select[multiple] option:checked {
     background: whitesmoke;
     border-bottom: 1px solid darkgrey;
     width: 100%;
+}
+
+.dropzone
+
+{
+  border: 2px dotted #bbb;
+  border-radius: 10px;
+  padding: 35px;
+  color: #bbb;
+  text-align: center;
+}
+
+table
+{
+      width: -webkit-fill-available;
+}
+
+.databasetable
+{
+  margin-top: 20px;
+}
+
+.adminOnly
+{
+    border: 2px dotted #bbb;
+  border-radius: 10px;
+  padding: 35px;
+  color: #bbb;
+
+
+}
+
+.SubEntry{
+border: 1px solid black;
+    padding: 13px;
+
 }

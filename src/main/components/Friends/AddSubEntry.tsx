@@ -1,0 +1,34 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { AddSubEntryForm } from './AddSubEntryFunc';
+
+const AddSubEntry = () => {
+  const { parentID, itemID } = useParams<{
+    parentID: string;
+    itemID?: string;
+  }>();
+
+  console.log('URL params - parentID:', parentID, 'itemID:', itemID);
+
+  // Validate that we have at least a parentID
+  if (!parentID) {
+    return (
+      <div className="alert alert-danger">
+        <h4>Error: No Parent ID Provided</h4>
+        <p>A parent entry ID is required to add or edit sub-entries.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container">
+      <h2>{itemID ? 'Edit Sub Entry' : 'Add New Sub Entry'}</h2>
+      <AddSubEntryForm
+        parentID={parentID}
+        itemID={itemID}
+      />
+    </div>
+  );
+};
+
+export default AddSubEntry;
