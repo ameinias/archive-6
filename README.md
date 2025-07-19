@@ -3,19 +3,26 @@
 # archive-5
 Based on Electron-react-Boilerplate with Dexie db.  
 
-## how to update thje db scheme
+## how to update the db scheme
 * get it working in AddEntryBit
-* Might want it in ShopwSingle (Might nuke this though? hmm)
+* Might want it in ShowSingle (Might nuke this though? hmm)
 * define things in utils/db.ts
 * catagory drop down options in constants.ts
-
 ## todo
 [x] Populate SingleItem from edit button
+[]  Cross referencing
+    - Needs to be able to select and cross reference two entries together (updates both entries on save)
+    - When one entry is not hashed, it is displayed as “UNAVAILABLE”
+    - use this "entry" object type to trigger from open entry. 
+      - Logic -> Open Entry -> Check Game State Conditionals -> If trigger effect, do so -> if trigger entry unlock, wait until next navigation step
 [] bool for "start state" JSON
 [] button switch between admin and player mode
-[] 
+[] image database (https://stackblitz.com/edit/dexie-images?file=console.ts)
 [x] Make delete item work
+[] Need object that can seach for
 [] (Wishlist) format JSON new entry
+[] Is this importnat? https://dexie.org/docs/StorageManager
+[] https://www.fastdev.com/blog/blog/dexie-local-file-storage/
 [] search function 
 [] Display Media
 [] Form upload media

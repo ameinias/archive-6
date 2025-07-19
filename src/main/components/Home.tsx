@@ -4,6 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import List from './List';
 import Search from './Search';
 import { FriendList } from './Friends/EntryList';
+import { FileDrop } from './FileDrop';
 
 // const { ipcRenderer } = window.require("electron");
 // const { HANDLE_FETCH_DATA, HANDLE_SAVE_DATA, HANDLE_REMOVE_DATA, HANDLE_EDIT_DATA } = window.require("../../utils/constants");
@@ -22,7 +23,7 @@ const Home: React.FC = () => {
   return (
     <div>
 
-
+<FileDrop />
       
       <div>
         <h2>Friend List</h2>

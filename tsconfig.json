@@ -14,5 +14,6 @@
     "allowJs": true,
     "outDir": ".erb/dll"
   },
+  "react-files": ["node_modules/react-files/dist/index.d.ts"],
   "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
 }
