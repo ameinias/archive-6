@@ -5,24 +5,12 @@ import icon from '../../assets/icon.svg';
 import './App.css';
 import Home from '../main/components/Home';
 import UserProfile from '../main/components/UserProfile';
-import NavBar from '../main/components/NavBar';
+import NavBar from '../main/components/bars/NavBar';
+import StatusBar from '../main/components/bars/StatusBar';
 import AddEntry from '../main/components/Friends/AddEntry';
 import ImportExport from '../main/components/ImportExport';
 import ShowSingle from '../main/components/Friends/ShowSingle';
 import AddSubEntry from '../main/components/Friends/AddSubEntry';
-
-
-
-
-function Hello() {
-  return (
-    <div>
-      <h1>Hello, World!</h1>
-      <img src={icon} alt="Icon" />
-      <p>This is a simple React application.</p>
-    </div>
-  );
-}
 
 // Component to track and restore route on hot reload
 function RouteTracker() {
@@ -68,7 +56,9 @@ export default function App() {
   return (
     <Router initialEntries={[initialRoute]}>
       <RouteTracker />
+      <div>
       <NavBar />
+      <div className="content">
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -79,6 +69,9 @@ export default function App() {
           <Route path="/import-export" element={<ImportExport />} />
           <Route path="/entry/:id" element={<ShowSingle />} />
         </Routes>
+      </div>
+      </div>
+      <StatusBar />
       </div>
     </Router>
   );

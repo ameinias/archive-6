@@ -1,0 +1,238 @@
+{
+  "formatName": "dexie",
+  "formatVersion": 1,
+  "data": {
+    "databaseName": "gb-current",
+    "databaseVersion": 1,
+    "tables": [
+      {
+        "name": "friends",
+        "schema": "++id,fauxID,title,description,thumbnail,category,date,entryDate,available,availableOnStart",
+        "rowCount": 11
+      },
+      {
+        "name": "subentries",
+        "schema": "++id,fauxID,title,description,media,subCategory,date,entryDate,researcherID,parentId,available,availableOnStart",
+        "rowCount": 1
+      }
+    ],
+    "data": [{
+      "tableName": "friends",
+      "inbound": true,
+      "rows": [
+        {
+          "title": "no wait i do need a title!",
+          "fauxID": "MX3939",
+          "hexHash": "",
+          "description": "ssfsfadf f",
+          "thumbnail": "",
+          "category": "Document",
+          "subItems": [],
+          "date": 1751582693804,
+          "entryDate": 1751582693804,
+          "id": 10,
+          "availableOnStart": false,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "Here is a new entry for you. ",
+          "fauxID": "MX1665",
+          "hexHash": "",
+          "description": "mock up time. ",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751595709493,
+          "entryDate": 1751595709493,
+          "id": 11,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "another patron of the arts",
+          "fauxID": "MX1922",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751595832619,
+          "entryDate": 1751595832619,
+          "id": 13,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "is this the same ID",
+          "fauxID": "MX3486",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751595837997,
+          "entryDate": 1751595837997,
+          "id": 14,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "sound of BEING VERY LOUD.",
+          "fauxID": "MX3939",
+          "hexHash": "",
+          "description": "A three legged dog. ",
+          "thumbnail": "",
+          "category": "Document",
+          "subItems": [],
+          "date": 1751582693804,
+          "entryDate": 1751582693804,
+          "id": 15,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "here we go again my love.",
+          "fauxID": "MX3939",
+          "hexHash": "",
+          "description": "Check that this works. ",
+          "thumbnail": "",
+          "category": "Document",
+          "subItems": [],
+          "date": 1751582693804,
+          "entryDate": 1751582693804,
+          "id": 16,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "ah, this is duplicting, not editing. ",
+          "fauxID": "MX3939",
+          "hexHash": "",
+          "description": "ssfsfadf f",
+          "thumbnail": "",
+          "category": "Document",
+          "subItems": [],
+          "date": 1751582693804,
+          "entryDate": 1751582693804,
+          "id": 17,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "this is a new entry",
+          "fauxID": "MX9377",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751663669236,
+          "entryDate": 1751663669236,
+          "id": 18,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "teting that new entry works",
+          "fauxID": "MX2100",
+          "hexHash": "",
+          "description": "even those i made edit entry... can  I do both?",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751670106204,
+          "entryDate": 1751670106204,
+          "id": 19,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "testing nscrollbar",
+          "fauxID": "MX9727",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751670243617,
+          "entryDate": 1751670243617,
+          "id": 20,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        },
+        {
+          "title": "need another one to make the header longer",
+          "fauxID": "MX1581",
+          "hexHash": "",
+          "description": "",
+          "thumbnail": "",
+          "category": "Object",
+          "subItems": [],
+          "date": 1751670810332,
+          "entryDate": 1751670810332,
+          "id": 21,
+          "$types": {
+            "subItems": "arrayNonindexKeys",
+            "date": "date",
+            "entryDate": "date"
+          }
+        }
+      ]
+    },{
+      "tableName": "subentries",
+      "inbound": true,
+      "rows": [
+        {
+          "title": "this is a sub of the title",
+          "fauxID": "MX3939-1",
+          "hexHash": "",
+          "description": "",
+          "media": "",
+          "subCategory": "MediaItem",
+          "date": 1752961548763,
+          "entryDate": 1752961548763,
+          "parentId": 10,
+          "available": false,
+          "availableOnStart": false,
+          "researcherID": "RM",
+          "id": 1,
+          "$types": {
+            "date": "date",
+            "entryDate": "date"
+          }
+        }
+      ]
+    }]
+  }
+}

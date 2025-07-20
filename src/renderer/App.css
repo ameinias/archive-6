@@ -1,9 +1,16 @@
-
-
 /*
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+
+ :root {
+  --main-bg-color: brown;
+  --div-border-color: #aeaeae;
+  --div-border: 1px solid var(--div-border-color);
+  --navbar-bg: white;
+  
+}
+
 
 body {
   position: relative;
@@ -11,11 +18,9 @@ body {
   height: 100vh;
   background: whitesmoke;
   font-family: sans-serif;
-  /* overflow-y: hidden; */
-  /* display: flex; */
-  /* justify-content: center;
-  align-items: center; */
-  padding: 80px 1em 0 1em;
+}
+html {
+  height: 100%;
 }
 
 button {
@@ -44,7 +49,6 @@ a {
   text-decoration: none;
   height: fit-content;
   width: fit-content;
-
 }
 
 a:hover {
@@ -70,7 +74,7 @@ select[multiple] option:checked {
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .form-control-dropdown {
@@ -78,9 +82,66 @@ select[multiple] option:checked {
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin-bottom:10px;
+  margin-bottom: 10px;
   appearance: auto;
   width: 50%;
+}
+
+/* Navbar styles */
+
+.root {
+  height: 100%;
+}
+.navbar-fixed-top {
+  height: 50px; /* must not use percents here, must be 80px*/
+  background-color: var(--navbar-bg);
+  border-bottom: var(--div-border);
+}
+
+.navbar .btn {
+  height: 25px;
+  padding: 0 10px;
+  color:black;
+  font-size: 0.8rem;
+  border: 1px solid #aeaeae; 
+}
+
+.navbar .btn:hover {
+  background-color: #343333;
+  color: rgb(241, 234, 234);
+}
+
+.login-info{
+  color:lightgrey;
+  font-size: 0.6rem;
+}
+
+.navbar-fixed-bottom {
+  background-color: var(--navbar-bg);
+  height: 18px; /* must not use percents here, must be 60px*/
+  border-top: var(--div-border);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 0 15px;
+
+  font-size: 0.6rem;
+}
+
+/* Content styles */
+.content {
+  position: fixed;
+  top: 80px;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+
+.content .row {
+  border-bottom: 2px solid #d3d3d3;
+  background-color: gray;
+  margin: 50px 0px 0px 0px;
 }
 
 .container {
@@ -91,8 +152,9 @@ select[multiple] option:checked {
   /* padding-top: 80px; */
   /* //display: flex; */
 }
-#app{
-  padding:10px;
+
+#app {
+  padding: 10px;
 }
 
 .sidebar {
@@ -105,18 +167,7 @@ select[multiple] option:checked {
   overflow: auto;
 }
 
-.NavBar
- {
-    position: fixed;
-    color: whitesmoke;
-    background: whitesmoke;
-    border-bottom: 1px solid darkgrey;
-    width: 100%;
-}
-
-.dropzone
-
-{
+.dropzone {
   border: 2px dotted #bbb;
   border-radius: 10px;
   padding: 35px;
@@ -124,28 +175,22 @@ select[multiple] option:checked {
   text-align: center;
 }
 
-table
-{
-      width: -webkit-fill-available;
+table {
+  width: -webkit-fill-available;
 }
 
-.databasetable
-{
+.databasetable {
   margin-top: 20px;
 }
 
-.adminOnly
-{
-    border: 2px dotted #bbb;
+.adminOnly {
+  border: 2px dotted #bbb;
   border-radius: 10px;
   padding: 35px;
   color: #bbb;
-
-
 }
 
-.SubEntry{
-border: 1px solid black;
-    padding: 13px;
-
+.SubEntry {
+  border: 1px solid black;
+  padding: 13px;
 }

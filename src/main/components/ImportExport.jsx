@@ -27,6 +27,8 @@ const handleExport = async () => {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
+    console.log("Export complete");
+    setStatus("Export started, check your downloads folder.");
   } catch (error) {
     console.error('' + error);
   }
@@ -91,6 +93,7 @@ const handleDrop = async (event) => {
 
 function ImportExport() {
   const { isAdmin, toggleAdmin } = GameLogic();
+    const [status, setStatus] = useState('');
 
   return (
     <>
@@ -102,6 +105,7 @@ function ImportExport() {
         <div className="col"><b>Current Database: </b>{db.name}</div>
         <div className="col"><b>Version:</b> {db.verno}</div>
       </div>
+       <p>{status}</p>
 
       <div className="row align-items-start databasetable">
         <div className="col">
@@ -160,6 +164,7 @@ function ImportExport() {
           TODO:
           <ul>
             <li>☑ Get a database read/write/edit working</li>
+            <li>☐ Update from Json on New Game</li>
             <li>☐ Update Full with new entries only</li>
             <li>☐ Create New, Full and Current databases</li>
             <li>☐ Switch between New, Full and Current databases</li>
