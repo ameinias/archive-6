@@ -7,10 +7,11 @@ import Home from '../main/components/Home';
 import UserProfile from '../main/components/UserProfile';
 import NavBar from '../main/components/bars/NavBar';
 import StatusBar from '../main/components/bars/StatusBar';
-import AddEntry from '../main/components/Friends/AddEntry';
-import ImportExport from '../main/components/ImportExport';
-import ShowSingle from '../main/components/Friends/ShowSingle';
-import AddSubEntry from '../main/components/Friends/AddSubEntry';
+import AddEntry from '../main/components/Admin/EditEntry';
+import ImportExport from '../main/components/Admin/ImportExport';
+import StaticSingle from '../main/components/Static/StaticSingle';
+import AddSubEntry from '../main/components/Admin/AddSubEntry';
+import StyleTest from '../main/components/Style';
 
 // Component to track and restore route on hot reload
 function RouteTracker() {
@@ -36,7 +37,7 @@ export default function App() {
 
       if (lastRoute) {
         const validRoutes = ['/', '/user-profile', '/import-export'];
-        const isDynamicRoute = lastRoute.startsWith('/edit-item/') || lastRoute.startsWith('/entry/');
+        const isDynamicRoute = lastRoute.startsWith('/edit-item/') || lastRoute.startsWith('/entry/')  || lastRoute.startsWith('/single-item/') || lastRoute.startsWith('/edit-subitem/') || lastRoute.startsWith('/add-subitem/');
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
           console.log('Using last route:', lastRoute);
@@ -67,7 +68,8 @@ export default function App() {
           <Route path="/add-subitem/:parentID" element={<AddSubEntry />} />
           <Route path="/edit-subitem/:parentID/:itemID" element={<AddSubEntry />} />
           <Route path="/import-export" element={<ImportExport />} />
-          <Route path="/entry/:id" element={<ShowSingle />} />
+          <Route path="/entry/:id" element={<StaticSingle />} />
+          <Route path="/style" element={<StyleTest />} />
         </Routes>
       </div>
       </div>
