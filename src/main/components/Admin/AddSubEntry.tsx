@@ -22,7 +22,7 @@ const AddSubEntry = () => {
 
   return (
     <div className="container">
-      <h2>{itemID ? 'Edit Sub Entry' : 'Add New Sub Entry'}</h2>
+      
       <AddSubEntryForm
         parentID={parentID}
         itemID={itemID}

@@ -3,11 +3,10 @@ import { db } from '../../utils/db'; // import the database
 import { categories, subCategories, researcherIDs } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
-import { ListSubEntries } from './ListSubEntries';
+import { ListSubEntries } from '../Lists/ListSubEntries';
 
-import { Network } from 'inspector/promises';
 
-export function AddFriendForm({
+export function AddEntryForm({
   itemID,
   parentID,
   isSubEntry,
@@ -16,7 +15,7 @@ export function AddFriendForm({
   parentID?: string;
   isSubEntry?: boolean;
 }) {
-  const [status, setStatus] = useState('');
+const { setStatusMessage } = GameLogic();
   const [title, setName] = useState('');
   const navigate = useNavigate();
   let savedID: number = 0;
@@ -27,6 +26,8 @@ export function AddFriendForm({
   const NewID = () => {
     // TODO: Calculate a new ID based on the existing items in storage
     // For now, just return a random number
+    let newID = Math.floor(Math.random() * 10000);
+    
     return 'MX' + Math.floor(Math.random() * 10000);
   };
 
@@ -71,7 +72,7 @@ export function AddFriendForm({
           ' and ',
           formValues.fauxID,
         );
-        setStatus(
+        setStatusMessage(
           'Fetched entry:' +
             entry.fauxID +
             ' and ID:' +
@@ -97,13 +98,13 @@ export function AddFriendForm({
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
-        setStatus('Title is required');
+        setStatusMessage('Title is required');
         return;
       }
 
       let idNumber = Number(itemID);
       if (isNaN(idNumber)) {
-        setStatus(savedID + 'is not a number');
+        setStatusMessage(savedID + 'is not a number');
         return;
       }
 
@@ -119,17 +120,17 @@ export function AddFriendForm({
         })
         .then(function (updated) {
           if (updated)
-            setStatus(idNumber + ' was updated to ' + formValues.title);
-          else setStatus('Nothing was updated - no key:' + idNumber);
+            setStatusMessage(idNumber + ' was updated to ' + formValues.title);
+          else setStatusMessage('Nothing was updated - no key:' + idNumber);
         });
 
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
-      setStatus(`Failed to edit ${title}  & ${formValues.title}: ${error}`);
+      setStatusMessage(`Failed to edit ${title}  & ${formValues.title}: ${error}`);
       return;
     }
-    setStatus(`Entry ${title} & ${formValues.title} successfully updated.`);
+    setStatusMessage(`Entry ${title} & ${formValues.title} successfully updated.`);
   }
 
   // Add the entry to the database
@@ -137,7 +138,7 @@ export function AddFriendForm({
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
-        setStatus('Title is required');
+        setStatusMessage('Title is required');
         return;
       }
 
@@ -154,54 +155,53 @@ export function AddFriendForm({
         availableOnStart: formValues.availableOnStart,
       });
 
-      setStatus(`Entry ${title} successfully added. Got id ${id}`);
-      // setName('');
-      // setCat(defaultCat);
-      // navigate('/'); // <-- Go to Home
-      setFormValue(defaultFormValue);
+      setStatusMessage(`Entry ${title} successfully added. Got id ${id}`);
+
+       navigate(`/edit-item/${id}`); // <-- Reset Page to show subitems
+      // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
-      setStatus(`Failed to add ${title}: ${error}`);
+      setStatusMessage(`Failed to add ${title}: ${error}`);
     }
   }
 
-  async function addSubEntry() {
-    try {
-      const title = formValues.title || 'Untitled';
-      if (!title) {
-        setStatus('Title is required');
-        return;
-      }
+  // async function addSubEntry() {
+  //   try {
+  //     const title = formValues.title || 'Untitled';
+  //     if (!title) {
+  //       setSt  atusMessage('Title is required');
+  //       return;   
+  //     }
 
-      // Ensure we have a valid parent ID
-      const parentId = parentID ? Number(parentID) : Number(itemID);
-      if (isNaN(parentId)) {
-        setStatus('Invalid parent ID for subentry');
-        return;
-      }
+  //     // Ensure we have a valid parent ID
+  //     const parentId = parentID ? Number(parentID) : Number(itemID);
+  //     if (isNaN(parentId)) {
+  //       setStatusMess  age('Invalid parent ID for subentry');
+  //       return;
+  //     }
 
-      const id = await db.subentries.add({
-        title: formValues.title,
-        fauxID: formValues.fauxID,
-        hexHash: '', // Add the missing hexHash field
-        description: formValues.description,
-        media: '',
-        subCategory: subCategories[0], // Default to first subcategory
-        date: formValues.date,
-        entryDate: formValues.entryDate,
-        parentId: parentId, // Link to the main entry
-        available: formValues.availableOnStart,
-        availableOnStart: formValues.availableOnStart,
-        researcherID: researcherIDs[0], // researcher who added the entry
-      });
+  //     const id = await db.subentries.add({
+  //       title: formValues.title,
+  //       fauxID: formValues.fauxID,
+  //       hexHash: '', // Add the missing hexHash field
+  //       description: formValues.description,
+  //       media: '',
+  //       subCategory: subCategories[0], // Default to first subcategory
+  //       date: formValues.date,
+  //       entryDate: formValues.entryDate,
+  //       parentId: parentId, // Link to the main entry
+  //       available: formValues.availableOnStart,
+  //       availableOnStart: formValues.availableOnStart,
+  //       researcherID: researcherIDs[0], // researcher who added the entry
+  //     });
 
-      setStatus(
-        `Subentry ${title} successfully added to parent ${parentId}. Got id ${id}`,
-      );
-      setFormValue(defaultFormValue);
-    } catch (error) {
-      setStatus(`Failed to add subentry ${title}: ${error}`);
-    }
-  }
+  //     setStatusMessage(
+  //       `Subentry ${title} successfully added to parent ${parentId}. Got id ${id}`,
+  //     );
+  //     setFormValue(defaultFormValue);
+  //   } catch (error) {
+  //     setStatusMessage(`Failed to add subentry ${title}: ${error}`);
+  //   }
+  // }
 
   // Manage state and input field
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -219,7 +219,7 @@ export function AddFriendForm({
         <p>{status}</p>
         <div className="row">
           <div className="col-3">
-            ID:
+            <div className="formLabel">ID:</div>
             {isNewEntry || isAdmin ? (
               <input
                 className="form-control"
@@ -242,7 +242,8 @@ export function AddFriendForm({
             )}
           </div>
           <div className="col">
-            Title:
+            <div className="formLabel">Title:</div>
+            
             <input
               className="form-control"
               type="text"
@@ -253,16 +254,9 @@ export function AddFriendForm({
             />
           </div>
         </div>
-        Description:
-        <input
-          className="form-control"
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={formValues.description}
-          onChange={handleChange}
-        />
-        Category:
+
+        <div className="row col">
+          <div className="formLabel">Category:</div>
         <select
           className="form-control form-control-dropdown"
           multiple={false}
@@ -275,30 +269,49 @@ export function AddFriendForm({
               {sub}
             </option>
           ))}
-        </select>{' '}
-        {isAdmin && <div className="adminOnly">"is admin"
+        </select>
+          </div>
+
+
+        <div className="row">
+           <div className="formLabel">Description:</div>
+            <textarea
+            rows={4}
+              className="form-control"
+              name="description"
+          placeholder="Description"
+          value={formValues.description}
+          onChange={handleChange}
+        />
+        </div>
+        
+        {isAdmin && <div className="row adminOnly">
           <input type="checkbox" checked={formValues.availableOnStart} onChange={handleChange} name="availableOnStart" />
           <label>available on start</label>
           <br />
 
 
 
-          </div>}
+          </div>
+  
+          }
+          
 
         {/* Only show Add Subentry button when not already a subentry. */}
-        {!isSubEntry ? (
-          <>
+        {!isSubEntry && itemID != 'new' ? (
+          <div className="row">
 
             <ListSubEntries itemID={itemID} />
 
-          </>
+          </div>
         ) : (
          <></>
         )
 
         }
-
+  <div className="save-buttons">
               {isNewEntry ? (
+              
           <button className="outline-primary" onClick={addEntry}>
             Add
           </button>
@@ -306,7 +319,9 @@ export function AddFriendForm({
           <button className="outline-warning" onClick={updateEntry}>
             Save
           </button>
+
         )}
+    </div>
     </div>
     </>
   );

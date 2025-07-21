@@ -8,7 +8,13 @@
   --div-border-color: #aeaeae;
   --div-border: 1px solid var(--div-border-color);
   --navbar-bg: white;
-  
+  --navbar-top-height: 50px;
+  --navbar-bottom-height: 18px;
+  --bg-remove-color: #f8d7da;
+  --bg-add-color: #d4edda;
+
+
+
 }
 
 
@@ -23,69 +29,8 @@ html {
   height: 100%;
 }
 
-button {
-  background-color: white;
-  padding: 5px 9px;
-  margin: 5px;
-  border-radius: 2px;
-  border: none;
-  appearance: none;
-  font-size: 1.1rem;
-  transition: all ease-in 0.1s;
-  cursor: pointer;
-  opacity: 0.9;
-}
 
-button:hover {
-  transform: scale(1.05);
-  opacity: 1;
-}
 
-li {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  height: fit-content;
-  width: fit-content;
-}
-
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-}
-
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-select[multiple] option:checked {
-  background: #007bff;
-  color: #fff;
-}
-
-.form-control {
-  width: 100%;
-
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-}
-
-.form-control-dropdown {
-  padding: none;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-  appearance: auto;
-  width: 50%;
-}
 
 /* Navbar styles */
 
@@ -93,7 +38,7 @@ select[multiple] option:checked {
   height: 100%;
 }
 .navbar-fixed-top {
-  height: 50px; /* must not use percents here, must be 80px*/
+  height: var(--navbar-top-height); /* must not use percents here, must be 80px*/
   background-color: var(--navbar-bg);
   border-bottom: var(--div-border);
 }
@@ -131,17 +76,17 @@ select[multiple] option:checked {
 /* Content styles */
 .content {
   position: fixed;
-  top: 80px;
-  bottom: 80px;
+  top: var(--navbar-top-height);
+  bottom: 18px;
   left: 0;
   right: 0;
   overflow: auto;
 }
 
 .content .row {
-  border-bottom: 2px solid #d3d3d3;
-  background-color: gray;
-  margin: 50px 0px 0px 0px;
+  border-bottom: var(--div-border);
+  margin: 0px 0px 5px 0px;
+  align-items: center;
 }
 
 .container {
@@ -149,12 +94,112 @@ select[multiple] option:checked {
   align-items: center;
   /* border: 1px blue solid; */
   /* leaves room for the menu bar */
-  /* padding-top: 80px; */
+  padding-top: 10px;
   /* //display: flex; */
 }
 
 #app {
   padding: 10px;
+}
+
+/* Page Specific Styles */
+
+.subentry-add-list{
+margin: 10px;
+    padding: 10px;
+    border: var(--div-border);
+    border-radius: 5px;
+    background-color: #fff;
+    width: 100%;
+}
+
+/* General styles */
+
+
+
+button {
+  background-color: white;
+  padding: 5px 9px;
+  margin: 5px;
+  border-radius: 2px;
+  border: none;
+  appearance: none;
+  font-size: 1.1rem;
+  transition: all ease-in 0.1s;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+  .btn-add-item {
+  background-color: var(--bg-add-color);
+  padding: 0.1rem 0.5rem;
+}
+
+.btn-remove-item {
+  background-color: var(--bg-remove-color);
+  padding: 0.1rem 0.5rem;
+}
+
+
+button:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  height: fit-content;
+  width: fit-content;
+}
+
+a:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+
+
+select[multiple] option:checked {
+  background: #007bff;
+  color: #fff;
+}
+
+/* Form styles */
+
+.formLabel{
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-right:5px;
+  display: inline-block;
+  display: block;
+}
+.form-control {
+  width: 100%;
+
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.form-control-dropdown {
+  padding: none;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  appearance: auto;
+  width: 50%;
+}
+
+.save-buttons{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .sidebar {
@@ -177,6 +222,24 @@ select[multiple] option:checked {
 
 table {
   width: -webkit-fill-available;
+}
+
+table.entryTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.entryTable tr {
+  border-bottom: 2px solid #ccc;
+  padding-bottom:5px;
+}
+
+table.entryTable .btn {
+  margin: 0 5px;
+  padding:0 5px;
+  height: 15px;
+  font-size:8px;
+  justify-self: right;
 }
 
 .databasetable {

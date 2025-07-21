@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
+    const navigate = useNavigate();
 
   return (
     // <div className="NavBar">
@@ -12,8 +14,15 @@ const NavBar = () => {
     // <div className="container-fluid">
     <nav className="navbar navbar-blend navbar-fixed-top">
       <div className="mainNavButtons">
+
+        <Button variant="outline-primary" style={{ width: '25px', padding:'2px' }} onClick={() => navigate(-1)}>
+          {'<<'}
+        </Button>{' '}
         <Link to="/">
           <Button variant="outline-primary">Home</Button>
+        </Link>{' '}
+         <Link to="/search">
+          <Button variant="outline-primary">Searchh</Button>
         </Link>{' '}
         
         <Link to="/user-profile">

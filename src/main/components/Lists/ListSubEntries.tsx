@@ -5,7 +5,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { AddSubEntryForm } from './AddSubEntryFunc';
+import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
 
 export function ListSubEntries({ itemID }: { itemID?: number }) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
@@ -37,19 +37,27 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
   };
 
   return (
-    <div className="List">
-      <h3>Sub Entries</h3>
+    <div className="subentry-add-list">
       {subEntryOfParent.length === 0 ? (
-        <p>No sub-entries found for parent {itemID}.</p>
+        <>
+        
+              <Button
+        variant= {toggleShowNewSubEntry ? 'remove-item' : 'add-item'} 
+        onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
+      >
+        {toggleShowNewSubEntry ? 'x' : 'Add Subentry'}
+      </Button></>
+        
       ) : (
+        <>
         <table>
           <tbody>
             {subEntryOfParent.map((item) => (
               <tr key={item.id}>
                 <td width="80%">
-                  {item.id} <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                  <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                     {item.fauxID} : {item.title}
-                  </Link> ParentID: {item.parentId}
+                  </Link>
                 </td>
                 <td>
                   <Button variant="outline-danger" onClick={() => removeItem(item)}>
@@ -60,14 +68,17 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
             ))}
           </tbody>
         </table>
-      )}
 
-      <Button
-        variant="outline-success"
+              <Button
+        variant= {toggleShowNewSubEntry ? 'remove-item' : 'add-item'} 
         onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
       >
-        {toggleShowNewSubEntry ? 'Cancel' : 'Add Subentry'}
+        {toggleShowNewSubEntry ? 'x' : '+'}
       </Button>
+      </>
+      )}
+
+
 
       {toggleShowNewSubEntry && (
         <AddSubEntryForm

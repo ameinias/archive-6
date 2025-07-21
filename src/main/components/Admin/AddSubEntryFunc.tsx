@@ -11,13 +11,14 @@ export function AddSubEntryForm({
   itemID?: string;
   parentID?: string;
 }) {
-  const [status, setStatus] = useState('');
+  const { status, setStatusMessage } = GameLogic();
   const [title, setName] = useState('');
   const navigate = useNavigate();
   let savedID: number = 0;
   const [isNewEntry, setNewEntry] = useState(false);
   const { isAdmin, toggleAdmin } = GameLogic();
-   const [parentFauxID, setparentFauxID] = useState('');
+   const [parentFauxFauxID, setparentFauxID] = useState('');
+
 
 
 
@@ -32,6 +33,8 @@ export function AddSubEntryForm({
     try {
       const parent = await db.friends.get(Number(parentID));
       const parentFauxID = parent?.fauxID || '';
+      setparentFauxID(parentFauxID);
+
       const lengthOfSiblings = await db.subentries.where('parentId').equals(Number(parentID)).toArray();
 
 
@@ -45,7 +48,7 @@ export function AddSubEntryForm({
 
 
   const defaultFormValue = {
-    fauxID: 'loading',
+    fauxID: generateNewID(),
     title: '',
     description: '',
     category: 'Object',
@@ -76,7 +79,7 @@ export function AddSubEntryForm({
       if (!itemID || itemID === 'new') {
         setFormValue(defaultFormValue);
         setNewEntry(true);
-        console.log('is new entry: ', isNewEntry);
+        console.log('Fetching data. Is new entry: ', isNewEntry);
         return;
       }
 
@@ -100,7 +103,7 @@ export function AddSubEntryForm({
           ' and ',
           formValues.fauxID,
         );
-        setStatus(
+        setStatusMessage(
           'Fetched entry:' +
             entry.fauxID +
             ' and ID:' +
@@ -122,23 +125,25 @@ export function AddSubEntryForm({
 
   const [formValues, setFormValue] = useState(defaultFormValue);
 
+
+// Save the entry to the database.
   async function updateSubEntry() {
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
-        setStatus('Title is required');
+        setStatusMessage('Title is required');
         return;
       }
 
       let idNumber = Number(itemID);
       if (isNaN(idNumber)) {
-        setStatus(savedID + 'is not a number');
+        setStatusMessage(savedID + 'is not a number');
         return;
       }
 
       db.subentries
         .update(idNumber, {
-                  title: formValues.title,
+        title: formValues.title,
         fauxID: formValues.fauxID,
         hexHash: '', // Add the missing hexHash field
         description: formValues.description,
@@ -153,18 +158,19 @@ export function AddSubEntryForm({
         })
         .then(function (updated) {
           if (updated)
-            setStatus(idNumber + ' was updated to ' + formValues.title);
-          else setStatus('Nothing was updated - no key:' + idNumber);
+            setStatusMessage(idNumber + ' was updated to ' + formValues.title);
+          else setStatusMessage('Nothing was updated - no key:' + idNumber);
         });
 
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
-      setStatus(`Failed to edit ${title} : ${error}`);
+      setStatusMessage(`Failed to edit ${title} : ${error}`);
       return;
     }
-    setStatus(`Entry ${title} successfully updated.`);
-    navigate(`/edit-item/${Number(parentID)}`);
+    setStatusMessage(`Entry ${title} successfully updated.`);
+    FinishEdit();
+   
   }
 
 
@@ -173,14 +179,14 @@ export function AddSubEntryForm({
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
-        setStatus('Title is required');
+        setStatusMessage('Title is required');
         return;
       }
 
       // Ensure we have a valid parent ID
       const parentIdCast = parentID ? Number(parentID) : Number(itemID);
       if (isNaN(parentIdCast)) {
-        setStatus('Invalid parent ID for subentry');
+        setStatusMessage('Invalid parent ID for subentry');
         return;
       }
 
@@ -199,15 +205,26 @@ export function AddSubEntryForm({
         researcherID: researcherIDs[0], // researcher who added the entry
       });
 
-      setStatus(
+      setStatusMessage(
         `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
       );
       setFormValue(defaultFormValue);
     } catch (error) {
-      setStatus(`Failed to add subentry ${title}: ${error}`);
+      setStatusMessage(`Failed to add subentry ${title}: ${error}`);
     }
-navigate(`/edit-item/${Number(parentID)}`);
+    FinishEdit();
+
   }
+
+    async function FinishEdit() {
+      const newFauxID = await generateNewID();
+      setFormValue({
+        ...defaultFormValue,
+        fauxID: newFauxID
+      });
+      setNewEntry(true);
+      console.log('FinishEdit called, new entry state:', isNewEntry);
+    }
 
   // Manage state and input field
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -222,14 +239,21 @@ navigate(`/edit-item/${Number(parentID)}`);
     <>
       <div className="SubEntry">
         {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>}
-        <p>{status}</p>
         <div className="row">
-          <div className="col-3">
-            Parent ID: {parentID}
+          {/* <div className="col-3">
+                          <input
+                className="form-control"
+                type="text"
+                name="fauxID"
+                placeholder="ID"
+                value={parentFauxFauxID}
+                onChange={handleChange}
+                readOnly
+              />
 
-          </div>
+          </div> */}
           <div className="col-3">
-            ID:
+           <div className="formLabel">ID:</div>
             {isNewEntry || isAdmin ? (
               <input
                 className="form-control"
@@ -252,7 +276,7 @@ navigate(`/edit-item/${Number(parentID)}`);
             )}
           </div>
           <div className="col">
-            Title:
+           <div className="formLabel">Title:</div>
             <input
               className="form-control"
               type="text"
@@ -263,20 +287,13 @@ navigate(`/edit-item/${Number(parentID)}`);
             />
           </div>
         </div>
-        Description:
-        <input
-          className="form-control"
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={formValues.description}
-          onChange={handleChange}
-        />
-        Category:
-        <select
-          className="form-control form-control-dropdown"
-          multiple={false}
-          value={formValues.category}
+                <div className="row">
+<div className="col-3">
+           <div className="formLabel">Category:</div>
+            <select
+              className="form-control form-control-dropdown"
+              multiple={false}
+              value={formValues.category}
           onChange={handleChange}
           name="category"
         >
@@ -285,20 +302,12 @@ navigate(`/edit-item/${Number(parentID)}`);
               {sub}
             </option>
           ))}
-        </select>{' '}
-        {isAdmin && <div className="adminOnly">
-          <input type="checkbox" checked={formValues.availableOnStart} onChange={handleChange} name="availableOnStart" />
-          <label>available on start</label>
-          <br />
+        </select>
+        {' '}
+        </div>
 
-
-
-          </div>}
-
-        {/* Only show Add Subentry button when not already a subentry. */}
-
-
-              Researcher:
+  <div className="col">
+             <div className="formLabel">Researcher:</div>
               <select className="form-control form-control-dropdown"
                 multiple={false} value={formValues.researcherID}
           onChange={handleChange} name="researcherID"
@@ -309,10 +318,35 @@ navigate(`/edit-item/${Number(parentID)}`);
             </option>
           ))}
         </select>
+        </div>
+        
+
+      </div>
+
+        <div className="row">
+           <div className="formLabel">Description:</div>
+            <textarea
+            rows={4}
+              className="form-control"
+              type="textarea"
+              name="description"
+          placeholder="Description"
+          value={formValues.description}
+          onChange={handleChange}
+        />
+        </div>
+
+
+
+
+        {isAdmin && <div className="adminOnly">
+          <input type="checkbox" checked={formValues.availableOnStart} onChange={handleChange} name="availableOnStart" />
+          <label>available on start</label>
           <br />
 
 
 
+          </div>}
 
 
               {isNewEntry ? (

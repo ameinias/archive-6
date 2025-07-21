@@ -12,6 +12,7 @@ import ImportExport from '../main/components/Admin/ImportExport';
 import StaticSingle from '../main/components/Static/StaticSingle';
 import AddSubEntry from '../main/components/Admin/AddSubEntry';
 import StyleTest from '../main/components/Style';
+import Search from '../main/components/Search/Search';
 
 // Component to track and restore route on hot reload
 function RouteTracker() {
@@ -36,7 +37,7 @@ export default function App() {
       console.log('Last route from localStorage:', lastRoute);
 
       if (lastRoute) {
-        const validRoutes = ['/', '/user-profile', '/import-export'];
+        const validRoutes = ['/', '/user-profile', '/import-export','search', '/style', '/edit-item/new', '/edit-item/:id', '/add-subitem/:parentID', '/edit-subitem/:parentID/:itemID', '/entry/:id'];
         const isDynamicRoute = lastRoute.startsWith('/edit-item/') || lastRoute.startsWith('/entry/')  || lastRoute.startsWith('/single-item/') || lastRoute.startsWith('/edit-subitem/') || lastRoute.startsWith('/add-subitem/');
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="/import-export" element={<ImportExport />} />
           <Route path="/entry/:id" element={<StaticSingle />} />
           <Route path="/style" element={<StyleTest />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </div>
       </div>

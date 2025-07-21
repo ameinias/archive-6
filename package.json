@@ -188,7 +188,7 @@
     "webpack-merge": "^6.0.1"
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "archive-5",
     "appId": "org.erb.ElectronReact",
     "asar": true,
     "afterSign": ".erb/scripts/notarize.js",

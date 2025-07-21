@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Dexie from 'dexie';
-import { db } from '../utils/db'; // import the database
+import { db } from '../../utils/db'; // import the database
 import 'dexie-export-import'; // Import the export/import addon
-import { GameLogic } from '../utils/gamelogic';
+import { GameLogic } from '../../utils/gamelogic';
 
 const notHookedUp = () => {
   console.log("This feature is not hooked up yet. Please check back later.");
@@ -28,12 +28,40 @@ const handleExport = async () => {
     a.remove();
     URL.revokeObjectURL(url);
     console.log("Export complete");
-    setStatus("Export started, check your downloads folder.");
+    setStatusMessage("Export started, check your downloads folder.");
   } catch (error) {
     console.error('' + error);
   }
 };
 
+
+
+const newGame =async () => {
+// Close the current database
+    await db.close();
+
+    // Delete the current database
+    await db.delete();
+
+     const response = await fetch('/assets/databases/dexie-import.json');
+  if (!response.ok) {
+    throw new Error('Failed to fetch database file');
+  }
+  const blob = await response.blob();
+  const file = new File([blob], 'dexie-import.json', { type: 'application/json' });
+
+    // Import the file and get the new database instance
+    const importedDb = await Dexie.import(blob, {
+      progressCallback: (progress) => {
+        console.log(`Import progress: ${progress.completedRows}/${progress.totalRows} rows`);
+      }
+    });
+
+    console.log("Import complete");
+
+    // Reopen the original database to refresh it
+    await db.open();
+}
 
 const handleImport = async (file) => {
   try {
@@ -93,12 +121,21 @@ const handleDrop = async (event) => {
 
 function ImportExport() {
   const { isAdmin, toggleAdmin } = GameLogic();
-    const [status, setStatus] = useState('');
+    const { setStatusMessage } = GameLogic();
 
   return (
     <>
       <h3>Database Info</h3>
       <span>Various database related tasks.</span>
+
+      <div className="row" style={{
+    display: "flex",
+    justifyContent: "center"
+  }}>
+        <Button variant="primary" onClick={newGame}>
+          New Game
+        </Button>
+      </div>
       <br />
       <div className="row align-items-start databasetable">
         <div className="col"><b>Admin: </b>{isAdmin ? "Yes" : "No"}</div>
@@ -177,6 +214,9 @@ function ImportExport() {
 
 
 {/*<Button variant="primary" className="mt-3" onClick={handleClear}>Clear Database</Button>  */}
+
+<Link to="/style">Style</Link>
+
      </>
   )
 }
