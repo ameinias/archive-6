@@ -26,16 +26,21 @@ export function StaticList() {
 
       <table className="entryTable">
         <tbody>
-          {sortedFriends.map((item) => (
-            <tr key={item.id}>
-              <td width="80%">
-                <Link to={`/entry/${item.id}`}>
-                  {item.fauxID} : {item.title}
-                  </Link>  </td><td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}
-                
-              </td>
+          {sortedFriends.length === 0 ? (
+            <tr>
+              <td colSpan={2}>No Entries!<br/>Hit <Link to="/import-export">Admin</Link> / New Game to get the starter database while work in progress.</td>
             </tr>
-          ))}
+          ) : (
+            sortedFriends.map((item) => (
+              <tr key={item.id}>
+                <td width="80%">
+                  <Link to={`/entry/${item.id}`}>
+                    {item.fauxID} : {item.title}
+                  </Link>
+                </td>
+                <td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}</td>
+              </tr>
+            )))}
         </tbody>
       </table>
     </div>

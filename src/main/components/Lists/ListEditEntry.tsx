@@ -41,6 +41,11 @@ export function EntryList() {
 
       <table className="entryTable">
         <tbody>
+          {sortedFriends.length === 0 ? (
+            <tr>
+              <td colSpan={3}>No Entries!<br/>Hit <Link to="/import-export">Admin</Link> / New Game to get the starter database while work in progress.</td>
+            </tr>
+          ) : (<>
           {sortedFriends.map((item) => (
             <tr key={item.id}>
               <td width="80%">
@@ -61,6 +66,8 @@ export function EntryList() {
               </td>
             </tr>
           ))}
+          </>
+          )}
         </tbody>
       </table>
 

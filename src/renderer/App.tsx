@@ -13,6 +13,11 @@ import StaticSingle from '../main/components/Static/StaticSingle';
 import AddSubEntry from '../main/components/Admin/AddSubEntry';
 import StyleTest from '../main/components/Style';
 import Search from '../main/components/Search/Search';
+import { dbHelpers, newGameFromFile } from '../main/utils/db';
+
+
+
+// import { ImportExport } from 'ImportExport';
 
 // Component to track and restore route on hot reload
 function RouteTracker() {
@@ -27,6 +32,27 @@ function RouteTracker() {
 }
 
 export default function App() {
+
+// const newGame = async () => {
+//   if (!window.confirm("Starting a new game will delete all current database entries. Proceed?")) {
+//     return;
+//   }
+//   const fileContents = await window.electronAPI.readAssetFile('assets/databases/dexie-import.json');
+//   await newGameFromFile(fileContents);
+//   // Optionally set status message here
+// };
+
+
+//   useEffect(() => {
+//   dbHelpers.isEmpty().then(isEmpty => {
+//     if (isEmpty) {
+//       // Call your newGame or handleImport logic here
+//       newGame();
+//     }
+//   });
+// }, []);
+
+
   // Get the initial route synchronously before render
   const getInitialRoute = () => {
     const restoreLastRoute = localStorage.getItem('restoreLastRoute') !== 'false';

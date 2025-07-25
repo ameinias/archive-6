@@ -83,6 +83,8 @@ const dbHelpers = {
     };
   },
 
+  
+
   // Get all subentries for a main entry
   async getSubentriesForEntry(entryId: number) {
     return await db.subentries.where('parentId').equals(entryId).toArray();
@@ -102,10 +104,34 @@ const dbHelpers = {
   async deleteEntryWithSubentries(entryId: number) {
     await db.subentries.where('parentId').equals(entryId).delete();
     await db.friends.delete(entryId);
+  },
+    async isEmpty() {
+    const count = await db.friends.count();
+    return count === 0;
   }
+
 };
 
+export async function newGameFromFile(assetPath: string): Promise<void> {
+  // Close and delete the current database
+  await db.close();
+  await db.delete();
 
+  // Read the file using the preload API (call this from renderer, not here)
+  // This function expects the file contents to be passed in
+  // So you can keep file reading in the renderer for flexibility
+
+  // Example usage in renderer:
+  // const fileContents = await window.electronAPI.readAssetFile(assetPath);
+  // await newGameFromFile(fileContents);
+
+  // Import the file and get the new database instance
+  const blob = new Blob([assetPath], { type: 'application/json' });
+  await Dexie.import(blob);
+
+  // Reopen the database
+  await db.open();
+}
 
 export type { dbMainEntry, dbSubEntry, bothEntries };
 export { db, dbHelpers };

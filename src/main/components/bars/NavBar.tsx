@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
+import { dbHelpers, newGameFromFile } from '../../utils/db';
+
 
 const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
+
+  //     useEffect(() => {
+  //   dbHelpers.isEmpty().then(async (isEmpty) => {
+  //     if (isEmpty) {
+  //       const fileContents = await window.electronAPI.readAssetFile('assets/databases/dexie-import.json');
+  //       await newGameFromFile(fileContents);
+  //     }
+  //   });
+  // }, []);
+
+const resizeWindow = () => {
+
+  if (!window){
+    console.error("electronAPI is not defined on window");
+    return;
+  }
+  if (window.electronAPI?.resizeToDefault) {
+    window.electronAPI.resizeToDefault();
+    console.log("i tried to resize");
+  } else{
+console.log("i failed to resize, can't fine window.electronAPI");
+  }
+  
+};
+
+
+
+
 
   return (
     // <div className="NavBar">
@@ -18,6 +48,7 @@ const NavBar = () => {
         <Button variant="outline-primary" style={{ width: '25px', padding:'2px' }} onClick={() => navigate(-1)}>
           {'<<'}
         </Button>{' '}
+
         <Link to="/">
           <Button variant="outline-primary">Home</Button>
         </Link>{' '}
@@ -49,7 +80,10 @@ const NavBar = () => {
             title="eventually this will be a log in at the beginning of the game, displayed like this for testing."
           >
             {isAdmin ? 'Switch' : 'Switch'}
-          </Button>
+          </Button> {''}
+                    <Button title="Resize Window" variant="outline-secondary" onClick={resizeWindow}>
+    [ ]
+  </Button>{' '}
            </div>
         </div>
 

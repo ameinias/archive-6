@@ -1,8 +1,12 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+// import fs from 'fs';
+// import path from 'path';
 
 export type Channels = 'ipc-example';
+
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
 
 const electronHandler = {
   ipcRenderer: {
@@ -24,6 +28,19 @@ const electronHandler = {
   },
 };
 
-contextBridge.exposeInMainWorld('electron', electronHandler);
+
+
+
+// const fs = require('fs');
+// const path = require('path');
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  readAssetFile: (relativePath: string) =>
+    ipcRenderer.invoke('read-asset-file', relativePath),
+  resizeToDefault: () => ipcRenderer.send('resize-to-default')
+});
+
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSTLOADED');
+
 
 export type ElectronHandler = typeof electronHandler;

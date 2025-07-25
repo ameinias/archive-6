@@ -9,14 +9,14 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcRenderer, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
 import os from 'os';
-import { ipcRenderer } from 'electron';
+
 
 class AppUpdater {
   constructor() {
@@ -26,12 +26,21 @@ class AppUpdater {
   }
 }
 
+
+
 let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.on('resize-to-default', () => {
+  if (mainWindow) {
+    mainWindow.setSize(555, 555); // Set your default width and height
+    mainWindow.center();
+  }
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -93,23 +102,36 @@ const createWindow = async () => {
   // Load previous window state
   const windowState = loadWindowState();
 
+  console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + '../../.erb/dll/preload.js')
+
   mainWindow = new BrowserWindow({
     show: false,
-    width: windowState.width || 555,
+    width: windowState.width || 655,
     height: windowState.height || 555,
     x: windowState.x,
     y: windowState.y,
-    icon: getAssetPath('main/folder.png'),
+    icon: getAssetPath('icons/folder.png'),
     webPreferences: {
+      contextIsolation: true,
+        nodeIntegration: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
+        : path.join(__dirname, '../../.erb/dll/preload.js'), // ../../.erb/dll/preload.js
+         
     },
   });
+
+  console.log('Main window created with dimensions:', {
+    width: windowState.width || 555,
+    height: windowState.height || 555
+  }, 'app is packed: ', app.isPackaged);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
+ 
+    console.log('>>>>>>>>>>>>>' + __dirname + '../../.erb/dll/preload.js ' + app.isPackaged);
+
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -147,6 +169,7 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
+console.log('>>> main.ts is running');
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -163,9 +186,24 @@ app
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
+      console.log('>>> main.ts is running');
     });
   })
   .catch(console.log);
+
+//   ipcMain.handle('read-asset-file', (event, relativePath) => {
+//   const assetPath = path.join(__dirname, '..', '..', relativePath);
+//   return fs.readFileSync(assetPath, 'utf8');
+// });
+
+
+ipcMain.handle('read-asset-file', (event, relativePath) => {
+  const assetPath = app.isPackaged
+    ? path.join(process.resourcesPath, relativePath)
+    : path.join(__dirname, '../../', relativePath);
+  console.log('Reading asset from:', assetPath);
+  return fs.readFileSync(assetPath, 'utf8');
+});
 
 
 

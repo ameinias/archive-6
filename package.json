@@ -50,7 +50,9 @@
     "start:main": "concurrently -k -P \"cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --watch --config ./.erb/configs/webpack.config.main.dev.ts\" \"electronmon . -- {@}\" --",
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "jest"
+    "test": "jest",
+    "package:win": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" electron-builder --win --x64 --ia32 --publish never"
+    
   },
   "browserslist": [
     "extends browserslist-config-erb"
@@ -118,8 +120,7 @@
     "react-dom": "^19.0.0",
     "react-files": "^3.0.3",
     "react-fontawesome": "^1.7.1",
-    "react-router-dom": "^7.3.0",
-    "skeleton-framework": "^1.0.10"
+    "react-router-dom": "^7.3.0"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.7.1",
