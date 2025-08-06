@@ -94,9 +94,10 @@ if (foundSubItems) {
 
   return (
     <>
-    Fake
     <InputGroup className="searchBar">
       <input type="text" onChange={handleChange} 
+      className="form-control"
+      placeholder="Search by entry title"
       onKeyDown={e => {
       if (e.key === 'Enter') {
         searchItem(val);

@@ -52,7 +52,6 @@
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
     "package:win": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" electron-builder --win --x64 --ia32 --publish never"
-    
   },
   "browserslist": [
     "extends browserslist-config-erb"
@@ -115,6 +114,7 @@
     "electron-log": "^5.3.2",
     "electron-store": "^10.1.0",
     "electron-updater": "^6.3.9",
+    "quill": "^2.0.3",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.0.0",

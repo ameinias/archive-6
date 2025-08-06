@@ -53,7 +53,7 @@ console.log("i failed to resize, can't fine window.electronAPI");
           <Button variant="outline-primary">Home</Button>
         </Link>{' '}
          <Link to="/search">
-          <Button variant="outline-primary">Searchh</Button>
+          <Button variant="outline-primary">Search</Button>
         </Link>{' '}
         
         <Link to="/user-profile">

@@ -15,6 +15,12 @@ export function SearchResults({ results }: { results: any[] }) {
 
   return (
     <div className="subentry-add-list">
+      {results.length === 0 ? (
+        <>
+        No results to show.
+        </>
+        
+      ) : (
         <table>
           <tbody>
             {results.map((item) => (
@@ -31,7 +37,7 @@ export function SearchResults({ results }: { results: any[] }) {
             ))}
           </tbody>
         </table>
-     
+      )}
     </div>
   );
 }
