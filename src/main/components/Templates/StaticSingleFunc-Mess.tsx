@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
+import { StaticSubListItem } from '../Components/StaticSubListItem';
 
-export function ShowStaticSingle({ itemID }: { itemID?: number }) {
+export function StaticSingleMess({ itemID }: { itemID?: number }) {
   const { id } = useParams(); // get the id from the route
+  const gameState = GameLogic();
 
   const item = useLiveQuery(() => {
     const numericID = Number(itemID);
@@ -18,6 +20,7 @@ export function ShowStaticSingle({ itemID }: { itemID?: number }) {
     }
     return db.friends.get(numericID);
   }, [itemID]);
+
   const navigate = useNavigate();
   const [statusMessage, setStatusMessage] = useState<string>('');
 
@@ -28,14 +31,6 @@ const subEntryOfParent = useLiveQuery(() => {
   }
   return db.subentries.where('parentId').equals(numericID).toArray();
 }, [itemID]) || [];
-
-// Add this after the useLiveQuery calls for debugging:
-useEffect(() => {
-  console.log('ShowStaticSingle Debug:');
-  console.log('itemID prop:', itemID);
-  console.log('id from params:', id);
-  console.log('item from db:', item);
-}, [itemID, id, item]);
 
 
 
@@ -68,7 +63,7 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
 
 
   return (
-    <div className="List">
+    <div className={`List ${gameState.gameState.level > 0? 'haunted' : ''}`}>
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
         <div>
@@ -81,8 +76,8 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
           <b>Category:</b> {item.category}{' '}
         </div>
         <div>
-          <b>Description:</b> <br />
-          {item.description} <hr />
+          <b>Description:</b> <br /> <div className="jittery-text"> 
+          {item.description}</div> <hr />
 
              <section title="Media">  {/* Show media entries if they exist */}
           <br />
@@ -142,28 +137,42 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
       </section>
 
 
-<section title="Subentries"> {/* Show subentries if they exist */}
-                    <div>
+<section title="Subentries" className="subentry-add-list"> {/* Show subentries if they exist */}
+                    <div title="Subentries">
 
             {subEntryOfParent.map((item) => (
-              <div key={item.id}>
-                <div width="80%">
-                  <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-                    {item.fauxID} : {item.title}
-                  </Link>
-                </div>
-                <div className={`subentry-${item.id}`}>
-                  {item.description}
-                  <br />
-                  <span className='image-subinfo' style='float:right;' >
-                  - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
-                  </span>
-                </div>
-              </div>
+              // <div key={item.id}>
+              //   <div width="80%">
+              //     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+              //       {item.fauxID} : {item.title}
+              //     </Link>
+              //   </div>
+              //   <div className={`subentry-${item.id}`}>
+              //     <div className='rotate-text'>{item.description}</div>
+              //     {item.mediaSub.map((item) => (
+              //       <div key={item.id}>
+              //         <Link to={`/file-fullscreen/entry-${item.id}`}>
+              //           {item.name}
+              //         </Link>
+              //       </div>
+              //     ))}
+
+              //     <br />
+              //     <span className='image-subinfo subinfo'  >
+              //     - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
+              //     </span>
+              //   </div>
+              // </div>
+             <div> {item.id}  | {item.parentId}
+              <StaticSubListItem
+                itemID={item.id}
+                parentID={item.parentId}
+              />
+            </div>
             ))}
 
         </div>
-          <hr />
+
 </section>
 
         </div>{' '}
@@ -182,7 +191,8 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
               : 'No entry date'}
           </span>
         </div>
-      </div>
+
+      </div> {/* item.id */}
     </div>
   );
 }

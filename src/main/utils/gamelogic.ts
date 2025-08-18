@@ -13,15 +13,18 @@ let globalIsAdmin = (() => {
 let globalGameState = {
   score: 0,
   isGameOver: false,
+  level: 0
 };
 let globalStatus = '';
 let globalRemoveText = 'remove';
+
 
 // Array to store all update functions from components
 const adminUpdateCallbacks: Array<(isAdmin: boolean) => void> = [];
 const gameStateUpdateCallbacks: Array<(gameState: any) => void> = [];
 const gameStatusUpdateCallbacks: Array<(status: string) => void> = [];
 const removeTextUpdateCallbacks: Array<(removeText: string) => void> = [];
+
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);

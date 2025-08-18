@@ -9,6 +9,9 @@ Based on Electron-react-Boilerplate with Dexie db.
 * define things in utils/db.ts
 * catagory drop down options in constants.ts
 
+## put assets
+projects>assets(check this)
+
 ## todo
 [x] Populate SingleItem from edit button
 []  Cross referencing
@@ -39,6 +42,7 @@ Based on Electron-react-Boilerplate with Dexie db.
 * [Folder Icon](app.isPackaged) 
 
 <img src=".erb/img/erb-banner.svg" width="100%" />
+<a href="https://www.flaticon.com/free-icons/bookmark" title="bookmark icons">Bookmark icons created by Freepik - Flaticon</a>
 
 <br>
 

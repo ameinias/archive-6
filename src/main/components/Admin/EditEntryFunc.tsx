@@ -5,11 +5,12 @@ import {
   categories,
   subCategories,
   researcherIDs,
+  entryTemplate,
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
 import { ListSubEntries } from '../Lists/ListSubEntries';
-import { MediaUpload } from '../bars/MediaUpload';
+import { MediaUpload } from './MediaUpload';
 
 export function AddEntryForm({
   itemID,
@@ -82,6 +83,7 @@ export function AddEntryForm({
     available: true,
     researcherID: researcherIDs[0],
     media: [],
+    template: 'default', // Optional field for template
   };
 
   // Initialize form values - if an ID came through, get that. If not, default empty.
@@ -112,6 +114,8 @@ export function AddEntryForm({
           availableOnStart: entry.availableOnStart || false,
           available: entry.available || false,
           media: entry.media || [],
+          template: entry.template || 'default',
+          bookmark: entry.bookmark || false,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -139,8 +143,7 @@ export function AddEntryForm({
       console.log('is new entry: ', isNewEntry);
     }
     fetchData();
-    // console.log('Fetched media files:', formValues.media.length, " " + formValues.media[0].name);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [itemID]);
 
   const [formValues, setFormValue] = useState(defaultFormValue);
@@ -172,6 +175,8 @@ export function AddEntryForm({
           availableOnStart: formValues.availableOnStart,
           available: formValues.available,
           media: formValues.media,
+          template: formValues.template,
+          bookmark: formValues.bookmark,
         })
         .then(function (updated) {
           if (updated)
@@ -216,6 +221,8 @@ export function AddEntryForm({
         entryDate: formValues.entryDate,
         available: formValues.availableOnStart,
         availableOnStart: formValues.availableOnStart,
+        template: formValues.template,
+        bookmark: formValues.bookmark || false, // Optional field for bookmark
       });
 
       setStatusMessage(`Entry ${title} successfully added. Got id ${id}`);
@@ -320,10 +327,10 @@ export function AddEntryForm({
           <div className="col-3">
             {' '}
             {/*// ------ ID  ------*/}
-            <div className="formLabel">ID:</div>
+            <div className="formLabel col">ID:</div>
             {isNewEntry || isAdmin ? (
               <input
-                className={`form-control ${!isIDValid ? 'is-invalid' : ''}`}
+                className={`form-control ${!isIDValid ? 'is-invalid' : ''} col`}
                 type="text"
                 name="fauxID"
                 placeholder="ID"
@@ -333,7 +340,7 @@ export function AddEntryForm({
               />
             ) : (
               <input
-                className="form-control"
+                className="form-control col"
                 type="text"
                 name="fauxID"
                 placeholder="ID"
@@ -346,9 +353,9 @@ export function AddEntryForm({
           <div className="col">
             {' '}
             {/*// ------ Title  ------*/}
-            <div className="formLabel">Title:</div>
+            <div className="formLabel col">Title:</div>
             <input
-              className="form-control"
+              className="form-control col"
               type="text"
               name="title"
               placeholder="Title"
@@ -415,7 +422,7 @@ export function AddEntryForm({
           <MediaUpload mediaFiles={formValues.media} />
         </div>
 
-        {isAdmin && (
+      {isAdmin && (
           <div className="row adminOnly">
             <div className="row">
               {' '}
@@ -442,7 +449,38 @@ export function AddEntryForm({
                 name="available"
               />
             </div>
+                        <div className="row">
+              {' '}
+              {/*// ------ available  ------*/}
+              <label className="formLabel">bookmark</label>
+              <input
+                type="checkbox"
+                className="formLabel"
+                checked={formValues.bookmark}
+                onChange={handleCheckboxChange}
+                name="bookmark"
+              />
+            </div>
+        
+
+            {/*// ------ Template  ------*/}
+            <div className="row">
+            <div className="col-1 formLabel">Template:</div>
+            <select
+              className="form-control form-control-dropdown col"
+              multiple={false}
+              value={formValues.template}
+              onChange={handleChange}
+              name="template"
+            >
+              {entryTemplate.map((sub, i) => (
+                <option key={i} value={sub}>
+                  {sub}
+                </option>
+              ))}
+            </select>{' '}
           </div>
+          </div> // admin row 
         )}
 
         {/* Only show Add Subentry button when not already a subentry. */}

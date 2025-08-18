@@ -5,10 +5,12 @@ import {
   categories,
   subCategories,
   researcherIDs,
+  entryTemplate,
+  
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
-import { MediaUploadSub } from '../bars/MediaUploadSub';
+import { MediaUploadSub } from './MediaUploadSub';
 import { availableMemory } from 'process';
 import { useLiveQuery } from 'dexie-react-hooks';
 
@@ -30,6 +32,8 @@ export function AddSubEntryForm({
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
 
+
+ /* ------------------------  Generate entry functions --------*/
   // Create async function to generate new ID
   async function generateNewID(): Promise<string> {
     if (!parentID) return 'NEW-001';
@@ -87,6 +91,8 @@ export function AddSubEntryForm({
     }
   }
 
+
+   /* ------------------------  Handlers --------*/
   // Manage state and input field
   const handleIDChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -124,6 +130,7 @@ export function AddSubEntryForm({
     if (!message && isValid) setStatusMessage(''); // Clear on success
   };
 
+  /* ------------------------  Default Form Value --------*/
   const defaultFormValue = {
     fauxID: 'tempID',
     title: '',
@@ -136,6 +143,7 @@ export function AddSubEntryForm({
     mediaSub: [],
     subCategory: subCategories[0], // Default to first subcategory
     researcherID: researcherIDs[0],
+    template: 'default', // Optional field for template
   };
 
   //*    ---------------    UseEffect   ------------------ */
@@ -171,11 +179,13 @@ export function AddSubEntryForm({
           title: entry.title,
           description: entry.description,
           category: entry.subCategory,
-          date: entry.date || new Date(), // Handle optional date
+          date: entry.date || new Date(), 
           entryDate: entry.entryDate,
           availableOnStart: entry.availableOnStart || false,
           available: entry.available || false,
           mediaSub: entry.mediaSub || [],
+          template: entry.template || 'default',
+          bookmark: entry.bookmark || false,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -239,6 +249,8 @@ export function AddSubEntryForm({
           available: formValues.available,
           availableOnStart: formValues.availableOnStart,
           researcherID: researcherIDs[0], // researcher who added the entry
+          template: formValues.template, // Handle  template
+          bookmark: formValues.bookmark || false, // Handle optional bookmark
         })
         .then(function (updated) {
           if (updated)
@@ -284,6 +296,8 @@ export function AddSubEntryForm({
         available: formValues.available,
         availableOnStart: formValues.availableOnStart,
         researcherID: researcherIDs[0], // researcher who added the entry
+        template: formValues.template, // Handle  template
+        bookmark: formValues.bookmark || false, // Handle optional bookmark
       });
 
       setStatusMessage(
@@ -506,7 +520,42 @@ export function AddSubEntryForm({
                 name="available"
               />
             </div>
-          </div>
+            
+            <div className="row">
+              {' '}
+              {/*// ------ bookmark  ------*/}
+              <label className="formLabel">bookmark</label>
+              <input
+                type="checkbox"
+                className="formLabel"
+                checked={formValues.bookmark}
+                onChange={handleCheckboxChange}
+                name="bookmark"
+              />
+            </div>
+
+                        <div className="row">
+                        <div className="col-1 formLabel">Template:</div>
+                        <select
+                          className="form-control form-control-dropdown col"
+                          multiple={false}
+                          value={formValues.template}
+                          onChange={handleChange}
+                          name="template"
+                        >
+                          {entryTemplate.map((sub, i) => (
+                            <option key={i} value={sub}>
+                              {sub}
+                            </option>
+                          ))}
+                        </select>{' '}
+                      </div>
+          </div> // admin row
+
+
+
+
+
         )}
 
         <div className="save-buttons">

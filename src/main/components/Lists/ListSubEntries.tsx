@@ -55,6 +55,9 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
             <tbody>
               {subEntryOfParentLQ.map((item) => (
                 <tr key={item.id}>
+                               <> This is what I added: {item.id}  | {item.parentId}
+                       
+                              </>
                   <td width="80%">
                     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                       {item.fauxID} : {item.title}
@@ -75,7 +78,7 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
             variant={toggleShowNewSubEntry ? 'remove-item' : 'add-item'}
             onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
           >
-            {toggleShowNewSubEntry ? 'x' : '+'}
+            {toggleShowNewSubEntry ? 'x' : 'Add SubEntry'}
           </Button>
         </>
       )}

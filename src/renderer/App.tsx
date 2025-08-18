@@ -7,16 +7,16 @@ import Home from '../main/components/Home';
 import UserProfile from '../main/components/UserProfile';
 import NavBar from '../main/components/bars/NavBar';
 import StatusBar from '../main/components/bars/StatusBar';
-import AddEntry from '../main/components/Admin/EditEntry';
+import AddEntry from '../main/components/Routes/EditEntry';
 import ImportExport from '../main/components/Admin/ImportExport';
-import StaticSingle from '../main/components/Static/StaticSingle';
-import AddSubEntry from '../main/components/Admin/AddSubEntry';
+import StaticSingle from '../main/components/Routes/StaticSingle';
+import AddSubEntry from '../main/components/Routes/AddSubEntry';
 import StyleTest from '../main/components/Style';
 import Search from '../main/components/Search/Search';
 import { dbHelpers, newGameFromFile } from '../main/utils/db';
 import { GameLogic } from '../main/utils/gamelogic';
-import FileFullscreen from '../main/components/Static/FileFullScreen';
-
+import FileFullscreen from '../main/components/Templates/FileFullScreen';
+import Bookmarks from '../main/components/Search/Bookmarks';
 
 
 // import { ImportExport } from 'ImportExport';
@@ -81,12 +81,14 @@ export default function App() {
           '/edit-item/:id',
           '/add-subitem/:parentID',
           '/edit-subitem/:parentID/:itemID',
+          '/bookmarks',
           '/entry/:id'];
         const isDynamicRoute = lastRoute.startsWith('/edit-item/')
         || lastRoute.startsWith('/entry/')
         || lastRoute.startsWith('/single-item/')
         || lastRoute.startsWith('/edit-subitem/')
         || lastRoute.startsWith('/add-subitem/')
+        // || lastRoute.startsWith('/add-subitem/')
         || lastRoute.startsWith('/file-fullscreen/');
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
@@ -107,7 +109,7 @@ export default function App() {
   return (
     <Router initialEntries={[initialRoute]}>
       <RouteTracker />
-      <div>
+      <div className="wrapper">
       <NavBar />
       <div className="content">
       <div className="container">
@@ -122,6 +124,7 @@ export default function App() {
           <Route path="/style" element={<StyleTest />} />
           <Route path="/search" element={<Search />} />
           <Route path="/file-fullscreen/:fileID" element={<FileFullscreen />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
           {/* <Route path="/file-fullscreen/:id" element={<FileFullscreen />} /> */}
         </Routes>
       </div>

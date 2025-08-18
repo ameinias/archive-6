@@ -20,6 +20,8 @@ interface dbMainEntry {
   entryDate: Date;
   available: boolean; //  field to indicate availability
   availableOnStart: boolean; //  field to indicate if available on start
+  template: string; // Optional field for template
+  bookmark?: boolean;
 }
 
 interface dbSubEntry {
@@ -36,14 +38,20 @@ interface dbSubEntry {
   parentId: number; // Changed to number to match the main entry's id
   available: boolean; //  field to indicate availability
   availableOnStart: boolean; //  field to indicate if available on start
+  template: string; // Optional field for template
+  bookmark?: boolean;
 }
 
-interface bothEntries {
-  id: number; //real id
+
+// This is for search and bookmark results
+interface bothEntries { 
+  id: number; // id of search database
+  origin: number; // index in og datrabase
   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
   title: string;
   date?: Date;
   type: 'main' | 'sub'; // Type to distinguish between main and sub entries
+  parentId?: number; // Include parentId for subentries
 }
 
 const db = new Dexie('gb-current') as Dexie & {
@@ -63,8 +71,8 @@ const db = new Dexie('gb-current') as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart', // Removed subItems
-  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart' // Fixed spelling and added parentId index
+  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template' // Fixed spelling and added parentId index
 });
 
 

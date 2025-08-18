@@ -44,32 +44,46 @@ export function EntryList() {
         <tbody>
           {sortedFriends.length === 0 ? (
             <tr>
-              <td colSpan={3}>No Entries!<br/>Hit <Link to="/import-export">Admin</Link> / New Game to get the starter database while work in progress.</td>
-            </tr>
-          ) : (<>
-          {sortedFriends.map((item) => (
-            <tr key={item.id}>
-              <td width="80%">
-                <Link to={`/edit-item/${item.id}`}>
-                  {item.fauxID} : {item.title}
-                </Link>
-                </td><td>
-                   {item.media?.length > 0 ? (
-                  <div className="note">{item.media?.length}</div>) : null}</td>
-
-                <td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}
-
-              </td>
-              <td>
-                {' '}
-                <Button
-                  className="remove-button button-small remove-button-small"
-                  onClick={() => removeItem(item)}
-                >               </Button>
+              <td colSpan={3}>
+                No Entries!
+                <br />
+                Hit <Link to="/import-export">Admin</Link> / New Game to get the
+                starter database while work in progress.
               </td>
             </tr>
-          ))}
-          </>
+          ) : (
+            <>
+              {sortedFriends.map((item) => (
+                <tr key={item.id}>
+                  <td width="80%">
+                    <Link to={`/edit-item/${item.id}`}>
+                      {item.fauxID} : {item.title}
+                    </Link>
+                  </td>
+                  <td>
+                    {item.media?.length > 0 ? (
+                      <div className="note">{item.media?.length}</div>
+                    ) : null}
+                  </td>
+                  
+
+                  <td>
+                    {item.date
+                      ? new Date(item.date).toLocaleDateString()
+                      : 'No date'}
+                  </td>
+                  <td>
+                    {' '}
+                    <Button
+                      className="remove-button button-small remove-button-small"
+                      onClick={() => removeItem(item)}
+                    >
+                      {' '}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </>
           )}
         </tbody>
       </table>

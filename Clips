@@ -1,0 +1,26 @@
+            {subEntryOfParent.map((item) => (
+              <div key={item.id}>
+                <div width="80%">
+                  <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                    {item.fauxID} : {item.title}
+                  </Link>
+                </div>
+                <div className={`subentry-${item.id}`}>
+                  {item.description}
+                  {item.mediaSub.map((item) => (
+                    <div key={item.id}>
+                      <Link to={`/file-fullscreen/entry-${item.id}`}>
+                        {item.name}
+                      </Link>
+                    </div>
+                  ))}
+
+                  <br />
+                  <span className='image-subinfo subinfo'  >
+                  - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
+                  </span>
+                </div>
+              </div>
+            ))}
+
+             <div className={`List ${gameState.gameState.level > 0? 'haunted' : ''}`}>

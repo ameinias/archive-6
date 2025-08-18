@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { GameLogic } from '../../utils/gamelogic';
-import { ShowStaticSingle } from './ShowStaticSingleFunc';
 import { AddEntryForm } from '../Admin/EditEntryFunc';
+import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
+import { GameLogic } from '../../utils/gamelogic';
 
-const StaticSingle = () => {
+const EditEntry = () => {
   const { id } = useParams(); // get the id from the route
   const { isAdmin } = GameLogic();
 
@@ -11,8 +11,7 @@ const StaticSingle = () => {
     <>
       {id ? (
         <>
-        {isAdmin ? ( <AddEntryForm itemID={id}/>) : ( <ShowStaticSingle itemID={id} />) }
-
+            <AddEntryForm itemID={id} />
         </>
       ) : (
         <div>No ID provided.</div>
@@ -21,4 +20,4 @@ const StaticSingle = () => {
   );
 };
 
-export default StaticSingle;
+export default EditEntry;

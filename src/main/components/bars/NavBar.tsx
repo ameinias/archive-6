@@ -59,6 +59,9 @@ console.log("i failed to resize, can't fine window.electronAPI");
         <Link to="/user-profile">
           <Button variant="outline-primary">User Profile</Button>
         </Link>
+                <Link to="/bookmarks">
+          <Button variant="outline-primary">Bookmarks</Button>
+        </Link>
         {isAdmin && (
           <>
             {' '}

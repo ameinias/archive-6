@@ -75,30 +75,32 @@ export function MediaUpload({ mediaFiles }: { mediaFiles: File[] }) {
 
   return (
     <div>
-      <div className="subentry-add-list">
-        {files.length === 0 ? (
-          <>No Attachments.</>
-        ) : (
-          <>
-
-                {files.map((file, index) => (
-                  <div className="media-thumbnail" key={index}>
-
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={file.name}
-                        style={{ width: '100%', height: 'auto' }}
-                      />
-                     <span className="image-subinfo"> {file.name} ({(file.size / 1024).toFixed(2)} KB)</span>{' '}
-                      <Button
-                        className="remove-button button-small remove-button-small"
-                        onClick={() => removeFile(index)}
-                      >                      </Button>
-                    </div>
-                ))}
-                </>
-        )}
-      </div>
+      {files.length === 0 ? (
+        <div className="subentry-add-list">
+          {gameLogic.isAdmin ? <>No Attachments.</> : <></>}
+        </div>
+      ) : (
+        <div className="subentry-add-list">
+          {files.map((file, index) => (
+            <div className="media-thumbnail" key={index}>
+              <img
+                src={URL.createObjectURL(file)}
+                alt={file.name}
+                style={{ width: '100%', height: 'auto' }}
+              />
+              <span className="image-subinfo">
+                {file.name} ({(file.size / 1024).toFixed(2)} KB)
+              </span>
+              <Button
+                className="remove-button button-small remove-button-small"
+                onClick={() => removeFile(index)}
+              >
+                Remove {/* ✅ FIXED: Added button text */}
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
 
       <input
         type="file"
@@ -107,9 +109,10 @@ export function MediaUpload({ mediaFiles }: { mediaFiles: File[] }) {
         style={{ display: 'none' }}
         id="fileInput"
       />
+
       <Button
         className="btn-add-item"
-        onClick={() => document.getElementById('fileInput').click()}
+        onClick={() => document.getElementById('fileInput')?.click()} 
       >
         Import Attachments
       </Button>

@@ -6,15 +6,25 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
+import { GameLogic } from '../../utils/gamelogic';
 
 export function SearchResults({ results }: { results: any[] }) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const gameLog = GameLogic();
+
+
+  const urlDirect = !gameLog.isAdmin ? 'entry' : 'edit-item';
+  const urlSubDirect = 'edit-subitem'; // Same for both admin and non-admin
 
 
   return (
     <div className="subentry-add-list">
+      
+
+
+
       {results.length === 0 ? (
         <>
         No results to show.
@@ -26,9 +36,29 @@ export function SearchResults({ results }: { results: any[] }) {
             {results.map((item) => (
               <tr key={item.id}>
                 <td width="80%">
-                 {item.id} <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-                    {item.fauxID} : {item.title}
-                  </Link>
+
+                    
+                 {item.id} {item.type === 'sub' ? 
+                 (
+                 
+                 <>  
+                 
+                 <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.title}</Link>
+
+                  </>
+                 ) 
+                 : (
+
+              <>  
+                  
+                    <Link to={`/${urlDirect}/${item.origin}`}>
+                                       {item.fauxID} : {item.title}
+                                     </Link>
+
+                                     </>
+                 )}
+
+
                 </td>
                 <td>
 
