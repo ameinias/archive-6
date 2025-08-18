@@ -11,7 +11,7 @@ export function StaticList() {
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
 
-  // Sort friends by date 
+  // Sort friends by date
   const sortedFriends = friends
     ? [...friends].sort((a, b) => {
         const dateA = a.date ? new Date(a.date).getTime() : 0;

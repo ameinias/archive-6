@@ -84,7 +84,7 @@ if (foundSubItems) {
 
     if (foundItems && foundItems.length > 0) {
       setResults(tempItems); // update state!
-      
+
     } else {
       setResults([]); // clear results if nothing foun
     }
@@ -95,7 +95,7 @@ if (foundSubItems) {
   return (
     <>
     <InputGroup className="searchBar">
-      <input type="text" onChange={handleChange} 
+      <input type="text" onChange={handleChange}
       className="form-control"
       placeholder="Search by entry title"
       onKeyDown={e => {
@@ -104,17 +104,17 @@ if (foundSubItems) {
       }
     }} title="search entries"
       value={val} />
-      <Button variant="outline-primary" 
-      onClick={() => searchItem(val)}    
-      
-  
+      <Button variant="outline-primary"
+      onClick={() => searchItem(val)}
+
+
   >Search</Button>
     </InputGroup>
 
           <SearchResults
             results={results}
           />
-   
+
       </>
 
 )

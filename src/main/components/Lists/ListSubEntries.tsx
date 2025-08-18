@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../utils/db'; // import the database
+import { db, dbSubEntry, dbHelpers } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
@@ -10,9 +10,11 @@ import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
 export function ListSubEntries({ itemID }: { itemID?: number }) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
   const navigate = useNavigate();
+  //const [subEntryOfParent, setSubEntries] = useState<dbSubEntry[]>([]);
+
 
   // Use useLiveQuery to automatically update when database changes
-  const subEntryOfParent = useLiveQuery(async () => {
+  const subEntryOfParentLQ = useLiveQuery(async () => {
     if (!itemID) return [];
 
     const parentId = Number(itemID);
@@ -38,47 +40,45 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
 
   return (
     <div className="subentry-add-list">
-      {subEntryOfParent.length === 0 ? (
+      {subEntryOfParentLQ.length === 0 ? (
         <>
-        
-              <Button
-        variant= {toggleShowNewSubEntry ? 'remove-item' : 'add-item'} 
-        onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
-      >
-        {toggleShowNewSubEntry ? 'x' : 'Add Subentry'}
-      </Button></>
-        
+          <Button
+            variant={toggleShowNewSubEntry ? 'remove-item' : 'add-item'}
+            onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
+          >
+            {toggleShowNewSubEntry ? 'x' : 'Add Subentry'}
+          </Button>
+        </>
       ) : (
         <>
-        <table>
-          <tbody>
-            {subEntryOfParent.map((item) => (
-              <tr key={item.id}>
-                <td width="80%">
-                  <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-                    {item.fauxID} : {item.title}
-                  </Link>
-                </td>
-                <td>
-                  <Button variant="outline-danger" onClick={() => removeItem(item)}>
-                    Remove
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <table>
+            <tbody>
+              {subEntryOfParentLQ.map((item) => (
+                <tr key={item.id}>
+                  <td width="80%">
+                    <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                      {item.fauxID} : {item.title}
+                    </Link>
+                  </td>
+                  <td>
+                    <Button
+                      variant="remove-button"
+                      onClick={() => removeItem(item)}
+                    ></Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-              <Button
-        variant= {toggleShowNewSubEntry ? 'remove-item' : 'add-item'} 
-        onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
-      >
-        {toggleShowNewSubEntry ? 'x' : '+'}
-      </Button>
-      </>
+          <Button
+            variant={toggleShowNewSubEntry ? 'remove-item' : 'add-item'}
+            onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
+          >
+            {toggleShowNewSubEntry ? 'x' : '+'}
+          </Button>
+        </>
       )}
-
-
 
       {toggleShowNewSubEntry && (
         <AddSubEntryForm
@@ -90,5 +90,3 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
     </div>
   );
 }
-
-

@@ -8,174 +8,110 @@ import {
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
-import { MediaUploadSub } from '../bars/MediaUploadSub';
-import { availableMemory } from 'process';
-import { useLiveQuery } from 'dexie-react-hooks';
+import { ListSubEntries } from '../Lists/ListSubEntries';
+import { MediaUpload } from '../bars/MediaUpload';
 
-export function AddSubEntryForm({
+export function AddEntryForm({
   itemID,
   parentID,
+  isSubEntry,
 }: {
   itemID?: string;
   parentID?: string;
+  isSubEntry?: boolean;
 }) {
   //*    ---------------    CONST  ------------------ */
   const { setStatusMessage } = GameLogic();
   const [title, setName] = useState('');
   const navigate = useNavigate();
+  const [status, setStatus] = useState('');
   let savedID: number = 0;
   const [isNewEntry, setNewEntry] = useState(false);
-  const { isAdmin, toggleAdmin } = GameLogic();
-  const [parentFauxFauxID, setparentFauxID] = useState('');
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
 
-  // Create async function to generate new ID
-  async function generateNewID(): Promise<string> {
-    if (!parentID) return 'NEW-001';
+  const { isAdmin, toggleAdmin } = GameLogic();
 
+  const generateNewID = async (): Promise<string> => {
     try {
-      const parent = await db.friends.get(Number(parentID));
-      const parentFauxID = parent?.fauxID || '';
-      setparentFauxID(parentFauxID);
+      // Get all existing IDs
+      const items = await db.friends.toArray();
+      const existingIDs = items.map((item) => item.fauxID);
 
-      const lengthOfSiblings = await db.subentries
-        .where('parentId')
-        .equals(Number(parentID))
-        .toArray();
+      // Extract numeric parts and find highest
+      const numericIDs = existingIDs
+        .filter((id) => id.startsWith('MX'))
+        .map((id) => parseInt(id.replace('MX', '')))
+        .filter((num) => !isNaN(num));
 
-      function findLowestGap(siblings: any[]): number {
-        // Extract numbers after the '-' from fauxIDs
-        const existingNumbers = siblings
-          .map((sibling) => {
-            const fauxID = sibling.fauxID || '';
-            const parts = fauxID.split('-');
-            if (parts.length >= 2) {
-              const number = parseInt(parts[1]);
-              return isNaN(number) ? null : number;
-            }
-            return null;
-          })
-          .filter((num) => num !== null) // Remove null values
-          .sort((a, b) => a - b); // Sort ascending
+      const highestID = numericIDs.length > 0 ? Math.max(...numericIDs) : 999;
+      console.log('Highest ID found:', highestID);
 
-        console.log('Existing numbers:', existingNumbers);
+      // Generate new ID (next sequential number)
+      let newID = highestID + 1;
 
-        // If no existing numbers, start at 1
-        if (existingNumbers.length === 0) {
-          return 1;
-        }
-
-        // Check for gap starting from 1
-        for (let i = 1; i <= existingNumbers.length + 1; i++) {
-          if (!existingNumbers.includes(i)) {
-            return i; // Found the first missing number
-          }
-        }
-
-        // If no gaps found, return next number in sequence
-        return Math.max(...existingNumbers) + 1;
+      // Ensure it's at least 1000
+      if (newID < 1000) {
+        newID = 1000;
       }
 
-      const nextNumber = findLowestGap(lengthOfSiblings);
-      console.log('Next available number:', nextNumber);
+      // Double-check uniqueness (shouldn't be needed with sequential, but safety first)
+      while (existingIDs.includes('MX' + newID)) {
+        newID++;
+      }
 
-      return `${parentFauxID || 'PARENT'}-${nextNumber || 1}`;
+      setStatusMessage(`Generated new ID: MX${newID}`);
+      return 'MX' + newID;
     } catch (error) {
       console.error('Error generating ID:', error);
-      return 'ERROR-001';
+      // Fallback to random number if database fails
+      const randomID = Math.floor(Math.random() * 9000) + 1000;
+      return 'MX' + randomID;
     }
-  }
-
-  // Manage state and input field
-  const handleIDChange = (e: { target: { name: any; value: any } }) => {
-    const { name, value } = e.target;
-    // Ensure the ID starts with 'MX' and is followed by numbers
-    if (!/^MX\d+$/.test(value)) {
-      setIDValidWithMessage(
-        false,
-        `ID ${value} must start with "MX" followed by numbers.`,
-      );
-      return;
-    }
-    //check if the ID is unique
-    db.subentries
-      .where('fauxID')
-      .equals(value)
-      .count()
-      .then((count) => {
-        if (count > 0) {
-          //setStatusMessage(`ID ${value} already exists. Please choose a different ID.`);
-          setIDValidWithMessage(false, `ID ${value} already exists.`);
-        } else {
-          setIDValidWithMessage(true);
-        }
-        setFormValue({
-          ...formValues,
-          [name]: value,
-        });
-      });
   };
 
-  const setIDValidWithMessage = (isValid: boolean, message?: string) => {
-    setIDValid(isValid);
-    setFormValid(isValid);
-    if (message) setStatusMessage(message);
-    if (!message && isValid) setStatusMessage(''); // Clear on success
-  };
-
+  // Update your defaultFormValue to use async ID generation
   const defaultFormValue = {
-    fauxID: 'tempID',
+    fauxID: 'MX0000', // Temporary ID
     title: '',
     description: '',
     category: 'Object',
     date: new Date(),
     entryDate: new Date(),
     availableOnStart: false, // Default to false
-    available: false, // Default to false
-    mediaSub: [],
-    subCategory: subCategories[0], // Default to first subcategory
+    available: true,
     researcherID: researcherIDs[0],
+    media: [],
   };
-
-  //*    ---------------    UseEffect   ------------------ */
-  // Generate the fauxID when component mounts or parentID changes
-  useEffect(() => {
-    async function setupNewEntry() {
-      if (isNewEntry && parentID) {
-        const newFauxID = await generateNewID();
-        setFormValue((prev) => ({
-          ...prev,
-          fauxID: newFauxID,
-        }));
-      }
-    }
-
-    setupNewEntry();
-  }, [isNewEntry, parentID]);
 
   // Initialize form values - if an ID came through, get that. If not, default empty.
   useEffect(() => {
     async function fetchData() {
       if (!itemID || itemID === 'new') {
-        setFormValue(defaultFormValue);
+        // setFormValue(defaultFormValue);
+        generateNewID().then((newID) => {
+          setFormValue((prev) => ({
+            ...prev,
+            fauxID: newID,
+          }));
+        });
         setNewEntry(true);
-        console.log('Fetching data. Is new entry: ', isNewEntry);
+        console.log('is new entry: ', isNewEntry);
         return;
       }
 
-      const entry = await db.subentries.get(Number(itemID));
+      const entry = await db.friends.get(Number(itemID));
       if (entry) {
         setFormValue({
           fauxID: entry.fauxID,
           title: entry.title,
           description: entry.description,
-          category: entry.subCategory,
+          category: entry.category,
           date: entry.date || new Date(), // Handle optional date
           entryDate: entry.entryDate,
           availableOnStart: entry.availableOnStart || false,
           available: entry.available || false,
-          mediaSub: entry.mediaSub || [],
+          media: entry.media || [],
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -203,6 +139,7 @@ export function AddSubEntryForm({
       console.log('is new entry: ', isNewEntry);
     }
     fetchData();
+    // console.log('Fetched media files:', formValues.media.length, " " + formValues.media[0].name);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemID]);
 
@@ -210,8 +147,7 @@ export function AddSubEntryForm({
 
   //*    ---------------    ENTRY FUNCTIONS  ------------------ */
 
-  // Save the entry to the database.
-  async function updateSubEntry() {
+  async function updateEntry() {
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
@@ -225,38 +161,43 @@ export function AddSubEntryForm({
         return;
       }
 
-      db.subentries
+      db.friends
         .update(idNumber, {
           title: formValues.title,
           fauxID: formValues.fauxID,
-          hexHash: '', // Add the missing hexHash field
           description: formValues.description,
-          mediaSub: formValues.mediaSub || [],
-          subCategory: subCategories[0], // Default to first subcategory
+          category: formValues.category,
           date: formValues.date,
           entryDate: formValues.entryDate,
-          parentId: Number(parentID), // Link to the main entry
-          available: formValues.available,
           availableOnStart: formValues.availableOnStart,
-          researcherID: researcherIDs[0], // researcher who added the entry
+          available: formValues.available,
+          media: formValues.media,
         })
         .then(function (updated) {
           if (updated)
-            setStatusMessage(idNumber + ' was updated to ' + formValues.title);
+            setStatusMessage(
+              idNumber +
+                ' ' +
+                formValues.fauxID +
+                ' was updated with ' +
+                formValues.media.length +
+                ' attachments',
+            );
           else setStatusMessage('Nothing was updated - no key:' + idNumber);
         });
 
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
-      setStatusMessage(`Failed to edit ${title} : ${error}`);
+      setStatusMessage(
+        `Failed to edit ${title}  & ${formValues.title}: ${error}`,
+      );
       return;
     }
-    setStatusMessage(`Entry ${title} successfully updated.`);
-    FinishEdit();
   }
 
-  async function addSubEntry() {
+  // Add the entry to the database
+  async function addEntry() {
     try {
       const title = formValues.title || 'Untitled';
       if (!title) {
@@ -264,65 +205,30 @@ export function AddSubEntryForm({
         return;
       }
 
-      // Ensure we have a valid parent ID
-      const parentIdCast = parentID ? Number(parentID) : Number(itemID);
-      if (isNaN(parentIdCast)) {
-        setStatusMessage('Invalid parent ID for subentry');
-        return;
-      }
-
-      const id = await db.subentries.add({
+      const id = await db.friends.add({
         title: formValues.title,
         fauxID: formValues.fauxID,
-        hexHash: '', // Add the missing hexHash field
+        hexHash: '',
         description: formValues.description,
-        mediaSub: formValues.mediaSub,
-        subCategory: subCategories[0], // Default to first subcategory
+        media: formValues.media,
+        category: formValues.category,
         date: formValues.date,
         entryDate: formValues.entryDate,
-        parentId: parentIdCast, // Link to the main entry
-        available: formValues.available,
+        available: formValues.availableOnStart,
         availableOnStart: formValues.availableOnStart,
-        researcherID: researcherIDs[0], // researcher who added the entry
       });
 
-      setStatusMessage(
-        `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
-      );
-      setFormValue(defaultFormValue);
+      setStatusMessage(`Entry ${title} successfully added. Got id ${id}`);
+      console.log('Saved attachments: ', formValues.media.length);
+      navigate(`/edit-item/${id}`); // <-- Reset Page to show subitems
+      // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
-      setStatusMessage(`Failed to add subentry ${title}: ${error}`);
+      setStatusMessage(`Failed to add ${title}: ${error}`);
     }
-    FinishEdit();
   }
-
-  async function FinishEdit() {
-    navigate(`/edit-item/${parentID}/`); // Go back to parent
-
-    // const newFauxID = await generateNewID();
-    // setFormValue({
-    //   ...defaultFormValue,
-    //   fauxID: newFauxID,
-    // });
-    // setNewEntry(true);
-    // console.log('FinishEdit called, new entry state:', isNewEntry);
-  }
-
-  const ListMediaEntriesLength =
-    useLiveQuery(async () => {
-      if (!itemID || itemID === 'new' || isNaN(Number(itemID))) {
-        return [];
-      }
-
-      const entry = await db.subentries.get(Number(itemID));
-      const mediaFiles = entry?.mediaSub || [];
-      return mediaFiles;
-    }, [itemID]) || [];
 
   async function removeCurrentEntry() {
-    if (
-      window.confirm(`Are you sure you want to delete "${formValues.title}"?`)
-    ) {
+    if (window.confirm(`Are you sure you want to delete "${formValues.title}"?`)) {
       try {
         const id = Number(itemID);
         if (isNaN(id)) {
@@ -330,9 +236,9 @@ export function AddSubEntryForm({
           return;
         }
 
-        await db.subentries.delete(id);
+        await db.friends.delete(id);
         setStatusMessage(`Entry ${formValues.title} successfully deleted.`);
-        navigate(`/edit-item/${parentID}/`); // Go back to parent
+        navigate('/'); // Go back to home
       } catch (error) {
         setStatusMessage(`Failed to delete ${formValues.title}: ${error}`);
       }
@@ -340,15 +246,7 @@ export function AddSubEntryForm({
   }
 
   //*    ---------------    HANDLERS  ------------------ */
-  // Manage state and input field
-  const handleChange = (e: { target: { name: any; value: any } }) => {
-    const { name, value } = e.target;
-    setFormValue({
-      ...formValues,
-      [name]: value,
-    });
-  };
-
+  // Checkbox handler
   const handleCheckboxChange = (e: {
     target: { name: any; checked: boolean };
   }) => {
@@ -359,41 +257,83 @@ export function AddSubEntryForm({
     });
   };
 
-  //*    --------------------------    RETURN  ------------------------------- */
+  // Manage state and input field
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    setFormValue({
+      ...formValues,
+      [name]: value,
+    });
+  };
 
+  // Manage state and input field
+  const handleIDChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    // Ensure the ID starts with 'MX' and is followed by numbers
+    if (!/^MX\d+$/.test(value)) {
+      setIDValidWithMessage(
+        false,
+        `ID ${value} must start with "MX" followed by numbers.`,
+      );
+      return;
+    }
+    //check if the ID is unique
+    db.friends
+      .where('fauxID')
+      .equals(value)
+      .count()
+      .then((count) => {
+        if (count > 0) {
+          //setStatusMessage(`ID ${value} already exists. Please choose a different ID.`);
+          setIDValidWithMessage(false, `ID ${value} already exists.`);
+        } else {
+          setIDValidWithMessage(true);
+        }
+        setFormValue({
+          ...formValues,
+          [name]: value,
+        });
+      });
+  };
+
+  const setIDValidWithMessage = (isValid: boolean, message?: string) => {
+    setIDValid(isValid);
+    setFormValid(isValid);
+    if (message) setStatusMessage(message);
+    if (!message && isValid) setStatusMessage(''); // Clear on success
+  };
+
+  const checkExistingID = async (id: string) => {
+    const count = await db.friends.where('fauxID').equals(id).count();
+    return count > 0;
+  };
+
+  //*    --------------------------    RETURN  ------------------------------- */
   return (
     <>
-      <div className="SubEntry">
-        {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>}
+      <div className="Single">
+        {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
+        <p>
+          {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
+        </p>
         <div className="row">
-          {/* <div className="col-3">
-                          <input
-                className="form-control"
-                type="text"
-                name="fauxID"
-                placeholder="ID"
-                value={parentFauxFauxID}
-                onChange={handleChange}
-                readOnly
-              />
-          </div> */}
-
           <div className="col-3">
             {' '}
             {/*// ------ ID  ------*/}
             <div className="formLabel">ID:</div>
             {isNewEntry || isAdmin ? (
               <input
-                className="form-control"
+                className={`form-control ${!isIDValid ? 'is-invalid' : ''}`}
                 type="text"
                 name="fauxID"
                 placeholder="ID"
                 value={formValues.fauxID}
-                onChange={handleIDChange}
+                onChange={handleIDChange} // ← Use the ID-specific handler
+                readOnly={!isNewEntry && !isAdmin}
               />
             ) : (
               <input
-                className="form-control-disabled"
+                className="form-control"
                 type="text"
                 name="fauxID"
                 placeholder="ID"
@@ -403,7 +343,6 @@ export function AddSubEntryForm({
               />
             )}
           </div>
-
           <div className="col">
             {' '}
             {/*// ------ Title  ------*/}
@@ -419,9 +358,9 @@ export function AddSubEntryForm({
           </div>
         </div>
         <div className="row">
-          <div className="col-3">
+          <div className="col-6">
             {' '}
-            {/*// ------ Category  ------*/}
+            {/*// ------ CATAGORY  ------*/}
             <div className="formLabel">Category:</div>
             <select
               className="form-control form-control-dropdown"
@@ -435,9 +374,8 @@ export function AddSubEntryForm({
                   {sub}
                 </option>
               ))}
-            </select>{' '}
+            </select>
           </div>
-
           <div className="col">
             {' '}
             {/*// ------ Researcher  ------*/}
@@ -457,7 +395,6 @@ export function AddSubEntryForm({
             </select>
           </div>
         </div>
-
         <div className="row">
           {' '}
           {/*// ------ Description  ------*/}
@@ -465,7 +402,6 @@ export function AddSubEntryForm({
           <textarea
             rows={4}
             className="form-control"
-            type="textarea"
             name="description"
             placeholder="Description"
             value={formValues.description}
@@ -475,12 +411,12 @@ export function AddSubEntryForm({
 
         <div className="row">
           {' '}
-          {/*// ------ Media Upload  ------*/}
-          <MediaUploadSub mediaSubFiles={formValues.mediaSub} />
+          {/*// ------ Media   ------*/}
+          <MediaUpload mediaFiles={formValues.media} />
         </div>
 
         {isAdmin && (
-          <div className="adminOnly">
+          <div className="row adminOnly">
             <div className="row">
               {' '}
               {/*// ------ Available on Start  ------*/}
@@ -509,38 +445,42 @@ export function AddSubEntryForm({
           </div>
         )}
 
+        {/* Only show Add Subentry button when not already a subentry. */}
+        {!isSubEntry && itemID != 'new' ? (
+          <div className="row">
+            {' '}
+            {/*// ------ subentries   ------*/}
+            <ListSubEntries itemID={itemID} />
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="save-buttons">
           {' '}
           {/*// ------ Save Buttons  ------*/}
           {isNewEntry ? (
-            <>
-              <Button
-                className="btn-save-add-item"
-                onClick={addSubEntry}
-                disabled={!isFormValid}
-              >
-                Add
-              </Button>
-            </>
+            <Button
+              className="btn-save-add-item"
+              onClick={addEntry}
+              disabled={!isFormValid}
+            >
+              Add
+            </Button>
           ) : (
             <>
-              <Button
-                className="btn-save-add-item"
-                onClick={updateSubEntry}
-                disabled={!isFormValid}
-              >
-                Save
-              </Button>
-              <Button
-                className="btn-save-add-item"
-                onClick={addSubEntry}
-                disabled={!isFormValid}
-              >
-                &laquo; Return
-              </Button>
-              <Button className="remove-button" onClick={removeCurrentEntry}>
-                Remove
-              </Button>
+            <Button
+              className="btn-save-add-item"
+              onClick={updateEntry}
+              disabled={!isFormValid}
+            >
+              Save
+            </Button>
+                        <Button
+              className="remove-button"
+              onClick={removeCurrentEntry}
+            >
+              Remove
+            </Button>
             </>
           )}
         </div>

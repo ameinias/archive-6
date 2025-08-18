@@ -5,12 +5,13 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { GameLogic } from '../../utils/gamelogic';
 
 export function EntryList() {
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
-  // const [friends, delEntry] = useState([]);
   const navigate = useNavigate();
+  const gameLogic = GameLogic();
 
   const removeItem = (item: any) => {
     if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
@@ -26,7 +27,7 @@ export function EntryList() {
     }
   };
 
-  // Sort friends by date 
+  // Sort friends by date
   const sortedFriends = friends
     ? [...friends].sort((a, b) => {
         const dateA = a.date ? new Date(a.date).getTime() : 0;
@@ -52,17 +53,19 @@ export function EntryList() {
                 <Link to={`/edit-item/${item.id}`}>
                   {item.fauxID} : {item.title}
                 </Link>
-                </td><td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}
-                
+                </td><td>
+                   {item.media?.length > 0 ? (
+                  <div className="note">{item.media?.length}</div>) : null}</td>
+
+                <td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}
+
               </td>
               <td>
                 {' '}
                 <Button
-                  variant="outline-danger"
+                  className="remove-button button-small remove-button-small"
                   onClick={() => removeItem(item)}
-                >
-                  R
-                </Button>
+                >               </Button>
               </td>
             </tr>
           ))}
@@ -84,11 +87,9 @@ export function EntryList() {
               <td>
                 {' '}
                 <Button
-                  variant="outline-danger"
+                  className="remove-button button-small remove-button-small"
                   onClick={() => removeSubentry(item)}
-                >
-                  X
-                </Button>
+                ></Button>
               </td>
             </tr>
           ))}

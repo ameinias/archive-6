@@ -9,6 +9,10 @@
   ];
     export const researcherIDs= [
     'RM','EQ'
+  ];
+      export const entryTemplate= [
+    'default',
+    'messed up'
   ]
 
 

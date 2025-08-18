@@ -1,30 +1,42 @@
 import React, { useState} from 'react';
 
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
-let globalIsAdmin = false;
+let globalIsAdmin = (() => {
+  try {
+    return localStorage.getItem('isAdmin') === 'true';
+  } catch (error) {
+    // Fallback for SSR or environments without localStorage
+    console.warn('localStorage not available:', error);
+    return false;
+  }
+})();
 let globalGameState = {
   score: 0,
   isGameOver: false,
 };
 let globalStatus = '';
+let globalRemoveText = 'remove';
 
 // Array to store all update functions from components
 const adminUpdateCallbacks: Array<(isAdmin: boolean) => void> = [];
 const gameStateUpdateCallbacks: Array<(gameState: any) => void> = [];
-
 const gameStatusUpdateCallbacks: Array<(status: string) => void> = [];
+const removeTextUpdateCallbacks: Array<(removeText: string) => void> = [];
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);
   const [gameState, setGameState] = useState(globalGameState);
   const [status, setStatus] = useState(globalStatus);
+  const [removeText, setRemoveText] = useState(globalRemoveText);
   const statusTimeOut = 5000; // 5 seconds
 
   // Register  update functions - so they can work globally in other scripts.
   React.useEffect(() => {
+
     adminUpdateCallbacks.push(setAdmin);
     gameStateUpdateCallbacks.push(setGameState);
     gameStatusUpdateCallbacks.push(setStatus);
+    removeTextUpdateCallbacks.push(setRemoveText);
 
     // Cleanup when component unmounts
     return () => {
@@ -36,6 +48,9 @@ export function GameLogic() {
 
        const statusIndex = gameStatusUpdateCallbacks.indexOf(setStatus);
       if (statusIndex > -1) gameStatusUpdateCallbacks.splice(statusIndex, 1);
+
+      const removeTextIndex = removeTextUpdateCallbacks.indexOf(setRemoveText);
+      if (removeTextIndex > -1) removeTextUpdateCallbacks.splice(removeTextIndex, 1);
     };
   }, []);
 
@@ -61,11 +76,12 @@ export function GameLogic() {
   const toggleAdmin = () => {
     globalIsAdmin = !globalIsAdmin;
     // Update all components that use this state
+    localStorage.setItem('isAdmin', JSON.stringify(globalIsAdmin));
     adminUpdateCallbacks.forEach(callback => callback(globalIsAdmin));
   };
 
   const setStatusMessage = (thestatus: string) => {
-    // This function can be used to set a status message in the footer. 
+    // This function can be used to set a status message in the footer.
     globalStatus = "status: " + thestatus;
     console.log(`${globalStatus}`);
     setStatus(globalStatus);
@@ -89,7 +105,9 @@ export function GameLogic() {
     endGame,
     increaseScore,
     toggleAdmin,
+    setAdmin,
     globalStatus,
-    setStatusMessage
+    setStatusMessage,
+    removeText,
    };
 }

@@ -6,7 +6,7 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels = 'ipc-example';
 
-console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
+// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
 
 const electronHandler = {
   ipcRenderer: {
@@ -40,7 +40,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   resizeToDefault: () => ipcRenderer.send('resize-to-default')
 });
 
-console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSTLOADED');
+// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSTLOADED');    fsdfsd
 
 
 export type ElectronHandler = typeof electronHandler;

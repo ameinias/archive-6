@@ -31,7 +31,7 @@ const resizeWindow = () => {
   } else{
 console.log("i failed to resize, can't fine window.electronAPI");
   }
-  
+
 };
 
 
@@ -55,7 +55,7 @@ console.log("i failed to resize, can't fine window.electronAPI");
          <Link to="/search">
           <Button variant="outline-primary">Search</Button>
         </Link>{' '}
-        
+
         <Link to="/user-profile">
           <Button variant="outline-primary">User Profile</Button>
         </Link>
@@ -65,7 +65,7 @@ console.log("i failed to resize, can't fine window.electronAPI");
             <Link to="/edit-item/new">
               <Button variant="outline-primary">New Entry</Button>
             </Link>{' '}
-            
+
             <Link to="/import-export">
               <Button variant="outline-primary">Admin</Button>
             </Link>{' '}

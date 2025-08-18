@@ -18,7 +18,7 @@ const UserProfile = () => {
               Toggle Restore Last Route
             </Button> */}
             <br />
-
+              <Link to={`http://blekkenhorst.ca`} target="_blank" rel="noopener noreferrer">blekkenhorst.ca</Link>
           </>
     )
 

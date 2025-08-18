@@ -14,6 +14,8 @@ import AddSubEntry from '../main/components/Admin/AddSubEntry';
 import StyleTest from '../main/components/Style';
 import Search from '../main/components/Search/Search';
 import { dbHelpers, newGameFromFile } from '../main/utils/db';
+import { GameLogic } from '../main/utils/gamelogic';
+import FileFullscreen from '../main/components/Static/FileFullScreen';
 
 
 
@@ -32,7 +34,9 @@ function RouteTracker() {
 }
 
 export default function App() {
+  const { isAdmin, setAdmin } = GameLogic();
 
+  // This was set up to automatically start a new game if the database is empty.
 // const newGame = async () => {
 //   if (!window.confirm("Starting a new game will delete all current database entries. Proceed?")) {
 //     return;
@@ -56,18 +60,37 @@ export default function App() {
   // Get the initial route synchronously before render
   const getInitialRoute = () => {
     const restoreLastRoute = localStorage.getItem('restoreLastRoute') !== 'false';
-    console.log('Restore last route setting:', restoreLastRoute);
+    //console.log('Restore last route setting:', restoreLastRoute);
+
+    //  setAdmin(localStorage.getItem('isAdmin') === 'true');
+     //console.log('Is admin:', isAdmin);
 
     if (restoreLastRoute) {
+
+
       const lastRoute = localStorage.getItem('lastRoute');
-      console.log('Last route from localStorage:', lastRoute);
+      //console.log('Last route from localStorage:', lastRoute);
 
       if (lastRoute) {
-        const validRoutes = ['/', '/user-profile', '/import-export','search', '/style', '/edit-item/new', '/edit-item/:id', '/add-subitem/:parentID', '/edit-subitem/:parentID/:itemID', '/entry/:id'];
-        const isDynamicRoute = lastRoute.startsWith('/edit-item/') || lastRoute.startsWith('/entry/')  || lastRoute.startsWith('/single-item/') || lastRoute.startsWith('/edit-subitem/') || lastRoute.startsWith('/add-subitem/');
+        const validRoutes = ['/',
+          '/user-profile',
+          '/file-fullscreen/:fileID',
+          '/import-export',
+          'search', '/style',
+          '/edit-item/new',
+          '/edit-item/:id',
+          '/add-subitem/:parentID',
+          '/edit-subitem/:parentID/:itemID',
+          '/entry/:id'];
+        const isDynamicRoute = lastRoute.startsWith('/edit-item/')
+        || lastRoute.startsWith('/entry/')
+        || lastRoute.startsWith('/single-item/')
+        || lastRoute.startsWith('/edit-subitem/')
+        || lastRoute.startsWith('/add-subitem/')
+        || lastRoute.startsWith('/file-fullscreen/');
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
-          console.log('Using last route:', lastRoute);
+        //  console.log('Using last route:', lastRoute);
           return lastRoute;
         } else {
           console.log('Invalid route, using default');
@@ -98,6 +121,8 @@ export default function App() {
           <Route path="/entry/:id" element={<StaticSingle />} />
           <Route path="/style" element={<StyleTest />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/file-fullscreen/:fileID" element={<FileFullscreen />} />
+          {/* <Route path="/file-fullscreen/:id" element={<FileFullscreen />} /> */}
         </Routes>
       </div>
       </div>

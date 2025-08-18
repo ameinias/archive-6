@@ -13,7 +13,7 @@ interface dbMainEntry {
   hexHash: string; // Eventually used to pull from the other database
   title: string;
   description: string;
-  thumbnail?: string;
+  media?: File[];
   category: string;
   // Remove subItems array - we'll query subentries by parentId instead
   date?: Date;
@@ -28,7 +28,7 @@ interface dbSubEntry {
   hexHash: string; // Eventually used to pull from the other database
   title: string;
   description?: string;
-  media?: string;
+  mediaSub?: string;
   researcherID: ResearcherID; // researcher who added the entry
   subCategory: string;
   date?: Date;
@@ -63,8 +63,8 @@ const db = new Dexie('gb-current') as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  friends: '++id, fauxID, title, description, thumbnail, category, date, entryDate, available, availableOnStart', // Removed subItems
-  subentries: '++id, fauxID, title, description, media, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart' // Fixed spelling and added parentId index
+  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart' // Fixed spelling and added parentId index
 });
 
 
@@ -83,7 +83,7 @@ const dbHelpers = {
     };
   },
 
-  
+
 
   // Get all subentries for a main entry
   async getSubentriesForEntry(entryId: number) {
@@ -108,9 +108,14 @@ const dbHelpers = {
     async isEmpty() {
     const count = await db.friends.count();
     return count === 0;
-  }
+  },
+
 
 };
+
+
+
+
 
 export async function newGameFromFile(assetPath: string): Promise<void> {
   // Close and delete the current database

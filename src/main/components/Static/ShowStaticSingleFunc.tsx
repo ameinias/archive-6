@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db } from '../../utils/db'; // import the database
+import { db, dbHelpers } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -9,62 +9,62 @@ import { Link } from 'react-router-dom';
 
 export function ShowStaticSingle({ itemID }: { itemID?: number }) {
   const { id } = useParams(); // get the id from the route
-  const item = useLiveQuery(() => db.friends.get(Number(itemID)), [itemID]);
+
+  const item = useLiveQuery(() => {
+    const numericID = Number(itemID);
+    if (!itemID || isNaN(numericID) || numericID <= 0) {
+      console.warn('Invalid itemID for database query:', itemID);
+      return null;
+    }
+    return db.friends.get(numericID);
+  }, [itemID]);
   const navigate = useNavigate();
+  const [statusMessage, setStatusMessage] = useState<string>('');
 
-
-
-  // const { isAdmin } = GameLogic();
-  // const { setStatusMessage } = GameLogic();
-
-  // // Initialize form values - if an ID came through, get that. If not, default empty.
-
-
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     if (!itemID) {
-  //           if (window.confirm(`ID not found, returning to list.`)) {
-  //             navigate('/');
-  //           }
-  //       return;
-  //     }
-
-  //     const entry = await db.friends.get(Number(itemID));
-  //     if (entry) {
-  //       console.log('Fetched entry:', entry);
-  //       setStatusMessage(
-  //         'Fetched entry:' +
-  //           entry.fauxID
-  //       );
-  //     }
-
-  //   }
-  //   fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [itemID]);
-
-  // const entry = useLiveQuery(async () => {
-  //   if (!itemID) return [];
-
-  //   const parentId = Number(itemID);
-  //   if (isNaN(parentId) || parentId <= 0) return [];
-
-  //   try {
-  //     return await db.subentries.where('parentId').equals(parentId).toArray();
-  //   } catch (error) {
-  //     console.error('Error fetching subentries:', error);
-  //     return [];
-  //   }
-  // }, [itemID]) || [];
-
-    // Use useLiveQuery to automatically update when database changes
 const subEntryOfParent = useLiveQuery(() => {
-
-  return db.subentries.where('parentId').equals(Number(itemID)).toArray();
+  const numericID = Number(itemID);
+  if (!itemID || isNaN(numericID) || numericID <= 0) {
+    return [];
+  }
+  return db.subentries.where('parentId').equals(numericID).toArray();
 }, [itemID]) || [];
 
-  if (!item) return <div>Loading...</div>;
+// Add this after the useLiveQuery calls for debugging:
+useEffect(() => {
+  console.log('ShowStaticSingle Debug:');
+  console.log('itemID prop:', itemID);
+  console.log('id from params:', id);
+  console.log('item from db:', item);
+}, [itemID, id, item]);
+
+
+
+  if (item === undefined) {
+    return <div>Loading...</div>;
+  }
+
+  if (item === null) {
+    return (
+      <div>
+        <h2>Item not found</h2>
+        <p>The requested item {itemID} could not be found in the database.</p>
+        <Button variant="primary" onClick={() => navigate('/')}>
+          Back to List
+        </Button>
+      </div>
+    );
+  }
+
+ // Helper function to determine if file is image or video
+function getFileType(filename: string): 'image' | 'video' | 'other' {
+  const ext: string | undefined = filename.toLowerCase().split('.').pop();
+  const imageExts: string[] = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
+  const videoExts: string[] = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
+
+  if (imageExts.includes(ext || '')) return 'image';
+  if (videoExts.includes(ext || '')) return 'video';
+  return 'other';
+}
 
 
   return (
@@ -83,7 +83,66 @@ const subEntryOfParent = useLiveQuery(() => {
         <div>
           <b>Description:</b> <br />
           {item.description} <hr />
-          
+
+             <section title="Media">  {/* Show media entries if they exist */}
+          <br />
+          <b>Media:</b>
+                <div className="subentry-add-list">
+        {!item.media || item.media.length === 0 ? (
+          <>No Attachments.</>
+        ) : (
+          <>
+            <table>
+              <tbody>
+                {item.media.map((file, index) => {
+                  // Check if it's actually a File object
+                  const isFile = file instanceof File;
+                  const fileType = getFileType(file.name || '');
+
+                  return (
+                    <tr key={index}>
+                      <td width="80%">
+                        <Link to={`/file-fullscreen/entry-${item.id}-${index}`} >
+                        {isFile && fileType === 'image' ? (
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={file.name}
+                            style={{ width: '100%', maxWidth: '300px', height: 'auto' }}
+                            onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))} // Cleanup
+                          />
+                        ) : isFile && fileType === 'video' ? (
+                          <video
+                            controls
+                            style={{ width: '100%', maxWidth: '300px', height: 'auto' }}
+                          >
+                            <source src={URL.createObjectURL(file)} />
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <div className="file-placeholder">
+                            📎 {file.name || `File ${index + 1}`}
+                          </div>
+                        )}</Link>
+
+                        <div>
+                          {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                        </div>
+                      </td>
+                      <td>
+                        {/* Empty for now */}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </>
+        )}
+      </div>
+      </section>
+
+
+<section title="Subentries"> {/* Show subentries if they exist */}
                     <div>
 
             {subEntryOfParent.map((item) => (
@@ -94,16 +153,19 @@ const subEntryOfParent = useLiveQuery(() => {
                   </Link>
                 </div>
                 <div className={`subentry-${item.id}`}>
-                  {item.description} - 
-                  {item.researcherID} | {item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'}
+                  {item.description}
+                  <br />
+                  <span className='image-subinfo' style='float:right;' >
+                  - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
+                  </span>
                 </div>
               </div>
             ))}
 
         </div>
           <hr />
-          <br />  
-          <b>Thumbnail:</b> <br />
+</section>
+
         </div>{' '}
         <div>
           <span>

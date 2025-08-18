@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { AddEntryForm } from './AddEntryFunc';
+import { AddEntryForm } from './EditEntryFunc';
 import { AddSubEntryForm } from './AddSubEntryFunc';
 import { GameLogic } from '../../utils/gamelogic';
 

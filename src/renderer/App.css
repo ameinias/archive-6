@@ -10,8 +10,9 @@
   --navbar-bg: white;
   --navbar-top-height: 50px;
   --navbar-bottom-height: 18px;
-  --bg-remove-color: #f8d7da;
-  --bg-add-color: #d4edda;
+  --bg-remove-color: #9b313a;
+  --bg-add-color: #50885d;
+    --bg-save-color: #5e3783;
 
 
 
@@ -48,7 +49,7 @@ html {
   padding: 0 10px;
   color:black;
   font-size: 0.8rem;
-  border: 1px solid #aeaeae; 
+  border: 1px solid #aeaeae;
 }
 
 .navbar .btn:hover {
@@ -130,15 +131,7 @@ button {
   opacity: 0.9;
 }
 
-  .btn-add-item {
-  background-color: var(--bg-add-color);
-  padding: 0.1rem 0.5rem;
-}
 
-.btn-remove-item {
-  background-color: var(--bg-remove-color);
-  padding: 0.1rem 0.5rem;
-}
 
 
 button:hover {
@@ -176,6 +169,7 @@ select[multiple] option:checked {
   margin-right:5px;
   display: inline-block;
   display: block;
+  width:auto;
 }
 .form-control {
   width: 100%;
@@ -193,7 +187,7 @@ select[multiple] option:checked {
   box-sizing: border-box;
   margin-bottom: 10px;
   appearance: auto;
-  width: 50%;
+  /* width: 50%; */
 }
 
 .save-buttons{
@@ -234,13 +228,13 @@ table.entryTable tr {
   padding-bottom:5px;
 }
 
-table.entryTable .btn {
+/* table.entryTable .btn {
   margin: 0 5px;
   padding:0 5px;
   height: 15px;
   font-size:8px;
   justify-self: right;
-}
+} */
 
 .databasetable {
   margin-top: 20px;
@@ -249,11 +243,138 @@ table.entryTable .btn {
 .adminOnly {
   border: 2px dotted #bbb;
   border-radius: 10px;
-  padding: 35px;
-  color: #bbb;
+  padding: 15px;
+  background-color: #f0f0f0;
 }
 
 .SubEntry {
   border: 1px solid black;
   padding: 13px;
+}
+
+.note{
+  padding:5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.media-thumbnail {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+  display: inline-block;
+  align-items: center;
+  max-width:220px;
+
+}
+
+.media-thumbnail img {
+  width:100%;
+  max-height: 100px;
+  margin-right: 10px;
+}
+
+
+
+/*                BUTTONS               */
+
+
+.btn-remove-item {
+  background-color: var(--bg-remove-color);
+  padding: 0.1rem 0.5rem;
+}
+
+
+
+.remove-button
+{
+
+  padding: 10px;
+  color: var(--bg-remove-color);
+  border: 1px solid var(--bg-remove-color);
+  border-radius: 5px;
+  background-color: #fff;
+  text-align: center;
+}
+.remove-button:hover {
+  background-color:var(--bg-remove-color);
+  border: 1px solid var(--bg-remove-color);
+  color: white;
+}
+
+.button-small {
+      padding:1px 2px;
+     min-width:25px;
+    height: 25px;
+    font-size:10px;
+}
+
+.remove-button-small:before {
+  content: "-";
+}
+
+.remove-button-small:hover:before {
+  content: "x";
+}
+
+.image-subinfo{
+  font-size: 0.8rem;
+  color: #555;
+  margin-left: 10px;
+      overflow-wrap: break-word;
+}
+
+
+.btn-add-item {
+margin: 10px 10%;
+  padding: 10px;
+  color: var(--bg-add-color);
+  border: 1px solid var(--bg-add-color);
+  border-radius: 5px;
+  background-color: #fff;
+  width: 80%;
+  text-align: center;
+}
+
+.btn-add-item:hover {
+  background-color: var(--bg-add-color);
+  border:0px;
+  color: white;
+
+}
+
+.btn-add-item {
+
+  padding: 10px;
+  color: var(--bg-add-color);
+  border: 1px solid var(--bg-add-color);
+  border-radius: 5px;
+  background-color: #fff;
+  /* width: 80%; */
+  text-align: center;
+}
+
+.btn-add-item:hover {
+  background-color: var(--bg-add-color);
+  border:0px;
+  color: white;
+  margin: 10px 10%;
+}
+
+.btn-save-add-item {
+
+  padding: 10px;
+  color: var(--bg-save-color);
+  border: 1px solid var(--bg-save-color);
+  border-radius: 5px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.btn-save-add-item:hover {
+
+  background-color: var(--bg-save-color);
+  border:0px;
+  color: white;
 }
