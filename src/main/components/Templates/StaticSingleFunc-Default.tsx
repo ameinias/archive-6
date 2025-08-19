@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
+import  BookMarkCheck  from '../Components/Bookmark-check';
 
 export function StaticSingleDefault({ itemID }: { itemID?: number }) {
   const { id } = useParams(); // get the id from the route
@@ -75,6 +76,9 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
       <div key={item.id}>
         <div>
           {' '}
+         <BookMarkCheck itemID={item.id} type="entry" />
+
+
           <h2>
             {item.fauxID} : {item.title}
           </h2>

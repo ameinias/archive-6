@@ -31,30 +31,30 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
 }
 
   const item = useLiveQuery(async () => {
-    if (!id) return null;
-    return await db.subentries.get(Number(id));
-  }, [id]);
+    if (!itemID) return null;
+    return await db.subentries.get(Number(itemID));
+  }, [itemID]);
 
     if (!item) {
     return <div>Loading...</div>;
   }
 
   if(item.available === false) {
-    return <div className="subEntry-not-available"><b>{item.fauxID} : </b> *****NOT AVAILABLE : DATA CORRUPTED*******</div>;
+    return <div className="subentry-staticentry subEntry-not-available"><h3>{item.fauxID} : </h3> *****NOT AVAILABLE : DATA CORRUPTED*******</div>;
   }
 
   return (
-    <div className={`List ${gameState.gameState.level > 0? 'haunted' : ''}`}>
+    <div className={`subentry-staticentry ${gameState.gameState.level > 0? 'haunted' : ''}`}>
 
           
         <div className='subentry-item'>
               <div key={item.id}>
                 <div width="80%">
-                  <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                 <h3> <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                     {item.fauxID} : {item.title}
-                  </Link>
+                  </Link></h3>
                 </div>
-                <div className={`subentry-${item.id}`}>
+                <div className={`subentry-desc subentry-${item.id}`}>
                   {item.description}
                   {item.mediaSub?.map((item) => (
                     <div key={item.id}>

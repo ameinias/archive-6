@@ -269,6 +269,26 @@ table.entryTable tr {
   padding: 13px;
 }
 
+.subentry-staticentry{
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+.subEntry-not-available{
+  color: darkred;
+  border: darkred 1px solid;
+  font-weight: bold;
+  background-color: #fdd;
+  padding: 10px;
+  border-radius: 5px;
+}
+.subentry-staticentry h3{
+  font-size: calc(1rem + 0.6vw);
+  font-weight: 500;
+}
+
 .note{
   padding:5px;
   border: 1px solid #ccc;
@@ -416,6 +436,25 @@ margin: 10px 10%;
   color: white;
 }
 
+.bookmark-btn
+{
+background-color: transparent;
+    padding: 1px 1px;
+    margin: 5px;
+    border-radius: 2px;
+    border: none;
+    appearance: none;
+    font-size: 1rem;
+    /* transition: all ease-in 0.1s;
+    cursor: pointer;
+    opacity: 0.9; */
+}
+
+.bookmark-btn:hover {
+ opacity: 0.5;
+
+}
+
 
 /*  ------------------  TEXT EFFECTS  ------------------------  */
 @keyframes jitter {
@@ -457,4 +496,8 @@ margin: 10px 10%;
 
 .rotate-text{
   rotate: 90deg;
+}
+
+.messy-sub-parent .subentry-desc{
+rotate: 90deg;
 }
