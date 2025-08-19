@@ -1,20 +1,3 @@
-{
-  "compilerOptions": {
-    "incremental": true,
-    "target": "es2022",
-    "module": "node16",
-    "lib": ["dom", "es2022"],
-    "jsx": "react-jsx",
-    "strict": true,
-    "sourceMap": true,
-    "moduleResolution": "node16",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "outDir": ".erb/dll"
-  },
-  "react-files": ["node_modules/react-files/dist/index.d.ts"],
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"],
-  "include": ["src", "src/types"]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fe580cebab19c8278644bbaf831f3068e6819b0c902465aae5afad6e9b14f263
+size 553

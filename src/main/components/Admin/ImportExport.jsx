@@ -102,7 +102,24 @@ function ImportExport() {
     dbHelpers.importFromBlob(
       new Blob([fileContents], { type: 'application/json' }),
     );
+
+    // clear bookmarks
+    await db.subentries.update(Number(itemID), { bookmark: false });
+    await db.friends.update(Number(itemID), { bookmark: false });
+    // clear available
+
+    
+    // make all availble on start available 
   };
+
+    const friends = useLiveQuery(() => db.friends.toArray());
+    const subentries = useLiveQuery(() => db.subentries.toArray());
+
+  const clearBookmarks = async () => {
+    friends.up
+
+
+  }
 
   const handleImport = async (file) => {
     try {
