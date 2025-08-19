@@ -100,7 +100,7 @@ height: var(--navbar-bottom-height);
 }
 
 .content .row {
-  border-bottom: var(--div-border);
+  /* border-bottom: var(--div-border); */
   margin: 0px 0px 5px 0px;
   align-items: center;
 }
@@ -313,6 +313,10 @@ table.entryTable tr {
   padding: 25px;
   border: var(--div-border);
   background-color: var(--div-island-bg);
+}
+
+.hashImport-div{
+  padding-bottom:25px;
 }
 
 

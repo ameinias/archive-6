@@ -57,11 +57,11 @@ interface bothEntries {
 const db = new Dexie('gb-current') as Dexie & {
   friends: EntityTable<
     dbMainEntry,
-    'id' // primary key "id" (for the typings only)
+    'id' 
   >;
   subentries: EntityTable<
     dbSubEntry,
-    'id' // primary key "id" (for the typings only)
+    'id' 
   >;
   export: (options?: any) => Promise<Blob>;
   import: (blob: Blob, options?: any) => Promise<Dexie>;
@@ -118,33 +118,28 @@ const dbHelpers = {
     return count === 0;
   },
 
+   async importFromBlob(blob: Blob): Promise<void> {
+    await db.close();
+    await db.delete();
+    
+    await Dexie.import(blob, {
+      progressCallback: (progress) => {
+        console.log(`Import progress: ${progress.completedRows}/${progress.totalRows} rows`);
+      },
+    });
+    
+    await db.open();
+  },
+
+  async exportToBlob(): Promise<Blob> {
+    return await db.export();
+  },
 
 };
 
 
 
 
-
-export async function newGameFromFile(assetPath: string): Promise<void> {
-  // Close and delete the current database
-  await db.close();
-  await db.delete();
-
-  // Read the file using the preload API (call this from renderer, not here)
-  // This function expects the file contents to be passed in
-  // So you can keep file reading in the renderer for flexibility
-
-  // Example usage in renderer:
-  // const fileContents = await window.electronAPI.readAssetFile(assetPath);
-  // await newGameFromFile(fileContents);
-
-  // Import the file and get the new database instance
-  const blob = new Blob([assetPath], { type: 'application/json' });
-  await Dexie.import(blob);
-
-  // Reopen the database
-  await db.open();
-}
 
 export type { dbMainEntry, dbSubEntry, bothEntries };
 export { db, dbHelpers };

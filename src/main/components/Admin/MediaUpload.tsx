@@ -95,7 +95,7 @@ export function MediaUpload({ mediaFiles }: { mediaFiles: File[] }) {
                 className="remove-button button-small remove-button-small"
                 onClick={() => removeFile(index)}
               >
-                Remove {/* ✅ FIXED: Added button text */}
+                
               </Button>
             </div>
           ))}

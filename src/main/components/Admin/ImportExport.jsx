@@ -3,12 +3,15 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Dexie from 'dexie';
-import { db } from '../../utils/db'; // import the database
+import { db, dbHelpers } from '../../utils/db'; // import the database
 import 'dexie-export-import'; // Import the export/import addon
 import { GameLogic } from '../../utils/gamelogic';
+// import { clear } from 'console';
+import HashImport from './HashImport';
 
 function ImportExport() {
   const { isAdmin, toggleAdmin, setStatusMessage } = GameLogic();
+  const [toggleHelp, setToggleHelp] = useState(false);
 
   const notHookedUp = () => {
     // Placeholder so links can be made
@@ -37,8 +40,44 @@ function ImportExport() {
     }
   };
 
-  const newGame = async () => {
+  const handleExportBlob = async () => {
+    try {
+      // Ensure the export function is available
+      if (typeof db.export !== 'function') {
+        throw new Error('dexie-export-import addon not properly loaded');
+      }
+      const blob = await db.export({ prettyJson: true });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dexie-export.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      console.log('Export complete');
+      setStatusMessage('Export started, check your downloads folder.');
+    } catch (error) {
+      console.error('' + error);
+    }
+  };
 
+  const clearDatabase = async () => {
+    setStatusMessage('Attempting to reset the database...');
+
+    if (
+      !window.confirm(`This will delete all current database entries. You may want to make a backup first. Proceed anyway?
+      `)
+    ) {
+      console.log('no');
+      return;
+    }
+    await db.close();
+    await db.delete();
+    db.open();
+  };
+
+  const newGameWithWarning = async () => {
     setStatusMessage('Attempting to reset the database...');
     console.log('No content found, importing NewGame Database');
 
@@ -50,45 +89,19 @@ function ImportExport() {
       return;
     } else {
       console.log('yes');
+      newGame();
     }
+  };
+  const newGame = async () => {
     setStatusMessage('got confirm.');
-  try {
-    // Close the current database
-    await db.close();
-    console.log('yes 2.5');
-
-    // Delete the current database
-    await db.delete();
-
-    console.log('yes a thies time');
 
     const fileContents = await window.electronAPI.readAssetFile(
       'assets/databases/dexie-import.json',
     );
-    setStatusMessage(`reading from assets/databases/dexie-import.json`, fileContents);
 
-    const blob = new Blob([fileContents], { type: 'application/json' });
-
-    // Import the file and get the new database instance
-    const importedDb = await Dexie.import(blob, {
-      progressCallback: (progress) => {
-        console.log(
-          `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
-        );
-        setStatusMessage(`Import progress: ${progress.completedRows}/${progress.totalRows} rows`);
-      },
-    });
-
-    console.log('Import complete');
-    setStatusMessage('Database reset.');
-
-
-    // Reopen the original database to refresh it
-    await db.open();
-
-  } catch (error) {
-    console.error('Import error:', error);
-  }
+    dbHelpers.importFromBlob(
+      new Blob([fileContents], { type: 'application/json' }),
+    );
   };
 
   const handleImport = async (file) => {
@@ -151,9 +164,11 @@ function ImportExport() {
 
   return (
     <>
-      <h3>Database Info</h3>
-      <span>Various database related tasks.</span>
-
+   <HashImport />
+    {isAdmin &&  (
+      <>
+      <h3>game import export</h3>
+ 
       <div
         className="row"
         style={{
@@ -161,21 +176,29 @@ function ImportExport() {
           justifyContent: 'center',
         }}
       >
-        <h2>New Game:</h2>
-        <span>Try this first:</span>
-        <Button variant="primary" onClick={newGame}>
+        <Button variant="primary" onClick={newGameWithWarning}>
           New Game
         </Button>
-        <span>If the database is still empty,  use the import feature and find the file at this location:</span>
-      <span>C:\path\to\app\archive-5\resources\assets\databases\dexie-import.json"</span>
-     <span>Sorry, this will be fixed in future releases!</span>
+         <Button
+            variant='toggleHelp'
+            onClick={() => setToggleHelp(!toggleHelp)}
+          >
+            {toggleHelp ? 'x' : 'TroubleShooting'}
+          </Button>
+         {toggleHelp && (<div>
+          <p>
+            If the database is still empty, use the import feature and find the
+            file at this location:
+          </p>
+          <code>
+            C:\path\to\app\archive-5\resources\assets\databases\dexie-import.json"
+          </code>
+          <p>Sorry, this will be fixed in future releases!</p>
+        </div>)}
       </div>
       <br />
       <div className="row align-items-start databasetable">
-        <div className="col">
-          <b>Admin: </b>
-          {isAdmin ? 'Yes' : 'No'}
-        </div>
+
         <div className="col">
           <b>Current Database: </b>
           {db.name}
@@ -187,7 +210,7 @@ function ImportExport() {
       <p>{status}</p>
 
       <div className="row align-items-start databasetable">
-        <div className="col">
+        {/* <div className="col">
           These currently do not work. They will be upgrades as they work.
           {isAdmin ? (
             <>
@@ -210,13 +233,13 @@ function ImportExport() {
               </Button>
             </>
           )}
-        </div>
+        </div> */}
       </div>
 
       <div className="row align-items-start databasetable">
         <div className="col">
           <Button variant="primary" className="mt-3" onClick={handleExport}>
-            Export Database
+            Export Database - JSON
           </Button>
 
           <input
@@ -232,8 +255,9 @@ function ImportExport() {
           >
             Import Database
           </Button>
-
-          <span>OR</span>
+          <Button variant="primary" onClick={clearDatabase}>
+            Clear Database
+          </Button>
 
           <div
             id="dropzone"
@@ -244,12 +268,9 @@ function ImportExport() {
             Drop dexie export JSON file here
           </div>
         </div>
+
         <div className="col">
-          <table border="1">
-            <thead></thead>
-            <tbody></tbody>
-          </table>
-          <div>
+          {/* <div>
             TODO:
             <ul>
               <li>☑ Get a database read/write/edit working</li>
@@ -259,15 +280,14 @@ function ImportExport() {
               <li>☐ Switch between New, Full and Current databases</li>
               <li>☐ Set Current Database to 'New'</li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
-
-      {/*<Button variant="primary" className="mt-3" onClick={handleClear}>Clear Database</Button>  */}
-
-      <Link to="/style">Style</Link>
+      </>
+      )}
     </>
   );
 }
 
+// export newGame;
 export default ImportExport;

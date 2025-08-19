@@ -13,7 +13,8 @@ let globalIsAdmin = (() => {
 let globalGameState = {
   score: 0,
   isGameOver: false,
-  level: 0
+  level: 0,
+  lastRoute: '/'
 };
 let globalStatus = '';
 let globalRemoveText = 'remove';
@@ -61,6 +62,8 @@ export function GameLogic() {
     globalGameState = {
       score: 0,
       isGameOver: false,
+      level: 0,
+      lastRoute: '/'
     };
     // Update all components
     gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));

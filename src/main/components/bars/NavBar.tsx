@@ -56,27 +56,31 @@ console.log("i failed to resize, can't fine window.electronAPI");
           <Button variant="outline-primary">Search</Button>
         </Link>{' '}
 
-        <Link to="/user-profile">
-          <Button variant="outline-primary">User Profile</Button>
-        </Link>
+
                 <Link to="/bookmarks">
           <Button variant="outline-primary">Bookmarks</Button>
         </Link>
+                    <Link to="/import-export">
+              <Button variant="outline-primary">Admin</Button>
+            </Link>{' '}
         {isAdmin && (
           <>
+          <Link to="/media/">
+              <Button variant="outline-primary">Media</Button>
+            </Link>{' '}
             {' '}
             <Link to="/edit-item/new">
               <Button variant="outline-primary">New Entry</Button>
             </Link>{' '}
 
-            <Link to="/import-export">
-              <Button variant="outline-primary">Admin</Button>
-            </Link>{' '}
+
           </>
         )}
         </div>
         <div>
-         <div className='login-info'> Logged in as: {isAdmin ? 'Admin' : 'User'}{' '}
+         <div className='login-info'> Logged in as:         <Link to="/user-profile">
+          
+        {isAdmin ? 'Admin' : 'User'}</Link>{' '}
           <Button
             variant="outline-secondary"
             onClick={toggleAdmin}

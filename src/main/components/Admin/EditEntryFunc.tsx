@@ -12,6 +12,22 @@ import { GameLogic } from '../../utils/gamelogic';
 import { ListSubEntries } from '../Lists/ListSubEntries';
 import { MediaUpload } from './MediaUpload';
 
+
+const defaultFormValue = {
+  fauxID: 'MX0000',
+  title: '',
+  description: '',
+  category: 'Object',
+  date: new Date(),
+  entryDate: new Date(),
+  availableOnStart: false,
+  available: true,
+  researcherID: researcherIDs[0] || '', 
+  media: [],
+  template: 'default',
+  bookmark: false, 
+};
+
 export function AddEntryForm({
   itemID,
   parentID,
@@ -21,10 +37,12 @@ export function AddEntryForm({
   parentID?: string;
   isSubEntry?: boolean;
 }) {
-  //*    ---------------    CONST  ------------------ */
+   
+  const [formValues, setFormValue] = useState(defaultFormValue);
+
   const { setStatusMessage } = GameLogic();
   const [title, setName] = useState('');
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const [status, setStatus] = useState('');
   let savedID: number = 0;
   const [isNewEntry, setNewEntry] = useState(false);
@@ -33,30 +51,60 @@ export function AddEntryForm({
 
   const { isAdmin, toggleAdmin } = GameLogic();
 
+ 
+  useEffect(() => {
+    async function fetchData() {
+      if (!itemID || itemID === 'new') {
+        
+        const newID = await generateNewID();
+        setFormValue({
+          ...defaultFormValue,  
+          fauxID: newID,
+        });
+        setNewEntry(true);
+        return;
+      }
+
+      const entry = await db.friends.get(Number(itemID));
+      if (entry) {
+        setFormValue({
+          fauxID: entry.fauxID || '',                    //  
+          title: entry.title || '',                       
+          description: entry.description || '',          
+          category: entry.category || 'Object',          
+          date: entry.date || new Date(),                
+          entryDate: entry.entryDate || new Date(),       
+          availableOnStart: entry.availableOnStart || false,  
+          available: entry.available || false,            
+          researcherID: entry.researcherID || researcherIDs[0] || '',  
+          media: entry.media || [],                       
+          template: entry.template || 'default',          
+          bookmark: entry.bookmark || false,             
+        });
+        savedID = entry.id;
+        setNewEntry(false);
+      } else {
+        setFormValue(defaultFormValue);
+        setNewEntry(true);
+      }
+    }
+
+    fetchData();
+  }, [itemID]);
+
+ 
   const generateNewID = async (): Promise<string> => {
     try {
-      // Get all existing IDs
       const items = await db.friends.toArray();
       const existingIDs = items.map((item) => item.fauxID);
-
-      // Extract numeric parts and find highest
       const numericIDs = existingIDs
         .filter((id) => id.startsWith('MX'))
         .map((id) => parseInt(id.replace('MX', '')))
         .filter((num) => !isNaN(num));
 
       const highestID = numericIDs.length > 0 ? Math.max(...numericIDs) : 999;
-      console.log('Highest ID found:', highestID);
+      let newID = Math.max(highestID + 1, 1000);
 
-      // Generate new ID (next sequential number)
-      let newID = highestID + 1;
-
-      // Ensure it's at least 1000
-      if (newID < 1000) {
-        newID = 1000;
-      }
-
-      // Double-check uniqueness (shouldn't be needed with sequential, but safety first)
       while (existingIDs.includes('MX' + newID)) {
         newID++;
       }
@@ -65,88 +113,10 @@ export function AddEntryForm({
       return 'MX' + newID;
     } catch (error) {
       console.error('Error generating ID:', error);
-      // Fallback to random number if database fails
       const randomID = Math.floor(Math.random() * 9000) + 1000;
       return 'MX' + randomID;
     }
   };
-
-  // Update your defaultFormValue to use async ID generation
-  const defaultFormValue = {
-    fauxID: 'MX0000', // Temporary ID
-    title: '',
-    description: '',
-    category: 'Object',
-    date: new Date(),
-    entryDate: new Date(),
-    availableOnStart: false, // Default to false
-    available: true,
-    researcherID: researcherIDs[0],
-    media: [],
-    template: 'default', // Optional field for template
-  };
-
-  // Initialize form values - if an ID came through, get that. If not, default empty.
-  useEffect(() => {
-    async function fetchData() {
-      if (!itemID || itemID === 'new') {
-        // setFormValue(defaultFormValue);
-        generateNewID().then((newID) => {
-          setFormValue((prev) => ({
-            ...prev,
-            fauxID: newID,
-          }));
-        });
-        setNewEntry(true);
-        console.log('is new entry: ', isNewEntry);
-        return;
-      }
-
-      const entry = await db.friends.get(Number(itemID));
-      if (entry) {
-        setFormValue({
-          fauxID: entry.fauxID,
-          title: entry.title,
-          description: entry.description,
-          category: entry.category,
-          date: entry.date || new Date(), // Handle optional date
-          entryDate: entry.entryDate,
-          availableOnStart: entry.availableOnStart || false,
-          available: entry.available || false,
-          media: entry.media || [],
-          template: entry.template || 'default',
-          bookmark: entry.bookmark || false,
-        });
-        savedID = entry.id;
-        setNewEntry(false);
-
-        console.log(
-          itemID + ' Fetched entry:',
-          entry.fauxID,
-          ' and ',
-          formValues.fauxID,
-        );
-        setStatusMessage(
-          'Fetched entry:' +
-            entry.fauxID +
-            ' and ID:' +
-            entry.id +
-            ' and ' +
-            savedID,
-        );
-      } else {
-        setFormValue(defaultFormValue);
-        console.log('No Fetched entry, creating new');
-        setNewEntry(true);
-      }
-
-      console.log('is new entry: ', isNewEntry);
-    }
-    fetchData();
-
-  }, [itemID]);
-
-  const [formValues, setFormValue] = useState(defaultFormValue);
 
   //*    ---------------    ENTRY FUNCTIONS  ------------------ */
 

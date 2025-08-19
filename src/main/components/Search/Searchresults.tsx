@@ -42,8 +42,16 @@ export function SearchResults({ results }: { results: any[] }) {
                  (
                  
                  <>  
+                 {(!gameLog.isAdmin ?  (
+                 <Link to={`/entry/${item.parentId}/`}>{item.fauxID} : {item.title}</Link>
+                 )
+                 :  (
                  
-                 <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.title}</Link>
+                 <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.title}</Link>)
+                 )}
+
+
+                
 
                   </>
                  ) 

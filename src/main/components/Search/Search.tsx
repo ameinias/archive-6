@@ -1,14 +1,16 @@
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { useState } from 'react';
+import { EntryList } from '../Lists/ListEditEntry';
+import {StaticList} from '../Lists/StaticList';
 import React from 'react';
 import { db, dbMainEntry, bothEntries } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
-import { useNavigate, Link } from 'react-router-dom';
+import { GameLogic } from '../../utils/gamelogic';
 
 const Search = () => {
-  const [val, setVal] = React.useState<string>('');
+  const [val, setVal] = React.useState('');
+  const {isAdmin} = GameLogic();
   const [results, setResults] = React.useState<bothEntries[]>([]);
 
   const friends = useLiveQuery(() => db.friends.toArray());
@@ -83,6 +85,13 @@ const Search = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+  if (e.key === 'Enter') {
+    searchItem(val);
+  }
+};
+
   return (
     <>
       <InputGroup className="searchBar">
@@ -91,11 +100,7 @@ const Search = () => {
           onChange={handleChange}
           className="form-control"
           placeholder="Search by entry title"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              searchItem(val);
-            }
-          }}
+          onKeyDown={handleKeyDown}
           title="search entries"
           value={val}
         />
@@ -104,7 +109,14 @@ const Search = () => {
         </Button>
       </InputGroup>
 
+      {results.length === 0 ? (
+        <>
+        {isAdmin ? ( <EntryList />) : ( <StaticList />) }
+        </>
+        
+      ) : (
       <SearchResults results={results} />
+      )}
     </>
   );
 };
