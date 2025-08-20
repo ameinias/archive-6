@@ -19,16 +19,6 @@ export function StaticSubListItem({
   const navigate = useNavigate();
   const [statusMessage, setStatusMessage] = useState<string>('');
 
- // Helper function to determine if file is image or video
-function getFileType(filename: string): 'image' | 'video' | 'other' {
-  const ext: string | undefined = filename.toLowerCase().split('.').pop();
-  const imageExts: string[] = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
-  const videoExts: string[] = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
-
-  if (imageExts.includes(ext || '')) return 'image';
-  if (videoExts.includes(ext || '')) return 'video';
-  return 'other';
-}
 
   const item = useLiveQuery(async () => {
     if (!itemID) return null;

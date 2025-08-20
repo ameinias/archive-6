@@ -35,9 +35,12 @@ const electronHandler = {
 // const path = require('path');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  readAssetFile: (relativePath: string) =>
-    ipcRenderer.invoke('read-asset-file', relativePath),
-  resizeToDefault: () => ipcRenderer.send('resize-to-default')
+  //readAssetFile: (relativePath: string) =>
+  //  ipcRenderer.invoke('read-asset-file', relativePath),
+  resizeToDefault: () => ipcRenderer.send('resize-to-default'),
+  getAssetPath: (relativePath: string) => ipcRenderer.invoke('get-asset-path', relativePath),
+  readAssetFile: (relativePath: string) => ipcRenderer.invoke('read-asset-file', relativePath),
+  setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'), 
 });
 
 // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSTLOADED');    fsdfsd

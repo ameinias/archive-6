@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
 import { dbHelpers, newGameFromFile } from '../../utils/db';
+import Dropdown from 'react-bootstrap/Dropdown';
+import {newGameWithWarning} from '../Admin/ImportExport';
 
 
 const NavBar = () => {
@@ -65,20 +67,29 @@ console.log("i failed to resize, can't fine window.electronAPI");
             </Link>{' '}
         {isAdmin && (
           <>
-          <Link to="/media/">
+          {/* <Link to="/media/">
               <Button variant="outline-primary">Media</Button>
             </Link>{' '}
-            {' '}
-            <Link to="/edit-item/new">
-              <Button variant="outline-primary">New Entry</Button>
-            </Link>{' '}
+            {' '} */}
 
+ <Dropdown>
+      <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" >
+        Admin Tools
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        <Dropdown.Item className="dropdown-item"><Link to="/media/">Media List</Link></Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item className="dropdown-item" href="#/action-2"><Link to="/import-export">Database Actions</Link></Dropdown.Item>
+        <Dropdown.Item className="dropdown-item" onClick={newGameWithWarning} >New Game</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
 
           </>
         )}
         </div>
         <div>
-         <div className='login-info'> Logged in as:         <Link to="/user-profile">
+         <div className='login-info'> Logged in as:         <Link to="/user-profile"> sfsdf asfsdf
           
         {isAdmin ? 'Admin' : 'User'}</Link>{' '}
           <Button

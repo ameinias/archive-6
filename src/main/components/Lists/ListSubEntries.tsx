@@ -13,6 +13,8 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
   //const [subEntryOfParent, setSubEntries] = useState<dbSubEntry[]>([]);
 
 
+
+
   // Use useLiveQuery to automatically update when database changes
   const subEntryOfParentLQ = useLiveQuery(async () => {
     if (!itemID) return [];
@@ -51,28 +53,27 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
         </>
       ) : (
         <>
-          <table>
-            <tbody>
+         <div>
               {subEntryOfParentLQ.map((item) => (
-                <tr key={item.id}>
-                               <> This is what I added: {item.id}  | {item.parentId}
-                       
+                <div key={item.id}>
+                               <> 
+                               This is what I added: {item.id}  | {item.parentId}
                               </>
-                  <td width="80%">
+                  <div >
                     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>
-                  </td>
-                  <td>
+                  </div>
+                  <div>
                     <Button
                       variant="remove-button"
                       onClick={() => removeItem(item)}
                     ></Button>
-                  </td>
-                </tr>
+                  </div>
+                  </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+
 
           <Button
             variant={toggleShowNewSubEntry ? 'remove-item' : 'add-item'}

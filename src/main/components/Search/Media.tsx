@@ -5,7 +5,7 @@ import { SearchResults } from './Searchresults';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
-
+import {getFileType} from '../../../hooks/dbHooks'; 
 interface MediaFile {
   id: number;
   name: string;
@@ -42,8 +42,6 @@ const Media = () => {
     const subEntriesWithMedia = subentries?.filter(
       (item) => item.mediaSub && item.mediaSub.length > 0
     );
-
-    console.log('Entries with media: ', entriesWithMedia?.length);
 
     // Add media from main entries
     if (entriesWithMedia) {
@@ -94,15 +92,15 @@ const Media = () => {
     setMediaFiles(mediaFiles.filter(file => file.id !== mediaId));
   };
 
-  const getFileType = (filename: string): 'image' | 'video' | 'other' => {
-    const ext = filename.toLowerCase().split('.').pop();
-    const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
-    const videoExts = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
+  // const getFileType = (filename: string): 'image' | 'video' | 'other' => {
+  //   const ext = filename.toLowerCase().split('.').pop();
+  //   const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
+  //   const videoExts = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
 
-    if (imageExts.includes(ext || '')) return 'image';
-    if (videoExts.includes(ext || '')) return 'video';
-    return 'other';
-  };
+  //   if (imageExts.includes(ext || '')) return 'image';
+  //   if (videoExts.includes(ext || '')) return 'video';
+  //   return 'other';
+  // };
 
     // Sort media by date
   const sortedMedia = mediaFiles

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db, dbHelpers } from '../../utils/db'; // import the database
+import React, { useState } from 'react';
+import { db } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,8 @@ import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '../Components/StaticSubListItem';
-import  BookMarkCheck  from '../Components/Bookmark-check';
+import  {BookMarkCheck } from '../Components/Badges'
+import { getFileType } from '../../../hooks/dbHooks';
 
 export function StaticSingleMess({ itemID }: { itemID?: number }) {
   const { id } = useParams(); // get the id from the route
@@ -51,16 +52,6 @@ const subEntryOfParent = useLiveQuery(() => {
     );
   }
 
- // Helper function to determine if file is image or video
-function getFileType(filename: string): 'image' | 'video' | 'other' {
-  const ext: string | undefined = filename.toLowerCase().split('.').pop();
-  const imageExts: string[] = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
-  const videoExts: string[] = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
-
-  if (imageExts.includes(ext || '')) return 'image';
-  if (videoExts.includes(ext || '')) return 'video';
-  return 'other';
-}
 
 
   return (
@@ -144,28 +135,7 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
                     <div title="Subentries">
 
             {subEntryOfParent.map((item) => (
-              // <div key={item.id}>
-              //   <div width="80%">
-              //     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-              //       {item.fauxID} : {item.title}
-              //     </Link>
-              //   </div>
-              //   <div className={`subentry-${item.id}`}>
-              //     <div className='rotate-text'>{item.description}</div>
-              //     {item.mediaSub.map((item) => (
-              //       <div key={item.id}>
-              //         <Link to={`/file-fullscreen/entry-${item.id}`}>
-              //           {item.name}
-              //         </Link>
-              //       </div>
-              //     ))}
-
-              //     <br />
-              //     <span className='image-subinfo subinfo'  >
-              //     - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
-              //     </span>
-              //   </div>
-              // </div>
+            
              <div className="messy-sub-parent"> 
               <StaticSubListItem
                 itemID={item.id}

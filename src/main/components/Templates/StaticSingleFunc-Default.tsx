@@ -6,7 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
-import  BookMarkCheck  from '../Components/Bookmark-check';
+import { StaticSubListItem } from '../Components/StaticSubListItem';
+import  {BookMarkCheck } from '../Components/Badges'
+import { getFileType } from '../../../hooks/dbHooks'; 
 
 export function StaticSingleDefault({ itemID }: { itemID?: number }) {
   const { id } = useParams(); // get the id from the route
@@ -58,16 +60,6 @@ useEffect(() => {
     );
   }
 
- // Helper function to determine if file is image or video
-function getFileType(filename: string): 'image' | 'video' | 'other' {
-  const ext: string | undefined = filename.toLowerCase().split('.').pop();
-  const imageExts: string[] = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
-  const videoExts: string[] = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
-
-  if (imageExts.includes(ext || '')) return 'image';
-  if (videoExts.includes(ext || '')) return 'video';
-  return 'other';
-}
 
 
   return (
@@ -146,34 +138,17 @@ function getFileType(filename: string): 'image' | 'video' | 'other' {
         )}
       </div>
       </section>
-
-
 <section title="Subentries" className="subentry-add-list"> {/* Show subentries if they exist */}
-                    <div>
+                    <div title="Subentries">
 
             {subEntryOfParent.map((item) => (
-              <div key={item.id}>
-                <div width="80%">
-                  <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-                    {item.fauxID} : {item.title}
-                  </Link>
-                </div>
-                <div className={`subentry-${item.id}`}>
-                  {item.description}
-                  {item.mediaSub?.map((item) => (
-                    <div key={item.id}>
-                      <Link to={`/file-fullscreen/entry-${item.id}`}>
-                        {item.name}
-                      </Link>
-                    </div>
-                  ))}
-
-                  <br />
-                  <span className='image-subinfo subinfo'  >
-                  - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
-                  </span>
-                </div>
-              </div>
+            
+             <div > 
+              <StaticSubListItem
+                itemID={item.id}
+                parentID={item.parentId}
+              />
+            </div>
             ))}
 
         </div>

@@ -8,7 +8,14 @@ import 'dexie-export-import'; // Import the export/import addon
 import { GameLogic } from '../../utils/gamelogic';
 // import { clear } from 'console';
 import HashImport from './HashImport';
+import { useLiveQuery } from 'dexie-react-hooks';
 
+  export function newGameWithWarning()
+  {
+    newGameWithWarning();
+  }
+
+  
 function ImportExport() {
   const { isAdmin, toggleAdmin, setStatusMessage } = GameLogic();
   const [toggleHelp, setToggleHelp] = useState(false);
@@ -77,49 +84,82 @@ function ImportExport() {
     db.open();
   };
 
+
+
   const newGameWithWarning = async () => {
     setStatusMessage('Attempting to reset the database...');
-    console.log('No content found, importing NewGame Database');
 
     if (
       !window.confirm(`Starting a new game will delete all current database entries. You may want to make a backup first. Proceed anyway?
       `)
     ) {
-      console.log('no');
       return;
     } else {
-      console.log('yes');
       newGame();
     }
   };
+
   const newGame = async () => {
-    setStatusMessage('got confirm.');
+    setStatusMessage('Setting up new game...');
 
-    const fileContents = await window.electronAPI.readAssetFile(
-      'assets/databases/dexie-import.json',
-    );
+    try {
 
-    dbHelpers.importFromBlob(
-      new Blob([fileContents], { type: 'application/json' }),
-    );
+      await window.electronAPI.setupUserDatabase();
+      
 
-    // clear bookmarks
-    await db.subentries.update(Number(itemID), { bookmark: false });
-    await db.friends.update(Number(itemID), { bookmark: false });
-    // clear available
+      const fileContents = await window.electronAPI.readAssetFile(
+        'assets/databases/dexie-import.json'
+      );
 
-    
-    // make all availble on start available 
+      await dbHelpers.importFromBlob(
+        new Blob([fileContents], { type: 'application/json' }),
+      );
+
+      // Clear bookmarks
+      await db.subentries.toCollection().modify({ bookmark: false });
+      await db.friends.toCollection().modify({ bookmark: false });
+
+      await startOnAvailable();
+
+        db.friends.get(24).then(entry => {
+     console.log(`-------------------After finish:  ${entry.id} to available: ${entry.available}`);
+  });
+
+      setStatusMessage('New game started successfully!');
+    } catch (error) {
+      console.error('Error starting new game:', error);
+      setStatusMessage('Error starting new game: ' + error.message);
+    }
   };
 
-    const friends = useLiveQuery(() => db.friends.toArray());
-    const subentries = useLiveQuery(() => db.subentries.toArray());
 
-  const clearBookmarks = async () => {
-    friends.up
+  const startOnAvailable = async () => {
+  
+        const subentries = await db.subentries.toArray();
+    for (const entry of subentries) {
+      console.log(`Updated subentry ${entry.id} to available: ${entry.available}`);
+      if(entry.availableOnStart)
+        await db.subentries.update(entry.id, { available: true });
+      else
+        await db.subentries.update(entry.id, { available: false });
+      
+    }
 
-
+  const friends = await db.friends.toArray();
+  for (const entry of friends) {
+    const newAvailableValue = entry.availableOnStart ? true : false;
+    
+    console.log(`Updating entry ${entry.fauxID}: availableOnStart=${entry.availableOnStart}, setting available to ${newAvailableValue}`);
+    
+    await db.friends.update(entry.id, { available: newAvailableValue });
+    
+    // ✅ Verify the update worked
+    const updatedEntry = await db.friends.get(entry.id);
+    console.log(`✓ Verified entry ${entry.fauxID} available is now: ${updatedEntry.available}`);
   }
+
+
+};
 
   const handleImport = async (file) => {
     try {

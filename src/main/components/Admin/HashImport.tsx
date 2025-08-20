@@ -3,12 +3,28 @@ import Dexie from 'dexie';
 import { db, dbHelpers } from '../../utils/db'; 
 import { Button } from 'react-bootstrap';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 function HashImport() {
+    const friends = useLiveQuery(() => db.friends.toArray());
+    const subentries = useLiveQuery(() => db.subentries.toArray());
 
+    // Sort friends by date
+  const findByHash = (hash: string) => friends
+    ? [...friends]
+    .filter(item => item.hexHash === hash)
+
+    // .sort((a, b) => {
+    //     const dateA = a.date ? new Date(a.date).getTime() : 0;
+    //     const dateB = b.date ? new Date(b.date).getTime() : 0;
+    //     return dateB - dateA;
+    //   })
+    : [];
     
 const importHash = async (event) => {
 
+      const hash = event.target.elements.hash.value;
+      const entries = findByHash(hash);
 
       if (
       !window.alert(`Entries added to database.
@@ -43,6 +59,7 @@ return(
                   Import Hash
                 </Button>
                 </div>
+                Try:        eeqR-4fd9-D04S  
               </div>
 );
 }

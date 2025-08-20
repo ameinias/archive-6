@@ -6,7 +6,6 @@ import {
   subCategories,
   researcherIDs,
   entryTemplate,
-  
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
@@ -32,8 +31,7 @@ export function AddSubEntryForm({
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
 
-
- /* ------------------------  Generate entry functions --------*/
+  /* ------------------------  Generate entry functions --------*/
   // Create async function to generate new ID
   async function generateNewID(): Promise<string> {
     if (!parentID) return 'NEW-001';
@@ -91,8 +89,7 @@ export function AddSubEntryForm({
     }
   }
 
-
-   /* ------------------------  Handlers --------*/
+  /* ------------------------  Handlers --------*/
   // Manage state and input field
   const handleIDChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -179,13 +176,14 @@ export function AddSubEntryForm({
           title: entry.title,
           description: entry.description,
           category: entry.subCategory,
-          date: entry.date || new Date(), 
+          date: entry.date || new Date(),
           entryDate: entry.entryDate,
           availableOnStart: entry.availableOnStart || false,
           available: entry.available || false,
           mediaSub: entry.mediaSub || [],
           template: entry.template || 'default',
           bookmark: entry.bookmark || false,
+          hexHash: entry.hexHash || 'aeoh-3q484-da232',
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -239,7 +237,7 @@ export function AddSubEntryForm({
         .update(idNumber, {
           title: formValues.title,
           fauxID: formValues.fauxID,
-          hexHash: '', // Add the missing hexHash field
+          hexHash: formValues.hexHash || 'aeoh-3q484-da232',
           description: formValues.description,
           mediaSub: formValues.mediaSub || [],
           subCategory: subCategories[0], // Default to first subcategory
@@ -286,7 +284,7 @@ export function AddSubEntryForm({
       const id = await db.subentries.add({
         title: formValues.title,
         fauxID: formValues.fauxID,
-        hexHash: '', // Add the missing hexHash field
+        hexHash: formValues.hexHash || 'aeoh-3q484-da232',
         description: formValues.description,
         mediaSub: formValues.mediaSub,
         subCategory: subCategories[0], // Default to first subcategory
@@ -520,7 +518,7 @@ export function AddSubEntryForm({
                 name="available"
               />
             </div>
-            
+
             <div className="row">
               {' '}
               {/*// ------ bookmark  ------*/}
@@ -534,28 +532,35 @@ export function AddSubEntryForm({
               />
             </div>
 
-                        <div className="row">
-                        <div className="col-1 formLabel">Template:</div>
-                        <select
-                          className="form-control form-control-dropdown col"
-                          multiple={false}
-                          value={formValues.template}
-                          onChange={handleChange}
-                          name="template"
-                        >
-                          {entryTemplate.map((sub, i) => (
-                            <option key={i} value={sub}>
-                              {sub}
-                            </option>
-                          ))}
-                        </select>{' '}
-                      </div>
+            <div className="row">
+              <div className="col-1 formLabel">hexhash:</div>
+              <input
+                className="form-control form-control-dropdown col"
+                type="text"
+                placeholder="aeoh-3q484-da232"
+                value={formValues.hexHash}
+                onChange={handleChange}
+                name="hexhash"
+              />
+            </div>
+
+            <div className="row">
+              <div className="col-1 formLabel">Template:</div>
+              <select
+                className="form-control form-control-dropdown col"
+                multiple={false}
+                value={formValues.template}
+                onChange={handleChange}
+                name="template"
+              >
+                {entryTemplate.map((sub, i) => (
+                  <option key={i} value={sub}>
+                    {sub}
+                  </option>
+                ))}
+              </select>{' '}
+            </div>
           </div> // admin row
-
-
-
-
-
         )}
 
         <div className="save-buttons">

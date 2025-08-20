@@ -7,6 +7,8 @@ type Category = keyof typeof categories;
 type SubCategory = keyof typeof subCategories;
 type ResearcherID = keyof typeof researcherIDs;
 
+
+//  hexHash: 'aeoh-3q484-da232',
 interface dbMainEntry {
   id: number; //real id
   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
@@ -77,26 +79,23 @@ db.version(1).stores({
 
 
 
-// Helper functions for working with entries and subentries
+// Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.ts
 const dbHelpers = {
-  // Get a main entry with all its subentries
-  async getEntryWithSubentries(entryId: number) {
-    const entry = await db.friends.get(entryId);
-    if (!entry) return null;
 
-    const subentries = await db.subentries.where('parentId').equals(entryId).toArray();
-    return {
-      ...entry,
-      subentries
-    };
-  },
+  // Get a main entry with all its subentries - why did i write this?
+  // async getEntryWithSubentries(entryId: number) {
+  //   const entry = await db.friends.get(entryId);
+  //   if (!entry) return null;
+
+  //   const subentries = await db.subentries.where('parentId').equals(entryId).toArray();
+  //   return {
+  //     ...entry,
+  //     subentries
+  //   };
+  // },
 
 
 
-  // Get all subentries for a main entry
-  async getSubentriesForEntry(entryId: number) {
-    return await db.subentries.where('parentId').equals(entryId).toArray();
-  },
 
   // Add a new main entry
   async addMainEntry(entry: Omit<dbMainEntry, 'id'>) {

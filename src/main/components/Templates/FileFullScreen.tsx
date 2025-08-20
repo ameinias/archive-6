@@ -5,17 +5,10 @@ import { Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../../utils/db';
+import { getFileType } from '../../../hooks/dbHooks'; 
 
-// Helper function to determine file type synchronously
-const getFileType = (filename: string): 'image' | 'video' | 'other' => {
-  const ext = filename.toLowerCase().split('.').pop();
-  const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'];
-  const videoExts = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'];
+// Not using this yet - eventually want to open media full screen to make it easier to read.
 
-  if (imageExts.includes(ext || '')) return 'image';
-  if (videoExts.includes(ext || '')) return 'video';
-  return 'other';
-};
 
 const FileFullscreen = () => {
   const { fileID } = useParams<{ fileID: string }>(); // Get fileID from route params

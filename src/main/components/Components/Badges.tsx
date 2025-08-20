@@ -1,10 +1,50 @@
-
-import { db, dbHelpers } from '../../utils/db'; 
-import { Button } from 'react-bootstrap';
-
+import React from 'react';
+import { GetSubentryCount, GetMediaCount,CheckAvailable } from '../../../hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { db, dbHelpers } from '../../utils/db'; 
 
-function BookMarkCheck({ 
+export function MediaCountCell({ 
+  itemId, 
+  type = 'entry' 
+}: { 
+  itemId: number; 
+  type?: 'entry' | 'subentry' 
+}) {
+  const count = GetMediaCount(itemId, type);
+
+  return (
+<>
+      {count > 0 ? <div className="badger">{count}</div> : null}
+</>
+  );
+}
+
+export function SubentryCountCell({ parentId }: { parentId: number }) {
+  const count = GetSubentryCount(parentId);
+    if (count === undefined) return; 
+  return (
+    <>
+      {count > 0 ? <div className="badger">{count}</div> : null}
+    </>
+  );
+}
+
+// badge to show current availabilty, used ont eh edit entry page. 
+export function AvailableCell({ 
+  itemId, 
+  type = 'entry' 
+}: { 
+  itemId: number; 
+  type?: 'entry' | 'subentry' 
+}) {
+    const available = CheckAvailable(itemId,type );
+
+  return (
+      <div className="badger">{available ? 'y' : 'x'}</div>
+  );
+}
+
+export function BookMarkCheck({ 
   itemID, 
   type 
 }: { 
@@ -45,7 +85,7 @@ function BookMarkCheck({
   }
   return (
     <button 
-      className='bookmark-btn'
+      className='badger bookmark-btn'
       onClick={toggleBookmark}
       title={isBookmarked ? 'unbookmark' : 'bookmark'}
     >
@@ -53,5 +93,3 @@ function BookMarkCheck({
     </button>
   );
 }
-
-export default BookMarkCheck;

@@ -12,7 +12,6 @@ import { GameLogic } from '../../utils/gamelogic';
 import { ListSubEntries } from '../Lists/ListSubEntries';
 import { MediaUpload } from './MediaUpload';
 
-
 const defaultFormValue = {
   fauxID: 'MX0000',
   title: '',
@@ -22,10 +21,11 @@ const defaultFormValue = {
   entryDate: new Date(),
   availableOnStart: false,
   available: true,
-  researcherID: researcherIDs[0] || '', 
+  researcherID: researcherIDs[0] || '',
   media: [],
   template: 'default',
-  bookmark: false, 
+  bookmark: false,
+  hexHash: 'aeoh-3q484-da232',
 };
 
 export function AddEntryForm({
@@ -37,12 +37,11 @@ export function AddEntryForm({
   parentID?: string;
   isSubEntry?: boolean;
 }) {
-   
   const [formValues, setFormValue] = useState(defaultFormValue);
 
   const { setStatusMessage } = GameLogic();
   const [title, setName] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [status, setStatus] = useState('');
   let savedID: number = 0;
   const [isNewEntry, setNewEntry] = useState(false);
@@ -51,14 +50,12 @@ export function AddEntryForm({
 
   const { isAdmin, toggleAdmin } = GameLogic();
 
- 
   useEffect(() => {
     async function fetchData() {
       if (!itemID || itemID === 'new') {
-        
         const newID = await generateNewID();
         setFormValue({
-          ...defaultFormValue,  
+          ...defaultFormValue,
           fauxID: newID,
         });
         setNewEntry(true);
@@ -68,18 +65,19 @@ export function AddEntryForm({
       const entry = await db.friends.get(Number(itemID));
       if (entry) {
         setFormValue({
-          fauxID: entry.fauxID || '',                    //  
-          title: entry.title || '',                       
-          description: entry.description || '',          
-          category: entry.category || 'Object',          
-          date: entry.date || new Date(),                
-          entryDate: entry.entryDate || new Date(),       
-          availableOnStart: entry.availableOnStart || false,  
-          available: entry.available || false,            
-          researcherID: entry.researcherID || researcherIDs[0] || '',  
-          media: entry.media || [],                       
-          template: entry.template || 'default',          
-          bookmark: entry.bookmark || false,             
+          fauxID: entry.fauxID || '', //
+          title: entry.title || '',
+          hexHash: entry.hexHash || '',
+          description: entry.description || '',
+          category: entry.category || 'Object',
+          date: entry.date || new Date(),
+          entryDate: entry.entryDate || new Date(),
+          availableOnStart: entry.availableOnStart || false,
+          available: entry.available || false,
+          researcherID: entry.researcherID || researcherIDs[0] || '',
+          media: entry.media || [],
+          template: entry.template || 'default',
+          bookmark: entry.bookmark || false,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -92,7 +90,6 @@ export function AddEntryForm({
     fetchData();
   }, [itemID]);
 
- 
   const generateNewID = async (): Promise<string> => {
     try {
       const items = await db.friends.toArray();
@@ -138,6 +135,7 @@ export function AddEntryForm({
         .update(idNumber, {
           title: formValues.title,
           fauxID: formValues.fauxID,
+          hexHash: formValues.hexHash,
           description: formValues.description,
           category: formValues.category,
           date: formValues.date,
@@ -183,7 +181,7 @@ export function AddEntryForm({
       const id = await db.friends.add({
         title: formValues.title,
         fauxID: formValues.fauxID,
-        hexHash: '',
+        hexHash: formValues.hexHash ,
         description: formValues.description,
         media: formValues.media,
         category: formValues.category,
@@ -205,7 +203,9 @@ export function AddEntryForm({
   }
 
   async function removeCurrentEntry() {
-    if (window.confirm(`Are you sure you want to delete "${formValues.title}"?`)) {
+    if (
+      window.confirm(`Are you sure you want to delete "${formValues.title}"?`)
+    ) {
       try {
         const id = Number(itemID);
         if (isNaN(id)) {
@@ -392,7 +392,7 @@ export function AddEntryForm({
           <MediaUpload mediaFiles={formValues.media} />
         </div>
 
-      {isAdmin && (
+        {isAdmin && (
           <div className="row adminOnly">
             <div className="row">
               {' '}
@@ -419,9 +419,9 @@ export function AddEntryForm({
                 name="available"
               />
             </div>
-                        <div className="row">
+            <div className="row">
               {' '}
-              {/*// ------ available  ------*/}
+              {/*// ------ bookmark  ------*/}
               <label className="formLabel">bookmark</label>
               <input
                 type="checkbox"
@@ -431,26 +431,36 @@ export function AddEntryForm({
                 name="bookmark"
               />
             </div>
-        
+            <div className="row">
+              <div className="col-1 formLabel">hexhash:</div>
+              <input
+                className="form-control col"
+                type="text"
+                placeholder="aeoh-3q484-da232"
+                value={formValues.hexHash}
+                onChange={handleChange}
+                name="hexHash"
+              />
+            </div>
 
             {/*// ------ Template  ------*/}
             <div className="row">
-            <div className="col-1 formLabel">Template:</div>
-            <select
-              className="form-control form-control-dropdown col"
-              multiple={false}
-              value={formValues.template}
-              onChange={handleChange}
-              name="template"
-            >
-              {entryTemplate.map((sub, i) => (
-                <option key={i} value={sub}>
-                  {sub}
-                </option>
-              ))}
-            </select>{' '}
-          </div>
-          </div> // admin row 
+              <div className="col-1 formLabel">Template:</div>
+              <select
+                className="form-control form-control-dropdown col"
+                multiple={false}
+                value={formValues.template}
+                onChange={handleChange}
+                name="template"
+              >
+                {entryTemplate.map((sub, i) => (
+                  <option key={i} value={sub}>
+                    {sub}
+                  </option>
+                ))}
+              </select>{' '}
+            </div>
+          </div> // admin row
         )}
 
         {/* Only show Add Subentry button when not already a subentry. */}
@@ -476,19 +486,16 @@ export function AddEntryForm({
             </Button>
           ) : (
             <>
-            <Button
-              className="btn-save-add-item"
-              onClick={updateEntry}
-              disabled={!isFormValid}
-            >
-              Save
-            </Button>
-                        <Button
-              className="remove-button"
-              onClick={removeCurrentEntry}
-            >
-              Remove
-            </Button>
+              <Button
+                className="btn-save-add-item"
+                onClick={updateEntry}
+                disabled={!isFormValid}
+              >
+                Save
+              </Button>
+              <Button className="remove-button" onClick={removeCurrentEntry}>
+                Remove
+              </Button>
             </>
           )}
         </div>

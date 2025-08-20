@@ -15,7 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
-import os from 'os';
+
 
 
 class AppUpdater {
@@ -191,18 +191,72 @@ app
   })
   .catch(console.log);
 
-//   ipcMain.handle('read-asset-file', (event, relativePath) => {
-//   const assetPath = path.join(__dirname, '..', '..', relativePath);
-//   return fs.readFileSync(assetPath, 'utf8');
-// });
+// Replace your existing handlers with these:
+ipcMain.handle('get-asset-path', (event, relativePath) => {
 
+  
+  const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
+  
+  // Create the directory if it doesn't exist
+  if (!fs.existsSync(APP_DATA_PATH)) {
+    fs.mkdirSync(APP_DATA_PATH, { recursive: true });
+  }
+  
+  return path.join(APP_DATA_PATH, relativePath);
+});
 
-ipcMain.handle('read-asset-file', (event, relativePath) => {
-  const assetPath = app.isPackaged
-    ? path.join(process.resourcesPath, relativePath)
-    : path.join(__dirname, '../../', relativePath);
-  console.log('Reading asset from:', assetPath);
-  return fs.readFileSync(assetPath, 'utf8');
+ipcMain.handle('read-asset-file', async (event, relativePath) => {
+  try {
+// use appdata or resources
+    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
+    const appDataFile = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+    
+    // If file exists in AppData, use it
+    if (fs.existsSync(appDataFile)) {
+      console.log('Reading from AppData:', appDataFile);
+      return fs.readFileSync(appDataFile, 'utf8');
+    }
+    
+    // Otherwise, fallback to bundled assets
+    const bundledPath = app.isPackaged
+      ? path.join(process.resourcesPath, relativePath)
+      : path.join(__dirname, '../../', relativePath);
+    
+    console.log('Reading from bundled assets:', bundledPath);
+    return fs.readFileSync(bundledPath, 'utf8');
+  } catch (error) {
+    console.error('Error reading asset file:', error);
+    throw error;
+  }
+});
+
+// copy bundled database to AppData on first run
+ipcMain.handle('setup-user-database', async () => {
+  try {
+    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets', 'databases');
+    const userDbPath = path.join(APP_DATA_PATH, 'dexie-import.json');
+    
+    // If user database doesn't exist, copy from bundled assets
+    if (!fs.existsSync(userDbPath)) {
+      // Create directories
+      fs.mkdirSync(APP_DATA_PATH, { recursive: true });
+      
+      // Copy from bundled assets
+      const bundledDbPath = app.isPackaged
+        ? path.join(process.resourcesPath, 'assets/databases/dexie-import.json')
+        : path.join(__dirname, '../../assets/databases/dexie-import.json');
+      
+      if (fs.existsSync(bundledDbPath)) {
+        fs.copyFileSync(bundledDbPath, userDbPath);
+        console.log('Copied database to user folder:', userDbPath);
+      }
+    }
+    
+    return userDbPath;
+  } catch (error) {
+    console.error('Error setting up user database:', error);
+    throw error;
+  }
 });
 
 
