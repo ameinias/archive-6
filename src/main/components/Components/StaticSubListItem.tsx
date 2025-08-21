@@ -52,10 +52,11 @@ export function StaticSubListItem({
           </div>
           <div className="subentry-desc">
             {item.description}
-            {item.mediaSub?.map((mediaItem) => (
+            {item.mediaSub?.map((file, index) => {
               <div key={mediaItem.id}>
+                <MediaDisplay file={file} index={index}/>
                 <Link to={`/file-fullscreen/entry-${mediaItem.id}`}>
-                  {mediaItem.name}
+                  {file.name} ({(file.size / 1024).toFixed(2)} KB)
                 </Link>
               </div>
             ))}
