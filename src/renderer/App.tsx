@@ -7,8 +7,12 @@ import {
 } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import icon from '../../assets/icon.svg';
 import './App.css';
+
+import { db, dbHelpers, newGame } from '../main/utils/db';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { GameLogic } from '../main/utils/gamelogic';
+
 import Home from '../main/components/Home';
 import UserProfile from '../main/components/UserProfile';
 import NavBar from '../main/components/bars/NavBar';
@@ -19,12 +23,10 @@ import StaticSingle from '../main/components/Routes/StaticSingle';
 import AddSubEntry from '../main/components/Routes/AddSubEntry';
 import StyleTest from '../main/components/Style';
 import Search from '../main/components/Search/Search';
-import { GameLogic } from '../main/utils/gamelogic';
 import FileFullscreen from '../main/components/Templates/FileFullScreen';
 import Bookmarks from '../main/components/Search/Bookmarks';
 import Media from '../main/components/Search/Media';
-import { db, dbHelpers } from '../main/utils/db';
-import { useLiveQuery } from 'dexie-react-hooks';
+import HashImport from '../main/components/Admin/HashImport';
 
 // import { ImportExport } from 'ImportExport';
 
@@ -44,9 +46,10 @@ function RouteTracker() {
 export default function App() {
   const { isAdmin, setAdmin } = GameLogic();
   const [dbKey, setDbKey] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0);
+  
 
   useEffect(() => {
-    console.log('use effect App');
     checkNewGame();
   }, []);
 
@@ -63,8 +66,14 @@ export default function App() {
       );
       console.log('Initial data loaded successfully.');
       setDbKey((prev) => prev + 1);
+      console.log('Database key updated:', dbKey);
     }
   };
+
+      const handleNewGame = async () => {
+      await newGame(); // Your newGame function
+      setDbKey((prev) => prev + 1);
+    };
 
   // Get the initial route synchronously before render
   const getInitialRoute = () => {
@@ -89,6 +98,7 @@ export default function App() {
           '/edit-subitem/:parentID/:itemID',
           '/bookmarks',
           '/entry/:id',
+          '/hashimport',
         ];
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -140,6 +150,7 @@ export default function App() {
               />
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/media" element={<Media />} />
+              <Route path="/hashimport" element={<HashImport />} />
               {/* <Route path="/file-fullscreen/:id" element={<FileFullscreen />} /> */}
             </Routes>
           </div>

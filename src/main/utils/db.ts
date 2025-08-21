@@ -24,6 +24,7 @@ interface dbMainEntry {
   availableOnStart: boolean; //  field to indicate if available on start
   template: string; // Optional field for template
   bookmark?: boolean;
+  unread: boolean;
 }
 
 interface dbSubEntry {
@@ -42,6 +43,7 @@ interface dbSubEntry {
   availableOnStart: boolean; //  field to indicate if available on start
   template: string; // Optional field for template
   bookmark?: boolean;
+  unread: boolean;
 }
 
 
@@ -56,7 +58,7 @@ interface bothEntries {
   parentId?: number; // Include parentId for subentries
 }
 
-const db = new Dexie('gb-current') as Dexie & {
+export const db = new Dexie('gb-current') as Dexie & {
   friends: EntityTable<
     dbMainEntry,
     'id' 
@@ -73,26 +75,20 @@ const db = new Dexie('gb-current') as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template', // Removed subItems
-  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template' // Fixed spelling and added parentId index
+  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template, unread', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template,unread' // Fixed spelling and added parentId index
+});
+
+// Schema declaration:
+db.version(2).stores({
+  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template, unread,hexHash', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template,unread, hexHash' // Fixed spelling and added parentId index
 });
 
 
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.ts
-const dbHelpers = {
-
-  // Get a main entry with all its subentries - why did i write this?
-  // async getEntryWithSubentries(entryId: number) {
-  //   const entry = await db.friends.get(entryId);
-  //   if (!entry) return null;
-
-  //   const subentries = await db.subentries.where('parentId').equals(entryId).toArray();
-  //   return {
-  //     ...entry,
-  //     subentries
-  //   };
-  // },
+export const dbHelpers = {
 
 
 
@@ -136,12 +132,63 @@ const dbHelpers = {
 
 };
 
+export const saveAsDefaultDatabase = async () => {
+  try {
+    const blob = await db.export({ prettyJson: true });
+    
+   
+    const content = await blob.text();
+    
+    await window.electronAPI.saveAssetFile(
+      'assets/databases/dexie-import.json',
+      content 
+    );
+    
+    const fullPath = await window.electronAPI.getAssetPath('databases/dexie-import.json');
+    console.log('Database saved successfully to:', fullPath);
 
+  } catch (error) {
+    console.error('Error saving default database:', error);
+  }
+};
 
+export const newGame = async () => {
+  try {
+    // called main.ts to set up the database in AppData
+    const userDbPath = await window.electronAPI.setupUserDatabase();
+    
 
+    const relativePath = 'assets/databases/dexie-import.json';
+    const fileContents = await window.electronAPI.readAssetFile(
+      relativePath
+    );
+
+    await dbHelpers.importFromBlob(
+      new Blob([fileContents], { type: 'application/json' }),
+    );
+
+    await db.subentries.toCollection().modify({ bookmark: false });
+    await db.friends.toCollection().modify({ bookmark: false });
+
+    await db.subentries.toCollection().modify({ unread: true });
+    await db.friends.toCollection().modify({ unread: true });
+
+      //await db.open(); // Re-open connection to trigger updates
+
+    console.log('New game started successfully! ' + userDbPath);
+  } catch (error) {
+    console.error('Error starting new game:', error);
+  }
+};
+
+export const newGameWithWarning = async () => {
+  if (window.confirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
+    await newGame();
+  }
+};
 
 export type { dbMainEntry, dbSubEntry, bothEntries };
-export { db, dbHelpers };
+// export { db, dbHelpers };
 
 
 

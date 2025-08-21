@@ -3,13 +3,45 @@ import { GameLogic } from '../../utils/gamelogic';
 import { StaticSingleDefault } from '../Templates/StaticSingleFunc-Default';
 import { StaticSingleMess } from '../Templates/StaticSingleFunc-Mess';
 import { AddEntryForm } from '../Admin/EditEntryFunc';
-import { db } from '../../utils/db'; // import the database
+import { db } from '../../utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useEffect } from 'react'; // 
 
 const StaticSingle = () => {
-  const { id } = useParams(); // get the id from the route
+  const { id } = useParams();
   const { isAdmin } = GameLogic();
 
+
+  const entryData = useLiveQuery(async () => {
+    const numericID = Number(id);
+    if (!id || isNaN(numericID) || numericID <= 0) {
+      return null;
+    }
+    
+    const entry = await db.friends.get(numericID);
+    if (!entry) {
+      console.error("Cannot find the entry with ID:", numericID);
+      return null;
+    }
+
+    return entry; 
+  }, [id]);
+
+
+  useEffect(() => {
+    const markAsRead = async () => {
+      if (entryData && entryData.unread) {
+        try {
+          await db.friends.update(Number(id), { unread: false });
+          console.log(entryData.fauxID + " was unread, now marked as read");
+        } catch (error) {
+          console.error("Error marking as read:", error);
+        }
+      }
+    };
+
+    markAsRead();
+  }, [entryData, id]); 
 
   const CheckConditionals = () => {
     if (!entryData) {
@@ -17,31 +49,24 @@ const StaticSingle = () => {
     }
 
     if (entryData.template === 'messed up') {
-      return  <StaticSingleMess itemID={id} />;
+      return <StaticSingleMess itemID={id} />;
     } else {
       return <StaticSingleDefault itemID={id} />;
     }
   };
 
-   const entryData = useLiveQuery(() => {
-     const numericID = Number(id);
-     if (!id || isNaN(numericID) || numericID <= 0) {
-       return null;
-     }
-     return db.friends.get(numericID);
-   }, [id]);
-
   return (
     <>
       {id ? (
         <>
-        {isAdmin ? ( <AddEntryForm itemID={id}/>) : ( <>
-
-          {/* <StaticSingleDefault itemID={id} /> */}
-
-          {CheckConditionals()}
-        </>)
-          }
+          {isAdmin ? (
+            <AddEntryForm itemID={id} />
+          ) : (
+            <>
+              Unread: {entryData?.unread}
+              {CheckConditionals()}
+            </>
+          )}
         </>
       ) : (
         <div>No ID provided.</div>

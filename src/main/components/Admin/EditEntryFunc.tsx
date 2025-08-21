@@ -193,8 +193,8 @@ export function AddEntryForm({
         bookmark: formValues.bookmark || false, // Optional field for bookmark
       });
 
-      setStatusMessage(`Entry ${title} successfully added. Got id ${id}`);
-      console.log('Saved attachments: ', formValues.media.length);
+      setStatusMessage(`Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`);
+
       navigate(`/edit-item/${id}`); // <-- Reset Page to show subitems
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {

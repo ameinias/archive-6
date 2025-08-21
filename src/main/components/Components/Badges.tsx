@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetSubentryCount, GetMediaCount,CheckAvailable } from '../../../hooks/dbHooks';
+import { GetSubentryCount, GetMediaCount,CheckAvailable, CheckUnread } from '../../../hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers } from '../../utils/db'; 
 
@@ -41,6 +41,21 @@ export function AvailableCell({
 
   return (
       <div className="badger">{available ? 'y' : 'x'}</div>
+  );
+}
+
+// badge to show current availabilty, used ont eh edit entry page. 
+export function UnreadBadge({ 
+  itemId, 
+  type = 'entry' 
+}: { 
+  itemId: number; 
+  type?: 'entry' | 'subentry' 
+}) {
+    const unread = CheckUnread(itemId,type );
+
+  return (
+      <div className={'badger' + (unread ? ' unread' : ' empty')}></div>
   );
 }
 

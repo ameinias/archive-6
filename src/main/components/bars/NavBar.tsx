@@ -3,23 +3,17 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
-import { dbHelpers, newGameFromFile } from '../../utils/db';
+import { dbHelpers, newGameWithWarning } from '../../utils/db';
 import Dropdown from 'react-bootstrap/Dropdown';
-import {newGameWithWarning} from '../Admin/ImportExport';
+
 
 
 const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
+    const CallNewGame = newGameWithWarning;
 
-  //     useEffect(() => {
-  //   dbHelpers.isEmpty().then(async (isEmpty) => {
-  //     if (isEmpty) {
-  //       const fileContents = await window.electronAPI.readAssetFile('assets/databases/dexie-import.json');
-  //       await newGameFromFile(fileContents);
-  //     }
-  //   });
-  // }, []);
+
 
 const resizeWindow = () => {
 
@@ -62,8 +56,8 @@ console.log("i failed to resize, can't fine window.electronAPI");
                 <Link to="/bookmarks">
           <Button variant="outline-primary">Bookmarks</Button>
         </Link>
-                    <Link to="/import-export">
-              <Button variant="outline-primary">Admin</Button>
+                    <Link to="/hashimport">
+              <Button variant="outline-primary">Import</Button>
             </Link>{' '}
         {isAdmin && (
           <>
@@ -78,10 +72,9 @@ console.log("i failed to resize, can't fine window.electronAPI");
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item className="dropdown-item"><Link to="/media/">Media List</Link></Dropdown.Item>
+        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/media/')}>Media List</Dropdown.Item>
         <Dropdown.Divider />
-        <Dropdown.Item className="dropdown-item" href="#/action-2"><Link to="/import-export">Database Actions</Link></Dropdown.Item>
-        <Dropdown.Item className="dropdown-item" onClick={newGameWithWarning} >New Game</Dropdown.Item>
+        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/import-export')}>Database Actions</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
 
@@ -89,7 +82,7 @@ console.log("i failed to resize, can't fine window.electronAPI");
         )}
         </div>
         <div>
-         <div className='login-info'> Logged in as:         <Link to="/user-profile"> sfsdf asfsdf
+         <div className='login-info'> Logged in as:         <Link to="/user-profile">
           
         {isAdmin ? 'Admin' : 'User'}</Link>{' '}
           <Button

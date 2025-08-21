@@ -41,6 +41,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAssetPath: (relativePath: string) => ipcRenderer.invoke('get-asset-path', relativePath),
   readAssetFile: (relativePath: string) => ipcRenderer.invoke('read-asset-file', relativePath),
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'), 
+  saveAssetFile: (relativePath: string, content: string) => ipcRenderer.invoke('save-asset-file', relativePath, content),
+
 });
 
 // console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSTLOADED');    fsdfsd

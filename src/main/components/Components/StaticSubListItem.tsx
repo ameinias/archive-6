@@ -19,50 +19,57 @@ export function StaticSubListItem({
   const navigate = useNavigate();
   const [statusMessage, setStatusMessage] = useState<string>('');
 
-
   const item = useLiveQuery(async () => {
     if (!itemID) return null;
     return await db.subentries.get(Number(itemID));
   }, [itemID]);
 
-    if (!item) {
+  if (!item) {
     return <div>Loading...</div>;
   }
 
-  if(item.available === false) {
-    return <div className="subentry-staticentry subEntry-not-available"><h3>{item.fauxID} : </h3> *****NOT AVAILABLE : DATA CORRUPTED*******</div>;
+  if (item.available === false) {
+    return (
+      <div className="subentry-staticentry subEntry-not-available">
+        <h3>{item.fauxID} : </h3> *****NOT AVAILABLE : DATA CORRUPTED*******
+      </div>
+    );
   }
 
   return (
-    <div className={`subentry-staticentry ${gameState.gameState.level > 0? 'haunted' : ''}`}>
-
-          
-        <div className='subentry-item'>
-              <div key={item.id}>
-                <div width="80%">
-                 <h3> <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-                    {item.fauxID} : {item.title}
-                  </Link></h3>
-                </div>
-                <div className={`subentry-desc subentry-${item.id}`}>
-                  {item.description}
-                  {item.mediaSub?.map((item) => (
-                    <div key={item.id}>
-                      <Link to={`/file-fullscreen/entry-${item.id}`}>
-                        {item.name}
-                      </Link>
-                    </div>
-                  ))}
-
-                  <br />
-                  <span className='image-subinfo subinfo'  >
-                  - {item.researcherID.toString()}  ({item.entryDate ? new Date(item.entryDate).toLocaleDateString() : 'No date'})
-                  </span>
-                </div>
+    <div
+      className={`subentry-staticentry ${gameState.gameState.level > 0 ? 'haunted' : ''}`}
+    >
+      <div className="subentry-item">
+        {/* <div > */}
+          <div width="80%" key={item.id}>
+            <h3>
+              {' '}
+              <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                {item.fauxID} : {item.title}
+              </Link>
+            </h3>
+          </div>
+          <div className="subentry-desc">
+            {item.description}
+            {item.mediaSub?.map((mediaItem) => (
+              <div key={mediaItem.id}>
+                <Link to={`/file-fullscreen/entry-${mediaItem.id}`}>
+                  {mediaItem.name}
+                </Link>
               </div>
-            
-            </div>
+            ))}
+
+            <br />
+            <span className="image-subinfo subinfo">
+              - {item.researcherID.toString()} (
+              {item.entryDate
+                ? new Date(item.entryDate).toLocaleDateString()
+                : 'No date'}
+              )
+            </span>
+          </div>
         </div>
-        
-        ) // return
+      </div>
+  ); // return
 }

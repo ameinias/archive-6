@@ -1,8 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { db } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
+import { UnreadBadge } from '../Components/Badges';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,6 +34,7 @@ export function StaticList() {
           ) : (
             sortedFriends.map((item) => (
               <tr key={item.id}>
+                <td><UnreadBadge itemId={item.id} type="entry" /></td>
                 <td width="80%">
                   <Link to={`/entry/${item.id}`}>
                     {item.fauxID} : {item.title}

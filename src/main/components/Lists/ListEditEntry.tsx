@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db, dbHelpers } from '../../utils/db'; // import the database
+import { db } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
@@ -13,11 +13,32 @@ import {
 } from '../../components/Components/Badges';
 
 export function EntryList() {
+    const [isLoading, setIsLoading] = useState(false);
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
   const gameLogic = GameLogic();
-  //const { subEntryOfParentLQ } = ListSubEntries();
+  
+
+useEffect(() => {
+    const handleNewGameStart = () => setIsLoading(true);
+    const handleNewGameEnd = () => {
+      setIsLoading(false);
+      // Force component refresh after new game
+      window.location.reload(); // Simple but effective
+    };
+
+    window.addEventListener('newGameStart', handleNewGameStart);
+    window.addEventListener('newGameEnd', handleNewGameEnd);
+
+    return () => {
+      window.removeEventListener('newGameStart', handleNewGameStart);
+      window.removeEventListener('newGameEnd', handleNewGameEnd);
+    };
+  }, []);
+
+
+
 
   const removeItem = (item: any) => {
     if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
@@ -41,6 +62,20 @@ export function EntryList() {
         return dateB - dateA;
       })
     : [];
+
+
+
+
+
+  if (isLoading || !friends || !subentries) {
+    return (
+      <div className="List">
+        <h3>Loading...</h3>
+      </div>
+    );
+  }
+
+
 
   return (
 <>

@@ -252,6 +252,7 @@ ipcMain.handle('setup-user-database', async () => {
       }
     }
     
+    console.log('User database setup at:', userDbPath);
     return userDbPath;
   } catch (error) {
     console.error('Error setting up user database:', error);
@@ -259,5 +260,56 @@ ipcMain.handle('setup-user-database', async () => {
   }
 });
 
+// copy bundled database to AppData on first run
+ipcMain.handle('overwrite-database', async () => {
+  try {
+    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets', 'databases');
+    const userDbPath = path.join(APP_DATA_PATH, 'dexie-import.json');
+    
+    // If user database doesn't exist, copy from bundled assets
+    // this shouldn't need to be made since the database is always copied on first run
+    if (!fs.existsSync(userDbPath)) {
+      // Create directories
+      fs.mkdirSync(APP_DATA_PATH, { recursive: true });
+      
+      // Copy from bundled assets
+      const bundledDbPath = app.isPackaged
+        ? path.join(process.resourcesPath, 'assets/databases/dexie-import.json')
+        : path.join(__dirname, '../../assets/databases/dexie-import.json');
+      
+      if (fs.existsSync(bundledDbPath)) {
+        fs.copyFileSync(bundledDbPath, userDbPath);
+        console.log('Copied database to user folder:', userDbPath);
+      }
+    }
+    
+    return userDbPath;
+  } catch (error) {
+    console.error('Error setting up user database:', error);
+    throw error;
+  }
+});
 
-
+// export database as file 
+// Add this after your existing ipcMain.handle calls in main.ts
+ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
+  try {
+    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
+    const fullPath = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+    
+    // Create directories if they don't exist
+    const dir = path.dirname(fullPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    
+    // Write the file
+    fs.writeFileSync(fullPath, content, 'utf8');
+    console.log('Saved asset file to:', fullPath);
+    
+    return fullPath;
+  } catch (error) {
+    console.error('Error saving asset file:', error);
+    throw error;
+  }
+});
