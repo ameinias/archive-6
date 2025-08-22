@@ -8,7 +8,7 @@ import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '../Components/StaticSubListItem';
 import { BookMarkCheck } from '../Components/Badges';
-import { getFileType } from '../../../hooks/dbHooks';
+import {MediaDisplay} from '../Components/MediaDisplay'
 
 export function StaticSingleDefault({ itemID }: { itemID?: number }) {
   const { id } = useParams(); // get the id from the route
@@ -84,55 +84,16 @@ export function StaticSingleDefault({ itemID }: { itemID?: number }) {
                   <table>
                     <tbody>
                       {item.media.map((file, index) => {
-                        // Check if it's actually a File object
-                        const isFile = file instanceof File;
-                        const fileType = getFileType(file.name || '');
-
-                        return (
+                        return(
                           <tr key={index}>
-                            <td width="80%">
-                              <Link
-                                to={`/file-fullscreen/entry-${item.id}-${index}`}
-                              >
-                                {isFile && fileType === 'image' ? (
-                                  <img
-                                    src={URL.createObjectURL(file)}
-                                    alt={file.name}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '300px',
-                                      height: 'auto',
-                                    }}
-                                    onLoad={() =>
-                                      URL.revokeObjectURL(
-                                        URL.createObjectURL(file),
-                                      )
-                                    } // Cleanup
-                                  />
-                                ) : isFile && fileType === 'video' ? (
-                                  <video
-                                    controls
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '300px',
-                                      height: 'auto',
-                                    }}
-                                  >
-                                    <source src={URL.createObjectURL(file)} />
-                                    Your browser does not support the video tag.
-                                  </video>
-                                ) : (
-                                  <div className="file-placeholder">
-                                    📎 {file.name || `File ${index + 1}`}
-                                  </div>
-                                )}
-                              </Link>
+                        <td>
+                       <MediaDisplay file={file} index={index}/>
 
-                              <div>
+                         
                                 {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                              </div>
+                          
                             </td>
-                            <td>{/* Empty for now */}</td>
+                            
                           </tr>
                         );
                       })}

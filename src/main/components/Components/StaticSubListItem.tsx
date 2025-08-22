@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
+import {MediaDisplay} from '../Components/MediaDisplay'
 
 export function StaticSubListItem({
   itemID,
@@ -43,21 +44,22 @@ export function StaticSubListItem({
       <div className="subentry-item">
         {/* <div > */}
           <div width="80%" key={item.id}>
-            <h3>
+            <h4>
               {' '}
-              <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+              {/* <Link to={`/edit-subitem/${item.parentId}/${item.id}`}> */}
                 {item.fauxID} : {item.title}
-              </Link>
-            </h3>
+              {/* </Link> */}
+            </h4>
           </div>
           <div className="subentry-desc">
             {item.description}
-            {item.mediaSub?.map((file, index) => {
-              <div key={mediaItem.id}>
+            {item.mediaSub?.map((file, index) => (
+              <div key={index}>
+                
                 <MediaDisplay file={file} index={index}/>
-                <Link to={`/file-fullscreen/entry-${mediaItem.id}`}>
+                {/* <Link to={`/file-fullscreen/entry-${file.id}`}> */}
                   {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                </Link>
+                {/* </Link> */}
               </div>
             ))}
 

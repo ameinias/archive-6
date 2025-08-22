@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { db } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
-import { UnreadBadge } from '../Components/Badges';
+import { BookMarkCheck, UnreadBadge } from '../Components/Badges';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ export function StaticList() {
   // Sort friends by date
   const sortedFriends = friends
     ? [...friends]
-    .filter(item => item.available === true)
+     .filter(item => item.available)
     .sort((a, b) => {
         const dateA = a.date ? new Date(a.date).getTime() : 0;
         const dateB = b.date ? new Date(b.date).getTime() : 0;
@@ -34,6 +34,7 @@ export function StaticList() {
           ) : (
             sortedFriends.map((item) => (
               <tr key={item.id}>
+                <td><BookMarkCheck itemID={item.id} type="entry" /></td>
                 <td><UnreadBadge itemId={item.id} type="entry" /></td>
                 <td width="80%">
                   <Link to={`/entry/${item.id}`}>

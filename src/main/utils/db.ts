@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
 import { categories, subCategories,researcherIDs } from "./constants.js";
 import "dexie-export-import";
+import {setStartAvalability} from "../../hooks/dbHooks"
 
 
 type Category = keyof typeof categories;
@@ -134,6 +135,7 @@ export const dbHelpers = {
 
 export const saveAsDefaultDatabase = async () => {
   try {
+    {await setDefaultParameters(); }
     const blob = await db.export({ prettyJson: true });
     
    
@@ -166,6 +168,22 @@ export const newGame = async () => {
     await dbHelpers.importFromBlob(
       new Blob([fileContents], { type: 'application/json' }),
     );
+    console.error("SET DEFAULTS");
+    {await setDefaultParameters(); }
+
+    console.log('New game started successfully! ' + userDbPath);
+  } catch (error) {
+    console.error('Error starting new game:', error);
+  }
+};
+
+export const setDefaultParameters = async () =>
+{
+  try{
+
+    console.error("SET DEFAULTS");
+      
+      await setStartAvalability(); 
 
     await db.subentries.toCollection().modify({ bookmark: false });
     await db.friends.toCollection().modify({ bookmark: false });
@@ -173,13 +191,10 @@ export const newGame = async () => {
     await db.subentries.toCollection().modify({ unread: true });
     await db.friends.toCollection().modify({ unread: true });
 
-      //await db.open(); // Re-open connection to trigger updates
-
-    console.log('New game started successfully! ' + userDbPath);
-  } catch (error) {
-    console.error('Error starting new game:', error);
+      } catch (error) {
+    return "Error.";
   }
-};
+}
 
 export const newGameWithWarning = async () => {
   if (window.confirm('Starting a new game will delete all current database entries. Proceed anyway?')) {

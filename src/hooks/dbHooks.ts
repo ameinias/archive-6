@@ -97,6 +97,7 @@ export function CheckUnread(itemId: number, type: 'entry' | 'subentry' = 'entry'
 }
 
 
+
 // export const markRead = async (itemId: number, type: 'entry' | 'subentry' = 'entry') => {
 //   if (!itemId) return false;
 
@@ -122,7 +123,7 @@ export function CheckUnread(itemId: number, type: 'entry' | 'subentry' = 'entry'
 // };
 
 export const findByHashAndUnLock = async (hash: string) => {
-  if (!hash) return false;
+  if (!hash) return "Please enter a hash code to continue.";
 
   try {
     const friendsUpdated = await db.friends
@@ -143,6 +144,16 @@ export const findByHashAndUnLock = async (hash: string) => {
   } catch (error) {
     console.error('Error unlocking items by hash:', error);
     return "Hash not recognized.";
+  }
+};
+
+export const setStartAvalability = async () => {
+  try {
+    await db.friends.toCollection().modify(item => { item.available = item.availableOnStart; });
+    await db.subentries.toCollection().modify(item => { item.available = item.availableOnStart; });
+    return "Set starting availability";
+  } catch (error) {
+    return "Error.";
   }
 };
 

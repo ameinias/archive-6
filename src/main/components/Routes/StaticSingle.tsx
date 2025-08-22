@@ -63,7 +63,6 @@ const StaticSingle = () => {
             <AddEntryForm itemID={id} />
           ) : (
             <>
-              Unread: {entryData?.unread}
               {CheckConditionals()}
             </>
           )}

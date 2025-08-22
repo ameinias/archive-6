@@ -56,9 +56,7 @@ export function ListSubEntries({ itemID }: { itemID?: number }) {
          <div>
               {subEntryOfParentLQ.map((item) => (
                 <div key={item.id}>
-                               <> 
-                               This is what I added: {item.id}  | {item.parentId}
-                              </>
+                          
                   <div >
                     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                       {item.fauxID} : {item.title}
