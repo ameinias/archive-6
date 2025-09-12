@@ -49,7 +49,7 @@ interface dbSubEntry {
 
 
 // This is for search and bookmark results
-interface bothEntries { 
+interface bothEntries {
   id: number; // id of search database
   origin: number; // index in og datrabase
   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
@@ -62,11 +62,11 @@ interface bothEntries {
 export const db = new Dexie('gb-current') as Dexie & {
   friends: EntityTable<
     dbMainEntry,
-    'id' 
+    'id'
   >;
   subentries: EntityTable<
     dbSubEntry,
-    'id' 
+    'id'
   >;
   export: (options?: any) => Promise<Blob>;
   import: (blob: Blob, options?: any) => Promise<Dexie>;
@@ -82,7 +82,7 @@ db.version(1).stores({
 
 // Schema declaration:
 db.version(2).stores({
-  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template, unread,hexHash', // Removed subItems
+  friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template, unread, hexHash', // Removed subItems
   subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template,unread, hexHash' // Fixed spelling and added parentId index
 });
 
@@ -117,13 +117,13 @@ export const dbHelpers = {
    async importFromBlob(blob: Blob): Promise<void> {
     await db.close();
     await db.delete();
-    
+
     await Dexie.import(blob, {
       progressCallback: (progress) => {
         console.log(`Import progress: ${progress.completedRows}/${progress.totalRows} rows`);
       },
     });
-    
+
     await db.open();
   },
 
@@ -137,15 +137,15 @@ export const saveAsDefaultDatabase = async () => {
   try {
     {await setDefaultParameters(); }
     const blob = await db.export({ prettyJson: true });
-    
-   
+
+
     const content = await blob.text();
-    
+
     await window.electronAPI.saveAssetFile(
       'assets/databases/dexie-import.json',
-      content 
+      content
     );
-    
+
     const fullPath = await window.electronAPI.getAssetPath('databases/dexie-import.json');
     console.log('Database saved successfully to:', fullPath);
 
@@ -158,7 +158,7 @@ export const newGame = async () => {
   try {
     // called main.ts to set up the database in AppData
     const userDbPath = await window.electronAPI.setupUserDatabase();
-    
+
 
     const relativePath = 'assets/databases/dexie-import.json';
     const fileContents = await window.electronAPI.readAssetFile(
@@ -168,8 +168,8 @@ export const newGame = async () => {
     await dbHelpers.importFromBlob(
       new Blob([fileContents], { type: 'application/json' }),
     );
-    console.error("SET DEFAULTS");
-    {await setDefaultParameters(); }
+
+    await setDefaultParameters();
 
     console.log('New game started successfully! ' + userDbPath);
   } catch (error) {
@@ -181,9 +181,9 @@ export const setDefaultParameters = async () =>
 {
   try{
 
-    console.error("SET DEFAULTS");
-      
-      await setStartAvalability(); 
+
+
+      await setStartAvalability();
 
     await db.subentries.toCollection().modify({ bookmark: false });
     await db.friends.toCollection().modify({ bookmark: false });

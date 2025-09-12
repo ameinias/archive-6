@@ -74,7 +74,7 @@ export function AddEntryForm({
           entryDate: entry.entryDate || new Date(),
           availableOnStart: entry.availableOnStart || false,
           available: entry.available || false,
-          researcherID: entry.researcherID || researcherIDs[0] || '',
+          // researcherID: entry.researcherID || researcherIDs[0] || '',
           media: entry.media || [],
           template: entry.template || 'default',
           bookmark: entry.bookmark || false,
@@ -356,7 +356,7 @@ export function AddEntryForm({
           <div className="col">
             {' '}
             {/*// ------ Researcher  ------*/}
-            <div className="formLabel">Researcher:</div>
+            {/* <div className="formLabel">Researcher:</div>
             <select
               className="form-control form-control-dropdown"
               multiple={false}
@@ -369,7 +369,7 @@ export function AddEntryForm({
                   {sub}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
         </div>
         <div className="row">

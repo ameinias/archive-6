@@ -141,6 +141,8 @@ export function AddSubEntryForm({
     subCategory: subCategories[0], // Default to first subcategory
     researcherID: researcherIDs[0],
     template: 'default', // Optional field for template
+    bookmark:false,
+    hexHash: 'aeoh-3q484-da232',
   };
 
   //*    ---------------    UseEffect   ------------------ */
@@ -174,7 +176,7 @@ export function AddSubEntryForm({
         setFormValue({
           fauxID: entry.fauxID,
           title: entry.title,
-          description: entry.description,
+          description: entry.description || "",
           category: entry.subCategory,
           date: entry.date || new Date(),
           entryDate: entry.entryDate,
@@ -183,7 +185,8 @@ export function AddSubEntryForm({
           mediaSub: entry.mediaSub || [],
           template: entry.template || 'default',
           bookmark: entry.bookmark || false,
-          hexHash: entry.hexHash || 'aeoh-3q484-da232',
+          researcherID: entry.researcherID,
+          hexHash: entry.hexHash,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -218,6 +221,14 @@ export function AddSubEntryForm({
 
   //*    ---------------    ENTRY FUNCTIONS  ------------------ */
 
+  async function returnToParent(){
+    try{
+      navigate(`/edit-item/${parentID}/`);
+    } catch (error) {
+      console.error('Error navigating to parent:', error);
+    }
+  }
+
   // Save the entry to the database.
   async function updateSubEntry() {
     try {
@@ -237,16 +248,16 @@ export function AddSubEntryForm({
         .update(idNumber, {
           title: formValues.title,
           fauxID: formValues.fauxID,
-          hexHash: formValues.hexHash || 'aeoh-3q484-da232',
+          hexHash: formValues.hexHash, // || 'aeoh-3q484-da232',
           description: formValues.description,
           mediaSub: formValues.mediaSub || [],
-          subCategory: subCategories[0], // Default to first subcategory
+          subCategory: formValues.subCategory || subCategories[0], // Default to first subcategory
           date: formValues.date,
           entryDate: formValues.entryDate,
           parentId: Number(parentID), // Link to the main entry
           available: formValues.available,
           availableOnStart: formValues.availableOnStart,
-          researcherID: researcherIDs[0], // researcher who added the entry
+          researcherID: formValues.researcherID, // researcher who added the entry
           template: formValues.template, // Handle  template
           bookmark: formValues.bookmark || false, // Handle optional bookmark
         })
@@ -284,7 +295,7 @@ export function AddSubEntryForm({
       const id = await db.subentries.add({
         title: formValues.title,
         fauxID: formValues.fauxID,
-        hexHash: formValues.hexHash || 'aeoh-3q484-da232',
+        hexHash: formValues.hexHash ,
         description: formValues.description,
         mediaSub: formValues.mediaSub,
         subCategory: subCategories[0], // Default to first subcategory
@@ -310,14 +321,15 @@ export function AddSubEntryForm({
 
   async function FinishEdit() {
     navigate(`/edit-item/${parentID}/`); // Go back to parent
+    setStatusMessage('Should return to parent');
 
-    // const newFauxID = await generateNewID();
-    // setFormValue({
-    //   ...defaultFormValue,
-    //   fauxID: newFauxID,
-    // });
-    // setNewEntry(true);
-    // console.log('FinishEdit called, new entry state:', isNewEntry);
+    const newFauxID = await generateNewID();
+    setFormValue({
+      ...defaultFormValue,
+      fauxID: newFauxID,
+    });
+    setNewEntry(true);
+    console.log('FinishEdit called, new entry state:', isNewEntry);
   }
 
   const ListMediaEntriesLength =
@@ -372,6 +384,10 @@ export function AddSubEntryForm({
   };
 
   //*    --------------------------    RETURN  ------------------------------- */
+
+
+
+
 
   return (
     <>
@@ -540,7 +556,7 @@ export function AddSubEntryForm({
                 placeholder="aeoh-3q484-da232"
                 value={formValues.hexHash}
                 onChange={handleChange}
-                name="hexhash"
+                name="hexHash"
               />
             </div>
 
@@ -587,7 +603,7 @@ export function AddSubEntryForm({
               </Button>
               <Button
                 className="btn-save-add-item"
-                onClick={addSubEntry}
+                onClick={returnToParent}
                 disabled={!isFormValid}
               >
                 &laquo; Return
