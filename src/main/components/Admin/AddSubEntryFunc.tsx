@@ -353,10 +353,10 @@ export function AddSubEntryForm({
           setStatusMessage('Invalid ID: ' + itemID);
           return;
         }
-
+        navigate(`/edit-item/${parentID}/`); // Go back to parent
         await db.subentries.delete(id);
         setStatusMessage(`Entry ${formValues.title} successfully deleted.`);
-        navigate(`/edit-item/${parentID}/`); // Go back to parent
+
       } catch (error) {
         setStatusMessage(`Failed to delete ${formValues.title}: ${error}`);
       }

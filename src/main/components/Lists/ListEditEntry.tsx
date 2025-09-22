@@ -18,7 +18,8 @@ export function EntryList() {
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
   const gameLogic = GameLogic();
-  
+    const { setStatusMessage } = GameLogic();
+
 
 useEffect(() => {
     const handleNewGameStart = () => setIsLoading(true);
@@ -43,14 +44,14 @@ useEffect(() => {
   const removeItem = (item: any) => {
     if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.friends.delete(item.id);
-      console.log('Removing item: ', item.title);
+      setStatusMessage(`Entry ${item.title} successfully deleted.`);
     }
   };
 
   const removeSubentry = (item: any) => {
     if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.subentries.delete(item.id);
-      console.log('Removing subentry: ', item.title);
+      setStatusMessage(`Removing subentry: ${item.title}`);
     }
   };
 
@@ -80,7 +81,7 @@ useEffect(() => {
   return (
 <>
 
-      {sortedFriends.length === 0 ? 
+      {sortedFriends.length === 0 ?
       (
         <div className="List">
         <table className="entryTable">
@@ -199,5 +200,5 @@ useEffect(() => {
       )}
        </>
   );
- 
+
 }
