@@ -10,10 +10,11 @@ const UserProfile = () => {
     const { isLoggedIn, setLoggedIn } = GameLogic();
     const { globalUser } = GameLogic();
     const { setStatusMessage } = GameLogic();
+      const navigate = useNavigate();
 
       const handleSubmit = () => {
 
-
+          navigate('/');
             setLoggedIn(false);
             setStatusMessage(`Logged out`);
 

@@ -30,7 +30,16 @@ let globalGameState = {
 };
 let globalStatus = '';
 let globalRemoveText = 'remove';
-let globalUser = { username: 'playerName', password: 'password' };
+let globalUser = (() => {
+  try {
+    const savedUser = localStorage.getItem('globalUser');
+    return savedUser ? JSON.parse(savedUser) : { username: 'playerName', password: 'password' };
+  } catch (error) {
+    // Fallback for SSR or environments without localStorage
+    console.warn('localStorage not available:', error);
+    return { username: 'playerName', password: 'password' };
+  }
+})();
 let globalAdminUser = { username: 'admin', password: 'password' };
 
 
@@ -146,6 +155,8 @@ export function GameLogic() {
 
   const setPlayerUsername = (username: string) => {
     globalUser.username = username;
+    localStorage.setItem('globalUser', JSON.stringify(globalUser));
+    userUpdateCallbacks.forEach(callback => callback(globalUser));
     console.log(`Player username set to: ${username}`);
   };
 
@@ -153,6 +164,8 @@ export function GameLogic() {
 
   const setPlayerPassword = (password: string) => {
     globalUser.password = password;
+    localStorage.setItem('globalUser', JSON.stringify(globalUser));
+    userUpdateCallbacks.forEach(callback => callback(globalUser));
     console.log(`Player password set to: ${password}`);
   };
 

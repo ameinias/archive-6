@@ -195,11 +195,10 @@ function ImportExport() {
             {toggleHelp && (
               <div>
                 <p>
-                  If the database is still empty, use the import feature and
-                  find the file at this location:
+                  If the database is still empty,ssssssssssss
                 </p>
                 <code>
-                  C:\path\to\app\archive-5\resources\assets\databases\dexie-import.json"
+                  C:\path\to\app\archive-6\resources\assets\databases\dexie-import.json"
                 </code>
                 <p>Sorry, this will be fixed in future releases!</p>
               </div>
