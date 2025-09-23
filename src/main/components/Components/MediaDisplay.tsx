@@ -6,8 +6,8 @@ export function MediaDisplay({ file, index }: { file?: File; index?: number; }) 
   const fileType = getFileType(file.name || '');
 
   return (
-    <tr key={index}>
-      <td width="80%">
+    <div key={index}>
+      <div width="80%">
         {/* <Link to={`/file-fullscreen/entry-${index}`}> */}
           {isFile && fileType === 'image' ? (
             <img
@@ -39,7 +39,7 @@ export function MediaDisplay({ file, index }: { file?: File; index?: number; }) 
           )}
         {/* </Link> */}
 
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 
 const StatusBar = () => {
-  const { isAdmin, toggleAdmin, globalStatus, setStatusMessage } = GameLogic();
+  const { isAdmin, toggleAdmin, globalStatus, setStatusMessage, isLoggedIn } = GameLogic();
 
 
   return (

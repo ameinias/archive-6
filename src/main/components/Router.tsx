@@ -6,18 +6,31 @@ import {
   useLocation,
 } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import './App.css';
 
-import { db, dbHelpers, newGame } from '../main/utils/db';
+import  AddEntry from './Routes/EditEntry';
+import Home from './Home';
+import UserProfile from './Login/UserProfile';
+import Register from './Login/Register';
+import Login from './Login/Login';
+import NavBar from './bars/NavBar';
+
+import ImportExport from './Admin/ImportExport';
+import StaticSingle from './Routes/StaticSingle';
+import AddSubEntry from './Routes/AddSubEntry';
+// import StyleTest from 'Style';
+import Search from './Search/Search';
+import FileFullscreen from './Templates/FileFullScreen';
+import Bookmarks from './Search/Bookmarks';
+import Media from './Search/Media';
+import HashImport from './Admin/HashImport';
+
+import {AuthProvider} from '../context/AuthProvider';
+
 import { useLiveQuery } from 'dexie-react-hooks';
-import { GameLogic } from '../main/utils/gamelogic';
-
-import RouterPath from '../main/components/Router';
-
-import {AuthProvider} from '../main/context/AuthProvider';
-import Login from '../main/components/Login/Login';
-import StatusBar from '../main/components/bars/StatusBar';
+import { db, dbHelpers, newGame } from '../utils/db';
+import { GameLogic } from '../utils/gamelogic';
 
 // import { ImportExport } from 'ImportExport';
 
@@ -34,12 +47,11 @@ function RouteTracker() {
   return null;
 }
 
-export default function App() {
+export default function RouterPath() {
   const { isAdmin, setAdmin } = GameLogic();
-  const { isLoggedIn, setLoggedIn } = GameLogic();
   const [dbKey, setDbKey] = useState(0);
     const [refreshKey, setRefreshKey] = useState(0);
-
+const { isLoggedIn, setLoggedIn } = GameLogic();
 
   useEffect(() => {
     checkNewGame();
@@ -91,6 +103,8 @@ export default function App() {
           '/bookmarks',
           '/entry/:id',
           '/hashimport',
+          '/login',
+          '/register'
         ];
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -117,23 +131,46 @@ export default function App() {
   const initialRoute = getInitialRoute();
 
   return (
+    // <Router initialEntries={[initialRoute]}>
+    //   <RouteTracker />
 <>
-    <Router initialEntries={[initialRoute]}>
-      <div className="wrapper" key={dbKey}>
-
-      <RouteTracker />
-
-
 {!isLoggedIn ? (
- 
           <Login />
         ) : (
-          <RouterPath />
-        )}
-        <StatusBar />
-      </div>
+        <>
+        <NavBar />
+        <div className="content">
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/user-profile" element={<UserProfile />} />
+              <Route path="/edit-item/:id" element={<AddEntry />} />
+              <Route path="/add-subitem/:parentID" element={<AddSubEntry />} />
+              <Route
+                path="/edit-subitem/:parentID/:itemID"
+                element={<AddSubEntry />}
+              />
+              <Route path="/import-export" element={<ImportExport />} />
+              <Route path="/entry/:id" element={<StaticSingle />} />
+              {/* <Route path="/style" element={<StyleTest />} /> */}
+              <Route path="/search" element={<Search />} />
+              <Route
+                path="/file-fullscreen/:fileID"
+                element={<FileFullscreen />}
+              />
+              <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/media" element={<Media />} />
+              <Route path="/hashimport" element={<HashImport />} />
+              <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
 
-</Router>
-</>
+
+              {/* <Route path="/register" element={<Register />} /> */}
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </div>
+        </div>
+        </>
+        )}
+        </>
   );
 }

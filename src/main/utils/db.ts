@@ -59,6 +59,15 @@ interface bothEntries {
   parentId?: number; // Include parentId for subentries
 }
 
+interface User {
+  email: string;
+  id: number;
+  name: string;
+  password: string;
+  role: string;
+}
+
+
 export const db = new Dexie('gb-current') as Dexie & {
   friends: EntityTable<
     dbMainEntry,
@@ -202,8 +211,7 @@ export const newGameWithWarning = async () => {
   }
 };
 
-export type { dbMainEntry, dbSubEntry, bothEntries };
-// export { db, dbHelpers };
+export type { dbMainEntry, dbSubEntry, bothEntries, User };
 
 
 

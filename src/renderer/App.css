@@ -80,6 +80,7 @@ h4{
 .login-info{
   color:lightgrey;
   font-size: 0.6rem;
+  margin:3px;
 }
 
 .navbar-fixed-bottom {
@@ -104,7 +105,7 @@ height: var(--navbar-bottom-height);
 }
 .dropdown-item {
   color: black;
-  font-size: 0.8rem;    
+  font-size: 0.8rem;
 }
 .dropdown-item:hover {
   background-color: #f0f0f0;
@@ -548,3 +549,24 @@ rotate: 90deg;
 .divTableHeading { display: table-header-group; }
 .divTableFoot { display: table-footer-group; }
 .divTableBody { display: table-row-group; }
+
+
+.login {
+
+margin: 15% auto;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0px 0px 13px 7px rgba(0, 0, 0, 0.1);
+}
+
+.loginInner{
+  /* border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 25px;
+  background-color: white;
+
+  width: 100%; */
+}

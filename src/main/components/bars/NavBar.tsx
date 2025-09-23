@@ -12,6 +12,7 @@ const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
     const CallNewGame = newGameWithWarning;
+    const { globalUser } = GameLogic();
 
 
 
@@ -82,9 +83,10 @@ console.log("i failed to resize, can't fine window.electronAPI");
         )}
         </div>
         <div>
-         <div className='login-info'> Logged in as:         <Link to="/user-profile">
-          
-        {isAdmin ? 'Admin' : 'User'}</Link>{' '}
+         <div className='login-info'> Logged in as:
+          <Link to="/user-profile">
+
+        {isAdmin ? 'Admin' : `${globalUser.username}`}</Link>{' '}
           <Button
             variant="outline-secondary"
             onClick={toggleAdmin}
