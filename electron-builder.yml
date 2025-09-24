@@ -1,0 +1,13 @@
+# electron-builder.yml
+appId: com.example.${env.APP_VERSION}
+productName: ${env.APP_NAME}
+files:
+  - 'src/**/*'
+  - 'package.json'
+  - 'config/**/*'
+directories:
+  output: 'build/${env.APP_VERSION}'
+mac:
+  icon: 'assets/icons/${env.APP_ICON}'
+win:
+  icon: 'assets/icons/${env.APP_ICON}'

@@ -16,7 +16,15 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
 
+let config;
+const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
+try {
+  config = require(`../../config/${appVersion}.json`);
+} catch (error) {
+  console.error(`Error loading config for ${appVersion}:`, error);
+  app.quit();
+}
 
 class AppUpdater {
   constructor() {
@@ -117,7 +125,7 @@ const createWindow = async () => {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'), // ../../.erb/dll/preload.js
-         
+
     },
   });
 
@@ -126,10 +134,11 @@ const createWindow = async () => {
     height: windowState.height || 555
   }, 'app is packed: ', app.isPackaged);
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  mainWindow.loadURL(resolveHtmlPath('index.html')); // old line
+ // mainWindow.loadURL(resolveHtmlPath(path.join(__dirname, `${appVersion}/index.html`)));
 
   mainWindow.on('ready-to-show', () => {
- 
+
     console.log('>>>>>>>>>>>>>' + __dirname + '../../.erb/dll/preload.js ' + app.isPackaged);
 
     if (!mainWindow) {
@@ -194,14 +203,14 @@ app
 // Replace your existing handlers with these:
 ipcMain.handle('get-asset-path', (event, relativePath) => {
 
-  
+
   const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
-  
+
   // Create the directory if it doesn't exist
   if (!fs.existsSync(APP_DATA_PATH)) {
     fs.mkdirSync(APP_DATA_PATH, { recursive: true });
   }
-  
+
   return path.join(APP_DATA_PATH, relativePath);
 });
 
@@ -210,18 +219,18 @@ ipcMain.handle('read-asset-file', async (event, relativePath) => {
 // use appdata or resources
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
     const appDataFile = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
-    
+
     // If file exists in AppData, use it
     if (fs.existsSync(appDataFile)) {
       console.log('Reading from AppData:', appDataFile);
       return fs.readFileSync(appDataFile, 'utf8');
     }
-    
+
     // Otherwise, fallback to bundled assets
     const bundledPath = app.isPackaged
       ? path.join(process.resourcesPath, relativePath)
       : path.join(__dirname, '../../', relativePath);
-    
+
     console.log('Reading from bundled assets:', bundledPath);
     return fs.readFileSync(bundledPath, 'utf8');
   } catch (error) {
@@ -235,23 +244,23 @@ ipcMain.handle('setup-user-database', async () => {
   try {
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets', 'databases');
     const userDbPath = path.join(APP_DATA_PATH, 'dexie-import.json');
-    
+
     // If user database doesn't exist, copy from bundled assets
     if (!fs.existsSync(userDbPath)) {
       // Create directories
       fs.mkdirSync(APP_DATA_PATH, { recursive: true });
-      
+
       // Copy from bundled assets
       const bundledDbPath = app.isPackaged
         ? path.join(process.resourcesPath, 'assets/databases/dexie-import.json')
         : path.join(__dirname, '../../assets/databases/dexie-import.json');
-      
+
       if (fs.existsSync(bundledDbPath)) {
         fs.copyFileSync(bundledDbPath, userDbPath);
         console.log('Copied database to user folder:', userDbPath);
       }
     }
-    
+
     console.log('User database setup at:', userDbPath);
     return userDbPath;
   } catch (error) {
@@ -265,24 +274,24 @@ ipcMain.handle('overwrite-database', async () => {
   try {
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets', 'databases');
     const userDbPath = path.join(APP_DATA_PATH, 'dexie-import.json');
-    
+
     // If user database doesn't exist, copy from bundled assets
     // this shouldn't need to be made since the database is always copied on first run
     if (!fs.existsSync(userDbPath)) {
       // Create directories
       fs.mkdirSync(APP_DATA_PATH, { recursive: true });
-      
+
       // Copy from bundled assets
       const bundledDbPath = app.isPackaged
         ? path.join(process.resourcesPath, 'assets/databases/dexie-import.json')
         : path.join(__dirname, '../../assets/databases/dexie-import.json');
-      
+
       if (fs.existsSync(bundledDbPath)) {
         fs.copyFileSync(bundledDbPath, userDbPath);
         console.log('Copied database to user folder:', userDbPath);
       }
     }
-    
+
     return userDbPath;
   } catch (error) {
     console.error('Error setting up user database:', error);
@@ -290,23 +299,23 @@ ipcMain.handle('overwrite-database', async () => {
   }
 });
 
-// export database as file 
+// export database as file
 // Add this after your existing ipcMain.handle calls in main.ts
 ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
   try {
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
     const fullPath = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
-    
+
     // Create directories if they don't exist
     const dir = path.dirname(fullPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     // Write the file
     fs.writeFileSync(fullPath, content, 'utf8');
     console.log('Saved asset file to:', fullPath);
-    
+
     return fullPath;
   } catch (error) {
     console.error('Error saving asset file:', error);
