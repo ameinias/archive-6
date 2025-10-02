@@ -16,20 +16,7 @@ const NavBar = () => {
 
 
 
-const resizeWindow = () => {
 
-  if (!window){
-    console.error("electronAPI is not defined on window");
-    return;
-  }
-  if (window.electronAPI?.resizeToDefault) {
-    window.electronAPI.resizeToDefault();
-    console.log("i tried to resize");
-  } else{
-console.log("i failed to resize, can't fine window.electronAPI");
-  }
-
-};
 
 
 
@@ -93,10 +80,7 @@ console.log("i failed to resize, can't fine window.electronAPI");
             title="eventually this will be a log in at the beginning of the game, displayed like this for testing."
           >
             {isAdmin ? 'Switch' : 'Switch'}
-          </Button> {''}
-                    <Button title="Resize Window" variant="outline-secondary" onClick={resizeWindow}>
-    [ ]
-  </Button>{' '}
+          </Button> {' '}
            </div>
         </div>
 

@@ -146,12 +146,14 @@ export const saveAsDefaultDatabase = async () => {
       content
     );
 
+
     const fullPath = await window.electronAPI.getAssetPath('databases/dexie-import.json');
     console.log('Database saved successfully to:', fullPath);
 
-          window.confirm(`Make sure you are also saving into the VS code project, to assets/databases/dexie-import.json.`);
+          // await window.electronAPI.showAlert(`Make sure you are also saving into the VS code project, to assets/databases/dexie-import.json.`);
 
 
+   console.log('Database saved successfully to:', fullPath);
 
 
   } catch (error) {
@@ -203,7 +205,7 @@ export const setDefaultParameters = async () =>
 }
 
 export const newGameWithWarning = async () => {
-  if (window.confirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
+  if (await window.electronAPI.showConfirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
     await newGame();
   }
 

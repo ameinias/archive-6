@@ -22,7 +22,7 @@ const Search = () => {
 
   const searchItem = (searchTerm) => {
     if (!searchTerm) {
-      alert('Please enter a search term.');
+      window.electronAPI.showAlert('Please enter a search term.');
       return;
     }
 

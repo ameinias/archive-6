@@ -19,6 +19,8 @@ import fs from 'fs';
 let config;
 const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
+const {dialog} = require('electron');
+
 try {
   config = require(`../../config/${appVersion}.json`);
 } catch (error) {
@@ -43,6 +45,32 @@ ipcMain.on('ipc-example', async (event, arg) => {
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
+
+ipcMain.handle('show-alert', async (event, str) => {
+  const options = {
+    type: 'warning',
+    buttons: ["Ok"],
+    defaultId: 0,
+    cancelId: 0,
+    detail: str,
+    message: ''
+  };
+  return dialog.showMessageBoxSync(null, options);
+});
+
+ipcMain.handle('show-confirm', async (event, str) => {
+  const options = {
+    type: 'question',
+    buttons: ["Cancel", "Ok"],
+    defaultId: 1,
+    cancelId: 0,
+    detail: str,
+    message: ''
+  };
+  return dialog.showMessageBoxSync(null, options);
+});
+
+
 
 ipcMain.on('resize-to-default', () => {
   if (mainWindow) {
@@ -137,6 +165,16 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html')); // old line
  // mainWindow.loadURL(resolveHtmlPath(path.join(__dirname, `${appVersion}/index.html`)));
 
+mainWindow.webContents.on('will-prevent-unload', (e) => {
+  // code for showMessageBoxSync, prevent default if the user wants to close
+  if (process.platform === 'win32') {
+    mainWindow.hide();
+    setTimeout(() => mainWindow.show());
+  }
+});
+
+
+
   mainWindow.on('ready-to-show', () => {
 
     console.log('>>>>>>>>>>>>>' + __dirname + '../../.erb/dll/preload.js ' + app.isPackaged);
@@ -165,8 +203,10 @@ const createWindow = async () => {
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
-    shell.openExternal(edata.url);
-    return { action: 'deny' };
+
+
+          shell.openExternal(edata.url);
+      return { action: 'deny' };
   });
 
   // Remove this if your app does not use auto updates
@@ -299,12 +339,17 @@ ipcMain.handle('overwrite-database', async () => {
   }
 });
 
+
+    // If there are build issues with saving default database, the problem is here in this fuction with projectExportPath
 // export database as file
-// Add this after your existing ipcMain.handle calls in main.js
 ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
   try {
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
     const fullPath = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+
+    const projectRoot = app.isPackaged
+  ? path.dirname(process.execPath)  // When packaged, use exe location
+  : path.join(__dirname, '../..');  // In dev, go up from compiled main.js
 
     // Create directories if they don't exist
     const dir = path.dirname(fullPath);
@@ -313,6 +358,18 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
     }
 
     // Write the file
+
+
+    const projectExportPath = path.join(projectRoot, 'assets/databases/', 'dexie-import.json');
+
+    const exportDir = path.dirname(projectExportPath);
+if (!fs.existsSync(exportDir)) {
+  fs.mkdirSync(exportDir, { recursive: true });
+}
+
+    fs.writeFileSync(projectExportPath, content, 'utf8');
+    console.log('Saved asset file to:', projectExportPath);
+
     fs.writeFileSync(fullPath, content, 'utf8');
     console.log('Saved asset file to:', fullPath);
 
@@ -322,3 +379,5 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
     throw error;
   }
 });
+
+

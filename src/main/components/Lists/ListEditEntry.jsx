@@ -41,15 +41,15 @@ useEffect(() => {
 
 
 
-  const removeItem = (item) => {
-    if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
+  const removeItem = async (item) => {
+    if (await window.electronAPI.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.friends.delete(item.id);
       setStatusMessage(`Entry ${item.title} successfully deleted.`);
     }
   };
 
-  const removeSubentry = (item) => {
-    if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
+  const removeSubentry = async (item) => {
+    if (await window.electronAPI.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.subentries.delete(item.id);
       setStatusMessage(`Removing subentry: ${item.title}`);
     }

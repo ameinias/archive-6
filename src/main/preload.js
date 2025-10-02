@@ -40,10 +40,35 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readAssetFile: (relativePath) => ipcRenderer.invoke('read-asset-file', relativePath),
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
   saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content),
+    showAlert: (message) => ipcRenderer.invoke('show-alert', message),
+    showConfirm: (message) => ipcRenderer.invoke('show-confirm', message)
 
 });
 
-// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSTLOADED');    fsdfsd
+
+
+
+// Add this to your preload.js file
+window.addEventListener('DOMContentLoaded', () => {
+  // Prevent middle-click on links
+  document.addEventListener('mousedown', (event) => {
+    if (event.button === 1 && event.target.closest('a')) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+
+  // Also prevent the auxclick event which handles middle-clicks
+  document.addEventListener('auxclick', (event) => {
+    if (event.button === 1 && event.target.closest('a')) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
+});
+
+
+
 
 
  export { electronHandler };

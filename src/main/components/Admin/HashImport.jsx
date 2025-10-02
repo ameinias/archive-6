@@ -18,7 +18,8 @@ const importHash =  async() => {
 
  const result = await findByHashAndUnLock(hashValue);
   console.log(result);
-window.alert(result);
+//window.alert(result);
+window.electronAPI.showAlert(result);
 }
 
   const handleChange = (e) => {

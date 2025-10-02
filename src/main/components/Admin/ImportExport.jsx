@@ -24,6 +24,8 @@ function ImportExport() {
     console.log('This feature is not hooked up yet. Please check back later.');
   };
 
+
+  // this function fakes a bunch of clicking and interaction. could be useful later for database ghosts. 
   const handleExport = async () => {
     try {
       // Ensure the export function is available
@@ -72,7 +74,7 @@ function ImportExport() {
     setStatusMessage('Attempting to reset the database...');
 
     if (
-      !window.confirm(`This will delete all current database entries. You may want to make a backup first. Proceed anyway?
+      !await window.electronAPI.showConfirm(`This will delete all current database entries. You may want to make a backup first. Proceed anyway?
       `)
     ) {
       console.log('no');

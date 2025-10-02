@@ -342,7 +342,7 @@ export function AddSubEntryForm({
 
   async function removeCurrentEntry() {
     if (
-      window.confirm(`Are you sure you want to delete "${formValues.title}"?`)
+      await window.electronAPI.showConfirm(`Are you sure you want to delete "${formValues.title}"?`)
     ) {
       try {
         const id = Number(itemID);
