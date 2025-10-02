@@ -17,6 +17,8 @@ export default class MenuBuilder {
       process.env.DEBUG_PROD === 'true'
     ) {
       this.setupDevelopmentEnvironment();
+    } else {
+      this.setupProductionEnvironment();
     }
 
     const template =
@@ -30,6 +32,7 @@ export default class MenuBuilder {
     return menu;
   }
 
+  // This is where to control the right click menu for development.
   setupDevelopmentEnvironment() {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
       const { x, y } = props;
@@ -41,6 +44,61 @@ export default class MenuBuilder {
             this.mainWindow.webContents.inspectElement(x, y);
           },
         },
+                {
+          label: 'Inspect element',
+          click: () => {
+            this.mainWindow.webContents.inspectElement(x, y);
+          },
+
+
+        },
+        {
+      label: 'Edit',
+      submenu: [
+        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
+        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        {
+          label: 'Select All',
+          accelerator: 'Command+A',
+          selector: 'selectAll:',
+        },
+      ],
+    }
+      ]).popup({ window: this.mainWindow });
+    });
+  }
+
+
+  // This is where to control the right click menu for development.
+  setupProductionEnvironment() {
+    this.mainWindow.webContents.on('context-menu', (_, props) => {
+      const { x, y } = props;
+
+      Menu.buildFromTemplate([
+        {
+          label: 'Excuse me, what are you doing?',
+
+        },
+                {
+      label: 'Edit',
+      submenu: [
+        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
+        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        {
+          label: 'Select All',
+          accelerator: 'Command+A',
+          selector: 'selectAll:',
+        },
+      ],
+    }
       ]).popup({ window: this.mainWindow });
     });
   }

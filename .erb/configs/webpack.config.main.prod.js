@@ -2,20 +2,20 @@
  * Webpack config for production electron main process
  */
 
-import path from 'path';
-import webpack from 'webpack';
-import { merge } from 'webpack-merge';
-import TerserPlugin from 'terser-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import baseConfig from './webpack.config.base';
-import webpackPaths from './webpack.paths';
-import checkNodeEnv from '../scripts/check-node-env';
-import deleteSourceMaps from '../scripts/delete-source-maps';
+const path = require('path');
+const webpack = require('webpack');
+const { merge } = require('webpack-merge');
+const TerserPlugin = require('terser-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const baseConfig = require('./webpack.config.base');
+const webpackPaths = require('./webpack.paths');
+const checkNodeEnv = require('../scripts/check-node-env');
+const deleteSourceMaps = require('../scripts/delete-source-maps');
 
 checkNodeEnv('production');
 deleteSourceMaps();
 
-const configuration: webpack.Configuration = {
+const configuration = {
   devtool: 'source-map',
 
   mode: 'production',
@@ -80,4 +80,4 @@ const configuration: webpack.Configuration = {
   },
 };
 
-export default merge(baseConfig, configuration);
+module.exports = merge(baseConfig, configuration);

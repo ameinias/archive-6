@@ -16,7 +16,6 @@ export default function App() {
 return (
   <div>
     {/* <NavBar /> */}
-    <div>If you can see this, i've upgraded from typescript ok.</div>
     <NewAppInterface />
     {/* {appVersion === 'newapp' ? <NewAppInterface /> : <OldAppInterface />} */}
   </div>

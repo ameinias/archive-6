@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import { rimrafSync } from 'rimraf';
-import webpackPaths from '../configs/webpack.paths';
+const fs = require('fs');
+const path = require('path');
+const { rimrafSync } = require('rimraf');
+const webpackPaths = require('../configs/webpack.paths');
 
-export default function deleteSourceMaps() {
+function deleteSourceMaps() {
   if (fs.existsSync(webpackPaths.distMainPath))
     rimrafSync(path.join(webpackPaths.distMainPath, '*.js.map'), {
       glob: true,
@@ -13,3 +13,5 @@ export default function deleteSourceMaps() {
       glob: true,
     });
 }
+
+module.exports = deleteSourceMaps;
