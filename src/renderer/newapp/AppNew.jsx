@@ -13,7 +13,7 @@ import { db, dbHelpers, newGame } from '../../main/utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { GameLogic } from '../../main/utils/gamelogic';
 
-import Test from '../../main/components/Test';
+import RouterPath from '../../main/components/Router';
 
 import Login from '../../main/components/Login/Login';
 import StatusBar from '../../main/components/bars/StatusBar';
@@ -127,7 +127,7 @@ export default function App() {
 
           <Login />
         ) : (
-          <Test />
+          <RouterPath />
         )}
         <StatusBar />
       </div>

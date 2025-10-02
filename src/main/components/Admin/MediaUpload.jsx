@@ -7,7 +7,7 @@ import { useActionState } from 'react';
 
 export function MediaUpload({ mediaFiles }) {
   const [isOver, setIsOver] = useState(false);
-  const [files, setFiles] = useActionState([]);
+  const [files, setFiles] = useState([]);
   const { setStatusMessage } = GameLogic();
   const gameLogic = GameLogic();
 

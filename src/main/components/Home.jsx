@@ -7,7 +7,7 @@ import { GameLogic } from '../utils/gamelogic';
 import { StaticList } from './Lists/StaticList';
 
 
-const Home: React.FC = () => {
+const Home = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
 
   return (

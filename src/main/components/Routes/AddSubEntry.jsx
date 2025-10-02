@@ -3,10 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
 
 const AddSubEntry = () => {
-  const { parentID, itemID } = useParams<{
-    parentID;
-    itemID? ;
-  }>();
+const { parentID, itemID } = useParams();
 
   console.log('URL params - parentID:', parentID, 'itemID:', itemID);
 

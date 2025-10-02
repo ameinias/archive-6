@@ -11,7 +11,7 @@ import { GameLogic } from '../../utils/gamelogic';
 const Search = () => {
   const [val, setVal] = React.useState('');
   const {isAdmin} = GameLogic();
-  const [results, setResults] = React.useState<bothEntries[]>([]);
+  const [results, setResults] = React.useState([]);
 
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
@@ -35,7 +35,7 @@ const Search = () => {
           item.description.toLowerCase().includes(searchTermLower)),
     );
 
-    let tempItems: bothEntries[] = [];
+    let tempItems = [];
     let nextID = 0;
 
     if (foundItems) {

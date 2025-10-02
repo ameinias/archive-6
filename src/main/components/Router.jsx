@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css';
 
-import DescriptionEntry from './Components/DescriptionEntry';
+// import DescriptionEntry from './Components/DescriptionEntry';
 
 import  AddEntry from './Routes/EditEntry';
 import Home from './Home';
@@ -162,7 +162,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/media" element={<Media />} />
               <Route path="/hashimport" element={<HashImport />} />
               <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
-              <Route path="/test" element={<DescriptionEntry />} />
+              {/* <Route path="/test" element={<DescriptionEntry />} /> */}
 
 
               {/* <Route path="/register" element={<Register />} /> */}

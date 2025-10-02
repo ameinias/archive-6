@@ -31,7 +31,7 @@ export function AvailableCell({
   itemId,
 
 }) {
-    const available = dbHooks.CheckAvailable(itemId,type );
+    const available = dbHooks.CheckAvailable(itemId );
 
   return (
       <div className="badger">{available ? 'y' : 'x'}</div>
@@ -43,7 +43,7 @@ export function UnreadBadge({
   itemId
 
 }) {
-    const unread = dbHelpers.CheckUnread(itemId,type );
+    const unread = dbHooks.CheckUnread(itemId );
 
   return (
       <div className={'badger' + (unread ? ' unread' : ' empty')}></div>
@@ -54,7 +54,7 @@ export function BookMarkCheck({
   itemID
 }) {
 
-const entry = dbHooks.ReturnEntryOrSubentry(itemID);
+const entry = dbHooks.useReturnEntryOrSubentry(itemID);
 
   const isBookmarked = entry?.bookmark || false;
 
@@ -64,12 +64,8 @@ const entry = dbHooks.ReturnEntryOrSubentry(itemID);
     try {
       const newBookmarkState = !isBookmarked;
 
-      dbHooks.ReturnDatabase(itemID).update(Number(itemID), { bookmark: newBookmarkState });
+      await dbHooks.updateEntryProperty(itemID, { bookmark: newBookmarkState });
 
-    //   if (type === 'subentry') {
-    //     await db.subentries.update(Number(itemID), { bookmark: newBookmarkState });
-    //   } else {
-    //     await db.friends.update(Number(itemID), { bookmark: newBookmarkState });
     //   }
  } catch (error) {
       console.error('Error updating bookmark:', error);

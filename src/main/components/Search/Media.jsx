@@ -19,7 +19,7 @@ import {getFileType} from '../../../hooks/dbHooks';
 // }
 
 const Media = () => {
-  const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
+  const [mediaFiles, setMediaFiles] = useState([]);
   const gameLogic = GameLogic();
 
   const friends = useLiveQuery(() => db.friends.toArray());
@@ -30,7 +30,7 @@ const Media = () => {
   }, [friends, subentries]);
 
   const findMedia = () => {
-    let tempMediaFiles: MediaFile[] = [];
+    let tempMediaFiles = [];
     let nextID = 0;
 
 
@@ -88,7 +88,7 @@ const Media = () => {
     setMediaFiles(tempMediaFiles);
   };
 
-  const removeMediaFile = (mediaId: number) => {
+  const removeMediaFile = (mediaId) => {
     setMediaFiles(mediaFiles.filter(file => file.id !== mediaId));
   };
 
@@ -130,7 +130,7 @@ const Media = () => {
                   src={URL.createObjectURL(mediaFile.file)}
                   alt={mediaFile.name}
                   style={{ width: '100%', height: 'auto', maxWidth: '200px' }}
-                  onLoad={() => URL.revokeObjectURL(URL.createObjectURL(mediaFile.file!))}
+                  onLoad={() => URL.revokeObjectURL(URL.createObjectURL(mediaFile.file))}
                 />
               )}
 

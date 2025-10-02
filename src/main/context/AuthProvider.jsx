@@ -14,9 +14,9 @@ const AuthContext = createContext<AuthContextValueType>({
   setAuth: () => undefined
 });
 
-export const AuthProvider = ({ children }: AuthProviderType) => {
+export const AuthProvider = ({ children }) => {
 
-  const [auth, setAuth] = useState<IAuthContext>(authContextDefault);
+  const [auth, setAuth] = useState(authContextDefault);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

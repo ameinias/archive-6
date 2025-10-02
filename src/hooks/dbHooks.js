@@ -57,49 +57,28 @@ export function GetAvailableSubCount(parentID){
 }
 
 
-// is this  entry/subentry available?
-export function CheckAvailable(itemId) {
-  return useLiveQuery(async () => {
-    if (!itemId) return 0;
+// This can be called from multiple hooks
+const getEntryOrSubentry = async (itemId) => {
+  if (!itemId) return null;
+  return (await db.friends.get(itemId)) || (await db.subentries.get(itemId));
+};
 
-    try{
-
-    const item = (await db.friends.get(itemId)) || (await db.subentries.get(itemId));
-
-    return item?.available;
-      }catch (error) {
-    console.log('Error, database may be closed');
-    return 0;
-  }
-  }, itemId) || false;
-}
-
-
-
-// is this  entry/subentry available?
+// Use it in multiple hooks
 export function CheckUnread(itemId) {
   return useLiveQuery(async () => {
-    if (!itemId) return 0;
-
-    try{
-
-
-    const item = ReturnEntryOrSubentry(itemId);
-
-    //= ReturnEntryOrSubentry(itemId);
-
-    //     if (db.friends.get(itemId)) item= db.friends.get(itemId);
-
-    // if (db.subentries.get(itemId)) item= db.subentries.get(itemId);
-
-
+    const item = await getEntryOrSubentry(itemId);
     return item?.unread;
-      }catch (error) {
-    console.log('Error, database may be closed');
-    return 0;
-  }
-  }, itemId) || false;
+  }, [itemId]);
 }
+
+export function CheckAvailable(itemId) {
+  return useLiveQuery(async () => {
+    const item = await getEntryOrSubentry(itemId);
+    return item?.available;
+  }, [itemId]);
+}
+
+
 
 
 
@@ -107,7 +86,7 @@ export function CheckUnread(itemId) {
 
   // The logic in these might need to get fixed if theire are overlapped IDs in both databases.
 
-export function ReturnEntryOrSubentry(itemId) {
+export function useReturnEntryOrSubentry(itemId) {
   return useLiveQuery(async () => {
     if (!itemId) return null;
 
@@ -118,7 +97,7 @@ export function ReturnEntryOrSubentry(itemId) {
   return null;
 }
 
-export function ReturnDatabase(itemId) {
+export function useReturnDatabase(itemId) {
   return useLiveQuery(async () => {
     if (!itemId) return null;
 
@@ -237,3 +216,28 @@ export function useSubentry(itemId) {
     if (videoExts.includes(ext || '')) return 'video';
     return 'other';
   };
+
+  // In dbHooks.js - add this regular function (not a hook)
+export const updateEntryProperty = async (itemId, updates) => {
+  if (!itemId) return false;
+
+  try {
+    // Try to find which table the item is in
+    const mainEntry = await db.friends.get(Number(itemId));
+    if (mainEntry) {
+      await db.friends.update(Number(itemId), updates);
+      return true;
+    }
+
+    const subEntry = await db.subentries.get(Number(itemId));
+    if (subEntry) {
+      await db.subentries.update(Number(itemId), updates);
+      return true;
+    }
+
+    return false; // Item not found
+  } catch (error) {
+    console.error('Error updating entry:', error);
+    return false;
+  }
+};

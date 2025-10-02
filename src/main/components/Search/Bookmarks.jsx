@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { db, dbMainEntry, bothEntries } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
@@ -19,7 +19,7 @@ const Bookmarks = () => {
 
   const bookmark = () => {
 
-    let tempItems: bothEntries[] = [];
+    let tempItems = [];
     let nextID = 0;
 
       const foundItems = friends?.filter(

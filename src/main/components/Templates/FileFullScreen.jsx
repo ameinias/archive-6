@@ -11,13 +11,13 @@ import { getFileType } from '../../../hooks/dbHooks';
 
 
 const FileFullscreen = () => {
-  const { fileID } = useParams<{ fileID }>(); // Get fileID from route params
+  const { fileID } = useParams(); // Get fileID from route params
   const { isAdmin } = GameLogic();
   const navigate = useNavigate();
-  const [fileType, setFileType] = useState<'image' | 'video' | 'other'>('other');
-  const [entryId, setEntryId] = useState<number | null>(null);
-  const [mediaIndex, setMediaIndex] = useState<number | null>(null);
-  const [entryType, setEntryType] = useState<string | null>(null);
+  const [fileType, setFileType] = useState('other');
+  const [entryId, setEntryId] = useState(null);
+  const [mediaIndex, setMediaIndex] = useState(null);
+  const [entryType, setEntryType] = useState(null);
 
 
   // FIXED: Parse the fileID to get entryId and mediaIndex

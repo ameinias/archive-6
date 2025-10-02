@@ -41,14 +41,14 @@ useEffect(() => {
 
 
 
-  const removeItem = (item: any) => {
+  const removeItem = (item) => {
     if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.friends.delete(item.id);
       setStatusMessage(`Entry ${item.title} successfully deleted.`);
     }
   };
 
-  const removeSubentry = (item: any) => {
+  const removeSubentry = (item) => {
     if (window.confirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.subentries.delete(item.id);
       setStatusMessage(`Removing subentry: ${item.title}`);

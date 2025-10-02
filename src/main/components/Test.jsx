@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import UserProfile from './Login/UserProfile';
 // import Register from './Login/Register';
 // import Login from './Login/Login';
-// import NavBar from './bars/NavBar';
+import NavBar from './bars/NavBar';
 
 // import ImportExport from './Admin/ImportExport';
 import StaticSingle from './Routes/StaticSingle';
@@ -140,7 +140,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
           <Login />
         ) : (
         <>
-        {/* <NavBar /> */}
+        <NavBar />
         <div className="content">
           <div className="container">
             <Routes>
