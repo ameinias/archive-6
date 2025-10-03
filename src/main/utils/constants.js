@@ -6,7 +6,12 @@
   export const subCategories= [
     'MediaItem',
     'Document',
-    ''
+    'Commentary',
+    'AudioLog',
+    'VideoLog',
+    'Image',
+    'Text',
+    'Metadata'
   ];
     export const researcherIDs= [
     'RM','EQ'
