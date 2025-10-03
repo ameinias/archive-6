@@ -2,25 +2,53 @@ import React from 'react';
 
 // use import * as FormBits from '../main/components/Components/FormAssets';
 
-// badge to show current availabilty, used ont eh edit entry page.
-export function FormTextBox() {
+export function FormTextBox({label, name, formValue, readOnly, onChange}) {
 
+    return (
+        <div className='row'>
 
-
-  return (
-      <div>
-        <input type="text" placeholder="Enter text..." />
-      </div>
-  );
+            <div className="formLabel">{label}</div>
+            <input
+                name={name}
+                className="form-control col"
+                type="text"
+                placeholder="Title"
+                value={formValue}
+                onChange={onChange}
+                readOnly={readOnly}/>
+        </div>
+    );
 }
 
-// badge to show current availabilty, used ont eh edit entry page.
 export function FormBool() {
-  return (
-      <div>
-        <input type="checkbox" />
-      </div>
-  );
+    return (
+        <div>
+            <input type="checkbox"/>
+        </div>
+    );
 }
 
-
+export function FormDropDown({
+    label,
+    name,
+    multiple,
+    formValue,
+    readOnly,
+    onChange,
+    options
+}) {
+    return (
+        <div className='row'>
+            <div className="formLabel">{label}</div>
+            <select
+                name={name}
+                className="form-control form-control-dropdown col"
+                multiple={multiple}
+                value={formValue}
+                onChange={onChange}
+                disabled={readOnly}>
+                {options}
+            </select>
+        </div>
+    );
+}

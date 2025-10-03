@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { categories, subCategories,researcherIDs } from "./constants.js";
+import { categories, subCategories,researcherIDs,hexHashes } from "./constants.js";
 import "dexie-export-import";
 import {setStartAvalability} from "../../hooks/dbHooks.js"
 
@@ -85,9 +85,6 @@ db.version(2).stores({
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
 export const dbHelpers = {
 
-
-
-
   // Add a new main entry
   async addMainEntry(entry) {
     return await db.friends.add(entry);
@@ -125,6 +122,31 @@ export const dbHelpers = {
     return await db.export();
   },
 
+
+  // Helper function to convert IDs to names for display. Gets possibly an array from an entry and returns their readable name.
+ getHexHashNamesFromIds(ids) {
+    return ids.map(id => {
+        const hash = hexHashes.find(h => h.id === parseInt(id));
+        console.log("getHexHashNamesFromIds", id, hash ? hash.name : "no");
+        return hash ? hash.name : id;
+    });
+},
+
+// Helper function to get IDs from the database value
+ getHexHashIds(value) {
+    // If it's already an array of IDs, return as-is
+    if (Array.isArray(value) && value.every(v => typeof v === 'number')) {
+        return value;
+    }
+    // If it's names, convert to IDs
+    if (Array.isArray(value)) {
+        return value.map(name => {
+            const hash = hexHashes.find(h => h.name === name);
+            return hash ? hash.id : name;
+        });
+    }
+    return [value];
+},
 
 /////////////////////////////////////////////////
 
