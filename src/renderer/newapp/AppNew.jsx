@@ -90,6 +90,10 @@ export default function App() {
           '/bookmarks',
           '/entry/:id',
           '/hashimport',
+                    '/login',
+          '/register',
+          '/media',
+          '/hex',
         ];
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -99,6 +103,8 @@ export default function App() {
           lastRoute.startsWith('/add-subitem/') ||
           // || lastRoute.startsWith('/add-subitem/')
           lastRoute.startsWith('/file-fullscreen/');
+          lastRoute.startsWith('/hex/');
+                    lastRoute.startsWith('/media/');
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
           //  console.log('Using last route:', lastRoute);

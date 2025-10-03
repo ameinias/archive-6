@@ -1,5 +1,5 @@
 import React from 'react';
-// import { GetSubentryCount, GetMediaCount,CheckAvailable, CheckUnread,  ReturnEntryOrSubentry } from '../../../hooks/dbHooks';
+
 import * as dbHooks from '../../../hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers } from '../../utils/db';

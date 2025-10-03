@@ -570,3 +570,9 @@ margin: 15% auto;
 
   width: 100%; */
 }
+
+.hexInfo{
+  .p{
+margin-bottom:0.5rem;
+  }
+}

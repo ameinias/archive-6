@@ -172,18 +172,30 @@ export const setStartAvalability = async () => {
 };
 
 // picks between entries and wubentries and poulls out their respective media query.
-export function GetMediaCount(itemId) {
+export function GetMediaCount(itemId, type) {
   return useLiveQuery(async () => {
     if (!itemId) return 0;
 
     try {
+
+      if(type === 'entry'){
       const entry = await db.friends.get(itemId);
-      if (entry) return entry.media?.length || 0;
+      return entry?.media?.length || 0;
+      }
 
+      if(type === 'subentry'){
       const subentry = await db.subentries.get(itemId);
-      if (subentry) return subentry.mediaSub?.length || 0;
+      return subentry?.mediaSub?.length || 0;
+      }
 
-      return 0;
+      // // Fallback: check both tables
+      // const entry = await db.friends.get(itemId);
+      // if (entry) return entry.media?.length || 0;
+
+      // const subentry = await db.subentries.get(itemId);
+      // if (subentry) return subentry.mediaSub?.length || 0;
+
+      // return 0;
     } catch (error) {
       console.log('Error getting media count:', error);
       return 0;

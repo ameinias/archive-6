@@ -24,6 +24,14 @@ function Login() {
     navigate('/');
   };
 
+    const handleKeyDown = (e) => {
+
+  if (e.key === 'Enter') {
+    handleSubmit();
+  }
+};
+
+
     const handleSubmit = () => {
       // Will eventually check database but for now just checks for admin
 
@@ -99,6 +107,7 @@ function Login() {
               name="password"
               placeholder="password"
               value={formValues.password}
+              onKeyDown={handleKeyDown}
               onChange={handleChange}
             />
 

@@ -60,7 +60,8 @@ const NavBar = () => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/media/')}>Media List</Dropdown.Item>
+        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/media')}>Media List</Dropdown.Item>
+        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/hex')}>Hex List</Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item className="dropdown-item" onClick={() => navigate('/import-export')}>Database Actions</Dropdown.Item>
       </Dropdown.Menu>

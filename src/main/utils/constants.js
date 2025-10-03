@@ -14,7 +14,9 @@
     'Metadata'
   ];
     export const researcherIDs= [
-    'RM','EQ'
+    'RM','EQ',
+    { id:1,name: 'RM',  note: 'For scenes that are available at the beginning of the game.' },
+    { id:2, name: 'EQ', note: 'For the first unlockable scenes.' },
   ];
       export const entryTemplate= [
     'default',

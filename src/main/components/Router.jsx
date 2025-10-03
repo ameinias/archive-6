@@ -11,7 +11,7 @@ import React, { useEffect, useState } from 'react';
 
 // import DescriptionEntry from './Components/DescriptionEntry';
 
-import  AddEntry from './Routes/EditEntry';
+
 import Home from './Home';
 import UserProfile from './Login/UserProfile';
 import Register from './Login/Register';
@@ -19,20 +19,26 @@ import Login from './Login/Login';
 import NavBar from './bars/NavBar';
 
 import ImportExport from './Admin/ImportExport';
+import HashImport from './Admin/HashImport';
+
+//Entries
 import StaticSingle from './Routes/StaticSingle';
 import AddSubEntry from './Routes/AddSubEntry';
-// import StyleTest from 'Style';
+import  AddEntry from './Routes/EditEntry';
+
+// Lists
 import Search from './Search/Search';
 import FileFullscreen from './Templates/FileFullScreen';
 import Bookmarks from './Search/Bookmarks';
 import Media from './Search/Media';
-import HashImport from './Admin/HashImport';
+import  HexList  from './Search/HexList';
 
+//Tools
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers, newGame } from '../utils/db';
 import { GameLogic } from '../utils/gamelogic';
 
-// import { ImportExport } from 'ImportExport';
+ 
 
 // Component to track and restore route on hot reload
 function RouteTracker() {
@@ -79,60 +85,60 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
       setDbKey((prev) => prev + 1);
     };
 
-  // Get the initial route synchronously before render
-  const getInitialRoute = () => {
-    const restoreLastRoute =
-      localStorage.getItem('restoreLastRoute') !== 'false';
+    // This now happens in AppNew.jsx
+  // // Get the initial route synchronously before render
+  // const getInitialRoute = () => {
+  //   const restoreLastRoute =
+  //     localStorage.getItem('restoreLastRoute') !== 'false';
 
-    if (restoreLastRoute) {
-      const lastRoute = localStorage.getItem('lastRoute');
-      //console.log('Last route from localStorage:', lastRoute);
+  //   if (restoreLastRoute) {
+  //     const lastRoute = localStorage.getItem('lastRoute');
+  //     //console.log('Last route from localStorage:', lastRoute);
 
-      if (lastRoute) {
-        const validRoutes = [
-          '/',
-          '/user-profile',
-          '/file-fullscreen/:fileID',
-          '/import-export',
-          'search',
-          '/style',
-          '/edit-item/new',
-          '/edit-item/:id',
-          '/add-subitem/:parentID',
-          '/edit-subitem/:parentID/:itemID',
-          '/bookmarks',
-          '/entry/:id',
-          '/hashimport',
-          '/login',
-          '/register'
-        ];
-        const isDynamicRoute =
-          lastRoute.startsWith('/edit-item/') ||
-          lastRoute.startsWith('/entry/') ||
-          lastRoute.startsWith('/single-item/') ||
-          lastRoute.startsWith('/edit-subitem/') ||
-          lastRoute.startsWith('/add-subitem/') ||
-          // || lastRoute.startsWith('/add-subitem/')
-          lastRoute.startsWith('/file-fullscreen/');
+  //     if (lastRoute) {
+  //       const validRoutes = [
+  //         '/',
+  //         '/user-profile',
+  //         '/file-fullscreen/:fileID',
+  //         '/import-export',
+  //         'search',
+  //         '/style',
+  //         '/edit-item/new',
+  //         '/edit-item/:id',
+  //         '/add-subitem/:parentID',
+  //         '/edit-subitem/:parentID/:itemID',
+  //         '/bookmarks',
+  //         '/entry/:id',
+  //         '/hashimport',
+  //         '/login',
+  //         '/register',
+  //         '/media',
+  //         '/hex',
+  //       ];
+  //       const isDynamicRoute =
+  //         lastRoute.startsWith('/edit-item/') ||
+  //         lastRoute.startsWith('/entry/') ||
+  //         lastRoute.startsWith('/single-item/') ||
+  //         lastRoute.startsWith('/edit-subitem/') ||
+  //         lastRoute.startsWith('/add-subitem/') ||
+  //         lastRoute.startsWith('/file-fullscreen/') ||
+  //         lastRoute.startsWith('/hex/');
 
-        if (validRoutes.includes(lastRoute) || isDynamicRoute) {
-          //  console.log('Using last route:', lastRoute);
-          return lastRoute;
-        } else {
-          console.log('Invalid route, using default');
-        }
-      } else {
-        console.log('No last route found, using default');
-      }
-    }
-    return '/'; // Default route.  A comment
-  };
+  //       if (validRoutes.includes(lastRoute) || isDynamicRoute) {
+  //         return lastRoute;
+  //       } else {
+  //         console.log('Invalid route, using default');
+  //       }
+  //     } else {
+  //       console.log('No last route found, using default ', lastRoute);
+  //     }
+  //   }
+  //   return '/'; // Default route. 
+  // };
 
-  const initialRoute = getInitialRoute();
+  // const initialRoute = getInitialRoute();
 
   return (
-    // <Router initialEntries={[initialRoute]}>
-    //   <RouteTracker />
 <>
 {!isLoggedIn ? (
           <Login />
@@ -143,30 +149,31 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
           <div className="container">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/user-profile" element={<UserProfile />} />
+
+   {/* Entries ---------------------------------------------------------- */}
               <Route path="/edit-item/:id" element={<AddEntry />} />
               <Route path="/add-subitem/:parentID" element={<AddSubEntry />} />
               <Route
                 path="/edit-subitem/:parentID/:itemID"
                 element={<AddSubEntry />}
               />
-              <Route path="/import-export" element={<ImportExport />} />
               <Route path="/entry/:id" element={<StaticSingle />} />
-              {/* <Route path="/style" element={<StyleTest />} /> */}
+ {/* admin tools -------------------            -------------------------*/}
+              <Route path="/import-export" element={<ImportExport />} />
+
+  {/* Lists   ------------------------------------------------------------ */}
               <Route path="/search" element={<Search />} />
-              <Route
-                path="/file-fullscreen/:fileID"
-                element={<FileFullscreen />}
-              />
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/media" element={<Media />} />
-              <Route path="/hashimport" element={<HashImport />} />
+              <Route path="/hex" element={<HexList />} />
               <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
               {/* <Route path="/test" element={<DescriptionEntry />} /> */}
 
-
+{/* PlayerAdmin   ------------------------------------------------------------ */}
               {/* <Route path="/register" element={<Register />} /> */}
               <Route path="/login" element={<Login />} />
+              <Route path="/user-profile" element={<UserProfile />} />
+               <Route path="/hashimport" element={<HashImport />} />
             </Routes>
           </div>
         </div>

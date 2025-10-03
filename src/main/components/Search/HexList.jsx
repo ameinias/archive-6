@@ -4,30 +4,31 @@ import { db, dbMainEntry, bothEntries } from '../../utils/db'; // import the dat
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
 import { useNavigate, Link } from 'react-router-dom';
+import { hexHashes } from '../../utils/constants';
 
-const Bookmarks = () => {
+const HexList = () => {
   const [val, setVal] =  useState('');
-  const [results, setResults] =  useState([]);
+  //const [results, setResults] =  useState([]);
 
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
-
+    // const hexHashList = hexHashes;
 
   useEffect(() => {
-    bookmark();
+   // hexHashEntries();
   }, [friends, subentries]);
 
-  const bookmark = () => {
+  const hexHashEntries = (hexHashID) => {
 
     let tempItems = [];
     let nextID = 0;
 
       const foundItems = friends?.filter(
-      (item) => item.bookmark === true,
+      (item) => item.hexHash?.includes(hexHashID),
     );
 
     const foundSubItems = subentries?.filter(
-      (item) => item.bookmark === true,
+      (item) => item.hexHashes?.includes(hexHashID),
     );
 
         // Add main entries
@@ -62,19 +63,43 @@ const Bookmarks = () => {
     }
 
     if (foundItems && foundItems.length > 0 || foundSubItems && foundSubItems.length > 0) {
-      setResults(tempItems); // update state
+      return tempItems; // update state
     } else {
-      setResults([]); // clear results if nothing found
+      return []; // clear results if nothing found
     }
   };
 
   return (
     <>
-      <h1>Bookmarks</h1>
-    
-      <SearchResults results={results} />
+      <h1>HexList</h1>
+
+
+    <table>
+          <tbody>
+           {hexHashes.map((item) => (
+             <tr key={item.id}>
+                <td width="80%">
+                    <tr>
+                <h3>{item.name} </h3>
+                </tr>
+
+                <tr className='hexInfo'>                            
+                    <p><b>hexHash:</b> {item.hexHashcode} </p>
+                            <p> <b>Note:</b> {item.note} </p>
+                            <p><b>Entries:</b></p>
+                            </tr>
+<tr>
+                            <SearchResults results={hexHashEntries(item.id)} />
+                            </tr>
+                        </td> 
+                      </tr>
+                    ))}
+          </tbody>
+        </table>
+
+      {/* <SearchResults results={results} /> */}
     </>
   );
 };
 
-export default Bookmarks;
+export default HexList;

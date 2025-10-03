@@ -138,6 +138,13 @@ useEffect(() => {
                   <td data-label="media">
                     <MediaCountCell itemId={item.id} type="entry" />
                   </td>
+                  <td data-label="hex">
+                      {item.hexHash ? (
+    Array.isArray(item.hexHash) 
+      ? item.hexHash.join(', ') 
+      : item.hexHash.toString()
+  ) : 'None'}
+                  </td>
                   <td data-label="currentlyavailable">
                     <AvailableCell itemId={item.id} type="entry" />
                   </td>

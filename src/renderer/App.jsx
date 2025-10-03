@@ -1,6 +1,6 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+// import './App.css';
 import React from 'react';
 import NewAppInterface from './newapp/AppNew';
 // import OldAppInterface from './oldapp/AppOld';
