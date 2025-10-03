@@ -6,6 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
+import * as FormAssets from '../Components/FormAssets';
+
 import {
   MediaCountCell,
   SubentryCountCell,

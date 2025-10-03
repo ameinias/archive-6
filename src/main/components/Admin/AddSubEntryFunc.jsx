@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
-import {
-  categories,
-  subCategories,
-  researcherIDs,
-  entryTemplate,
-} from '../../utils/constants';
+import {categories, subCategories, researcherIDs, entryTemplate, hexHashes} from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
 import { MediaUploadSub } from './MediaUploadSub';
 // import { availableMemory } from 'process';
 import { useLiveQuery } from 'dexie-react-hooks';
+import * as FormAssets from '../Components/FormAssets';
 
 export function AddSubEntryForm({
   itemID,
@@ -378,6 +374,21 @@ export function AddSubEntryForm({
     });
   };
 
+      const handleArrayChange = (e) => {
+        const {name, options} = e.target;
+        const selectedValues = Array
+            .from(options)
+            .filter(option => option.selected)
+            .map(option => option.value);
+
+        setFormValue({
+            ...formValues,
+            [name]: selectedValues
+        });
+    };
+
+
+
   //*    --------------------------    RETURN  ------------------------------- */
 
 
@@ -553,7 +564,22 @@ export function AddSubEntryForm({
                 onChange={handleChange}
                 name="hexHash"
               />
+
+                              <FormAssets.FormDropDown
+                                  name="hexHash"
+                                  label="HexHash:"
+                                  multiple={true}
+                                  formValue={formValues.hexHash}
+                                  readOnly={false}
+                                  onChange={handleArrayChange}
+                                  options={hexHashes.map((sub, i) => (
+                                  <option key={i} value={sub.id}>
+                                      {sub.name} ({sub.hexHashcode})
+                                  </option>
+                              ))}/>
             </div>
+
+
 
             <div className="row">
               <div className="col-1 formLabel">Template:</div>
