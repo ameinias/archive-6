@@ -84,11 +84,26 @@ export function MediaUpload({ mediaFiles }) {
         <div className="subentry-add-list">
           {files.map((file, index) => (
             <div className="media-thumbnail" key={index}>
-              <img
-                src={URL.createObjectURL(file)}
-                alt={file.name}
-                style={{ width: '100%', height: 'auto' }}
-              />
+                  {/* ✅ FIXED: Check if file is a File object before using createObjectURL */}
+              {file instanceof File ? (
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={file.name}
+                  style={{ width: '100%', height: 'auto' }}
+                />
+              ) : (
+                <div style={{ 
+                  width: '200px', 
+                  height: '150px', 
+                  backgroundColor: '#f0f0f0', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  border: '1px dashed #ccc'
+                }}>
+                  <span>📁 {file.name || 'Saved File'}</span>
+                </div>
+              )}
               <span className="image-subinfo">
                 {file.name} ({(file.size / 1024).toFixed(2)} KB)
               </span>

@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../main/utils/db';
+import { db, dbHelpers } from '../main/utils/db';
 
 
 
@@ -136,35 +136,14 @@ export function useReturnDatabase(itemId) {
 //   }
 // };
 
-export const findByHashAndUnLock = async (hash) => {
-  if (!hash) return "Please enter a hash code to continue.";
-
-  try {
-    const friendsUpdated = await db.friends
-      .where('hexHash')
-      .equals(hash)
-      .modify({ available: true });
-
-    const subentriesUpdated = await db.subentries
-      .where('hexHash')
-      .equals(hash)
-      .modify({ available: true });
-
-
-    const message = `Hash: ${hash} | Entries unlocked: ${friendsUpdated} | Subentries unlocked: ${subentriesUpdated}`;
-
-
-    return message;
-  } catch (error) {
-    console.error('Error unlocking items by hash:', error);
-    return "Hash not recognized.";
-  }
-};
 
 export const setStartAvalability = async () => {
   try {
-    await db.friends.toCollection().modify(item => { item.available = item.availableOnStart; });
-    await db.subentries.toCollection().modify(item => { item.available = item.availableOnStart; });
+
+    await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(1); 
+      console.log(item.id, item.hexHash, "available: ", item.available);
+    });
+    await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(1); });
     return "Set starting availability";
   } catch (error) {
     return "Error.";
@@ -180,6 +159,7 @@ export function GetMediaCount(itemId, type) {
 
       if(type === 'entry'){
       const entry = await db.friends.get(itemId);
+      console.log(`Entry media for ${itemId} count:`, entry?.media?.length);
       return entry?.media?.length || 0;
       }
 
@@ -187,6 +167,8 @@ export function GetMediaCount(itemId, type) {
       const subentry = await db.subentries.get(itemId);
       return subentry?.mediaSub?.length || 0;
       }
+
+
 
       // // Fallback: check both tables
       // const entry = await db.friends.get(itemId);

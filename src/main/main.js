@@ -48,12 +48,13 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
 ipcMain.handle('show-alert', async (event, str) => {
   const options = {
-    type: 'warning',
+    type: 'none',
     buttons: ["Ok"],
     defaultId: 0,
     cancelId: 0,
     detail: str,
-    message: ''
+    message: '',
+
   };
   return dialog.showMessageBoxSync(null, options);
 });
@@ -377,6 +378,58 @@ if (!fs.existsSync(exportDir)) {
   } catch (error) {
     console.error('Error saving asset file:', error);
     throw error;
+  }
+});
+
+// Get the app's data directory (works in both dev and packaged)
+const getAppDataPath = () => {
+  return app.isPackaged 
+    ? path.join(process.resourcesPath, 'app') 
+    : __dirname;
+};
+
+// Save file to app directory
+ipcMain.handle('save-artifact-file', async (event, relativePath, data) => {
+  return new Promise((resolve, reject) => {
+    const appDataPath = app.isPackaged 
+      ? path.join(process.resourcesPath, 'app') 
+      : path.join(__dirname, '..','..');
+    
+    const fullPath = path.join(appDataPath, relativePath);
+    
+    console.log('main js aves-artifact-file - Saving file to:', fullPath); 
+
+    // Ensure directory exists
+    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+    
+
+    fs.writeFile(fullPath, Buffer.from(data), (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(relativePath);
+      }
+    });
+  });
+});
+
+// Get file URL for display
+ipcMain.handle('get-artifact-url', async (event, relativePath) => {
+  try {
+    const appDataPath = app.isPackaged 
+      ? path.join(process.resourcesPath, 'app') 
+      : path.join(__dirname, '..');
+    
+    const fullPath = path.join(appDataPath, relativePath);
+    
+    // Check if file exists
+    await fs.access(fullPath);
+    
+    // Return file:// URL (normalize path separators)
+    return `file://${fullPath.replace(/\\/g, '/')}`;
+  } catch (error) {
+    console.error('Error getting artifact URL:', error);
+    return null;
   }
 });
 

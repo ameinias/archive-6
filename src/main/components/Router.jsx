@@ -32,6 +32,7 @@ import FileFullscreen from './Templates/FileFullScreen';
 import Bookmarks from './Search/Bookmarks';
 import Media from './Search/Media';
 import  HexList  from './Search/HexList';
+import  Logs  from './Search/Logs';
 
 //Tools
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -85,58 +86,8 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
       setDbKey((prev) => prev + 1);
     };
 
-    // This now happens in AppNew.jsx
-  // // Get the initial route synchronously before render
-  // const getInitialRoute = () => {
-  //   const restoreLastRoute =
-  //     localStorage.getItem('restoreLastRoute') !== 'false';
+    // Initial Route now happens in AppNew.jsx
 
-  //   if (restoreLastRoute) {
-  //     const lastRoute = localStorage.getItem('lastRoute');
-  //     //console.log('Last route from localStorage:', lastRoute);
-
-  //     if (lastRoute) {
-  //       const validRoutes = [
-  //         '/',
-  //         '/user-profile',
-  //         '/file-fullscreen/:fileID',
-  //         '/import-export',
-  //         'search',
-  //         '/style',
-  //         '/edit-item/new',
-  //         '/edit-item/:id',
-  //         '/add-subitem/:parentID',
-  //         '/edit-subitem/:parentID/:itemID',
-  //         '/bookmarks',
-  //         '/entry/:id',
-  //         '/hashimport',
-  //         '/login',
-  //         '/register',
-  //         '/media',
-  //         '/hex',
-  //       ];
-  //       const isDynamicRoute =
-  //         lastRoute.startsWith('/edit-item/') ||
-  //         lastRoute.startsWith('/entry/') ||
-  //         lastRoute.startsWith('/single-item/') ||
-  //         lastRoute.startsWith('/edit-subitem/') ||
-  //         lastRoute.startsWith('/add-subitem/') ||
-  //         lastRoute.startsWith('/file-fullscreen/') ||
-  //         lastRoute.startsWith('/hex/');
-
-  //       if (validRoutes.includes(lastRoute) || isDynamicRoute) {
-  //         return lastRoute;
-  //       } else {
-  //         console.log('Invalid route, using default');
-  //       }
-  //     } else {
-  //       console.log('No last route found, using default ', lastRoute);
-  //     }
-  //   }
-  //   return '/'; // Default route. 
-  // };
-
-  // const initialRoute = getInitialRoute();
 
   return (
 <>
@@ -166,6 +117,8 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/media" element={<Media />} />
               <Route path="/hex" element={<HexList />} />
+              <Route path="/logs" element={<Logs />} />
+
               <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
               {/* <Route path="/test" element={<DescriptionEntry />} /> */}
 

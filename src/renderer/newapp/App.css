@@ -299,6 +299,7 @@ table.entryTable tr {
   padding: 10px;
   margin-bottom: 10px;
   background-color: #f9f9f9;
+  max-width: 640px;
 }
 
 .subEntry-not-available{
@@ -575,4 +576,33 @@ margin: 15% auto;
   .p{
 margin-bottom:0.5rem;
   }
+}
+
+.italic-text {
+  font-style: italic;
+}
+
+.searchResults
+{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.searchResults th,
+.searchResults td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.searchResults th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+
+.searchResults tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.searchResults tr:hover {
+  background-color: #f1f1f1;
 }

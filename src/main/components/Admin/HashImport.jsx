@@ -6,25 +6,71 @@ import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { findByHashAndUnLock } from  '../../../hooks/dbHooks'
 
+
 function HashImport() {
     const [hashValue, setHashVal] = React.useState('');
     const friends = useLiveQuery(() => db.friends.toArray());
     const subentries = useLiveQuery(() => db.subentries.toArray());
 
 
-
 const importHash =  async() => {
 
 
- const result = await findByHashAndUnLock(hashValue);
-  console.log(result);
-//window.alert(result);
-window.electronAPI.showAlert(result);
+const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue).toString();
+
+console.log(hashValue ,"  ===================== ", hexHashID);
+
+     const foundItems = friends?.filter(
+        (item => {  if (Array.isArray(item.hexHash)) {
+              return item.hexHash.includes(hexHashID);
+      }
+            return item.hexHash === hexHashID;
+        } ),
+      );
+    
+        const foundSubItems = subentries?.filter(
+                  (item => {  if (Array.isArray(item.hexHash)) {
+              return item.hexHash.includes(hexHashID);
+      }
+
+        if(item.hexHash === hexHashID) {console.log("found subitem with hex: ", item.title);} else {
+           console.log("not found subitem with hex: ", item.title, item.hexHash, hexHashID);
+        }
+
+
+            return item.hexHash === hexHashID;
+        } ),
+        );
+
+        foundItems.map( (item) => {
+           db.friends.update(item.id, { available: true });
+        });
+
+        foundSubItems.map( (item) => {
+           db.friends.update(item.id, { available: true });
+        });
+
+
+
+  const message = `Hash: ${hashValue} | ${dbHelpers.getIdsFromHexHashes(hashValue)} | Entries unlocked: ${foundItems.length} | Subentries unlocked: ${foundSubItems.length}`;
+
+//  const result = await findByHashAndUnLock(hashValue);
+//   console.log(result);
+  window.electronAPI.showAlert(message);
+  // setHashVal(''); // Clear input field after import
+  //  hashInput = '';
 }
 
   const handleChange = (e) => {
     setHashVal(e.target.value);
   };
+
+   const handleKeyDown = (e) => {
+
+  if (e.key === 'Enter') {
+    importHash();
+  }
+};
 
 
 return(
@@ -37,9 +83,9 @@ return(
                 <input
                   className="form-control col"
                   type="text"
-                  name="title"
-                  placeholder="Title"
+                  name="hashinput"
                   // value={formValues.title}
+                  onKeyDown={handleKeyDown}
                    onChange={handleChange}
                 />
 

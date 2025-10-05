@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
-import {categories, subCategories, researcherIDs, entryTemplate, hexHashes} from '../../utils/constants';
+import {
+  categories,
+  subCategories,
+  researcherIDs,
+  entryTemplate,
+  hexHashes,
+  metaData
+} from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
 import { MediaUploadSub } from './MediaUploadSub';
@@ -9,10 +16,7 @@ import { MediaUploadSub } from './MediaUploadSub';
 import { useLiveQuery } from 'dexie-react-hooks';
 import * as FormAssets from '../Components/FormAssets';
 
-export function AddSubEntryForm({
-  itemID,
-  parentID,
-}) {
+export function AddSubEntryForm({ itemID, parentID }) {
   //*    ---------------    CONST  ------------------ */
   const { setStatusMessage } = GameLogic();
   const [title, setName] = useState('');
@@ -23,6 +27,7 @@ export function AddSubEntryForm({
   const [parentFauxFauxID, setparentFauxID] = useState('');
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
+  const [isMeta, setMeta] = useState(false);
 
   /* ------------------------  Generate entry functions --------*/
   // Create async function to generate new ID
@@ -84,34 +89,6 @@ export function AddSubEntryForm({
 
   /* ------------------------  Handlers --------*/
   // Manage state and input field
-  const handleIDChange = (e) => {
-    const { name, value } = e.target;
-    // Ensure the ID starts with 'MX' and is followed by numbers
-    if (!/^MX\d+$/.test(value)) {
-      setIDValidWithMessage(
-        false,
-        `ID ${value} must start with "MX" followed by numbers.`,
-      );
-      return;
-    }
-    //check if the ID is unique
-    db.subentries
-      .where('fauxID')
-      .equals(value)
-      .count()
-      .then((count) => {
-        if (count > 0) {
-          //setStatusMessage(`ID ${value} already exists. Please choose a different ID.`);
-          setIDValidWithMessage(false, `ID ${value} already exists.`);
-        } else {
-          setIDValidWithMessage(true);
-        }
-        setFormValue({
-          ...formValues,
-          [name]: value,
-        });
-      });
-  };
 
   const setIDValidWithMessage = (isValid, message) => {
     setIDValid(isValid);
@@ -128,13 +105,12 @@ export function AddSubEntryForm({
     category: 'Object',
     date: new Date(),
     entryDate: new Date(),
-    availableOnStart: false, // Default to false
     available: false, // Default to false
     mediaSub: [],
     subCategory: subCategories[0], // Default to first subcategory
     researcherID: researcherIDs[0],
     template: 'default', // Optional field for template
-    bookmark:false,
+    bookmark: false,
     hexHash: 'aeoh-3q484-da232',
   };
 
@@ -169,11 +145,10 @@ export function AddSubEntryForm({
         setFormValue({
           fauxID: entry.fauxID,
           title: entry.title,
-          description: entry.description || "",
-          category: entry.subCategory,
+          description: entry.description || '',
+          subCategory: entry.subCategory,
           date: entry.date || new Date(),
           entryDate: entry.entryDate,
-          availableOnStart: entry.availableOnStart || false,
           available: entry.available || false,
           mediaSub: entry.mediaSub || [],
           template: entry.template || 'default',
@@ -214,8 +189,8 @@ export function AddSubEntryForm({
 
   //*    ---------------    ENTRY FUNCTIONS  ------------------ */
 
-  async function returnToParent(){
-    try{
+  async function returnToParent() {
+    try {
       navigate(`/edit-item/${parentID}/`);
     } catch (error) {
       console.error('Error navigating to parent:', error);
@@ -249,7 +224,6 @@ export function AddSubEntryForm({
           entryDate: formValues.entryDate,
           parentId: Number(parentID), // Link to the main entry
           available: formValues.available,
-          availableOnStart: formValues.availableOnStart,
           researcherID: formValues.researcherID, // researcher who added the entry
           template: formValues.template, // Handle  template
           bookmark: formValues.bookmark || false, // Handle optional bookmark
@@ -288,7 +262,7 @@ export function AddSubEntryForm({
       const id = await db.subentries.add({
         title: formValues.title,
         fauxID: formValues.fauxID,
-        hexHash: formValues.hexHash ,
+        hexHash: formValues.hexHash,
         description: formValues.description,
         mediaSub: formValues.mediaSub,
         subCategory: subCategories[0], // Default to first subcategory
@@ -296,7 +270,6 @@ export function AddSubEntryForm({
         entryDate: formValues.entryDate,
         parentId: parentIdCast, // Link to the main entry
         available: formValues.available,
-        availableOnStart: formValues.availableOnStart,
         researcherID: researcherIDs[0], // researcher who added the entry
         template: formValues.template, // Handle  template
         bookmark: formValues.bookmark || false, // Handle optional bookmark
@@ -338,7 +311,9 @@ export function AddSubEntryForm({
 
   async function removeCurrentEntry() {
     if (
-      await window.electronAPI.showConfirm(`Are you sure you want to delete "${formValues.title}"?`)
+      await window.electronAPI.showConfirm(
+        `Are you sure you want to delete "${formValues.title}"?`,
+      )
     ) {
       try {
         const id = Number(itemID);
@@ -349,7 +324,6 @@ export function AddSubEntryForm({
         navigate(`/edit-item/${parentID}/`); // Go back to parent
         await db.subentries.delete(id);
         setStatusMessage(`Entry ${formValues.title} successfully deleted.`);
-
       } catch (error) {
         setStatusMessage(`Failed to delete ${formValues.title}: ${error}`);
       }
@@ -366,6 +340,49 @@ export function AddSubEntryForm({
     });
   };
 
+  const handleCatChange = (e) => {
+    const { name, value } = e.target;
+    setFormValue({
+      ...formValues,
+      [name]: value,
+    });
+
+    if (value === 'MetaData') {
+      setMeta(true);
+    } else {
+      setMeta(false);
+    }
+  };
+
+  const handleIDChange = (e) => {
+    const { name, value } = e.target;
+    // Ensure the ID starts with 'MX' and is followed by numbers
+    if (!/^MX\d+$/.test(value)) {
+      setIDValidWithMessage(
+        false,
+        `ID ${value} must start with "MX" followed by numbers.`,
+      );
+      return;
+    }
+    //check if the ID is unique
+    db.subentries
+      .where('fauxID')
+      .equals(value)
+      .count()
+      .then((count) => {
+        if (count > 0) {
+          //setStatusMessage(`ID ${value} already exists. Please choose a different ID.`);
+          setIDValidWithMessage(false, `ID ${value} already exists.`);
+        } else {
+          setIDValidWithMessage(true);
+        }
+        setFormValue({
+          ...formValues,
+          [name]: value,
+        });
+      });
+  };
+
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setFormValue({
@@ -374,26 +391,19 @@ export function AddSubEntryForm({
     });
   };
 
-      const handleArrayChange = (e) => {
-        const {name, options} = e.target;
-        const selectedValues = Array
-            .from(options)
-            .filter(option => option.selected)
-            .map(option => option.value);
+  const handleArrayChange = (e) => {
+    const { name, options } = e.target;
+    const selectedValues = Array.from(options)
+      .filter((option) => option.selected)
+      .map((option) => option.value);
 
-        setFormValue({
-            ...formValues,
-            [name]: selectedValues
-        });
-    };
-
-
+    setFormValue({
+      ...formValues,
+      [name]: selectedValues,
+    });
+  };
 
   //*    --------------------------    RETURN  ------------------------------- */
-
-
-
-
 
   return (
     <>
@@ -437,34 +447,59 @@ export function AddSubEntryForm({
               />
             )}
           </div>
-
           <div className="col">
             {' '}
-            {/*// ------ Title  ------*/}
-            <div className="formLabel">Title:</div>
-            <input
-              className="form-control"
-              type="text"
+
+      
+
+
+
+
+          {isMeta ? ( <div className="adminOnly">
+                          <FormAssets.FormDropDown
+                name="title"
+                label="Metadata:"
+                multiple={false}
+                formValue={formValues.title}
+                readOnly={false}
+                onChange={handleChange}
+                options={metaData.map((sub, i) => (
+                  <option key={i} value={sub.name}>
+                    {sub.name} 
+                  </option>
+                ))}
+              />
+            </div> ) : (<>
+                        <FormAssets.FormTextBox
+              label="Title:"
               name="title"
-              placeholder="Title"
-              value={formValues.title}
+              formValue={formValues.title}
+              readOnly={false}
               onChange={handleChange}
             />
-          </div>
+            </>)
+            }
+    </div>
+
+
+
+
+
+
         </div>
         <div className="row">
           <div className="col-3">
             {' '}
             {/*// ------ Category  ------*/}
-            <div className="formLabel">Category:</div>
+            <div className="formLabel">Type:</div>
             <select
               className="form-control form-control-dropdown"
               multiple={false}
-              value={formValues.category}
-              onChange={handleChange}
-              name="category"
+              value={formValues.subCategory}
+              onChange={handleCatChange}
+              name="subCategory"
             >
-              {categories.map((sub, i) => (
+              {subCategories.map((sub, i) => (
                 <option key={i} value={sub}>
                   {sub}
                 </option>
@@ -484,8 +519,8 @@ export function AddSubEntryForm({
               name="researcherID"
             >
               {researcherIDs.map((sub, i) => (
-                <option key={i} value={sub}>
-                  {sub}
+                <option key={i} value={sub.id}>
+                  {sub.name}
                 </option>
               ))}
             </select>
@@ -517,19 +552,6 @@ export function AddSubEntryForm({
           <div className="adminOnly">
             <div className="row">
               {' '}
-              {/*// ------ Available on Start  ------*/}
-              <label className="formLabel">available on start</label>
-              <input
-                type="checkbox"
-                className="formLabel"
-                checked={formValues.availableOnStart}
-                onChange={handleCheckboxChange}
-                name="availableOnStart"
-              />
-            </div>
-
-            <div className="row">
-              {' '}
               {/*// ------ available  ------*/}
               <label className="formLabel">available</label>
               <input
@@ -555,31 +577,22 @@ export function AddSubEntryForm({
             </div>
 
             <div className="row">
-              <div className="col-1 formLabel">hexhash:</div>
-              <input
-                className="form-control form-control-dropdown col"
-                type="text"
-                placeholder="aeoh-3q484-da232"
-                value={formValues.hexHash}
-                onChange={handleChange}
+
+
+              <FormAssets.FormDropDown
                 name="hexHash"
+                label="HexHash:"
+                multiple={true}
+                formValue={formValues.hexHash}
+                readOnly={false}
+                onChange={handleArrayChange}
+                options={hexHashes.map((sub, i) => (
+                  <option key={i} value={sub.id}>
+                    {sub.name} ({sub.hexHashcode})
+                  </option>
+                ))}
               />
-
-                              <FormAssets.FormDropDown
-                                  name="hexHash"
-                                  label="HexHash:"
-                                  multiple={true}
-                                  formValue={formValues.hexHash}
-                                  readOnly={false}
-                                  onChange={handleArrayChange}
-                                  options={hexHashes.map((sub, i) => (
-                                  <option key={i} value={sub.id}>
-                                      {sub.name} ({sub.hexHashcode})
-                                  </option>
-                              ))}/>
             </div>
-
-
 
             <div className="row">
               <div className="col-1 formLabel">Template:</div>
@@ -597,7 +610,7 @@ export function AddSubEntryForm({
                 ))}
               </select>{' '}
             </div>
-          </div> // admin row
+          </div>
         )}
 
         <div className="save-buttons">

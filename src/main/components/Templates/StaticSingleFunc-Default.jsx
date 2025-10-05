@@ -8,7 +8,7 @@ import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '../Components/StaticSubListItem';
 import { BookMarkCheck } from '../Components/Badges';
-import {MediaDisplay} from '../Components/MediaDisplay'
+import { MediaDisplay } from '../Components/MediaDisplay';
 
 export function StaticSingleDefault({ itemID }) {
   const { id } = useParams(); // get the id from the route
@@ -34,9 +34,6 @@ export function StaticSingleDefault({ itemID }) {
       }
       return db.subentries.where('parentId').equals(numericID).toArray();
     }, [itemID]) || [];
-
-
-
 
   if (item === undefined) {
     return <div>Loading...</div>;
@@ -65,70 +62,65 @@ export function StaticSingleDefault({ itemID }) {
             {item.fauxID} : {item.title}
           </h2>
         </div>
-        <div>
-          <b>Category:</b> {item.category}{' '}
-        </div>
-        <div>
-          <b>Description:</b> <br />
-          {item.description} <hr />
-          <section title="Media">
-            {' '}
-            {/* Show media entries if they exist */}
-            <br />
-            <b>Media:</b>
-            <div className="subentry-add-list">
-              {!item.media || item.media.length === 0 ? (
-                <>No Attachments.</>
-              ) : (
-                <>
-                  <table>
-                    <tbody>
-                      {item.media.map((file, index) => {
-                        return(
-                          <tr key={index}>
-                        <td>
-                       <MediaDisplay file={file} index={index}/>
+        <div title="Metadata">
+          <div>
+            <b>Category:</b> {item.category}{' '}
+          </div>
+          <div>
+            <b>Description:</b> <br />
+            {item.description} <hr />
+          </div>
 
-
-                                {file.name} ({(file.size / 1024).toFixed(2)} KB)
-
-                            </td>
-
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </>
-              )}
-            </div>
-          </section>{' '}
-          {/* Show subentries if they exist */}
-          <div title="Subentries">
-            {subEntryOfParent.map((item) => (
+          {subEntryOfParent
+            .filter((item) => item.subCategory.toLowerCase() === 'metadata')
+            .map((item) => (
               <div key={item.id}>
-                <StaticSubListItem itemID={item.id} parentID={item.parentId} />
+                <span>
+                  <strong>{item.title}:</strong> {item.description} <br />
+                </span>
               </div>
             ))}
-          </div>
-        </div>{' '}
-        <div>
-          <span>
-            <b>Actual Entry Date:</b>{' '}
-            {item.date ? new Date(item.date).toLocaleString() : 'No date'}{' '}
-          </span>{' '}
-        </div>{' '}
-        <div>
-          <span>
-            {' '}
-            <b>Fictional date:</b>
-            {item.entryDate
-              ? new Date(item.entryDate).toLocaleString()
-              : 'No entry date'}
-          </span>
         </div>
-      </div>{' '}
-      {/* item.id */}
+        <section title="Media">
+          {' '}
+          {/* Show media entries if they exist */}
+          <br />
+          <div className="subentry-add-list">
+            {!item.media || item.media.length === 0 ? (
+              <>No Attachments.</>
+            ) : (
+              <>
+                {item.media.map((file, index) => {
+                  return (
+                    <div key={index}>
+                      <MediaDisplay file={file} index={index} />
+                      {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        </section>{' '}
+        {/* Show subentries if they exist */}
+        {subEntryOfParent.filter(
+          (item) => item.subCategory.toLowerCase() !== 'metadata',
+        ).length != 0 && (
+          <div title="Subentries">
+            <h2>Logs</h2>
+            {subEntryOfParent
+              .filter((item) => item.subCategory.toLowerCase() !== 'metadata')
+              .map((item) => (
+                <div key={item.id}>
+                  <StaticSubListItem
+                    itemID={item.id}
+                    parentID={item.parentId}
+                  />
+                </div>
+              ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

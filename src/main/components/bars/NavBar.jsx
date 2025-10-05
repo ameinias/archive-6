@@ -44,6 +44,9 @@ const NavBar = () => {
                 <Link to="/bookmarks">
           <Button variant="outline-primary">Bookmarks</Button>
         </Link>
+        <Link to="/logs">
+          <Button variant="outline-primary">Logs</Button>
+        </Link>
                     <Link to="/hashimport">
               <Button variant="outline-primary">Import</Button>
             </Link>{' '}

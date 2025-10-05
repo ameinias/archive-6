@@ -15,7 +15,6 @@ const defaultFormValue = {
     category: 'Object',
     date: new Date(),
     entryDate: new Date(),
-    availableOnStart: false,
     available: true,
     researcherID: researcherIDs[0] || '',
     media: [],
@@ -70,7 +69,6 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     category: entry.category || 'Object',
                     date: entry.date || new Date(),
                     entryDate: entry.entryDate || new Date(),
-                    availableOnStart: entry.availableOnStart || false,
                     available: entry.available || false,
                     // researcherID: entry.researcherID || researcherIDs[0] || '',
                     media: entry.media || [],
@@ -140,7 +138,6 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     category: formValues.category,
                     date: formValues.date,
                     entryDate: formValues.entryDate,
-                    availableOnStart: formValues.availableOnStart,
                     available: formValues.available,
                     media: formValues.media,
                     template: formValues.template,
@@ -181,8 +178,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     category: formValues.category,
                     date: formValues.date,
                     entryDate: formValues.entryDate,
-                    available: formValues.availableOnStart,
-                    availableOnStart: formValues.availableOnStart,
+                    available: formValues.available,
                     template: formValues.template,
                     bookmark: formValues.bookmark || false, // Optional field for bookmark
                 });
@@ -391,18 +387,6 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
 
         {isAdmin && (
             <div className="row adminOnly">
-            <div className="row">
-                {' '}
-                {/*// ------ Available on Start  ------*/}
-                <label className="formLabel">available on start</label>
-                <input
-                    type="checkbox"
-                    className="formLabel"
-                    checked={formValues.availableOnStart}
-                    onChange={handleCheckboxChange}
-                    name="availableOnStart"/>
-            </div>
-
             <div className="row">
                 {' '}
                 {/*// ------ available  ------*/}

@@ -40,8 +40,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readAssetFile: (relativePath) => ipcRenderer.invoke('read-asset-file', relativePath),
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
   saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content),
+    saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
     showAlert: (message) => ipcRenderer.invoke('show-alert', message),
-    showConfirm: (message) => ipcRenderer.invoke('show-confirm', message)
+    showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
+    getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath)
 
 });
 

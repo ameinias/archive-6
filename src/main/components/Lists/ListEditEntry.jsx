@@ -21,7 +21,50 @@ export function EntryList() {
   const navigate = useNavigate();
   const gameLogic = GameLogic();
     const { setStatusMessage } = GameLogic();
+  const [editingHex, setEditingHex] = useState(null); // Track which item is being edited
+  const [tempHexValue, setTempHexValue] = useState(''); // Temporary value while editing
 
+  const startEditingHex = (item) => {
+    setEditingHex(item.id);
+    // Convert current hexHash to string for editing
+    const currentValue = item.hexHash 
+      ? (Array.isArray(item.hexHash) ? item.hexHash.join(', ') : item.hexHash.toString())
+      : '';
+    setTempHexValue(currentValue);
+  };
+
+
+  const saveHexHash = async (itemId, type) => {
+    try {
+      // Convert comma-separated string back to array
+      const hexArray = tempHexValue
+        .split(',')
+        .map(hex => hex.trim())
+        .filter(hex => hex.length > 0);
+      
+        if(type === 'subentry') {
+          await db.subentries.update(itemId, { 
+            hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null
+          });
+        } else {
+          await db.friends.update(itemId, { 
+            hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null 
+          });
+        }
+
+      setEditingHex(null);
+      setTempHexValue('');
+      setStatusMessage('Hex hash updated successfully');
+    } catch (error) {
+      console.error('Error updating hex hash:', error);
+      setStatusMessage('Error updating hex hash');
+    }
+  };
+
+  const cancelEditingHex = () => {
+    setEditingHex(null);
+    setTempHexValue('');
+  };
 
 useEffect(() => {
     const handleNewGameStart = () => setIsLoading(true);
@@ -43,6 +86,7 @@ useEffect(() => {
 
 
 
+  // --------------------  Remove Entries
   const removeItem = async (item) => {
     if (await window.electronAPI.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.friends.delete(item.id);
@@ -118,6 +162,7 @@ useEffect(() => {
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Hex</th>
                 <th>Subs</th>
                 <th>Media</th>
                 <th>Active</th>
@@ -127,25 +172,69 @@ useEffect(() => {
             <tbody>
               {sortedFriends.map((item) => (
                 <tr key={item.id}>
-                  <td width="80%" data-label="name">
+                  <td width="70%" data-label="name">
                     <Link to={`/edit-item/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>
+                    </td>
+                <td data-label="hex">
+      {editingHex === item.id ? (
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={tempHexValue}
+            onChange={(e) => setTempHexValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') saveHexHash(item.id, 'entry');
+              if (e.key === 'Escape') cancelEditingHex();
+            }}
+            placeholder="Enter hex values (comma separated)"
+            style={{ flex: 1, padding: '2px 5px' }}
+            autoFocus
+          />
+          <Button
+            size="sm"
+            variant="success"
+            onClick={() => saveHexHash(item.id, 'entry')}
+            style={{ padding: '2px 8px' }}
+          >
+            ✓
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={cancelEditingHex}
+            style={{ padding: '2px 8px' }}
+          >
+            ✕
+          </Button>
+        </div>
+      ) : (
+        <div 
+          onClick={() => startEditingHex(item)}
+          style={{ 
+            cursor: 'pointer', 
+            padding: '5px',
+            borderRadius: '3px',
+            ':hover': { backgroundColor: '#f0f0f0' }
+          }}
+          title="Click to edit"
+        >
+          {item.hexHash ? (
+            Array.isArray(item.hexHash) 
+              ? item.hexHash.join(', ') 
+              : item.hexHash.toString()
+          ) : 'None (click to add)'}
+        </div>
+      )}
                   </td>
-                  <td data-label="subentries">
+                <td data-label="subentries">
                     <SubentryCountCell parentId={item.id} />
                   </td>
-                  <td data-label="media">
+                <td data-label="media">
                     <MediaCountCell itemId={item.id} type="entry" />
                   </td>
-                  <td data-label="hex">
-                      {item.hexHash ? (
-    Array.isArray(item.hexHash) 
-      ? item.hexHash.join(', ') 
-      : item.hexHash.toString()
-  ) : 'None'}
-                  </td>
-                  <td data-label="currentlyavailable">
+                <td data-label="currentlyavailable">
                     <AvailableCell itemId={item.id} type="entry" />
                   </td>
 
@@ -170,7 +259,7 @@ useEffect(() => {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>-</th>
+                <th> Hex</th>
                 <th>Media</th>
                 <th>Active</th>
                 <th>Remove</th>
@@ -180,12 +269,62 @@ useEffect(() => {
             <tbody>
               {subentries?.map((item) => (
                 <tr key={item.id}>
-                  <td width="80%" data-label="title">
+                  <td width="70%" data-label="title">
                     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>
                   </td>
-                  <td></td>
+                                  <td data-label="hex">
+      {editingHex === item.id ? (
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <input
+            type="text"
+            value={tempHexValue}
+            onChange={(e) => setTempHexValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') saveHexHash(item.id, 'subentry');
+              if (e.key === 'Escape') cancelEditingHex();
+            }}
+            placeholder="Enter hex values (comma separated)"
+            style={{ flex: 1, padding: '2px 5px' }}
+            autoFocus
+          />
+          <Button
+            size="sm"
+            variant="success"
+            onClick={() => saveHexHash(item.id, 'subentry')}
+            style={{ padding: '2px 8px' }}
+          >
+            ✓
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={cancelEditingHex}
+            style={{ padding: '2px 8px' }}
+          >
+            ✕
+          </Button>
+        </div>
+      ) : (
+        <div 
+          onClick={() => startEditingHex(item)}
+          style={{ 
+            cursor: 'pointer', 
+            padding: '5px',
+            borderRadius: '3px',
+            ':hover': { backgroundColor: '#f0f0f0' }
+          }}
+          title="Click to edit"
+        >
+          {item.hexHash ? (
+            Array.isArray(item.hexHash) 
+              ? item.hexHash.join(', ') 
+              : item.hexHash.toString()
+          ) : 'None (click to add)'}
+        </div>
+      )}
+                  </td>
                   <td data-label="media">
                     <MediaCountCell itemId={item.id} type="subentry" />
                   </td>

@@ -4,14 +4,13 @@ import * as dbHooks from '../../../hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers } from '../../utils/db';
 
-export function MediaCountCell(
-  itemId
-) {
-  const count = dbHooks.GetMediaCount(itemId);
+export function MediaCountCell({ itemId, type }) {
+  const count = dbHooks.GetMediaCount(itemId, type);
 
   return (
 <>
       {count > 0 ? <div className="badger">{count}</div> : null}
+
 </>
   );
 }
@@ -28,10 +27,10 @@ export function SubentryCountCell({ parentId }) {
 
 // badge to show current availabilty, used ont eh edit entry page.
 export function AvailableCell({
-  itemId,
+  itemId, type
 
 }) {
-    const available = dbHooks.CheckAvailable(itemId );
+    const available = dbHooks.CheckAvailable(itemId, type);
 
   return (
       <div className="badger">{available ? 'y' : 'x'}</div>

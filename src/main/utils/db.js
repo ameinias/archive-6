@@ -74,10 +74,17 @@ db.version(1).stores({
   subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template,unread' // Fixed spelling and added parentId index
 });
 
-// Schema declaration:
+// version 2
 db.version(2).stores({
   friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template, unread, hexHash', // Removed subItems
   subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template,unread, hexHash' // Fixed spelling and added parentId index
+});
+
+// version 3  -  dublin core inspo https://www.dublincore.org/resources/userguide/creating_metadata/ 
+db.version(3).stores({
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, availableOnStart, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy' // Fixed spelling and added parentId index
+  attachments: '++id, parentId, fileName, fileType, filePath'
 });
 
 
@@ -126,19 +133,27 @@ export const dbHelpers = {
   // Helper function to convert IDs to names for display. Gets possibly an array from an entry and returns their readable name.
  getHexHashNamesFromIds(ids) {
     return ids.map(id => {
-        const hash = hexHashes.find(h => h.id === parseInt(id));
+        const hash = hexHashes.find(h => h.id === id);
         console.log("getHexHashNamesFromIds", id, hash ? hash.name : "no");
         return hash ? hash.name : id;
     });
 },
 
-// Helper function to get IDs from the database value
+
+ getIdsFromHexHashes(code) {
+    
+
+        const hash = hexHashes.find(h => h.hexHashcode === code);
+        console.log("getIdsFromHexHashes id: ", code, hash ? hash.id : "hash not found");
+        return hash ? hash.id : code;
+},
+
  getHexHashIds(value) {
-    // If it's already an array of IDs, return as-is
+    // keep ids
     if (Array.isArray(value) && value.every(v => typeof v === 'number')) {
         return value;
     }
-    // If it's names, convert to IDs
+    // turn names into ids
     if (Array.isArray(value)) {
         return value.map(name => {
             const hash = hexHashes.find(h => h.name === name);

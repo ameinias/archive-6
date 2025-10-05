@@ -94,6 +94,7 @@ export default function App() {
           '/register',
           '/media',
           '/hex',
+          '/logs',
         ];
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -104,7 +105,8 @@ export default function App() {
           // || lastRoute.startsWith('/add-subitem/')
           lastRoute.startsWith('/file-fullscreen/');
           lastRoute.startsWith('/hex/');
-                    lastRoute.startsWith('/media/');
+          lastRoute.startsWith('/media/');
+          lastRoute.startsWith('/logs/');
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
           //  console.log('Using last route:', lastRoute);
