@@ -80,10 +80,10 @@ db.version(2).stores({
   subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, entryDate, researcherID, parentId, available, availableOnStart, template,unread, hexHash' // Fixed spelling and added parentId index
 });
 
-// version 3  -  dublin core inspo https://www.dublincore.org/resources/userguide/creating_metadata/ 
+// version 3  -  dublin core inspo https://www.dublincore.org/resources/userguide/creating_metadata/
 db.version(3).stores({
-  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, availableOnStart, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy', // Removed subItems
-  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy', // Fixed spelling and added parentId index
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, availableOnStart, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', // Fixed spelling and added parentId index
   attachments: '++id, parentId, fileName, fileType, filePath'
 });
 
@@ -141,7 +141,7 @@ export const dbHelpers = {
 
 
  getIdsFromHexHashes(code) {
-    
+
 
         const hash = hexHashes.find(h => h.hexHashcode === code);
         console.log("getIdsFromHexHashes id: ", code, hash ? hash.id : "hash not found");

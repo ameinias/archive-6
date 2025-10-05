@@ -7,7 +7,7 @@ import {
   researcherIDs,
   entryTemplate,
   hexHashes,
-  metaData
+  metaData, editType,
 } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '../../utils/gamelogic';
@@ -111,8 +111,35 @@ export function AddSubEntryForm({ itemID, parentID }) {
     researcherID: researcherIDs[0],
     template: 'default', // Optional field for template
     bookmark: false,
-    hexHash: 'aeoh-3q484-da232',
+    hexHash: [1],
+    devNotes: '',
+    modEditDate: '2008-07-21',
+    modEdit: 'added',
+    displayDate: '1970-01-01', // YYYY-MM-DD
+    lastEditedBy: researcherIDs[0] || '',
+
   };
+
+      const FormToEntry = () => {
+        return {
+            title: formValues.title,
+            fauxID: formValues.fauxID,
+            hexHash: formValues.hexHash,
+            description: formValues.description,
+            category: formValues.category,
+            date: formValues.date,
+            entryDate: formValues.entryDate,
+            available: formValues.available,
+            media: formValues.media,
+            template: formValues.template,
+            bookmark: formValues.bookmark,
+            devNotes: formValues.devNotes,
+            modEditDate: formValues.modEditDate,
+            modEdit: formValues.modEdit,
+            displayDate: formValues.displayDate,
+            lastEditedBy: formValues.lastEditedBy
+        };
+    }
 
   //*    ---------------    UseEffect   ------------------ */
   // Generate the fauxID when component mounts or parentID changes
@@ -154,7 +181,14 @@ export function AddSubEntryForm({ itemID, parentID }) {
           template: entry.template || 'default',
           bookmark: entry.bookmark || false,
           researcherID: entry.researcherID,
-          hexHash: entry.hexHash,
+           hexHash: Array.isArray(entry.hexHash)
+                        ? entry.hexHash // Keep the IDs as-is
+                        : [entry.hexHash] || [1],
+                        devNotes: entry.devNotes || '',
+                    modEditDate: entry.modEditDate || '2008-07-21',
+                    modEdit: entry.modEdit,
+                    displayDate: entry.displayDate ||'1970-01-01',
+                    lastEditedBy: entry.lastEditedBy
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -213,21 +247,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
       }
 
       db.subentries
-        .update(idNumber, {
-          title: formValues.title,
-          fauxID: formValues.fauxID,
-          hexHash: formValues.hexHash, // || 'aeoh-3q484-da232',
-          description: formValues.description,
-          mediaSub: formValues.mediaSub || [],
-          subCategory: formValues.subCategory || subCategories[0], // Default to first subcategory
-          date: formValues.date,
-          entryDate: formValues.entryDate,
-          parentId: Number(parentID), // Link to the main entry
-          available: formValues.available,
-          researcherID: formValues.researcherID, // researcher who added the entry
-          template: formValues.template, // Handle  template
-          bookmark: formValues.bookmark || false, // Handle optional bookmark
-        })
+        .update(idNumber, FormToEntry())
         .then(function (updated) {
           if (updated)
             setStatusMessage(idNumber + ' was updated to ' + formValues.title);
@@ -259,21 +279,9 @@ export function AddSubEntryForm({ itemID, parentID }) {
         return;
       }
 
-      const id = await db.subentries.add({
-        title: formValues.title,
-        fauxID: formValues.fauxID,
-        hexHash: formValues.hexHash,
-        description: formValues.description,
-        mediaSub: formValues.mediaSub,
-        subCategory: subCategories[0], // Default to first subcategory
-        date: formValues.date,
-        entryDate: formValues.entryDate,
-        parentId: parentIdCast, // Link to the main entry
-        available: formValues.available,
-        researcherID: researcherIDs[0], // researcher who added the entry
-        template: formValues.template, // Handle  template
-        bookmark: formValues.bookmark || false, // Handle optional bookmark
-      });
+      const id = await db.subentries.add(
+        FormToEntry()
+      );
 
       setStatusMessage(
         `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
@@ -449,12 +457,6 @@ export function AddSubEntryForm({ itemID, parentID }) {
           </div>
           <div className="col">
             {' '}
-
-      
-
-
-
-
           {isMeta ? ( <div className="adminOnly">
                           <FormAssets.FormDropDown
                 name="title"
@@ -465,7 +467,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
                 onChange={handleChange}
                 options={metaData.map((sub, i) => (
                   <option key={i} value={sub.name}>
-                    {sub.name} 
+                    {sub.name}
                   </option>
                 ))}
               />
@@ -528,9 +530,59 @@ export function AddSubEntryForm({ itemID, parentID }) {
         </div>
 
         <div className="row">
+
+            <div className="col">
+                <FormAssets.FormDate
+                    label="Last Modified"
+                    name="modEditDate"
+                    formValue={formValues.modEditDate}
+                    onChange={handleChange}
+                   />
+            </div>
+                        <div className="col">
+                <FormAssets.FormDate
+                    label="Collection Date"
+                    name="displayDate"
+                    formValue={formValues.displayDate}
+                    onChange={handleChange}
+                   />
+
+            </div>
+        </div>
+        <div className="row">
+<div className="col">
+                <FormAssets.FormDropDown
+                    label="Edit Type"
+                    name="modEdit"
+                    formValue={formValues.modEdit}
+                    onChange={handleChange}
+                    options={editType.map((sub, i) => (
+                    <option key={i} value={sub}>
+                        {sub}
+                    </option>
+                   ))}/>
+            </div>
+            <div className="col">
+                      <FormAssets.FormDropDown
+                     label="Last Edit By"
+                    name="modEdit"
+                    formValue={formValues.modEdit}
+                    onChange={handleChange}
+                    options={researcherIDs.map((sub, i) => (
+                    <option key={i} value={sub.id}>
+                        {sub.name}
+                    </option>
+                ))}/>
+
+
+            </div>
+
+        </div>
+
+        <div className="row">
           {' '}
           {/*// ------ Description  ------*/}
-          <div className="formLabel">Description:</div>
+
           <textarea
             rows={4}
             className="form-control"

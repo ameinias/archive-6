@@ -25,7 +25,7 @@ function ImportExport() {
   };
 
 
-  // this function fakes a bunch of clicking and interaction. could be useful later for database ghosts. 
+  // this function fakes a bunch of clicking and interaction. could be useful later for database ghosts.
   const handleExport = async () => {
     try {
       // Ensure the export function is available
@@ -114,6 +114,44 @@ function ImportExport() {
   };
 
   const handleImport = async (file) => {
+    try {
+      if (!file) throw new Error(`Only files can be dropped here`);
+      console.log('Importing ' + file.name);
+
+      // Close the current database
+      await db.close();
+
+      // Delete the current database
+      await db.delete();
+
+      // Import the file and get the new database instance
+      const importedDb = await Dexie.import(file, {
+        progressCallback: (progress) => {
+          console.log(
+            `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
+          );
+          setStatusMessage(
+            `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
+          );
+        },
+      });
+
+      console.log('Import complete');
+
+      // Reopen the original database to refresh it
+      await db.open();
+    } catch (error) {
+      console.error('Import error:', error);
+      // Try to reopen the database even if import failed
+      try {
+        await db.open();
+      } catch (reopenError) {
+        console.error('Failed to reopen database:', reopenError);
+      }
+    }
+  };
+
+    const handleImportReplace = async (file) => {
     try {
       if (!file) throw new Error(`Only files can be dropped here`);
       console.log('Importing ' + file.name);
@@ -264,6 +302,8 @@ function ImportExport() {
               >
                 Import Database
               </Button>
+
+              
               <Button variant="primary" onClick={clearDatabase}>
                 Clear Database
               </Button>

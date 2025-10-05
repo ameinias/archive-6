@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {db, dbHelpers} from '../../utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
-import {categories, subCategories, researcherIDs, entryTemplate, hexHashes} from '../../utils/constants';
+import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, editType} from '../../utils/constants';
 import {Form, useNavigate} from 'react-router-dom';
 import {GameLogic} from '../../utils/gamelogic';
 import {ListSubEntries} from '../Lists/ListSubEntries';
@@ -10,7 +10,7 @@ import * as FormAssets from '../Components/FormAssets';
 
 const defaultFormValue = {
     fauxID: 'MX0000',
-    title: '',
+    title: 'Entry',
     description: '',
     category: 'Object',
     date: new Date(),
@@ -20,8 +20,14 @@ const defaultFormValue = {
     media: [],
     template: 'default',
     bookmark: false,
-    hexHash: [1]
+    hexHash: [1],
+    devNotes: '',
+    modEditDate: '2008-07-21',
+    modEdit: 'added',
+    displayDate: '1970-01-01', // YYYY-MM-DD
+    lastEditedBy: researcherIDs[0] || '',
 };
+
 
 export function AddEntryForm({itemID, parentID, isSubEntry}) {
     const [formValues,
@@ -63,17 +69,21 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     fauxID: entry.fauxID || '',
                     title: entry.title || '',
                     hexHash: Array.isArray(entry.hexHash)
-    ? entry.hexHash  // Keep the IDs as-is
-    : [entry.hexHash]  || [1],
+                        ? entry.hexHash // Keep the IDs as-is
+                        : [entry.hexHash] || [1],
                     description: entry.description || '',
                     category: entry.category || 'Object',
                     date: entry.date || new Date(),
                     entryDate: entry.entryDate || new Date(),
                     available: entry.available || false,
-                    // researcherID: entry.researcherID || researcherIDs[0] || '',
                     media: entry.media || [],
                     template: entry.template || 'default',
-                    bookmark: entry.bookmark || false
+                    bookmark: entry.bookmark || false,
+                    devNotes: entry.devNotes || '',
+                    modEditDate: entry.modEditDate || '2008-07-21',
+                    modEdit: entry.modEdit,
+                    displayDate: entry.displayDate ||'1970-01-01',
+                    lastEditedBy: entry.lastEditedBy
                 });
                 savedID = entry.id;
                 setNewEntry(false);
@@ -85,6 +95,28 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
 
         fetchData();
     }, [itemID]);
+
+    const FormToEntry = () => {
+        return {
+            title: formValues.title,
+            fauxID: formValues.fauxID,
+            hexHash: formValues.hexHash,
+            description: formValues.description,
+            category: formValues.category,
+            date: formValues.date,
+            entryDate: formValues.entryDate,
+            available: formValues.available,
+            media: formValues.media,
+            template: formValues.template,
+            bookmark: formValues.bookmark,
+            devNotes: formValues.devNotes,
+            modEditDate: formValues.modEditDate,
+            modEdit: formValues.modEdit,
+            displayDate: formValues.displayDate,
+            lastEditedBy: formValues.lastEditedBy
+        };
+    }
+
 
     const generateNewID = async() => {
         try {
@@ -130,19 +162,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
 
             db
                 .friends
-                .update(idNumber, {
-                    title: formValues.title,
-                    fauxID: formValues.fauxID,
-                    hexHash: formValues.hexHash,
-                    description: formValues.description,
-                    category: formValues.category,
-                    date: formValues.date,
-                    entryDate: formValues.entryDate,
-                    available: formValues.available,
-                    media: formValues.media,
-                    template: formValues.template,
-                    bookmark: formValues.bookmark
-                })
+                .update(idNumber, FormToEntry())
                 .then(function (updated) {
                     if (updated)
                         setStatusMessage(idNumber + ' ' + formValues.fauxID + ' was updated with ' + formValues.media.length + ' attachments',);
@@ -169,19 +189,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
 
             const id = await db
                 .friends
-                .add({
-                    title: formValues.title,
-                    fauxID: formValues.fauxID,
-                    hexHash: formValues.hexHash,
-                    description: formValues.description,
-                    media: formValues.media,
-                    category: formValues.category,
-                    date: formValues.date,
-                    entryDate: formValues.entryDate,
-                    available: formValues.available,
-                    template: formValues.template,
-                    bookmark: formValues.bookmark || false, // Optional field for bookmark
-                });
+                .add(FormToEntry());
 
             setStatusMessage(`Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`);
 
@@ -298,28 +306,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
             {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
         </p>
         <div className="row">
-            <div className="col-3">
-                {' '}
-                {/*// ------ ID  ------*/}
-                <div className="row">
-                    <div className="formLabel">ID:</div>
-                    {isNewEntry || isAdmin
-                        ? (<input className={`form-control ${ !isIDValid
-                            ? 'is-invalid'
-                            : ''} col`} type="text" name="fauxID" placeholder="ID" value={formValues.fauxID} onChange={handleIDChange} // ← Use the ID-specific handler
-    readOnly={!isNewEntry && !isAdmin}/>)
-                        : (<input
-                            className="form-control col"
-                            type="text"
-                            name="fauxID"
-                            placeholder="ID"
-                            value={formValues.fauxID}
-                            onChange={handleChange}
-                            readOnly/>)}
-                </div>
-            </div>
-            <div className="col">
-                {' '}
+
 
                 <FormAssets.FormTextBox
                     label="Title:"
@@ -328,9 +315,31 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     readOnly={false}
                     onChange={handleChange}/>
 
-            </div>
         </div>
         <div className="row">
+           <div className="col">
+            <div className="row">
+                    <div className="formLabel">ID:</div>
+                    {isNewEntry || isAdmin
+                        ? (<input className={`form-control ${ !isIDValid
+                            ? 'is-invalid'
+                            : ''} col`} type="text" name="fauxID"
+                            placeholder="ID"
+                            value={formValues.fauxID}
+                            onChange={handleIDChange}
+                            // readOnly={!isNewEntry && !isAdmin}
+                            />
+                            )
+                        : (<input
+                            className="form-control col"
+                            type="text"
+                            name="fauxID"
+                            placeholder="ID"
+                            value={formValues.fauxID}
+                            onChange={handleChange}/>)}
+            </div>
+            </div>
+
             <div className="col-6">
 
                 <FormAssets.FormDropDown
@@ -347,29 +356,61 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                 ))}/>
 
             </div>
-            <div className="col">
-                {' '}
 
-                <FormAssets.FormDropDown
-                    name="hexHash"
-                    label="HexHash:"
-                    multiple={true}
-                    formValue={formValues.hexHash}
-                    readOnly={false}
-                    onChange={handleArrayChange}
-                    options={hexHashes.map((sub, i) => (
-                    <option key={i} value={sub.id}>
-                        {sub.name} ({sub.hexHashcode})
-                    </option>
-                ))}/>
+        </div>
+        <div className="row">
+
+            <div className="col">
+                <FormAssets.FormDate
+                    label="Last Modified"
+                    name="modEditDate"
+                    formValue={formValues.modEditDate}
+                    onChange={handleChange}
+                   />
+            </div>
+                        <div className="col">
+                <FormAssets.FormDate
+                    label="Collection Date"
+                    name="displayDate"
+                    formValue={formValues.displayDate}
+                    onChange={handleChange}
+                   />
 
             </div>
         </div>
+        <div className="row">
+<div className="col">
+                <FormAssets.FormDropDown
+                    label="Edit Type"
+                    name="modEdit"
+                    formValue={formValues.modEdit}
+                    onChange={handleChange}
+                    options={editType.map((sub, i) => (
+                    <option key={i} value={sub}>
+                        {sub}
+                    </option>
+                   ))}/>
+            </div>
+            <div className="col">
+                      <FormAssets.FormDropDown
+                     label="Last Edit By"
+                    name="modEdit"
+                    formValue={formValues.modEdit}
+                    onChange={handleChange}
+                    options={researcherIDs.map((sub, i) => (
+                    <option key={i} value={sub.id}>
+                        {sub.name}
+                    </option>
+                ))}/>
 
+
+            </div>
+
+        </div>
         <div className="row">
             {' '}
             {/*// ------ Description  ------*/}
-            <div className="formLabel">Description:</div>
+
             <textarea
                 rows={4}
                 className="form-control"
@@ -409,6 +450,24 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     onChange={handleCheckboxChange}
                     name="bookmark"/>
             </div>
+                        <div className="col">
+                {' '}
+
+                <FormAssets.FormDropDown
+                    name="hexHash"
+
+                    multiple={true}
+                    formValue={formValues.hexHash}
+                    readOnly={false}
+                    onChange={handleArrayChange}
+                    options={hexHashes.map((sub, i) => (
+                    <option key={i} value={sub.id}>
+                        {sub.name}
+                        ({sub.hexHashcode})
+                    </option>
+                ))}/>
+
+            </div>
             {/* <div className="row">
                 <div className="col-1 formLabel">hexhash:</div>
                 <input
@@ -419,6 +478,17 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     onChange={handleChange}
                     name="hexHash"/>
             </div> */}
+            <div className="row">
+                {' '}
+                {/*// ------ Description  ------*/}
+                <div className="formLabel">Dev Notes:</div>
+                <textarea
+                    rows={3}
+                    className="form-control"
+                    name="devNotes"
+                    value={formValues.devNotes}
+                    onChange={handleChange}/>
+            </div>
 
             {/*// ------ Template  ------*/}
             <div className="row">

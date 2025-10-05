@@ -2,7 +2,37 @@ import React from 'react';
 
 // use import * as FormBits from '../main/components/Components/FormAssets';
 
-export function FormTextBox({label, name, formValue, readOnly, onChange}) {
+export function FormTextBox({
+    label = "Label:",
+    name = "textInput",
+    formValue = "",
+    readOnly = false,
+    onChange = () => {},
+    placeholder = ""
+}) {
+
+    return (
+        <div className='row'>
+
+            <div className="formLabel">{label}</div>
+            <input
+                name={name}
+                placeholder={placeholder}
+                value={formValue}
+                onChange={onChange}
+                readOnly={readOnly}/>
+        </div>
+    );
+}
+
+export function FormDate({
+    label = "Label:",
+    name = "textInput",
+    formValue = "",
+    readOnly = false,
+    onChange = () => {},
+    placeholder = ""
+}) {
 
     return (
         <div className='row'>
@@ -11,8 +41,8 @@ export function FormTextBox({label, name, formValue, readOnly, onChange}) {
             <input
                 name={name}
                 className="form-control col"
-                type="text"
-                placeholder="Title"
+                type="date"
+                placeholder={placeholder}
                 value={formValue}
                 onChange={onChange}
                 readOnly={readOnly}/>
@@ -31,15 +61,15 @@ export function FormBool() {
 export function FormDropDown({
     label,
     name,
-    multiple,
+    multiple = false,
     formValue,
-    readOnly,
+    readOnly = false,
     onChange,
     options
 }) {
     return (
         <div className='row'>
-            <div className="formLabel">{label}</div>
+            {label && (<div className="formLabel">{label}</div>)}
             <select
                 name={name}
                 className="form-control form-control-dropdown col"

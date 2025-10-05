@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
-import { dbHelpers, newGameWithWarning } from '../../utils/db';
+import { dbHelpers, newGame, newGameWithWarning } from '../../utils/db';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 
@@ -12,10 +12,19 @@ const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
     const CallNewGame = newGameWithWarning;
-    const { globalUser } = GameLogic();
+    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage } = GameLogic();
 
 
+      const  LogOut = async () => {
+          if (await window.electronAPI.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
+            await newGame();
 
+            navigate('/');
+            setLoggedIn(false);
+            setStatusMessage(`Logged out`);
+          }
+
+    };
 
 
 
@@ -80,10 +89,10 @@ const NavBar = () => {
         {isAdmin ? 'Admin' : `${globalUser.username}`}</Link>{' '}
           <Button
             variant="outline-secondary"
-            onClick={toggleAdmin}
-            title="eventually this will be a log in at the beginning of the game, displayed like this for testing."
+            onClick={LogOut}
+            title="This will delete your progress!"
           >
-            {isAdmin ? 'Switch' : 'Switch'}
+            {isAdmin ? 'Log Out' : 'Log Out '}
           </Button> {' '}
            </div>
         </div>

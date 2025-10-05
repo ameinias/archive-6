@@ -27,7 +27,7 @@ export function EntryList() {
   const startEditingHex = (item) => {
     setEditingHex(item.id);
     // Convert current hexHash to string for editing
-    const currentValue = item.hexHash 
+    const currentValue = item.hexHash
       ? (Array.isArray(item.hexHash) ? item.hexHash.join(', ') : item.hexHash.toString())
       : '';
     setTempHexValue(currentValue);
@@ -41,14 +41,14 @@ export function EntryList() {
         .split(',')
         .map(hex => hex.trim())
         .filter(hex => hex.length > 0);
-      
+
         if(type === 'subentry') {
-          await db.subentries.update(itemId, { 
+          await db.subentries.update(itemId, {
             hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null
           });
         } else {
-          await db.friends.update(itemId, { 
-            hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null 
+          await db.friends.update(itemId, {
+            hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null
           });
         }
 
@@ -179,7 +179,7 @@ useEffect(() => {
                     </td>
                 <td data-label="hex">
       {editingHex === item.id ? (
-        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center', width: '40px' }}>
           <input
             type="text"
             value={tempHexValue}
@@ -188,8 +188,8 @@ useEffect(() => {
               if (e.key === 'Enter') saveHexHash(item.id, 'entry');
               if (e.key === 'Escape') cancelEditingHex();
             }}
-            placeholder="Enter hex values (comma separated)"
-            style={{ flex: 1, padding: '2px 5px' }}
+            placeholder="hexes"
+            style={{ flex: 1, padding: '2px 5px', width: '40px' }}
             autoFocus
           />
           <Button
@@ -210,10 +210,10 @@ useEffect(() => {
           </Button>
         </div>
       ) : (
-        <div 
+        <div
           onClick={() => startEditingHex(item)}
-          style={{ 
-            cursor: 'pointer', 
+          style={{
+            cursor: 'pointer',
             padding: '5px',
             borderRadius: '3px',
             ':hover': { backgroundColor: '#f0f0f0' }
@@ -221,8 +221,8 @@ useEffect(() => {
           title="Click to edit"
         >
           {item.hexHash ? (
-            Array.isArray(item.hexHash) 
-              ? item.hexHash.join(', ') 
+            Array.isArray(item.hexHash)
+              ? item.hexHash.join(', ')
               : item.hexHash.toString()
           ) : 'None (click to add)'}
         </div>
@@ -307,10 +307,10 @@ useEffect(() => {
           </Button>
         </div>
       ) : (
-        <div 
+        <div
           onClick={() => startEditingHex(item)}
-          style={{ 
-            cursor: 'pointer', 
+          style={{
+            cursor: 'pointer',
             padding: '5px',
             borderRadius: '3px',
             ':hover': { backgroundColor: '#f0f0f0' }
@@ -318,8 +318,8 @@ useEffect(() => {
           title="Click to edit"
         >
           {item.hexHash ? (
-            Array.isArray(item.hexHash) 
-              ? item.hexHash.join(', ') 
+            Array.isArray(item.hexHash)
+              ? item.hexHash.join(', ')
               : item.hexHash.toString()
           ) : 'None (click to add)'}
         </div>
