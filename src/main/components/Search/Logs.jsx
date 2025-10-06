@@ -8,104 +8,118 @@ import {useNavigate} from 'react-router-dom';
 import {AddSubEntryForm} from '../Admin/AddSubEntryFunc';
 import {GameLogic} from '../../utils/gamelogic';
 
+import {
+  categories,
+  subCategories,
+  researcherIDs,
+  entryTemplate,
+  hexHashes,
+  metaData, editType,
+} from '../../utils/constants';
+
 const Logs = () => {
     const [toggleShowNewSubEntry,
         setToggleShowNewSubEntry] = useState(false);
 
     const navigate = useNavigate();
     const gameLog = GameLogic();
-      const [results, setResults] =  useState([]);
-    
-      const friends = useLiveQuery(() => db.friends.toArray());
-      const subentries = useLiveQuery(() => db.subentries.toArray());
+    const [results,
+        setResults] = useState([]);
 
-          const { globalUser } = GameLogic();
+    const friends = useLiveQuery(() => db.friends.toArray());
+    const subentries = useLiveQuery(() => db.subentries.toArray());
+
+    const {globalUser} = GameLogic();
     const urlDirect = !gameLog.isAdmin
         ? 'entry'
         : 'edit-item';
     const urlSubDirect = 'edit-subitem'; // Same for both admin and non-admin
 
+    useEffect(() => {
+        generateLogs();
+    }, [friends, subentries]);
 
+    const generateLogs = () => {
 
+        let tempItems = [];
+        let nextID = 0;
 
-  useEffect(() => {
-    generateLogs();
-  }, [friends, subentries]);
+        const foundItems = friends
+            ?.filter((item) => item.available === true,);
 
-  const generateLogs = () => {
-
-    let tempItems = [];
-    let nextID = 0;
-
-      const foundItems = friends?.filter(
-      (item) => item.available === true,
-    );
-
-    const foundSubItems = subentries?.filter(
-      (item) => item.available === true,
-    );
+        const foundSubItems = subentries
+            ?.filter((item) => item.available === true,);
 
         // Add main entries
-    if (foundItems) {
-      for (const item of foundItems) {
-        tempItems.push({
-          id: nextID,
-          fauxID: item.fauxID,
-           origin: item.id,
-          title: item.title,
-          date: item.date,
-          type: 'main',
+        if (foundItems) {
+            for (const item of foundItems) {
+                tempItems.push({
+                    id: nextID,
+                    fauxID: item.fauxID,
+                    origin: item.id,
+                    title: item.title,
+                    date: item.date,
+                    type: 'main',
+                    modEditDate: item.modEditDate,
+                    modEdit: item.modEdit,
+                    displayDate: item.displayDate,
+                    lastEditedBy: item.lastEditedBy,
+                    hexHash: item.hexHash,
+                });
+                nextID = nextID + 1;
+            }
+        }
+        // Add subs
+        if (foundSubItems) {
+            for (const subItem of foundSubItems) {
+                // Add the subitem to the results with its parentId
+                tempItems.push({
+                    id: nextID, // Ensure id is included
+                    origin: subItem.id,
+                    parentId: subItem.parentId,
+                    fauxID: subItem.fauxID, // Ensure fauxID is included
+                    title: subItem.title, // Ensure title is included
+                    date: subItem.date, // Include date if available
+                    type: 'sub', // Mark as sub entry
+                    modEditDate: subItem.modEditDate,
+                    modEdit: subItem.modEdit,
+                    displayDate: subItem.displayDate,
+                    lastEditedBy: subItem.lastEditedBy,
+                    hexHash: subItem.hexHash,
+
+                });
+                nextID = nextID + 1;
+            }
+        }
+
+        tempItems.sort((a, b) => {
+            const dateA = a.modEditDate
+                ? new Date(a.modEditDate)
+                : new Date(0);
+            const dateB = b.modEditDate
+                ? new Date(b.modEditDate)
+                : new Date(0);
+            return dateB - dateA; // Sort descending
         });
-        nextID = nextID + 1;
-      }
-    }
-    // Add subs
-    if (foundSubItems) {
-      for (const subItem of foundSubItems) {
-        // Add the subitem to the results with its parentId
-        tempItems.push({
-          id: nextID, // Ensure id is included
-          origin: subItem.id,
-          parentId: subItem.parentId,
-          fauxID: subItem.fauxID, // Ensure fauxID is included
-          title: subItem.title, // Ensure title is included
-          date: subItem.date, // Include date if available
-          type: 'sub', // Mark as sub entry
-        });
-        nextID = nextID + 1;
-      }
-    }
 
-    tempItems.sort((a, b) => {
-      const dateA = a.modEditDate ? new Date(a.modEditDate) : new Date(0);
-      const dateB = b.modEditDate ? new Date(b.modEditDate) : new Date(0);
-      return dateB - dateA; // Sort descending
-    });
+        if (foundItems && foundItems.length > 0 || foundSubItems && foundSubItems.length > 0) {
+            setResults(tempItems); // update state
+        } else {
+            setResults([]); // clear results if nothing found
+        }
+    };
 
-    if (foundItems && foundItems.length > 0 || foundSubItems && foundSubItems.length > 0) {
-      setResults(tempItems); // update state
-    } else {
-      setResults([]); // clear results if nothing found
-    }
-  };
-
-
-const displayUserLink = () => {
-    return (
-        <>
-        <Link to={`/user-profile`}>
+    const displayUserLink = () => {
+        return ( <> <Link to={`/user-profile`}>
             @{globalUser.username}
-        </Link>
-        </>
+        </Link> < />
     );
 };
 
 
     return (
             <>
-      <h1>Logs</h1>
-
-        <div className="subentry-add-list">
+      <h3>Logs</h3 > <div className="subentry-add-list">
 
             {results.length === 0
                 ? ( <> No results to show. < />
@@ -116,16 +130,16 @@ const displayUserLink = () => {
             {results.map((item) => (
               <tr key={item.id}>
                 <td width="80%">
-                 {item.type === 'sub' ? 
+                 {item.type === 'sub' ?
                  (
 
                  <>
                  {(!gameLog.isAdmin ?  (
-                 <Link to={`/entry / $ {item.parentId} / `}>{item.fauxID} : {item.title}</Link>
+                 <Link to={`/entry/${item.parentId}/`}>{item.fauxID} : {item.title}</Link>
                  )
                  :  (
 
-                 <Link to={` / $ {urlSubDirect} / $ {item.parentId} / $ {item.origin}`}>{item.fauxID} : {item.title}</Link>)
+                 <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.title}</Link>)
                  )}
 
                 </>
@@ -140,22 +154,39 @@ const displayUserLink = () => {
 
                 </td>
                 <td>
-                    {item.modEdit ? item.modEdit : <i>modified</i>}
+
+                 <i>                {item.hexHash != '1' ?
+                      item.modEdit :  <i>migrated</i>
+                      }
+
+                 </i>
+                    {/* ? item.modEdit : <i>modified</i>} */}
                 </td>
 
                 <td>
-                   {item.hexHash === 1 ? displayUserLink() : item.researcherID ? item.researcherID : "@unknown"}
+                  {/* Logic:
+                  if not startstate, editor is Player
+                  otherwhise get last edit by
+                  Eventually you'll need to add in entity edits */}
+
+
+                  {item.hexHash != '1' ? displayUserLink() :
+                    (item.lastEditedBy !== null ?
+                      researcherIDs.find(researcher => researcher.id === parseInt(item.lastEditedBy))?.name :
+                      researcherIDs[0].name)
+                  }
                 </td>
-                <td>
-                    {item.modEditDate ? item.modEditDate : "DD/MM/YY"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-        </div>
-            </>
-    );
+
+                < td > {
+            item.modEditDate
+                ? item.modEditDate
+                : <i>unknown</i>
+        } < /td>
+              </tr >))
+    } < /tbody>
+        </table >)
+} < /div>
+            </ >);
 }
-export default Logs;
+
+export default Logs

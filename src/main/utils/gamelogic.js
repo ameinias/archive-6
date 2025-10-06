@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
 let globalIsAdmin = (() => {
@@ -33,14 +33,14 @@ let globalRemoveText = 'remove';
 let globalUser = (() => {
   try {
     const savedUser = localStorage.getItem('globalUser');
-    return savedUser ? JSON.parse(savedUser) : { username: 'playerName', password: 'password' };
+    return savedUser ? JSON.parse(savedUser) : { username: 'playerName', password: 'password', firstname:"firstname", lastname:"lastname" };
   } catch (error) {
     // Fallback for SSR or environments without localStorage
     console.warn('localStorage not available:', error);
-    return { username: 'playerName', password: 'password' };
+    return { username: 'admin', password: 'password', firstname:"firstname", lastname:"lastname" };
   }
 })();
-let globalAdminUser = { username: 'admin', password: 'password' };
+let globalAdminUser = { username: 'admin', password: 'password', firstname:"firstname", lastname:"lastname" };
 
 
 // Array to store all update functions from components
@@ -65,8 +65,15 @@ export function GameLogic() {
 
   const statusTimeOut = 5000; // 5 seconds
 
+  const toggleAdmin = () => {
+    globalIsAdmin = !globalIsAdmin;
+    // Update all components that use this state
+    localStorage.setItem('isAdmin', JSON.stringify(globalIsAdmin));
+    adminUpdateCallbacks.forEach(callback => callback(globalIsAdmin));
+  };
+
   // Register  update functions - so they can work globally in other scripts.
-  React.useEffect(() => {
+  useEffect(() => {
 
     adminUpdateCallbacks.push(setAdmin);
     gameStateUpdateCallbacks.push(setGameState);
@@ -75,6 +82,12 @@ export function GameLogic() {
     loggedInUpdateCallbacks.push(setLoggedIn);
     userUpdateCallbacks.push(setUser);
     adminUserUpdateCallbacks.push(setAdminUser);
+
+    const handleToggleAdmin = () => {
+      toggleAdmin();
+    };
+
+    window.electronAPI.on('toggle-admin', handleToggleAdmin);
 
     // Cleanup when component unmounts
     return () => {
@@ -98,6 +111,8 @@ export function GameLogic() {
 
       const adminUserIndex = adminUserUpdateCallbacks.indexOf(setAdminUser);
       if (adminUserIndex > -1) adminUserUpdateCallbacks.splice(adminUserIndex, 1);
+
+      window.electronAPI.removeListener('toggle-admin', handleToggleAdmin);
     };
   }, []);
 
@@ -120,13 +135,6 @@ export function GameLogic() {
   const increaseScore = (points) => {
     globalGameState = { ...globalGameState, score: globalGameState.score + points };
     gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
-  };
-
-  const toggleAdmin = () => {
-    globalIsAdmin = !globalIsAdmin;
-    // Update all components that use this state
-    localStorage.setItem('isAdmin', JSON.stringify(globalIsAdmin));
-    adminUpdateCallbacks.forEach(callback => callback(globalIsAdmin));
   };
 
   const setLoggedInState = (loggedIn) => {

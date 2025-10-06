@@ -80,7 +80,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     template: entry.template || 'default',
                     bookmark: entry.bookmark || false,
                     devNotes: entry.devNotes || '',
-                    modEditDate: entry.modEditDate || '2008-07-21',
+                    modEditDate: entry.modEditDate || '1996-07-21',
                     modEdit: entry.modEdit,
                     displayDate: entry.displayDate ||'1970-01-01',
                     lastEditedBy: entry.lastEditedBy
@@ -394,8 +394,8 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
             <div className="col">
                       <FormAssets.FormDropDown
                      label="Last Edit By"
-                    name="modEdit"
-                    formValue={formValues.modEdit}
+                    name="lastEditedBy"
+                    formValue={formValues.lastEditedBy}
                     onChange={handleChange}
                     options={researcherIDs.map((sub, i) => (
                     <option key={i} value={sub.id}>

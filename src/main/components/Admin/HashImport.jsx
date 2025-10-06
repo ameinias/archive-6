@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { findByHashAndUnLock } from  '../../../hooks/dbHooks'
+import Logs from '../Search/Logs';
 
 
 function HashImport() {
@@ -27,7 +28,7 @@ console.log(hashValue ,"  ===================== ", hexHashID);
             return item.hexHash === hexHashID;
         } ),
       );
-    
+
         const foundSubItems = subentries?.filter(
                   (item => {  if (Array.isArray(item.hexHash)) {
               return item.hexHash.includes(hexHashID);
@@ -43,11 +44,11 @@ console.log(hashValue ,"  ===================== ", hexHashID);
         );
 
         foundItems.map( (item) => {
-           db.friends.update(item.id, { available: true });
+           db.friends.update(item.id, { available: true, modEditDate: new Date().toISOString().replace('T', ' ').substring(0, 19)  , modEdit: 'migrated' });
         });
 
         foundSubItems.map( (item) => {
-           db.friends.update(item.id, { available: true });
+           db.friends.update(item.id, { available: true, modEditDate: new Date().toISOString().replace('T', ' ').substring(0, 19) , modEdit: 'migrated' });
         });
 
 
@@ -78,6 +79,7 @@ return(
      <div className="hashImport-div">
               <div className="row">
                 {' '}
+                <h3>Migrate</h3>
                 {/*// ------ Title  ------*/}
                 <div className="formLabel col-2">hexHash:</div>
                 <input
@@ -98,12 +100,17 @@ return(
                   Import Hash
                 </Button>
                 </div>
-                Try:   <br />
+
+
+  <br />
+
+<Logs/>
+<div className="invisibleInk">
                 eeqR-4fd9-D04S  <br />
                 aeoh-3q484-da232 <br />
                 ooo5-6jdsA-GH7aa <br />
                 iaeF-33pqJ-ef09H <br />
-
+</div>
               </div>
 );
 }

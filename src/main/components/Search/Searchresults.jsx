@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import {AddSubEntryForm} from '../Admin/AddSubEntryFunc';
 import {GameLogic} from '../../utils/gamelogic';
+import {SearchPageItem} from '../Components/ListingComponent';
 
 export function SearchResults({results}) {
     const [toggleShowNewSubEntry,
@@ -33,34 +34,35 @@ export function SearchResults({results}) {
               <tr key={item.id}>
                 <td width="80%">
 
+                    <>
+                    {
+                        item.type === 'sub'
+                            ? ( <> {
+                                (!gameLog.isAdmin
+                                    ? (
+                                        <Link to={`/entry/${item.parentId}/`}>
+                                            {item.fauxID}
+                                            : {item.title}
+                                        </Link>
+                                    )
+                                    : (
 
-                 {item.id} {item.type === 'sub' ?
-                 (
+                                        <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>
+                                            {item.fauxID}
+                                            : {item.title}
+                                        </Link>
+                                    ))
+                            } < />
+                                 ) : (
 
-                 <>
-                 {(!gameLog.isAdmin ?  (
-                 <Link to={`/entry / $ {item.parentId} / `}>{item.fauxID} : {item.title}</Link>
-                 )
-                 :  (
+                              <>
+                              <Link to={`/${urlDirect}/${item.origin}`}>
+                                         {item.fauxID} : {item.title}
+                              </Link>
 
-                 <Link to={` / $ {urlSubDirect} / $ {item.parentId} / $ {item.origin}`}>{item.fauxID} : {item.title}</Link>)
-                 )}
-
-
-
-
-                  </>
-                 )
-                 : (
-
-              <>
-
-                    <Link to={` / $ {urlDirect} / $ {item.origin}`}>
-                                       {item.fauxID} : {item.title}
-                                     </Link>
-
-                                     </>
-                 )}
+                              </>
+                                 )}
+                    </>
 
 
                 </td>

@@ -140,10 +140,10 @@ export function useReturnDatabase(itemId) {
 export const setStartAvalability = async () => {
   try {
 
-    await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(1); 
+    await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(1) || item.hexHash?.includes('1');
       console.log(item.id, item.hexHash, "available: ", item.available);
     });
-    await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(1); });
+    await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(1) || item.hexHash?.includes('1') });
     return "Set starting availability";
   } catch (error) {
     return "Error.";

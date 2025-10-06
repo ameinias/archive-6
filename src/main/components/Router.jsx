@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 
 import Home from './Home';
 import UserProfile from './Login/UserProfile';
-import Register from './Login/Register';
+// import Register from './Login/Register';
 import Login from './Login/Login';
 import NavBar from './bars/NavBar';
 
@@ -39,7 +39,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers, newGame } from '../utils/db';
 import { GameLogic } from '../utils/gamelogic';
 
- 
+
 
 // Component to track and restore route on hot reload
 function RouteTracker() {
@@ -82,7 +82,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
   };
 
       const handleNewGame = async () => {
-      await newGame(); // Your newGame function
+      await newGame(); //  newGame in db
       setDbKey((prev) => prev + 1);
     };
 
@@ -111,14 +111,12 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/entry/:id" element={<StaticSingle />} />
  {/* admin tools -------------------            -------------------------*/}
               <Route path="/import-export" element={<ImportExport />} />
-
   {/* Lists   ------------------------------------------------------------ */}
               <Route path="/search" element={<Search />} />
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/media" element={<Media />} />
               <Route path="/hex" element={<HexList />} />
               <Route path="/logs" element={<Logs />} />
-
               <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
               {/* <Route path="/test" element={<DescriptionEntry />} /> */}
 

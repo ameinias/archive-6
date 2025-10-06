@@ -113,7 +113,7 @@ function ImportExport() {
     }
   };
 
-  const handleImport = async (file) => {
+  const handleImportAppend = async (file) => {
     try {
       if (!file) throw new Error(`Only files can be dropped here`);
       console.log('Importing ' + file.name);
@@ -121,11 +121,9 @@ function ImportExport() {
       // Close the current database
       await db.close();
 
-      // Delete the current database
-      await db.delete();
-
       // Import the file and get the new database instance
       const importedDb = await Dexie.import(file, {
+        overwriteValues: true,
         progressCallback: (progress) => {
           console.log(
             `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
@@ -198,9 +196,18 @@ function ImportExport() {
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      handleImport(file);
+      handleImportReplace(file);
     }
   };
+
+const handleFileAppendChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      handleImportAppend(file);
+    }
+  }
+
+
 
   const handleDrop = async (event) => {
     event.stopPropagation();
@@ -208,6 +215,17 @@ function ImportExport() {
     const file = event.dataTransfer.files[0];
     await handleImport(file);
   };
+
+
+  const DataState =  () => {
+
+  const entryCount = useLiveQuery(() => db.friends.count());
+  const subentryCount = useLiveQuery(() => db.subentries.count());
+  const availableCount = useLiveQuery(() => db.friends.filter(item => item.available === true).count());
+  const availableSubCount = useLiveQuery(() => db.subentries.filter(item => item.available === true).count());
+
+   return `Records: ${availableCount}/${entryCount} \n Subentries ${availableSubCount}/${subentryCount}`;
+  }
 
   return (
     <>
@@ -253,42 +271,30 @@ function ImportExport() {
             <div className="col">
               <b>Version:</b> {db.verno}
             </div>
+              <div className="col">
+               {DataState()}
+            </div>
           </div>
           <p>{status}</p>
 
           <div className="row align-items-start databasetable">
-            {/* <div className="col">
-          These currently do not work. They will be upgrades as they work.
-          {isAdmin ? (
-            <>
-              {' '}
-              <Button variant="primary" onClick={toggleAdmin}>
-                Switch Start Database
-              </Button>
-              <Button variant="primary" onClick={notHookedUp}>
-                Export Start Database From Full
-              </Button>{' '}
-              <Button variant="primary" onClick={notHookedUp}>
-                Export Start New Game
-              </Button>
-            </>
-          ) : (
-            <>
-              {' '}
-              <Button variant="primary" onClick={toggleAdmin}>
-                Switch Full Database
-              </Button>
-            </>
-          )}
-        </div> */}
           </div>
 
           <div className="row align-items-start databasetable">
             <div className="col">
+
+              <Button variant="primary" onClick={saveAsDefaultDatabase}>
+                Save as Default Database
+              </Button>
+
+
               <Button variant="primary" className="mt-3" onClick={handleExport}>
                 Export Database - JSON
               </Button>
 
+
+
+</div><div className="col">
               <input
                 type="file"
                 accept=".json"
@@ -303,38 +309,36 @@ function ImportExport() {
                 Import Database
               </Button>
 
-              
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleFileAppendChange}
+                style={{ display: 'none' }}
+                id="fileAppend"
+              />
+              <Button
+                variant="primary"
+                onClick={() => document.getElementById('fileAppend').click()}
+              >
+                Append Database
+              </Button>
+
+
               <Button variant="primary" onClick={clearDatabase}>
                 Clear Database
               </Button>
 
-              <Button variant="primary" onClick={saveAsDefaultDatabase}>
-                Save as Default Database
-              </Button>
-
-              <div
+              {/* <div
                 id="dropzone"
                 className="dropzone"
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
                 Drop dexie export JSON file here
-              </div>
+              </div> */}
             </div>
 
-            <div className="col">
-              {/* <div>
-            TODO:
-            <ul>
-              <li>☑ Get a database read/write/edit working</li>
-              <li>☑ Update from Json on New Game</li>
-              <li>☐ Update Full with new entries only</li>
-              <li>☐ Create New, Full and Current databases</li>
-              <li>☐ Switch between New, Full and Current databases</li>
-              <li>☐ Set Current Database to 'New'</li>
-            </ul>
-          </div> */}
-            </div>
+
           </div>
         </>
       )}

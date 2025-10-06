@@ -192,6 +192,9 @@ mainWindow.webContents.on('will-prevent-unload', (e) => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+      if (BrowserWindow.getAllWindows().length === 0) {
+    app.quit();
+  }
   });
 
   mainWindow.on('close', () => {
@@ -383,25 +386,25 @@ if (!fs.existsSync(exportDir)) {
 
 // Get the app's data directory (works in both dev and packaged)
 const getAppDataPath = () => {
-  return app.isPackaged 
-    ? path.join(process.resourcesPath, 'app') 
+  return app.isPackaged
+    ? path.join(process.resourcesPath, 'app')
     : __dirname;
 };
 
 // Save file to app directory
 ipcMain.handle('save-artifact-file', async (event, relativePath, data) => {
   return new Promise((resolve, reject) => {
-    const appDataPath = app.isPackaged 
-      ? path.join(process.resourcesPath, 'app') 
+    const appDataPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'app')
       : path.join(__dirname, '..','..');
-    
+
     const fullPath = path.join(appDataPath, relativePath);
-    
-    console.log('main js aves-artifact-file - Saving file to:', fullPath); 
+
+    console.log('main js aves-artifact-file - Saving file to:', fullPath);
 
     // Ensure directory exists
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-    
+
 
     fs.writeFile(fullPath, Buffer.from(data), (err) => {
       if (err) {
@@ -416,15 +419,15 @@ ipcMain.handle('save-artifact-file', async (event, relativePath, data) => {
 // Get file URL for display
 ipcMain.handle('get-artifact-url', async (event, relativePath) => {
   try {
-    const appDataPath = app.isPackaged 
-      ? path.join(process.resourcesPath, 'app') 
+    const appDataPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'app')
       : path.join(__dirname, '..');
-    
+
     const fullPath = path.join(appDataPath, relativePath);
-    
+
     // Check if file exists
     await fs.access(fullPath);
-    
+
     // Return file:// URL (normalize path separators)
     return `file://${fullPath.replace(/\\/g, '/')}`;
   } catch (error) {

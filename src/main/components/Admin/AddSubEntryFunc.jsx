@@ -126,11 +126,12 @@ export function AddSubEntryForm({ itemID, parentID }) {
             fauxID: formValues.fauxID,
             hexHash: formValues.hexHash,
             description: formValues.description,
-            category: formValues.category,
             date: formValues.date,
+            mediaSub: formValues.mediaSub,
+            subCategory:formValues.subCategory,
+            researcherID: formValues.researcherID,
             entryDate: formValues.entryDate,
             available: formValues.available,
-            media: formValues.media,
             template: formValues.template,
             bookmark: formValues.bookmark,
             devNotes: formValues.devNotes,
@@ -565,8 +566,8 @@ export function AddSubEntryForm({ itemID, parentID }) {
             <div className="col">
                       <FormAssets.FormDropDown
                      label="Last Edit By"
-                    name="modEdit"
-                    formValue={formValues.modEdit}
+                    name="lastEditedBy"
+                    formValue={formValues.lastEditedBy}
                     onChange={handleChange}
                     options={researcherIDs.map((sub, i) => (
                     <option key={i} value={sub.id}>

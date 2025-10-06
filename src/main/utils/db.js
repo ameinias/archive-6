@@ -5,64 +5,6 @@ import {setStartAvalability} from "../../hooks/dbHooks.js"
 
 
 
-// //  hexHash: 'aeoh-3q484-da232',
-// interface dbMainEntry {
-//   id: number; //real id
-//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
-//   hexHash: string; // Eventually used to pull from the other database
-//   title: string;
-//   description: string;
-//   media?: File[];
-//   category: string;
-//   // Remove subItems array - we'll query subentries by parentId instead
-//   date?: Date;
-//   entryDate: Date;
-//   available: boolean; //  field to indicate availability
-//   availableOnStart: boolean; //  field to indicate if available on start
-//   template: string; // Optional field for template
-//   bookmark?: boolean;
-//   unread: boolean;
-// }
-
-// interface dbSubEntry {
-//   id: number; //real id
-//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
-//   hexHash: string; // Eventually used to pull from the other database
-//   title: string;
-//   description?: string;
-//   mediaSub?: string;
-//   researcherID: ResearcherID; // researcher who added the entry
-//   subCategory: string;
-//   date?: Date;
-//   entryDate: Date;
-//   parentId: number; // Changed to number to match the main entry's id
-//   available: boolean; //  field to indicate availability
-//   availableOnStart: boolean; //  field to indicate if available on start
-//   template: string; // Optional field for template
-//   bookmark?: boolean;
-//   unread: boolean;
-// }
-
-
-// // This is for search and bookmark results
-// interface bothEntries {
-//   id: number; // id of search database
-//   origin: number; // index in og datrabase
-//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
-//   title: string;
-//   date?: Date;
-//   type: 'main' | 'sub'; // Type to distinguish between main and sub entries
-//   parentId?: number; // Include parentId for subentries
-// }
-
-// interface User {
-//   email: string;
-//   id: number;
-//   name: string;
-//   password: string;
-//   role: string;
-// }
-
 
 export const db = new Dexie('gb-current');
 

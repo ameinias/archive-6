@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
-
+import { Link } from 'react-router-dom';
+import { create } from 'core-js/core/object';
 const defaultFormValue = {
   username: '',
   password: '',
@@ -18,6 +19,17 @@ function Register() {
     navigate('/');
   };
 
+    const handleLogin = () => {
+    navigate('/login');
+  };
+
+      const handleKeyDown = (e) => {
+
+  if (e.key === 'Enter') {
+    handleSubmit();
+  }
+};
+
     const handleSubmit = () => {
       // Will eventually check database but for now just checks for admin
 
@@ -30,9 +42,16 @@ function Register() {
 
             const password = formValues.password || 'Untitled';
             if (!password) {
-              setStatusMessage('Password is required');
+              window.electronAPI.showAlert('Passwords is required');
               return;
             }
+
+
+            if (formValues.password !== formValues.password2) {
+              window.electronAPI.showAlert('Passwords must match!');
+              return;
+            }
+
 
             setStatusMessage(`Logged in as ${username} `);
 
@@ -54,49 +73,116 @@ function Register() {
     });
   };
 
-  return (
 
-      <div className="Single">
-        <div className="row">
-          <div className="col">
+// const createUserName = (first, last) => {
+//   if (!first && !last) return '';
+//   if (!first) return last.toLowerCase();
+//   if (!last) return first.toLowerCase();
+//   return (first[0] + last).toLowerCase();
+// }
+
+
+return (
+
+      <div className="login">
+        <div className=" row login-info-text">
+          Please register to access the archive database.
+        </div>
+        <div className=" row">
+
             {' '}
 
-            <div className="formLabel col">username:</div>
+            <div className="formLabel ">first name:</div>
+            <input
+              className="form-control col"
+              type="text"
+              name="firstName"
+
+              value={formValues.firstName}
+              onChange={handleChange}
+            />
+
+        </div>
+
+                <div className=" row">
+
+            {' '}
+
+            <div className="formLabel col-1">last name:</div>
+            <input
+              className="form-control col"
+              type="text"
+              name="lastname"
+              value={formValues.lastname}
+              onChange={handleChange}
+            />
+
+        </div>
+
+
+
+                <div className=" row">
+
+            {' '}
+
+            <div className="formLabel col-1">username:</div>
             <input
               className="form-control col"
               type="text"
               name="username"
-              placeholder="username"
-              value={formValues.username}
+              value={vvv}
               onChange={handleChange}
             />
-          </div>
         </div>
+
+
         <div className="row">
-          <div className="col">
+
             {' '}
-            <div className="formLabel col">password:</div>
+            <div className="formLabel ">password:</div>
             <input
               className="form-control col"
-              type="text"
+              type="password"
               name="password"
               placeholder="password"
               value={formValues.password}
+
               onChange={handleChange}
             />
-          </div>
+        </div>
+
+        <div className="row">
+     <div className="formLabel ">password:</div>
+            <input
+              className="form-control col"
+              type="password"
+              name="password2"
+              placeholder="confirm password"
+              value={formValues.password2}
+              onKeyDown={handleKeyDown}
+              onChange={handleChange}
+
+            />
+
         </div>
 
         <div className="row">
           {/* <Button className="btn-save-add-item" onClick={updateEntry}>
             Register
           </Button> */}
+
+                    <div className="row text-cente">
           <Button className="btn-save-add-itemn" onClick={handleSubmit}>
-            Login
+            Register
           </Button>
+          </div>
+                    <div className="row text-center">
+          <Link className="altSignIn"to="/login" tooltip="If you already have an account, click here to login" >
+            I already have an account
+          </Link>
+          </div>
         </div>
       </div>
   );
 }
-
 export default Register;

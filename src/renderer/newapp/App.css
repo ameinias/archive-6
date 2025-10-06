@@ -9,7 +9,7 @@
   --div-island-bg: #f0f0f0;
   --div-border: 1px solid var(--div-border-color);
   --navbar-bg: white;
-  --navbar-top-height: 50px;
+  --navbar-top-height: auto;
   --navbar-bottom-height: 25px;
   --bg-remove-color: #9b313a;
   --bg-add-color: #50885d;
@@ -31,6 +31,9 @@ html {
   height: 100%;
 }
 
+.invisibleInk{
+  color: whitesmoke;
+}
 
 /* fonts */
 h3{
@@ -39,6 +42,7 @@ h3{
     text-align: center;
     font-weight: 600;
     text-decoration: underline;
+    margin-bottom: 8px;
 }
 
 h4{
@@ -65,11 +69,13 @@ h4{
 }
 
 .navbar .btn {
-  height: 25px;
+  height: auto;
   padding: 0 10px;
   color:black;
   font-size: 0.8rem;
-  border: 1px solid #aeaeae;
+  border: none;
+  margin:1.5px;
+  border-radius: 0%;
 }
 
 .navbar .btn:hover {
@@ -605,4 +611,15 @@ margin-bottom:0.5rem;
 
 .searchResults tr:hover {
   background-color: #f1f1f1;
+}
+
+.login-info-text{
+  margin-bottom:13px;
+}
+
+.altSignIn{
+  font-size: 0.8rem;
+  color: rgb(128, 138, 228);
+  font-style: italic;
+  padding-top:8px;
 }

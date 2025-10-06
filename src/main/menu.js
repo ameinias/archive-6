@@ -8,7 +8,10 @@ import {
 import { saveDefaultDatabase } from './main';
 
 
+
 export default class MenuBuilder {
+
+
   constructor(mainWindow) {
     this.mainWindow = mainWindow;
   }
@@ -55,6 +58,18 @@ export default class MenuBuilder {
       } = props;
 
       Menu.buildFromTemplate([{
+  label: 'Toggle Admin',
+  click: () => {
+    // Execute in renderer context
+    this.mainWindow.webContents.executeJavaScript(`
+      const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+      const newAdmin = !currentAdmin;
+      localStorage.setItem('isAdmin', newAdmin.toString());
+      window.location.reload(); // Force React to re-read the value
+    `);
+  },
+},
+{
           label: 'Inspect element',
           click: () => {
             this.mainWindow.webContents.inspectElement(x, y);
@@ -130,6 +145,7 @@ export default class MenuBuilder {
           label: 'Excuse me, what are you doing?',
 
         },
+
         {
           label: 'Resize Window to Default',
 
@@ -138,6 +154,18 @@ export default class MenuBuilder {
             this.mainWindow.center();
           },
         },
+         {
+  label: 'Toggle Admin',
+  click: () => {
+    // Execute in renderer context
+    this.mainWindow.webContents.executeJavaScript(`
+      const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+      const newAdmin = !currentAdmin;
+      localStorage.setItem('isAdmin', newAdmin.toString());
+      window.location.reload(); // Force React to re-read the value
+    `);
+  },
+},
         {
           label: 'Edit',
           submenu: [{

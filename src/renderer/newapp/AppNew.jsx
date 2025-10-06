@@ -16,6 +16,7 @@ import { GameLogic } from '../../main/utils/gamelogic';
 import RouterPath from '../../main/components/Router';
 
 import Login from '../../main/components/Login/Login';
+// import Register from '../../main/components/Login/Register';
 import StatusBar from '../../main/components/bars/StatusBar';
 
 // import { ImportExport } from 'ImportExport';
@@ -38,6 +39,7 @@ export default function App() {
   const { isLoggedIn, setLoggedIn } = GameLogic();
   const [dbKey, setDbKey] = useState(0);
     const [refreshKey, setRefreshKey] = useState(0);
+      // const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -127,19 +129,14 @@ export default function App() {
 <>
     <Router initialEntries={[initialRoute]}>
       <div className="wrapper" key={dbKey}>
-
       <RouteTracker />
-
-
 {!isLoggedIn ? (
-
-          <Login />
+  <Login />
         ) : (
           <RouterPath />
         )}
         <StatusBar />
       </div>
-
 </Router>
 </>
   );

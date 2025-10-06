@@ -70,8 +70,8 @@ const Bookmarks = () => {
 
   return (
     <>
-      <h1>Bookmarks</h1>
-    
+      <h3>Bookmarks</h3>
+
       <SearchResults results={results} />
     </>
   );

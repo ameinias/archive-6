@@ -35,12 +35,12 @@
     { id:6,name: 'socieity2', note: 'For the first unlockable scenes.' },
 
   ];
-      export const entryTemplate= [
+export const entryTemplate= [
     'default',
     'messed up'
   ]
 
-        export const editType= [
+export const editType= [
     'added',
     'migrated',
     'modified'

@@ -33,7 +33,7 @@ const Search = () => {
         item.fauxID.toLowerCase().includes(searchTermLower) ||
         (item.description &&
           item.description.toLowerCase().includes(searchTermLower)),
-    );
+    ).filter((item) => item.available === true,);
 
     let tempItems = [];
     let nextID = 0;
@@ -94,6 +94,7 @@ const Search = () => {
 
   return (
     <>
+    <h3>Search</h3>
       <InputGroup className="searchBar">
         <input
           type="text"
@@ -109,14 +110,9 @@ const Search = () => {
         </Button>
       </InputGroup>
 
-      {results.length === 0 ? (
-        <>
-        {isAdmin ? ( <EntryList />) : ( <StaticList />) }
-        </>
 
-      ) : (
       <SearchResults results={results} />
-      )}
+
     </>
   );
 };

@@ -43,7 +43,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
     saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
     showAlert: (message) => ipcRenderer.invoke('show-alert', message),
     showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
-    getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath)
+    getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
+
+    // Add IPC listener methods
+    on: (channel, func) => {
+      const subscription = (_event, ...args) => func(...args);
+      ipcRenderer.on(channel, subscription);
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    },
+    removeListener: (channel, func) => {
+      ipcRenderer.removeListener(channel, func);
+    }
 
 });
 

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import { useState } from "react";
 import { GameLogic } from '../../utils/gamelogic';
+import { Link } from 'react-router-dom';
 import {
   newGame
 } from '../../utils/db'; // import the database
@@ -30,6 +31,11 @@ function Login() {
     handleSubmit();
   }
 };
+
+  //   const handleRegister = () => {
+  //   navigate('/register');
+  //   console.log("navigating to register");
+  // };
 
 
     const handleSubmit = () => {
@@ -79,8 +85,8 @@ function Login() {
   return (
 
       <div className="login">
-        <div className=" row">
-          Please enter the user name and password you would like to use.
+        <div className=" row login-info-text">
+          Please enter your user name and password.
         </div>
         <div className=" row">
 
@@ -121,6 +127,11 @@ function Login() {
             Login
           </Button>
         </div>
+                  <div className="row text-center">
+          {/* <Link to="/register" className="altSignIn" tooltip="If you already have an account, click here to login" >
+            Register for a new account
+          </Link> */}
+          </div>
       </div>
   );
 }
