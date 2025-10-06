@@ -33,15 +33,23 @@ export function StaticList() {
             </tr>
           ) : (
             sortedFriends.map((item) => (
-              <tr key={item.id}>
-                <td><BookMarkCheck itemID={item.id} type="entry" /></td>
-                <td><UnreadBadge itemId={item.id} type="entry" /></td>
-                <td width="80%">
-                  <Link to={`/entry/${item.id}`}>
-                    {item.fauxID} : {item.title}
-                  </Link>
-                </td>
-                <td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}</td>
+              <tr key={item.id} className={item.unread ? 'unread-display' : '' }>
+                {(item.hexHash && (item.hexHash.includes('50') || item.hexHash.includes(50))) ? (
+                  <td colSpan={4}>
+                    {item.fauxID} : Entry depreciated.
+                  </td>
+                ) : (
+                  <>
+                    <td><BookMarkCheck itemID={item.id} type="entry" /></td>
+                    <td><UnreadBadge itemId={item.id} type="entry" /></td>
+                    <td width="80%">
+                      <Link to={`/entry/${item.id}`}>
+                        {item.fauxID} : {item.title}
+                      </Link>
+                    </td>
+                    <td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}</td>
+                  </>
+                )}
               </tr>
             )))}
         </tbody>

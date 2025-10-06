@@ -75,8 +75,9 @@ export function StaticSingleDefault({ itemID }) {
             .filter((item) => item.subCategory.toLowerCase() === 'metadata')
             .map((item) => (
               <div key={item.id}>
-                <span>
-                  <strong>{item.title}:</strong> {item.description} <br />
+
+                <span className={item.unread ? 'unread-display' : '' }>
+                  <strong>{item.title}:</strong> {!item.available ? <span className="unavailablemeta">'----- DATA UNAVAILABLE -----'</span> : item.description} <br />
                 </span>
               </div>
             ))}

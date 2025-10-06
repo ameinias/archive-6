@@ -274,6 +274,11 @@ table.entryTable {
 table.entryTable tr {
   /* border-bottom: 2px solid #ccc; */
   padding-bottom:5px;
+  padding-right:4px;
+}
+
+table.entryTable td {
+  padding-right:4px;
 }
 
 /* table.entryTable .btn {
@@ -622,4 +627,15 @@ margin-bottom:0.5rem;
   color: rgb(128, 138, 228);
   font-style: italic;
   padding-top:8px;
+}
+
+.unavailablemeta
+{
+  color: darkred;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.unread-display{
+  /* background-color: #d6ecf4 */
 }

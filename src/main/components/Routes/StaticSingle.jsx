@@ -5,7 +5,7 @@ import { StaticSingleMess } from '../Templates/StaticSingleFunc-Mess';
 import { AddEntryForm } from '../Admin/EditEntryFunc';
 import { db } from '../../utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useEffect } from 'react'; // 
+import { useEffect } from 'react'; //
 
 const StaticSingle = () => {
   const { id } = useParams();
@@ -17,14 +17,14 @@ const StaticSingle = () => {
     if (!id || isNaN(numericID) || numericID <= 0) {
       return null;
     }
-    
+
     const entry = await db.friends.get(numericID);
     if (!entry) {
       console.error("Cannot find the entry with ID:", numericID);
       return null;
     }
 
-    return entry; 
+    return entry;
   }, [id]);
 
 
@@ -41,14 +41,20 @@ const StaticSingle = () => {
     };
 
     markAsRead();
-  }, [entryData, id]); 
+  }, [entryData, id]);
 
   const CheckConditionals = () => {
     if (!entryData) {
       return <div>No valid ID provided.</div>;
     }
 
-    if (entryData.template === 'messed up') {
+    if(entryData.hexHash === '50' || entryData.hexHash === 50) {
+      <div>
+         NO ENTRY
+      </div>
+
+    }
+    else if (entryData.template === 'messed up') {
       return <StaticSingleMess itemID={id} />;
     } else {
       return <StaticSingleDefault itemID={id} />;

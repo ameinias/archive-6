@@ -13,7 +13,7 @@ export function MediaUpload({ mediaFiles }) {
 
 
   useEffect(() => {
-    setFiles(mediaFiles);
+    setFiles(mediaFiles || []);
   }, [mediaFiles]);
 
   // Define the event handlers
@@ -37,10 +37,15 @@ export function MediaUpload({ mediaFiles }) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);
       }
 
-      //setFiles((prev) => [...prev, file]);
-      mediaFiles.push(file);
+      const newFiles = [...(mediaFiles || []), file];
+      setFiles(newFiles);
+      // Update the parent's mediaFiles array
+      if (mediaFiles) {
+        mediaFiles.length = 0; // Clear existing
+        mediaFiles.push(...newFiles); // Add all files
+      }
       console.log('File imported: ', file.name);
-      console.log('Total files: ', mediaFiles.length);
+      console.log('Total files: ', newFiles.length);
       setStatusMessage(`File imported: ${file.name}`);
     } catch (error) {
       setStatusMessage('An unknown error occurred during import.');
@@ -55,7 +60,13 @@ export function MediaUpload({ mediaFiles }) {
     }
   };
   const removeFile = (index) => {
-    setFiles(files.filter((_, i) => i !== index));
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
+    // Update the parent's mediaFiles array
+    if (mediaFiles) {
+      mediaFiles.length = 0; // Clear existing
+      mediaFiles.push(...newFiles); // Add remaining files
+    }
   };
 
   const handleDrop = (event) => {
@@ -84,7 +95,7 @@ export function MediaUpload({ mediaFiles }) {
         <div className="subentry-add-list">
           {files.map((file, index) => (
             <div className="media-thumbnail" key={index}>
-                  {/* ✅ FIXED: Check if file is a File object before using createObjectURL */}
+             
               {file instanceof File ? (
                 <img
                   src={URL.createObjectURL(file)}
@@ -92,12 +103,12 @@ export function MediaUpload({ mediaFiles }) {
                   style={{ width: '100%', height: 'auto' }}
                 />
               ) : (
-                <div style={{ 
-                  width: '200px', 
-                  height: '150px', 
-                  backgroundColor: '#f0f0f0', 
-                  display: 'flex', 
-                  alignItems: 'center', 
+                <div style={{
+                  width: '200px',
+                  height: '150px',
+                  backgroundColor: '#f0f0f0',
+                  display: 'flex',
+                  alignItems: 'center',
                   justifyContent: 'center',
                   border: '1px dashed #ccc'
                 }}>

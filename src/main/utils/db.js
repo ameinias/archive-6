@@ -5,6 +5,64 @@ import {setStartAvalability} from "../../hooks/dbHooks.js"
 
 
 
+// //  hexHash: 'aeoh-3q484-da232',
+// interface dbMainEntry {
+//   id: number; //real id
+//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
+//   hexHash: string; // Eventually used to pull from the other database
+//   title: string;
+//   description: string;
+//   media?: File[];
+//   category: string;
+//   // Remove subItems array - we'll query subentries by parentId instead
+//   date?: Date;
+//   entryDate: Date;
+//   available: boolean; //  field to indicate availability
+//   availableOnStart: boolean; //  field to indicate if available on start
+//   template: string; // Optional field for template
+//   bookmark?: boolean;
+//   unread: boolean;
+// }
+
+// interface dbSubEntry {
+//   id: number; //real id
+//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
+//   hexHash: string; // Eventually used to pull from the other database
+//   title: string;
+//   description?: string;
+//   mediaSub?: string;
+//   researcherID: ResearcherID; // researcher who added the entry
+//   subCategory: string;
+//   date?: Date;
+//   entryDate: Date;
+//   parentId: number; // Changed to number to match the main entry's id
+//   available: boolean; //  field to indicate availability
+//   availableOnStart: boolean; //  field to indicate if available on start
+//   template: string; // Optional field for template
+//   bookmark?: boolean;
+//   unread: boolean;
+// }
+
+
+// // This is for search and bookmark results
+// interface bothEntries {
+//   id: number; // id of search database
+//   origin: number; // index in og datrabase
+//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
+//   title: string;
+//   date?: Date;
+//   type: 'main' | 'sub'; // Type to distinguish between main and sub entries
+//   parentId?: number; // Include parentId for subentries
+// }
+
+// interface User {
+//   email: string;
+//   id: number;
+//   name: string;
+//   password: string;
+//   role: string;
+// }
+
 
 export const db = new Dexie('gb-current');
 
@@ -74,10 +132,37 @@ export const dbHelpers = {
 
   // Helper function to convert IDs to names for display. Gets possibly an array from an entry and returns their readable name.
  getHexHashNamesFromIds(ids) {
+    // Handle null/undefined
+    if (!ids) return [];
+
+    // Convert single value to array
+    if (!Array.isArray(ids)) {
+        ids = [ids];
+    }
+
     return ids.map(id => {
-        const hash = hexHashes.find(h => h.id === id);
-        console.log("getHexHashNamesFromIds", id, hash ? hash.name : "no");
-        return hash ? hash.name : id;
+        // Convert to string/number for comparison if needed
+        const hash = hexHashes.find(h => h.id == id || h.id === String(id) || h.id === Number(id));
+        console.log("getHexHashNamesFromIds", id, hash ? hash.name : "not found");
+        return hash ? hash.name : `Unknown (${id})`;
+    });
+},
+
+
+ getHexHashCodesFromIds(ids) {
+    // Handle null/undefined
+    if (!ids) return [];
+
+    // Convert single value to array
+    if (!Array.isArray(ids)) {
+        ids = [ids];
+    }
+
+    return ids.map(id => {
+        // Convert to string/number for comparison if needed
+        const hash = hexHashes.find(h => h.id == id || h.id === String(id) || h.id === Number(id));
+        console.log("getHexHashCodesFromIds", id, hash ? hash.hexHashcode : "not found");
+        return hash ? hash.hexHashcode : `Unknown (${id})`;
     });
 },
 

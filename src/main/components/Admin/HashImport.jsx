@@ -48,7 +48,7 @@ console.log(hashValue ,"  ===================== ", hexHashID);
         });
 
         foundSubItems.map( (item) => {
-           db.friends.update(item.id, { available: true, modEditDate: new Date().toISOString().replace('T', ' ').substring(0, 19) , modEdit: 'migrated' });
+           db.subentries.update(item.id, { available: true, modEditDate: new Date().toISOString().replace('T', ' ').substring(0, 19) , modEdit: 'migrated' });
         });
 
 

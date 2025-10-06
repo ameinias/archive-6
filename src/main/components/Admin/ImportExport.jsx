@@ -8,12 +8,14 @@ import {
   dbHelpers,
   newGameWithWarning,
   saveAsDefaultDatabase,
+
 } from '../../utils/db'; // import the database
 import 'dexie-export-import'; // Import the export/import addon
 import { GameLogic } from '../../utils/gamelogic';
 // import { clear } from 'console';
 import HashImport from './HashImport';
 import { useLiveQuery } from 'dexie-react-hooks';
+
 
 function ImportExport() {
   const { isAdmin, toggleAdmin, setStatusMessage } = GameLogic();
@@ -110,6 +112,81 @@ function ImportExport() {
       console.log(
         ` ${entry.fauxID}  is now: ${updatedEntry.available}`,
       );
+    }
+  };
+
+  const handleCSVExport = async () => {
+    try {
+      const friends = await db.friends.toArray();
+      const subentries = await db.subentries.toArray();
+
+      // Process data and convert hexHash IDs to names
+      const processedFriends = friends.map(item => ({
+        ...item,
+        hexHashCodes: item.hexHash ? dbHelpers.getHexHashCodesFromIds(item.hexHash).join(', ') : '',
+        type: 'main_entry'
+      }));
+
+      const processedSubentries = subentries.map(item => ({
+        ...item,
+        hexHashCodes: item.hexHash ? dbHelpers.getHexHashCodesFromIds(item.hexHash).join(', ') : '',
+        type: 'sub_entry'
+      }));
+
+      const combinedData = [...processedFriends, ...processedSubentries];
+
+
+      const selectedFields = [
+        'fauxID', 'category',
+        'hexHashCodes',
+      ];
+
+      // Map field names to display names for CSV headers
+      const fieldDisplayNames = {
+        'fauxID': 'ID',
+        'category': 'RecordType',
+        'hexHashCodes': 'hexHashCodes'
+      };
+
+      // Create CSV content with custom headers
+      let csvContent = selectedFields.map(field => fieldDisplayNames[field]).join(',') + '\n';
+
+      combinedData.forEach(row => {
+        const values = selectedFields.map(field => {
+          let value = row[field];
+
+          // Handle arrays/objects by converting to string
+          if (Array.isArray(value)) {
+            value = value.join('; '); // Join array elements with semicolon
+          } else if (typeof value === 'object' && value !== null) {
+            value = JSON.stringify(value);
+          }
+
+          // Escape commas and quotes for CSV
+          if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
+            value = `"${value.replace(/"/g, '""')}"`;
+          }
+
+          return value || '';
+        });
+        csvContent += values.join(',') + '\n';
+      });
+
+      // Create and download CSV file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'database-export-backup-1996FINAL.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      setStatusMessage('CSV export with hex hash names complete');
+    } catch (error) {
+      console.error('CSV Export error:', error);
+      setStatusMessage('CSV export failed: ' + error.message);
     }
   };
 
@@ -290,6 +367,10 @@ const handleFileAppendChange = (event) => {
 
               <Button variant="primary" className="mt-3" onClick={handleExport}>
                 Export Database - JSON
+              </Button>
+
+              <Button variant="primary" className="mt-3" onClick={handleCSVExport}>
+                Export Database - CSV
               </Button>
 
 

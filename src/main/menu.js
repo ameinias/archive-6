@@ -57,18 +57,7 @@ export default class MenuBuilder {
         y
       } = props;
 
-      Menu.buildFromTemplate([{
-  label: 'Toggle Admin',
-  click: () => {
-    // Execute in renderer context
-    this.mainWindow.webContents.executeJavaScript(`
-      const currentAdmin = localStorage.getItem('isAdmin') === 'true';
-      const newAdmin = !currentAdmin;
-      localStorage.setItem('isAdmin', newAdmin.toString());
-      window.location.reload(); // Force React to re-read the value
-    `);
-  },
-},
+      Menu.buildFromTemplate([
 {
           label: 'Inspect element',
           click: () => {
@@ -86,9 +75,44 @@ export default class MenuBuilder {
 
 
         },
+         {
+              type: 'separator'
+            },
+            {
+              label: 'Cut',
+              accelerator: 'Ctrl+X',
+              role: 'cut'
+            },
+            {
+              label: 'Copy',
+              accelerator: 'Ctrl+C',
+              role: 'copy'
+            },
+            {
+              label: 'Paste',
+              accelerator: 'Ctrl+V',
+              role: 'paste'
+            },
+            {
+              label: 'Select All',
+              accelerator: 'Ctrl+A',
+              role: 'selectAll'
+            },
         {
           label: 'Edit',
           submenu: [{
+  label: 'Toggle Admin',
+  click: () => {
+    // Execute in renderer context
+    this.mainWindow.webContents.executeJavaScript(`
+      const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+      const newAdmin = !currentAdmin;
+      localStorage.setItem('isAdmin', newAdmin.toString());
+      window.location.reload(); // Force React to re-read the value
+    `);
+  },
+},
+{
               label: 'Undo',
               accelerator: 'Command+Z',
               selector: 'undo:'
@@ -154,7 +178,32 @@ export default class MenuBuilder {
             this.mainWindow.center();
           },
         },
-         {
+ {
+              type: 'separator'
+            },
+            {
+              label: 'Cut',
+              accelerator: 'Command+X',
+              selector: 'cut:'
+            },
+            {
+              label: 'Copy',
+              accelerator: 'Command+C',
+              selector: 'copy:'
+            },
+            {
+              label: 'Paste',
+              accelerator: 'Command+V',
+              selector: 'paste:'
+            },
+            {
+              label: 'Select All',
+              accelerator: 'Command+A',
+              selector: 'selectAll:',
+            },
+        {
+          label: 'Edit',
+          submenu: [         {
   label: 'Toggle Admin',
   click: () => {
     // Execute in renderer context
@@ -165,10 +214,7 @@ export default class MenuBuilder {
       window.location.reload(); // Force React to re-read the value
     `);
   },
-},
-        {
-          label: 'Edit',
-          submenu: [{
+},{
               label: 'Undo',
               accelerator: 'Command+Z',
               selector: 'undo:'

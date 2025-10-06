@@ -40,7 +40,7 @@ export function StaticSubListItem({
     >
       <div className="subentry-item">
         {/* <div > */}
-          <div width="80%" key={item.id}>
+          <div width="80%" key={item.id} className={item.unread ? 'unread-display' : '' }>
             <h4>
               {' '}
               {/* <Link to={`/edit-subitem/${item.parentId}/${item.id}`}> */}
@@ -63,9 +63,7 @@ export function StaticSubListItem({
             <br />
             <span className="image-subinfo subinfo">
               - {item.researcherID.toString()} (
-              {item.entryDate
-                ? new Date(item.entryDate).toLocaleDateString()
-                : 'No date'}
+              {item.displayDate}
               )
             </span>
           </div>

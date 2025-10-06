@@ -102,7 +102,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
     fauxID: 'tempID',
     title: '',
     description: '',
-    category: 'Object',
+    parentId: Number(parentID) || 0,
     date: new Date(),
     entryDate: new Date(),
     available: false, // Default to false
@@ -127,6 +127,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
             hexHash: formValues.hexHash,
             description: formValues.description,
             date: formValues.date,
+            parentId: formValues.parentId,
             mediaSub: formValues.mediaSub,
             subCategory:formValues.subCategory,
             researcherID: formValues.researcherID,
@@ -175,6 +176,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
           title: entry.title,
           description: entry.description || '',
           subCategory: entry.subCategory,
+          parentId: entry.parentId,
           date: entry.date || new Date(),
           entryDate: entry.entryDate,
           available: entry.available || false,
@@ -542,7 +544,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
             </div>
                         <div className="col">
                 <FormAssets.FormDate
-                    label="Collection Date"
+                    label="Creation Date"
                     name="displayDate"
                     formValue={formValues.displayDate}
                     onChange={handleChange}
@@ -628,6 +630,15 @@ export function AddSubEntryForm({ itemID, parentID }) {
                 name="bookmark"
               />
             </div>
+<div className="row">
+             <FormAssets.FormTextBox
+              label="parentId:"
+              name="parentId"
+              formValue={formValues.parentId}
+              readOnly={false}
+              onChange={handleChange}
+            />
+ </div>
 
             <div className="row">
 
