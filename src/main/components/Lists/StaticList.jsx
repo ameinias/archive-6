@@ -15,8 +15,8 @@ export function StaticList() {
     ? [...friends]
      .filter(item => item.available)
     .sort((a, b) => {
-        const dateA = a.date ? new Date(a.date).getTime() : 0;
-        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        const dateA = a.displayDate ? new Date(a.date).getTime() : 0;
+        const dateB = b.displayDate ? new Date(b.date).getTime() : 0;
         return dateB - dateA;
       })
     : [];
@@ -47,7 +47,7 @@ export function StaticList() {
                         {item.fauxID} : {item.title}
                       </Link>
                     </td>
-                    <td>{item.date ? new Date(item.date).toLocaleDateString() : 'No date'}</td>
+                    <td>{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
                   </>
                 )}
               </tr>

@@ -15,6 +15,7 @@ import { GameLogic } from '../../utils/gamelogic';
 // import { clear } from 'console';
 import HashImport from './HashImport';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { subCategories } from '../../utils/constants';
 
 
 function ImportExport() {
@@ -138,13 +139,14 @@ function ImportExport() {
 
       const selectedFields = [
         'fauxID', 'category',
-        'hexHashCodes',
+        'hexHashCodes', 'subCategory'
       ];
 
       // Map field names to display names for CSV headers
       const fieldDisplayNames = {
         'fauxID': 'ID',
         'category': 'RecordType',
+        'subCategory': 'aRecordType',
         'hexHashCodes': 'hexHashCodes'
       };
 

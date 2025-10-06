@@ -95,7 +95,7 @@ export function MediaUpload({ mediaFiles }) {
         <div className="subentry-add-list">
           {files.map((file, index) => (
             <div className="media-thumbnail" key={index}>
-             
+
               {file instanceof File ? (
                 <img
                   src={URL.createObjectURL(file)}
