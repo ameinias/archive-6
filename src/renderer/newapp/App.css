@@ -639,3 +639,11 @@ margin-bottom:0.5rem;
 .unread-display{
   /* background-color: #d6ecf4 */
 }
+
+.bad-gateway{
+  color: darkred;
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 20%;
+}

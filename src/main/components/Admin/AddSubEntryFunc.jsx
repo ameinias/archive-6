@@ -454,7 +454,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
                 placeholder="ID"
                 value={formValues.fauxID}
                 onChange={handleChange}
-                readOnly
+                // readOnly
               />
             )}
           </div>

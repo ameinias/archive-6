@@ -38,6 +38,7 @@ import  Logs  from './Search/Logs';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers, newGame } from '../utils/db';
 import { GameLogic } from '../utils/gamelogic';
+import BadGateway from './Login/BadGateway';
 
 
 
@@ -125,6 +126,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/login" element={<Login />} />
               <Route path="/user-profile" element={<UserProfile />} />
                <Route path="/hashimport" element={<HashImport />} />
+               <Route path="/bad-gateway" element={<BadGateway />} />
             </Routes>
           </div>
         </div>

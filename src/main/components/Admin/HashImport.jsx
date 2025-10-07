@@ -6,18 +6,26 @@ import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { findByHashAndUnLock } from  '../../../hooks/dbHooks'
 import Logs from '../Search/Logs';
+import { badHashes } from '../../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 
 function HashImport() {
     const [hashValue, setHashVal] = React.useState('');
     const friends = useLiveQuery(() => db.friends.toArray());
     const subentries = useLiveQuery(() => db.subentries.toArray());
+      const navigate = useNavigate();
 
 
 const importHash =  async() => {
 
 
 const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue).toString();
+
+if(badHashes.includes(hexHashID)) {
+    navigate('/bad-gateway');
+    return;
+}
 
 console.log(hashValue ,"  ===================== ", hexHashID);
 

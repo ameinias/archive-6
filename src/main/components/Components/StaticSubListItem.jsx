@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import { GameLogic } from '../../utils/gamelogic';
 import { Link } from 'react-router-dom';
 import {MediaDisplay} from '../Components/MediaDisplay'
+import { researcherIDs } from '../../utils/constants.js';
 
 export function StaticSubListItem({
   itemID,
@@ -62,9 +63,17 @@ export function StaticSubListItem({
 
             <br />
             <span className="image-subinfo subinfo">
-              - {item.researcherID.toString()} (
-              {item.displayDate}
-              )
+         {item.displayDate ? (
+           typeof item.displayDate === 'string' 
+             ? item.displayDate 
+             : new Date(item.displayDate).toLocaleDateString()
+         ) : 'No date'}
+     
+        - {item.researcherID !== null && item.researcherID !== undefined
+         ? researcherIDs.find(researcher => researcher.id === parseInt(item.researcherID))?.name || 'Unknown'
+         : 'Unknown User'
+       }
+              
             </span>
           </div>
         </div>

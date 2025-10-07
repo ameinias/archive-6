@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
+import { researcherIDs } from '../../utils/constants.js';
 
 export function ListSubEntries({ itemID }) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
@@ -60,7 +61,19 @@ export function ListSubEntries({ itemID }) {
                   <div >
                     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                       {item.fauxID} : {item.title}
-                    </Link>
+                    </Link>  <span className="subentry-meta"> 
+    {item.displayDate ? (
+      typeof item.displayDate === 'string' 
+        ? item.displayDate 
+        : new Date(item.displayDate).toLocaleDateString()
+    ) : 'No date'}
+
+   - {item.researcherID !== null && item.researcherID !== undefined
+    ? researcherIDs.find(researcher => researcher.id === parseInt(item.researcherID))?.name || 'Unknown'
+    : 'Unknown User'
+  }
+</span>
+
                   </div>
                   <div>
                     <Button
