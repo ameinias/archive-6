@@ -29,10 +29,10 @@
       { id:0,name: 'unknown-user', note: 'For the first unlockable scenes.' },
     { id:1,name: 'RM',  note: 'For scenes that are available at the beginning of the game.' },
     { id:2,name: 'EQ', note: 'For the first unlockable scenes.' },
-    { id:3,name: 'programmer', note: 'For the first unlockable scenes.' },
-    { id:4,name: 'historian', note: 'For the first unlockable scenes.' },
-    { id:5,name: 'society1', note: 'For the first unlockable scenes.' },
-    { id:6,name: 'socieity2', note: 'For the first unlockable scenes.' },
+    { id:3,name: 'programmer96-2001', note: 'ony works atuniversity 96 97 then from home ' },
+    { id:4,name: 'historian73-82s', note: 'For the first unlockable scenes.' },
+    { id:5,name: 'society1-archivist-10-23', note: 'For the first unlockable scenes.' },
+    { id:6,name: 'socieity2-archivist-24-52', note: 'For the first unlockable scenes.' },
 
   ];
 export const entryTemplate= [
