@@ -139,7 +139,11 @@ const createWindow = async () => {
   // Load previous window state
   const windowState = loadWindowState();
 
-  // console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + '../../../.erb/dll/preload.js')
+
+   const preloadPath ='../../.erb/dll/preload.js';
+  
+
+  console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + preloadPath)
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -153,7 +157,7 @@ const createWindow = async () => {
         nodeIntegration: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../../.erb/dll/preload.js'), // ../../.erb/dll/preload.js
+        : path.join(__dirname, preloadPath), // ../../.erb/dll/preload.js
 
     },
   });

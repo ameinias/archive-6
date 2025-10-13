@@ -30,6 +30,8 @@ return (
     {/* <NavBar /> */}
 
     Test text la la 
+
+    will this week working? 
     {/* {appVersion === 'newapp' ? <NewAppInterface /> : <OldAppInterface />} */}
   </div>
 );
