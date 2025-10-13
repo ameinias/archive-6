@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 
 const StatusBar = () => {
   const { isAdmin, toggleAdmin, globalStatus, setStatusMessage, isLoggedIn } = GameLogic();

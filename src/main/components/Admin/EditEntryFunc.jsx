@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {db, dbHelpers} from '../../utils/db'; // import the database
+import {db, dbHelpers} from '../../../../packages/shared/utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
-import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, editType} from '../../utils/constants';
+import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, editType} from '../../../../packages/shared/utils/constants';
 import {Form, useNavigate} from 'react-router-dom';
-import {GameLogic} from '../../utils/gamelogic';
+import {GameLogic} from '../../../../packages/shared/utils/gamelogic';
 import {ListSubEntries} from '../Lists/ListSubEntries';
 import {MediaUpload} from './MediaUpload';
 import * as FormAssets from '../Components/FormAssets';

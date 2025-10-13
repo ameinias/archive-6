@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { db } from '../../utils/db'; // import the database
+import { db } from '../../../../packages/shared/utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '../Components/StaticSubListItem';
 import { BookMarkCheck } from '../Components/Badges';
-import { getFileType } from '../../../hooks/dbHooks';
+import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
 
 export function StaticSingleMess({ itemID }) {
   const { id } = useParams(); // get the id from the route

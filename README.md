@@ -9,6 +9,12 @@ Based on Electron-react-Boilerplate with Dexie db.
 * define things in utils/db.ts
 * catagory drop down options in constants.ts
 
+
+pulled from index.ejs
+'''
+    <!-- <title><%= require(htmlWebpackPlugin.options.packageJson).name %> <%= require(htmlWebpackPlugin.options.packageJson).version %></title> -->
+'''
+
 ## put assets
 projects>assets(check this)
 
@@ -47,9 +53,6 @@ projects>assets(check this)
 
 <br>
 
-<p>
-  Electron React Boilerplate uses <a href="https://electron.atom.io/">Electron</a>, <a href="https://facebook.github.io/react/">React</a>, <a href="https://github.com/reactjs/react-router">React Router</a>, <a href="https://webpack.js.org/">Webpack</a> and <a href="https://www.npmjs.com/package/react-refresh">React Fast Refresh</a>.
-</p>
 <a href="https://www.flaticon.com/free-icons/code" title="code icons">Code icons created by HideMaru - Flaticon</a>
 <br>
 

@@ -21,12 +21,12 @@ const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
 const {dialog} = require('electron');
 
-try {
-  config = require(`../../config/${appVersion}.json`);
-} catch (error) {
-  console.error(`Error loading config for ${appVersion}:`, error);
-  app.quit();
-}
+// try {
+//   config = require(`../../config/${appVersion}.json`);
+// } catch (error) {
+//   console.error(`Error loading config for ${appVersion}:`, error);
+//   app.quit();
+// }
 
 class AppUpdater {
   constructor() {
@@ -139,7 +139,7 @@ const createWindow = async () => {
   // Load previous window state
   const windowState = loadWindowState();
 
-  console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + '../../.erb/dll/preload.js')
+  // console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + '../../../.erb/dll/preload.js')
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -153,7 +153,7 @@ const createWindow = async () => {
         nodeIntegration: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'), // ../../.erb/dll/preload.js
+        : path.join(__dirname, '../../../.erb/dll/preload.js'), // ../../.erb/dll/preload.js
 
     },
   });
@@ -178,7 +178,7 @@ mainWindow.webContents.on('will-prevent-unload', (e) => {
 
   mainWindow.on('ready-to-show', () => {
 
-    console.log('>>>>>>>>>>>>>' + __dirname + '../../.erb/dll/preload.js ' + app.isPackaged);
+    console.log('>>>>>>>>>>>>>' + __dirname + '../../../.erb/dll/preload.js ' + app.isPackaged);
 
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');

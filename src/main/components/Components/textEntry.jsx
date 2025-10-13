@@ -1,4 +1,4 @@
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 
 const textEntry = ({ txt }) => {
   const { isAdmin, toggleAdmin } = GameLogic();

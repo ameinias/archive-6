@@ -1,8 +1,8 @@
 import React from 'react';
 
-import * as dbHooks from '../../../hooks/dbHooks';
+import * as dbHooks from '../../../../packages/shared/hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, dbHelpers } from '../../utils/db';
+import { db, dbHelpers } from '../../../../packages/shared/utils/db';
 
 export function MediaCountCell({ itemId, type }) {
   const count = dbHooks.GetMediaCount(itemId, type);
@@ -45,7 +45,7 @@ export function UnreadBadge({
     const unread = dbHooks.CheckUnread(itemId );
 
   return (
-      <div className={'badger' + (unread ? ' unread' : ' empty')}></div>
+      <div className={'badger' + (unread ? ' unread' : ' empty')}>sfsdhdddgff asfdghfgfff</div>
   );
 }
 

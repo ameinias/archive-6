@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, dbHelpers } from '../main/utils/db';
+import { db, dbHelpers } from '../utils/db';
 
 
 

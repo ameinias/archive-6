@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../utils/db'; // import the database
+import { db } from '../../../../packages/shared/utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
 import {
   categories,
@@ -8,9 +8,9 @@ import {
   entryTemplate,
   hexHashes,
   metaData, editType,
-} from '../../utils/constants';
+} from '../../../../packages/shared/utils/constants';
 import { useNavigate } from 'react-router-dom';
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 import { MediaUploadSub } from './MediaUploadSub';
 // import { availableMemory } from 'process';
 import { useLiveQuery } from 'dexie-react-hooks';

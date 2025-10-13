@@ -1,4 +1,4 @@
-import { getFileType } from '../../../hooks/dbHooks';
+import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
 import { Link } from 'react-router-dom';
 
 export function MediaDisplay({ file, index }) {

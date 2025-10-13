@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { DoctorRoutes, ReceptionistRoutes, AdminRoutes, PatientRoutes } from './root.routers';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../../packages/shared/hooks/useAuth';
 import { IAuthContext } from 'context/types';
 
 import Login from 'pages/login';

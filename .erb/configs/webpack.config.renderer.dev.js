@@ -19,10 +19,11 @@ if (process.env.NODE_ENV === 'production') {
 
 const port = process.env.PORT || 1212;
 const manifest = path.resolve(webpackPaths.dllPath, 'renderer.json');
-const skipDLLs =
-  module.parent?.filename.includes('webpack.config.renderer.dev.dll') ||
-  module.parent?.filename.includes('webpack.config.eslint');
+// const skipDLLs =
+//   module.parent?.filename.includes('webpack.config.renderer.dev.dll') ||
+//   module.parent?.filename.includes('webpack.config.eslint');
 
+const skipDLLs = true;
 /**
  * Warn if the DLL is not built
  */
@@ -45,11 +46,17 @@ const configuration = {
 
   target: ['web', 'electron-renderer'],
 
+  // entry: [
+  //   `webpack-dev-server/client?http://localhost:${port}/dist`,
+  //   'webpack/hot/only-dev-server',
+  //   path.join(webpackPaths.srcRendererPath, 'index.jsx'),
+  // ],
   entry: [
-    `webpack-dev-server/client?http://localhost:${port}/dist`,
-    'webpack/hot/only-dev-server',
-    path.join(webpackPaths.srcRendererPath, 'index.jsx'),
-  ],
+  `webpack-dev-server/client?http://localhost:${port}/dist`,
+  'webpack/hot/only-dev-server',
+  // Temporarily hardcode to test
+  'C:\\Users\\gillian\\_Academic\\Thesis\\archive-5\\packages\\app-electron\\src\\renderer\\index.jsx',
+],
 
   output: {
     path: webpackPaths.distRendererPath,
@@ -161,6 +168,7 @@ const configuration = {
       env: process.env.NODE_ENV,
       isDevelopment: process.env.NODE_ENV !== 'production',
       nodeModules: webpackPaths.appNodeModulesPath,
+        packageJson: path.join(webpackPaths.rootPath, 'package.json'),
     }),
   ],
 
@@ -209,5 +217,11 @@ const configuration = {
     },
   },
 };
+
+console.log('=== WEBPACK PATH DEBUG ===');
+console.log('webpackPaths.srcRendererPath:', webpackPaths.srcRendererPath);
+console.log('Entry point:', path.join(webpackPaths.srcRendererPath, 'index.jsx'));
+console.log('Template path:', path.join(webpackPaths.srcRendererPath, 'index.ejs'));
+console.log('=========================');
 
 module.exports = merge(baseConfig, configuration);

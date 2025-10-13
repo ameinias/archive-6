@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 import { categories, subCategories,researcherIDs,hexHashes } from "./constants.js";
 import "dexie-export-import";
-import {setStartAvalability} from "../../hooks/dbHooks.js"
+import {setStartAvalability} from "../hooks/dbHooks.js"
 
 
 

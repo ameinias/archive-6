@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db } from '../../utils/db'; // import the database
+import { db } from '../../../../packages/shared/utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { BookMarkCheck, UnreadBadge } from '../Components/Badges';
 import { Link } from 'react-router-dom';

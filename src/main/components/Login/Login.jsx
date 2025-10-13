@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import { useState } from "react";
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 import { Link } from 'react-router-dom';
 import {
   newGame
-} from '../../utils/db'; // import the database
+} from '../../../../packages/shared/utils/db'; // import the database
 
 const defaultFormValue = {
   username: '',

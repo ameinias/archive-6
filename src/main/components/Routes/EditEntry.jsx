@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { AddEntryForm } from '../Admin/EditEntryFunc';
 import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 
 const EditEntry = () => {
   const { id } = useParams(); // get the id from the route

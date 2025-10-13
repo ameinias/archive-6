@@ -3,10 +3,10 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { EntryList } from '../Lists/ListEditEntry';
 import {StaticList} from '../Lists/StaticList';
 import React from 'react';
-import { db, dbMainEntry, bothEntries } from '../../utils/db'; // import the database
+import { db, dbMainEntry, bothEntries } from '../../../../packages/shared/utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 
 const Search = () => {
   const [val, setVal] = React.useState('');

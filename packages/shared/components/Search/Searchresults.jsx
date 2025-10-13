@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {db} from '../../utils/db'; // import the database
+import {db} from '../../../../packages/shared/utils/db'; // import the database
 import {useLiveQuery} from 'dexie-react-hooks';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import {AddSubEntryForm} from '../Admin/AddSubEntryFunc';
-import {GameLogic} from '../../utils/gamelogic';
+import {GameLogic} from '../../../../packages/shared/utils/gamelogic';
 import {SearchPageItem} from '../Components/ListingComponent';
 
 export function SearchResults({results}) {

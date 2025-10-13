@@ -36,8 +36,8 @@ import  Logs  from './Search/Logs';
 
 //Tools
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, dbHelpers, newGame } from '../utils/db';
-import { GameLogic } from '../utils/gamelogic';
+import { db, dbHelpers, newGame } from '../../../packages/shared/utils/db';
+import { GameLogic } from '../../../packages/shared/utils/gamelogic';
 import BadGateway from './Login/BadGateway';
 
 

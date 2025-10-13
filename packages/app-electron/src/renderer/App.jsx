@@ -2,7 +2,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css';
 import React from 'react';
-import NewAppInterface from './newapp/AppNew';
+// import NewAppInterface from '@electron/renderer/newapp/AppNew';
+import Test from '@electron/renderer/newapp/test';
 // import OldAppInterface from './oldapp/AppOld';
 
 // import NavBar from '../main/components/bars/NavBar';
@@ -16,7 +17,8 @@ export default function App() {
 return (
   <div>
     {/* <NavBar /> */}
-    <NewAppInterface />
+    {/* <NewAppInterface /> */}
+    <Test />
     {/* {appVersion === 'newapp' ? <NewAppInterface /> : <OldAppInterface />} */}
   </div>
 );

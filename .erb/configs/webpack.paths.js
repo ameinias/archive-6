@@ -7,9 +7,12 @@ const erbNodeModulesPath = path.join(erbPath, 'node_modules');
 
 const dllPath = path.join(__dirname, '../dll');
 
-const srcPath = path.join(rootPath, 'src');
+const srcPath = path.join(rootPath, 'packages/app-electron/src');
 const srcMainPath = path.join(srcPath, 'main');
 const srcRendererPath = path.join(srcPath, 'renderer');
+
+
+const sharedPath = path.join(rootPath, 'packages/shared');
 
 const releasePath = path.join(rootPath, 'release');
 const appPath = path.join(releasePath, 'app');
@@ -30,6 +33,7 @@ module.exports = {
   srcPath,
   srcMainPath,
   srcRendererPath,
+  sharedPath, 
   releasePath,
   appPath,
   appPackagePath,

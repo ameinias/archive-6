@@ -9,13 +9,13 @@ import {
   newGameWithWarning,
   saveAsDefaultDatabase,
 
-} from '../../utils/db'; // import the database
+} from '../../../../packages/shared/utils/db'; // import the database
 import 'dexie-export-import'; // Import the export/import addon
-import { GameLogic } from '../../utils/gamelogic';
+import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
 // import { clear } from 'console';
 import HashImport from './HashImport';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { subCategories } from '../../utils/constants';
+import { subCategories } from '../../../../packages/shared/utils/constants';
 
 
 function ImportExport() {

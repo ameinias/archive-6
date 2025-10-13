@@ -9,9 +9,9 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-import { db, dbHelpers, newGame } from '../../main/utils/db';
+import { db, dbHelpers, newGame } from '../../../packages/shared/utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { GameLogic } from '../../main/utils/gamelogic';
+import { GameLogic } from '../../../packages/shared/utils/gamelogic';
 
 import RouterPath from '../../main/components/Router';
 
