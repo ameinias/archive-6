@@ -85,7 +85,7 @@ export function ListSubEntries({ itemID }) {
               ))}
             </div>
 
-
+                {/* what is going on here. */}
           <Button
             variant={toggleShowNewSubEntry ? 'remove-item' : 'add-item'}
             onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
