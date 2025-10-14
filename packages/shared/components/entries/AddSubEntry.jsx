@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { AddSubEntryForm } from '../Admin/AddSubEntryFunc';
+import { AddSubEntryForm } from '../admin/AddSubEntryFunc';
 
 const AddSubEntry = () => {
 const { parentID, itemID } = useParams();

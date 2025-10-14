@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db } from '../../../../packages/shared/utils/db'; // import the database
+import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
-import { BookMarkCheck, UnreadBadge } from '../Components/Badges';
+import { BookMarkCheck, UnreadBadge } from '@components/parts/Badges';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 

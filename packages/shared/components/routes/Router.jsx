@@ -13,32 +13,32 @@ import React, { useEffect, useState } from 'react';
 
 
 import Home from './Home';
-import UserProfile from './Login/UserProfile';
+import UserProfile from '@components/Login/UserProfile';
 // import Register from './Login/Register';
-import Login from './Login/Login';
-import NavBar from './bars/NavBar';
+import Login from '@components/Login/Login';
+import NavBar from '@components/bars/NavBar';
 
-import ImportExport from './Admin/ImportExport';
-import HashImport from './Admin/HashImport';
+import ImportExport from '@components/Admin/ImportExport';
+import HashImport from '@components/Admin/HashImport';
 
 //Entries
-import StaticSingle from './Routes/StaticSingle';
-import AddSubEntry from './Routes/AddSubEntry';
-import  AddEntry from './Routes/EditEntry';
+import StaticSingle from '@components/entries/StaticSingle';
+import AddSubEntry from '@components/entries/AddSubEntry';
+import  AddEntry from '@components/entries/EditEntry';
 
 // Lists
-import Search from './Search/Search';
-import FileFullscreen from './Templates/FileFullScreen';
-import Bookmarks from './Search/Bookmarks';
-import Media from './Search/Media';
-import  HexList  from './Search/HexList';
-import  Logs  from './Search/Logs';
+import Search from '@components/Search/Search';
+import FileFullscreen from '@components/Templates/FileFullScreen';
+import Bookmarks from '@components/Search/Bookmarks';
+import Media from '@components/Search/Media';
+import  HexList  from '@components/Search/HexList';
+import  Logs  from '@components/Search/Logs';
 
 //Tools
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, dbHelpers, newGame } from '../../../packages/shared/utils/db';
-import { GameLogic } from '../../../packages/shared/utils/gamelogic';
-import BadGateway from './Login/BadGateway';
+import { db, dbHelpers, newGame } from '@utils/db';
+import { GameLogic } from '@utils/gamelogic';
+import BadGateway from '@components/Login/BadGateway';
 
 
 
@@ -103,30 +103,30 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/" element={<Home />} />
 
    {/* Entries ---------------------------------------------------------- */}
-              <Route path="/edit-item/:id" element={<AddEntry />} />
-              <Route path="/add-subitem/:parentID" element={<AddSubEntry />} />
-              <Route
+              {/* <Route path="/edit-item/:id" element={<AddEntry />} /> */}
+              {/* <Route path="/add-subitem/:parentID" element={<AddSubEntry />} /> */}
+              {/* <Route
                 path="/edit-subitem/:parentID/:itemID"
                 element={<AddSubEntry />}
-              />
-              <Route path="/entry/:id" element={<StaticSingle />} />
+              /> */}
+              {/* <Route path="/entry/:id" element={<StaticSingle />} /> */}
  {/* admin tools -------------------            -------------------------*/}
-              <Route path="/import-export" element={<ImportExport />} />
+              {/* <Route path="/import-export" element={<ImportExport />} /> */}
   {/* Lists   ------------------------------------------------------------ */}
-              <Route path="/search" element={<Search />} />
-              <Route path="/bookmarks" element={<Bookmarks />} />
-              <Route path="/media" element={<Media />} />
-              <Route path="/hex" element={<HexList />} />
-              <Route path="/logs" element={<Logs />} />
-              <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
+              {/* <Route path="/search" element={<Search />} /> */}
+              {/* <Route path="/bookmarks" element={<Bookmarks />} /> */}
+              {/* <Route path="/media" element={<Media />} /> */}
+              {/* <Route path="/hex" element={<HexList />} /> */}
+              {/* <Route path="/logs" element={<Logs />} /> */}
+              {/* <Route path="/file-fullscreen/:id" element={<FileFullscreen />} /> */}
               {/* <Route path="/test" element={<DescriptionEntry />} /> */}
 
 {/* PlayerAdmin   ------------------------------------------------------------ */}
               {/* <Route path="/register" element={<Register />} /> */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/user-profile" element={<UserProfile />} />
-               <Route path="/hashimport" element={<HashImport />} />
-               <Route path="/bad-gateway" element={<BadGateway />} />
+              {/* <Route path="/login" element={<Login />} /> */}
+              {/* <Route path="/user-profile" element={<UserProfile />} /> */}
+               {/* <Route path="/hashimport" element={<HashImport />} /> */}
+               {/* <Route path="/bad-gateway" element={<BadGateway />} /> */}
             </Routes>
           </div>
         </div>

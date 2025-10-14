@@ -1,18 +1,19 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db } from '../../../../packages/shared/utils/db'; // import the database
+import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
-import * as FormAssets from '../Components/FormAssets';
+import { GameLogic } from '@utils/gamelogic';
+import * as FormAssets from '@components/parts/FormAssets';
 
 import {
   MediaCountCell,
   SubentryCountCell,
   AvailableCell,
-} from '../../components/Components/Badges';
+} from '@components/parts/Badges';
+
 
 export function EntryList() {
     const [isLoading, setIsLoading] = useState(false);

@@ -13,6 +13,8 @@ import { db, dbHelpers, newGame } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { GameLogic } from '@utils/gamelogic';
 // import NavBar from '../../../../shared/components/bars/NavBar';
+import NavBar from '@components/bars/NavBar';
+import TestComp from '@components/testcomp';
 
 // import RouterPath from '../../main/components/Router';
 
@@ -27,11 +29,15 @@ export default function Test() {
 
 return (
   <div>
-    {/* <NavBar /> */}
+    <NavBar />
 
     Test text la la 
 
     will this week working? 
+
+
+    <TestComp />
+
     {/* {appVersion === 'newapp' ? <NewAppInterface /> : <OldAppInterface />} */}
   </div>
 );

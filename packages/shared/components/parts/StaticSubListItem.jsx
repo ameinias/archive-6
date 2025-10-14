@@ -1,12 +1,12 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { db, dbHelpers } from '../../../../packages/shared/utils/db'; // import the database
+import { db, dbHelpers } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
+import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
-import {MediaDisplay} from '../Components/MediaDisplay'
+import {MediaDisplay} from './MediaDisplay'
 import { researcherIDs } from '../../../../packages/shared/utils/constants.js';
 
 export function StaticSubListItem({

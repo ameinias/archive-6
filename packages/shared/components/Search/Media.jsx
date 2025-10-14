@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { db, dbMainEntry, bothEntries } from '../../../../packages/shared/utils/db';
+import { db, dbMainEntry, bothEntries } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
+import { GameLogic } from '@utils/gamelogic';
 import {getFileType} from '../../../../packages/shared/hooks/dbHooks';
 // interface MediaFile {
 //   id: number;

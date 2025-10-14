@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../../../packages/shared/utils/db'; // import the database
+import { db } from '@utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
 import {
   categories,
@@ -8,13 +8,13 @@ import {
   entryTemplate,
   hexHashes,
   metaData, editType,
-} from '../../../../packages/shared/utils/constants';
+} from '@utils/constants';
 import { useNavigate } from 'react-router-dom';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
-import { MediaUploadSub } from './MediaUploadSub';
+import { GameLogic } from '@utils/gamelogic';
+import { MediaUploadSub } from '@components/parts/MediaUploadSub';
 // import { availableMemory } from 'process';
 import { useLiveQuery } from 'dexie-react-hooks';
-import * as FormAssets from '../Components/FormAssets';
+import * as FormAssets from '@components/parts/FormAssets';
 
 export function AddSubEntryForm({ itemID, parentID }) {
   //*    ---------------    CONST  ------------------ */

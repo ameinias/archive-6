@@ -1,7 +1,7 @@
 import { DragEvent, useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
-import { db } from '../../../../packages/shared/utils/db'; // import the database
+import { GameLogic } from '../../utils/gamelogic';
+import { db } from '../../utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useActionState } from 'react';
 

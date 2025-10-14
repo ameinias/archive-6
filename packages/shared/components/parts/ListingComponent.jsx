@@ -1,5 +1,5 @@
 import React from 'react';
-import {GameLogic} from '../../../../packages/shared/utils/gamelogic';
+import {GameLogic} from '@utils/gamelogic';
 import {Link} from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';

@@ -1,12 +1,12 @@
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
+import { GameLogic } from '../../utils/gamelogic';
 import Dexie from 'dexie';
-import { db, dbHelpers } from '../../../../packages/shared/utils/db';
+import { db, dbHelpers } from '../../utils/db';
 import { Button } from 'react-bootstrap';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { findByHashAndUnLock } from  '../../../../packages/shared/hooks/dbHooks'
-import Logs from '../Search/Logs';
-import { badHashes } from '../../../../packages/shared/utils/constants';
+import { findByHashAndUnLock } from  '../../hooks/dbHooks'
+import Logs from '../search/Logs';
+import { badHashes } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 
 

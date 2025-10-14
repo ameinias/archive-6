@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { db, dbMainEntry, bothEntries } from '../../../../packages/shared/utils/db'; // import the database
+import { db, dbMainEntry, bothEntries } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
 import { useNavigate, Link } from 'react-router-dom';

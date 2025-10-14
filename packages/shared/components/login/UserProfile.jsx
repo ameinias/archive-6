@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
+import { GameLogic } from '@utils/gamelogic';
 
 const UserProfile = () => {
   const [restoreLastRoute, setRestoreLastRoute] = useState(true); // default true

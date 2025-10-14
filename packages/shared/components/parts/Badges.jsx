@@ -1,8 +1,8 @@
 import React from 'react';
 
-import * as dbHooks from '../../../../packages/shared/hooks/dbHooks';
+import * as dbHooks from '../../hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, dbHelpers } from '../../../../packages/shared/utils/db';
+import { db, dbHelpers } from '../../utils/db';
 
 export function MediaCountCell({ itemId, type }) {
   const count = dbHooks.GetMediaCount(itemId, type);

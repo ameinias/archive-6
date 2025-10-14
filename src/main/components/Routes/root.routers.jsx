@@ -2,20 +2,20 @@
 
 
 // Player
-import Home from '../Home';
+import Home from '../../../../packages/shared/routes/Home';
 import UserProfile from '../Login/UserProfile';
 import NavBar from '../bars/NavBar';
 import StatusBar from '../bars/StatusBar';
-import AddEntry from './EditEntry';
-import ImportExport from '../Admin/ImportExport';
-import StaticSingle from '../Routes/StaticSingle';
-import AddSubEntry from './AddSubEntry';
+import AddEntry from '../../../../packages/shared/components/entries/EditEntry';
+import ImportExport from '../../../../packages/shared/components/admin/ImportExport';
+import StaticSingle from '../../../../packages/shared/components/entries/StaticSingle';
+import AddSubEntry from '../../../../packages/shared/components/entries/AddSubEntry';
 import StyleTest from '../Style';
 import Search from '../Search/Search';
 import FileFullscreen from '../Templates/FileFullScreen';
 import Bookmarks from '../Search/Bookmarks';
 import Media from '../Search/Media';
-import HashImport from '../Admin/HashImport';
+import HashImport from '../../../../packages/shared/components/admin/HashImport';
 import { StaticList } from '../Lists/StaticList';
 import { EntryList } from '../Lists/ListEditEntry';
 

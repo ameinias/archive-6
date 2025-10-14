@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
-import { GameLogic } from '../../../../packages/shared/utils/gamelogic';
+import { GameLogic } from '@utils/gamelogic';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../../../../packages/shared/utils/db';
+import { db } from '@utils/db';
 import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
 
 // Not using this yet - eventually want to open media full screen to make it easier to read.

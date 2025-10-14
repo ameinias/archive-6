@@ -9,15 +9,16 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-import { db, dbHelpers, newGame } from '../../../packages/shared/utils/db';
+import { db, dbHelpers, newGame } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { GameLogic } from '../../../packages/shared/utils/gamelogic';
+import { GameLogic } from '@utils/gamelogic';
 
-import RouterPath from '../../main/components/Router';
+import RouterPath from '@components/routes/Router';
+import TestComp from '@components/testcomp';
 
-import Login from '../../main/components/Login/Login';
+import Login from '@components/Login/Login';
 // import Register from '../../main/components/Login/Register';
-import StatusBar from '../../main/components/bars/StatusBar';
+import StatusBar from '@components/bars/StatusBar';
 
 // import { ImportExport } from 'ImportExport';
 
@@ -133,7 +134,8 @@ export default function App() {
 {!isLoggedIn ? (
   <Login />
         ) : (
-          <RouterPath />
+          // <RouterPath />
+          <TestComp />
         )}
         <StatusBar />
       </div>
