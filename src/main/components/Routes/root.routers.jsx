@@ -2,22 +2,22 @@
 
 
 // Player
-import Home from '../../../../packages/shared/routes/Home';
-import UserProfile from '../Login/UserProfile';
-import NavBar from '../bars/NavBar';
-import StatusBar from '../bars/StatusBar';
-import AddEntry from '../../../../packages/shared/components/entries/EditEntry';
-import ImportExport from '../../../../packages/shared/components/admin/ImportExport';
-import StaticSingle from '../../../../packages/shared/components/entries/StaticSingle';
-import AddSubEntry from '../../../../packages/shared/components/entries/AddSubEntry';
-import StyleTest from '../Style';
-import Search from '../Search/Search';
-import FileFullscreen from '../Templates/FileFullScreen';
-import Bookmarks from '../Search/Bookmarks';
-import Media from '../Search/Media';
-import HashImport from '../../../../packages/shared/components/admin/HashImport';
-import { StaticList } from '../Lists/StaticList';
-import { EntryList } from '../Lists/ListEditEntry';
+import Home from '@components/routes/Home';
+import UserProfile from '@components/login/UserProfile';
+import NavBar from '@components/bars/NavBar';
+import StatusBar from '@components/bars/StatusBar';
+import AddEntry from '@components/entries/EditEntry';
+import ImportExport from '@components/admin/ImportExport';
+import StaticSingle from '@components/entries/StaticSingle';
+import AddSubEntry from '@components/entries/AddSubEntry';
+// import StyleTest from '../Style';
+import Search from '@components/search/Search';
+import FileFullscreen from '@components/templates/FileFullScreen';
+import Bookmarks from '@components/search/Bookmarks';
+import Media from '@components/search/Media';
+import HashImport from '@components/admin/HashImport';
+import { StaticList } from '@components/lists/StaticList';
+import { EntryList } from '@components/lists/ListEditEntry';
 
 
 export type RouterState = {

@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
 import {AddSubEntryForm} from '@components/entries/AddSubEntryFunc';
 import {GameLogic} from '@utils/gamelogic';
-import {SearchPageItem} from '@components/parts/SearchPageItem';
+import {SearchPageItem} from '@components/parts/ListingComponent';
 
 export function SearchResults({results}) {
     const [toggleShowNewSubEntry,

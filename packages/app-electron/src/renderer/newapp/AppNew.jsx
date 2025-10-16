@@ -16,7 +16,7 @@ import { GameLogic } from '@utils/gamelogic';
 import RouterPath from '@components/routes/Router';
 import TestComp from '@components/testcomp';
 
-import Login from '@components/Login/Login';
+import Login from '@components/login/Login';
 // import Register from '../../main/components/Login/Register';
 import StatusBar from '@components/bars/StatusBar';
 

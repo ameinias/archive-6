@@ -44,7 +44,7 @@ const NavBar = () => {
         <Button variant="outline-primary" style={{ width: '25px', padding:'2px' }} onClick={() => navigate(-1)}>
           {'<<'}
         </Button>{' '}
-
+fsfdsf
         <Link to="/" title="home-button">
           <Button variant="outline-primary">Home</Button>
         </Link>{' '}

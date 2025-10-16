@@ -5,8 +5,8 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { AddSubEntryForm } from '../admin/AddSubEntryFunc';
-import { researcherIDs } from '../../utils/constants.js';
+import { AddSubEntryForm } from '@components/entries/AddSubEntryFunc';
+import { researcherIDs } from '@utils/constants.js';
 
 export function ListSubEntries({ itemID }) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);

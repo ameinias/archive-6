@@ -5,7 +5,7 @@ import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, edit
 import {Form, useNavigate} from 'react-router-dom';
 import {GameLogic} from '../../utils/gamelogic';
 import {ListSubEntries} from '../lists/ListSubEntries';
-import {MediaUpload} from './MediaUpload';
+import {MediaUpload} from '../parts/MediaUpload';
 import * as FormAssets from '../parts/FormAssets';
 
 const defaultFormValue = {

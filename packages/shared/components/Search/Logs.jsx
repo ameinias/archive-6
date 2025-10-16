@@ -5,7 +5,7 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
 import {useNavigate} from 'react-router-dom';
-import {AddSubEntryForm} from '../admin/AddSubEntryFunc';
+import {AddSubEntryForm} from '@components/entries/AddSubEntryFunc';
 import {GameLogic} from '@utils/gamelogic';
 
 import {

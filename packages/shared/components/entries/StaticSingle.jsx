@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
-import { GameLogic } from '../../utils/gamelogic';
-import { StaticSingleDefault } from '../../../../src/main/components/Templates/StaticSingleFunc-Default';
-import { StaticSingleMess } from '../../../../src/main/components/Templates/StaticSingleFunc-Mess';
-import { AddEntryForm } from '../admin/EditEntryFunc';
-import { db } from '../../utils/db';
+import { GameLogic } from '@utils/gamelogic';
+import { StaticSingleDefault } from '@components/templates/StaticSingleFunc-Default';
+import { StaticSingleMess } from '@components/templates/StaticSingleFunc-Mess';
+import { AddEntryForm } from '@components/entries/EditEntryFunc';
+import { db } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect } from 'react'; //
 

@@ -13,13 +13,13 @@ import React, { useEffect, useState } from 'react';
 
 
 import Home from './Home';
-import UserProfile from '@components/Login/UserProfile';
+import UserProfile from '@components/login/UserProfile';
 // import Register from './Login/Register';
-import Login from '@components/Login/Login';
+import Login from '@components/login/Login';
 import NavBar from '@components/bars/NavBar';
 
-import ImportExport from '@components/Admin/ImportExport';
-import HashImport from '@components/Admin/HashImport';
+import ImportExport from '@components/admin/ImportExport';
+import HashImport from '@components/admin/HashImport';
 
 //Entries
 import StaticSingle from '@components/entries/StaticSingle';
@@ -27,18 +27,18 @@ import AddSubEntry from '@components/entries/AddSubEntry';
 import  AddEntry from '@components/entries/EditEntry';
 
 // Lists
-import Search from '@components/Search/Search';
-import FileFullscreen from '@components/Templates/FileFullScreen';
-import Bookmarks from '@components/Search/Bookmarks';
-import Media from '@components/Search/Media';
-import  HexList  from '@components/Search/HexList';
-import  Logs  from '@components/Search/Logs';
+import Search from '@components/search/Search';
+import FileFullscreen from '@components/templates/FileFullScreen';
+import Bookmarks from '@components/search/Bookmarks';
+import Media from '@components/search/Media';
+import  HexList  from '@components/search/HexList';
+import  Logs  from '@components/search/Logs';
 
 //Tools
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers, newGame } from '@utils/db';
 import { GameLogic } from '@utils/gamelogic';
-import BadGateway from '@components/Login/BadGateway';
+import BadGateway from '@components/login/BadGateway';
 
 
 
