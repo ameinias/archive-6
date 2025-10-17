@@ -66,6 +66,7 @@ export function StaticSingleDefault({ itemID }) {
           <div>
             <b>Category:</b> {item.category}{' '}
           </div>
+                              <div><b>Collected:</b> {item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</div>
           <div>
             <b>Description:</b> <br />
             {item.description} <hr />

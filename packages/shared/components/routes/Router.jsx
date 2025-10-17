@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 
 import Home from './Home';
 import UserProfile from '@components/login/UserProfile';
-// import Register from './Login/Register';
+import Register from '@components/login/Register';
 import Login from '@components/login/Login';
 import NavBar from '@components/bars/NavBar';
 
@@ -103,30 +103,30 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/" element={<Home />} />
 
    {/* Entries ---------------------------------------------------------- */}
-              {/* <Route path="/edit-item/:id" element={<AddEntry />} /> */}
-              {/* <Route path="/add-subitem/:parentID" element={<AddSubEntry />} /> */}
-              {/* <Route
+              <Route path="/edit-item/:id" element={<AddEntry />} />
+              <Route path="/add-subitem/:parentID" element={<AddSubEntry />} />
+               <Route
                 path="/edit-subitem/:parentID/:itemID"
                 element={<AddSubEntry />}
-              /> */}
-              {/* <Route path="/entry/:id" element={<StaticSingle />} /> */}
+              /> 
+              <Route path="/entry/:id" element={<StaticSingle />} />
  {/* admin tools -------------------            -------------------------*/}
-              {/* <Route path="/import-export" element={<ImportExport />} /> */}
+              <Route path="/import-export" element={<ImportExport />} />
   {/* Lists   ------------------------------------------------------------ */}
-              {/* <Route path="/search" element={<Search />} /> */}
-              {/* <Route path="/bookmarks" element={<Bookmarks />} /> */}
-              {/* <Route path="/media" element={<Media />} /> */}
-              {/* <Route path="/hex" element={<HexList />} /> */}
-              {/* <Route path="/logs" element={<Logs />} /> */}
-              {/* <Route path="/file-fullscreen/:id" element={<FileFullscreen />} /> */}
+              <Route path="/search" element={<Search />} />
+              <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/media" element={<Media />} />
+              <Route path="/hex" element={<HexList />} />
+              <Route path="/logs" element={<Logs />} />
+              <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
               {/* <Route path="/test" element={<DescriptionEntry />} /> */}
 
 {/* PlayerAdmin   ------------------------------------------------------------ */}
-              {/* <Route path="/register" element={<Register />} /> */}
-              {/* <Route path="/login" element={<Login />} /> */}
-              {/* <Route path="/user-profile" element={<UserProfile />} /> */}
-               {/* <Route path="/hashimport" element={<HashImport />} /> */}
-               {/* <Route path="/bad-gateway" element={<BadGateway />} /> */}
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/user-profile" element={<UserProfile />} />
+               <Route path="/hashimport" element={<HashImport />} />
+               <Route path="/bad-gateway" element={<BadGateway />} />
             </Routes>
           </div>
         </div>

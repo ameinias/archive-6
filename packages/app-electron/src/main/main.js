@@ -126,6 +126,11 @@ function saveWindowState(window) {
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
+
+
+  if (typeof window !== 'undefined') {
+     window.React = React;
+}
   }
 
   const RESOURCES_PATH = app.isPackaged

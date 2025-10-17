@@ -134,8 +134,8 @@ export default function App() {
 {!isLoggedIn ? (
   <Login />
         ) : (
-          // <RouterPath />
-          <TestComp />
+          <RouterPath />
+          // <TestComp />
         )}
         <StatusBar />
       </div>

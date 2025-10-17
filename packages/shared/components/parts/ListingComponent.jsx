@@ -17,7 +17,7 @@ export function OldSearchPageItem({itemID}) {
 
     return (
 
-    <> sdffs {item.id}
+    <>  {item.id}
     {
         item.type === 'sub'
             ? ( <> {

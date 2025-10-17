@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { GameLogic } from '@utils/gamelogic';
 import * as FormAssets from '@components/parts/FormAssets';
+import { researcherIDs } from '@utils/constants';
+import * as EditableFields from '@components/parts/EditableFields';
 
 import {
   MediaCountCell,
@@ -22,40 +24,59 @@ export function EntryList() {
   const navigate = useNavigate();
   const gameLogic = GameLogic();
     const { setStatusMessage } = GameLogic();
-  const [editingHex, setEditingHex] = useState(null); // Track which item is being edited
-  const [tempHexValue, setTempHexValue] = useState(''); // Temporary value while editing
+  const [editingHex, setEditingHex] = useState(null);
+  const [editingSubHex, setEditingSubHex] = useState(null); 
+  const [tempHexValue, setTempHexValue] = useState(''); 
+  const [tempSubHexValue, setTempSubHexValue] = useState(''); 
 
-  const startEditingHex = (item) => {
-    setEditingHex(item.id);
+  const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing
     const currentValue = item.hexHash
       ? (Array.isArray(item.hexHash) ? item.hexHash.join(', ') : item.hexHash.toString())
       : '';
-    setTempHexValue(currentValue);
+
+        if (type === 'entry') {
+          setTempHexValue(currentValue);
+    setEditingHex(item.id);
+  } else {
+    setTempSubHexValue(currentValue);
+    setEditingSubHex(item.id);
+  }
+    
   };
 
 
   const saveHexHash = async (itemId, type) => {
     try {
       // Convert comma-separated string back to array
-      const hexArray = tempHexValue
+
+
+        if(type === 'subentry') {
+                const hexArray = tempSubHexValue
         .split(',')
         .map(hex => hex.trim())
         .filter(hex => hex.length > 0);
 
-        if(type === 'subentry') {
           await db.subentries.update(itemId, {
             hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null
           });
+                setEditingSubHex(null);
+                setTempSubHexValue('');
         } else {
+                const hexArray = tempHexValue
+        .split(',')
+        .map(hex => hex.trim())
+        .filter(hex => hex.length > 0);
+
           await db.friends.update(itemId, {
             hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null
           });
+                setEditingHex(null);
+                setTempHexValue('');
         }
 
-      setEditingHex(null);
-      setTempHexValue('');
-      setStatusMessage('Hex hash updated successfully');
+
+      setStatusMessage(itemId + ' Hex hash updated successfully');
     } catch (error) {
       console.error('Error updating hex hash:', error);
       setStatusMessage('Error updating hex hash');
@@ -64,6 +85,8 @@ export function EntryList() {
 
   const cancelEditingHex = () => {
     setEditingHex(null);
+    setEditingSubHex(null);
+    setTempHexValue('');
     setTempHexValue('');
   };
 
@@ -159,15 +182,16 @@ useEffect(() => {
               New Entry
             </Button>
             </Link>
-          <table className="entryTable">
+          <table className="searchResults">
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Collected</th>
                 <th>Hex</th>
                 <th>Subs</th>
-                <th>Media</th>
-                <th>Active</th>
-                <th>Remove</th>
+                <th>🖼️</th>
+                <th>🔛</th>
+                <th>🗑️</th>
               </tr>
             </thead>
             <tbody>
@@ -178,11 +202,16 @@ useEffect(() => {
                       {item.fauxID} : {item.title}
                     </Link>
                     </td>
+                    <td data-label="displayDate">
+                                          <td>{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
+                    </td>
                 <td data-label="hex">
       {editingHex === item.id ? (
         <div style={{ display: 'flex', gap: '5px', alignItems: 'center', width: '40px' }}>
           <input
             type="text"
+            name="hexedit"
+            title="hexedit"
             value={tempHexValue}
             onChange={(e) => setTempHexValue(e.target.value)}
             onKeyDown={(e) => {
@@ -193,26 +222,10 @@ useEffect(() => {
             style={{ flex: 1, padding: '2px 5px', width: '40px' }}
             autoFocus
           />
-          <Button
-            size="sm"
-            variant="success"
-            onClick={() => saveHexHash(item.id, 'entry')}
-            style={{ padding: '2px 8px' }}
-          >
-            ✓
-          </Button>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={cancelEditingHex}
-            style={{ padding: '2px 8px' }}
-          >
-            ✕
-          </Button>
         </div>
       ) : (
         <div
-          onClick={() => startEditingHex(item)}
+          onClick={() => startEditingHex(item, 'entry')}
           style={{
             cursor: 'pointer',
             padding: '5px',
@@ -256,14 +269,16 @@ useEffect(() => {
         </div>
     <div className="List">
           <h3>Subentries:</h3>
-          <table className="entryTable">
+          <table className="searchResults">
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Date</th>
+                <th>Researcher</th>
                 <th> Hex</th>
-                <th>Media</th>
-                <th>Active</th>
-                <th>Remove</th>
+                <th>🖼️</th>
+                <th>🔛</th>
+                <th>🗑️</th>
               </tr>
             </thead>
 
@@ -275,22 +290,37 @@ useEffect(() => {
                       {item.fauxID} : {item.title}
                     </Link>
                   </td>
-                                  <td data-label="hex">
-      {editingHex === item.id ? (
-        <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                  <td>        
+                     {item.displayDate ? (
+                             typeof item.displayDate === 'string' 
+                               ? item.displayDate 
+                               : new Date(item.displayDate).toLocaleDateString()
+                           ) : 'No date'}
+                           {/*  Below isn't working yet. Taking a break. TODO */}
+                       {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
+                          </td>
+                          <td>
+
+                         <EditableFields.EditResearcher itemID={item.id} type="subentry" />
+                         </td>
+                                  <td data-label="hexChild">
+      {editingSubHex === item.id ? (
+        <div style={{ display: 'flex', gap: '5px', alignItems: 'center', width: '40px' }}>
           <input
             type="text"
-            value={tempHexValue}
-            onChange={(e) => setTempHexValue(e.target.value)}
+                        name="hexeditChild"
+            title="hexeditChild"
+            value={tempSubHexValue}
+            onChange={(e) => setTempSubHexValue(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') saveHexHash(item.id, 'subentry');
               if (e.key === 'Escape') cancelEditingHex();
             }}
             placeholder="Enter hex values (comma separated)"
-            style={{ flex: 1, padding: '2px 5px' }}
+            style={{ flex: 1, padding: '2px 5px', width: '40px' }}
             autoFocus
           />
-          <Button
+          {/* <Button
             size="sm"
             variant="success"
             onClick={() => saveHexHash(item.id, 'subentry')}
@@ -305,11 +335,11 @@ useEffect(() => {
             style={{ padding: '2px 8px' }}
           >
             ✕
-          </Button>
+          </Button> */}
         </div>
       ) : (
         <div
-          onClick={() => startEditingHex(item)}
+          onClick={() => startEditingHex(item, 'subentry')}
           style={{
             cursor: 'pointer',
             padding: '5px',
@@ -322,7 +352,7 @@ useEffect(() => {
             Array.isArray(item.hexHash)
               ? item.hexHash.join(', ')
               : item.hexHash.toString()
-          ) : 'None (click to add)'}
+          ) : 'None'}
         </div>
       )}
                   </td>

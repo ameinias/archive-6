@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {db, dbHelpers} from '../../utils/db'; // import the database
+import {db, dbHelpers} from '@utils/db'; // import the database
 import Button from 'react-bootstrap/Button';
-import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, editType} from '../../utils/constants';
+import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, editType} from '@utils/constants';
 import {Form, useNavigate} from 'react-router-dom';
-import {GameLogic} from '../../utils/gamelogic';
-import {ListSubEntries} from '../lists/ListSubEntries';
-import {MediaUpload} from '../parts/MediaUpload';
-import * as FormAssets from '../parts/FormAssets';
+import {GameLogic} from '@utils/gamelogic';
+import {ListSubEntries} from '@components/lists/ListSubEntries';
+import {MediaUpload} from '@components/parts/MediaUpload';
+import * as FormAssets from '@components/parts/FormAssets';
 
 const defaultFormValue = {
     fauxID: 'MX0000',

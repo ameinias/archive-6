@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
 import {MediaDisplay} from './MediaDisplay'
-import { researcherIDs } from '../../../../packages/shared/utils/constants.js';
+import { researcherIDs } from '@utils/constants';
 
 export function StaticSubListItem({
   itemID,

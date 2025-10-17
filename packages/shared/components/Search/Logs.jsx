@@ -138,7 +138,6 @@ const Logs = () => {
                  <Link to={`/entry/${item.parentId}/`}>{item.fauxID} : {item.title}</Link>
                  )
                  :  (
-
                  <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.title}</Link>)
                  )}
 
@@ -154,11 +153,9 @@ const Logs = () => {
 
                 </td>
                 <td>
-
                  <i>                {item.hexHash != '1' ?
                       item.modEdit :  <i>migrated</i>
                       }
-
                  </i>
                     {/* ? item.modEdit : <i>modified</i>} */}
                 </td>
@@ -168,7 +165,6 @@ const Logs = () => {
                   if not startstate, editor is Player
                   otherwhise get last edit by
                   Eventually you'll need to add in entity edits */}
-
 
                   {item.hexHash != '1' ? displayUserLink() :
                     (item.lastEditedBy !== null ?
