@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
+import {eventManager} from '@utils/events';
+
+
 // import { create } from 'core-js/core/object';
 const defaultFormValue = {
   username: '',
@@ -42,13 +45,13 @@ function Register() {
 
             const password = formValues.password || 'Untitled';
             if (!password) {
-              window.electronAPI.showAlert('Passwords is required');
+              eventManager.showAlert('Passwords is required');
               return;
             }
 
 
             if (formValues.password !== formValues.password2) {
-              window.electronAPI.showAlert('Passwords must match!');
+              eventManager.showAlert('Passwords must match!');
               return;
             }
 

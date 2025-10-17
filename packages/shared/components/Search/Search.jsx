@@ -3,10 +3,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { EntryList } from '../lists/ListEditEntry';
 import {StaticList} from '../lists/StaticList';
 import React from 'react';
-import { db, dbMainEntry, bothEntries } from '@utils/db'; // import the database
+import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
 import { GameLogic } from '@utils/gamelogic';
+import {eventManager} from '@utils/events';
 
 const Search = () => {
   const [val, setVal] = React.useState('');
@@ -22,7 +23,7 @@ const Search = () => {
 
   const searchItem = (searchTerm) => {
     if (!searchTerm) {
-      window.electronAPI.showAlert('Please enter a search term.');
+      events.showAlert('Please enter a search term.');
       return;
     }
 

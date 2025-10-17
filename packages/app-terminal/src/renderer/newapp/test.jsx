@@ -7,7 +7,7 @@
 
 // import NavBar from '../main/components/bars/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '@shared/App.css';
+import './App.css';
 
 import { db, dbHelpers, newGame } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';

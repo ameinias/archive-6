@@ -39,6 +39,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, dbHelpers, newGame } from '@utils/db';
 import { GameLogic } from '@utils/gamelogic';
 import BadGateway from '@components/login/BadGateway';
+import { eventManager } from '@utils/events';
 
 
 
@@ -69,7 +70,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
     const isEmpty = await dbHelpers.isEmpty();
     if (isEmpty) {
       console.log('Database is empty, loading initial data...');
-      const fileContents = await window.electronAPI.readAssetFile(
+      const fileContents = await eventManager.readAssetFile(
         'assets/databases/dexie-import.json',
       );
 

@@ -1,4 +1,5 @@
-import {
+ 
+ import {
   MemoryRouter as Router,
   Routes,
   Route,
@@ -6,24 +7,12 @@ import {
   useLocation,
 } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '@shared/App.css';
-
+ import '@shared/App.css';
+import TestComp from '@shared/components/testcomp';
+import { GameLogic } from '@utils/gamelogic';
 import { db, dbHelpers, newGame } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { GameLogic } from '@utils/gamelogic';
 
-import RouterPath from '@components/routes/Router';
-import TestComp from '@components/testcomp';
-
-import Login from '@components/login/Login';
-// import Register from '../../main/components/Login/Register';
-import StatusBar from '@components/bars/StatusBar';
-import { eventManager } from '@utils/events';
-
-// import { ImportExport } from 'ImportExport';
-
-// Component to track and restore route on hot reload
 function RouteTracker() {
   const location = useLocation();
   const friends = useLiveQuery(() => db.friends.toArray());
@@ -36,40 +25,12 @@ function RouteTracker() {
   return null;
 }
 
-export default function App() {
-  const { isAdmin, setAdmin } = GameLogic();
-  const { isLoggedIn, setLoggedIn } = GameLogic();
-  const [dbKey, setDbKey] = useState(0);
-    const [refreshKey, setRefreshKey] = useState(0);
-      // const navigate = useNavigate();
-
-
-  useEffect(() => {
-    checkNewGame();
-  }, []);
-
-  const checkNewGame = async () => {
-    const isEmpty = await dbHelpers.isEmpty();
-    if (isEmpty) {
-      console.log('Database is empty, loading initial data...');
-      const fileContents = await eventManager.readAssetFile(
-        'assets/databases/dexie-import.json',
-      );
-
-      dbHelpers.importFromBlob(
-        new Blob([fileContents], { type: 'application/json' }),
-      );
-      console.log('Initial data loaded successfully.');
-      setDbKey((prev) => prev + 1);
-      console.log('Database key updated:', dbKey);
-    }
-  };
-
-      const handleNewGame = async () => {
-      await newGame(); // Your newGame function
-      setDbKey((prev) => prev + 1);
-    };
-
+ export default function App() {
+   const { isAdmin, setAdmin } = GameLogic();
+   const { isLoggedIn, setLoggedIn } = GameLogic();
+   const [dbKey, setDbKey] = useState(0);
+     const [refreshKey, setRefreshKey] = useState(0);
+    
   // Get the initial route synchronously before render
   const getInitialRoute = () => {
     const restoreLastRoute =
@@ -127,18 +88,13 @@ export default function App() {
 
   const initialRoute = getInitialRoute();
 
-  return (
+ return (
 <>
     <Router initialEntries={[initialRoute]}>
-      <div className="wrapper" key={dbKey}>
+      <div className="wrapper"  key={dbKey}>
       <RouteTracker />
-{!isLoggedIn ? (
-  <Login />
-        ) : (
-          <RouterPath />
-          // <TestComp />
-        )}
-        <StatusBar />
+          {/* <RouterPath /> */}
+           <TestComp />
       </div>
 </Router>
 </>

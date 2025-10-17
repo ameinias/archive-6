@@ -132,12 +132,9 @@ export default function App() {
     <Router initialEntries={[initialRoute]}>
       <div className="wrapper" key={dbKey}>
       <RouteTracker />
-{!isLoggedIn ? (
-  <Login />
-        ) : (
           <RouterPath />
-          // <TestComp />
-        )}
+           {/* <TestComp /> */}
+ sfsddsf dsds
         <StatusBar />
       </div>
 </Router>

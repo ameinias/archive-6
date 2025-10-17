@@ -5,10 +5,7 @@ import { GameLogic } from '@utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
 import { dbHelpers, newGame, newGameWithWarning } from '@utils/db';
 import Dropdown from 'react-bootstrap/Dropdown';
-
-// import { GameLogic } from '@shared/hooks/GameLogic';
-
-// import { dbHelpers, newGame, newGameWithWarning } from '@shared/utils/db';
+import { eventManager } from '@utils/events';
 
 
 const NavBar = () => {
@@ -19,7 +16,7 @@ const NavBar = () => {
 
 
       const  LogOut = async () => {
-          if (await window.electronAPI.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
+          if (await eventManager.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
             await newGame();
 
             navigate('/');

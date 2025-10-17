@@ -7,6 +7,7 @@ import {GameLogic} from '@utils/gamelogic';
 import {ListSubEntries} from '@components/lists/ListSubEntries';
 import {MediaUpload} from '@components/parts/MediaUpload';
 import * as FormAssets from '@components/parts/FormAssets';
+import {eventManager} from '@utils/events';
 
 const defaultFormValue = {
     fauxID: 'MX0000',
@@ -201,7 +202,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
     }
 
     async function removeCurrentEntry() {
-        if (await window.electronAPI.showConfirm(`Are you sure you want to delete "${formValues.title}"?`)) {
+        if (await events.showConfirm(`Are you sure you want to delete "${formValues.title}"?`)) {
             try {
                 const id = Number(itemID);
                 if (isNaN(id)) {

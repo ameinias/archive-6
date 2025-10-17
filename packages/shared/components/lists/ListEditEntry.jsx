@@ -15,6 +15,7 @@ import {
   SubentryCountCell,
   AvailableCell,
 } from '@components/parts/Badges';
+import { eventManager } from '@utils/events';
 
 
 export function EntryList() {
@@ -112,14 +113,14 @@ useEffect(() => {
 
   // --------------------  Remove Entries
   const removeItem = async (item) => {
-    if (await window.electronAPI.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
+    if (await eventManager.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.friends.delete(item.id);
       setStatusMessage(`Entry ${item.title} successfully deleted.`);
     }
   };
 
   const removeSubentry = async (item) => {
-    if (await window.electronAPI.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
+    if (await eventManager.showConfirm(`Are you sure you want to delete "${item.title}"?`)) {
       db.subentries.delete(item.id);
       setStatusMessage(`Removing subentry: ${item.title}`);
     }

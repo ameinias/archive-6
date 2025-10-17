@@ -4,11 +4,10 @@ import { db, dbHelpers } from '@utils/db';
 import { Button } from 'react-bootstrap';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { findByHashAndUnLock } from  '@hooks/dbHooks'
 import Logs from '@components/search/Logs';
 import { badHashes } from '@utils/constants';
 import { useNavigate } from 'react-router-dom';
-
+import {eventManager} from '@utils/events';
 
 function HashImport() {
     const [hashValue, setHashVal] = React.useState('');
@@ -65,7 +64,7 @@ console.log(hashValue ,"  ===================== ", hexHashID);
 
 //  const result = await findByHashAndUnLock(hashValue);
 //   console.log(result);
-  window.electronAPI.showAlert(message);
+  eventManager.showAlert(message);
   // setHashVal(''); // Clear input field after import
   //  hashInput = '';
 }

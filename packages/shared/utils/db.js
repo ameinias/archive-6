@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 import { categories, subCategories,researcherIDs,hexHashes } from "./constants.js";
 import "dexie-export-import";
 import {setStartAvalability} from "../hooks/dbHooks.js"
-
+import {eventManager} from '@utils/events';
 
 
 // //  hexHash: 'aeoh-3q484-da232',
@@ -205,13 +205,13 @@ export const saveAsDefaultDatabase = async () => {
 
     const content = await blob.text();
 
-    await window.electronAPI.saveAssetFile(
+    await eventManager.saveAssetFile(
       'assets/databases/dexie-import.json',
       content
     );
 
 
-    const fullPath = await window.electronAPI.getAssetPath('databases/dexie-import.json');
+    const fullPath = await eventManager.getAssetPath('databases/dexie-import.json');
     console.log('Database saved successfully to:', fullPath);
 
           // await window.electronAPI.showAlert(`Make sure you are also saving into the VS code project, to assets/databases/dexie-import.json.`);
@@ -228,11 +228,11 @@ export const saveAsDefaultDatabase = async () => {
 export const newGame = async () => {
   try {
     // called main.js to set up the database in AppData
-    const userDbPath = await window.electronAPI.setupUserDatabase();
+    const userDbPath = await eventManager.setupUserDatabase();
 
 
     const relativePath = 'assets/databases/dexie-import.json';
-    const fileContents = await window.electronAPI.readAssetFile(
+    const fileContents = await eventManager.readAssetFile(
       relativePath
     );
 
@@ -269,7 +269,7 @@ export const setDefaultParameters = async () =>
 }
 
 export const newGameWithWarning = async () => {
-  if (await window.electronAPI.showConfirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
+  if (await eventManager.showConfirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
     await newGame();
   }
 

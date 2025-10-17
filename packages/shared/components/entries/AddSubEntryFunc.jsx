@@ -16,6 +16,8 @@ import { GameLogic } from '@utils/gamelogic';
 import { useLiveQuery } from 'dexie-react-hooks';
 import * as FormAssets from '@components/parts/FormAssets';
 import { MediaUploadSub } from '@components/parts/MediaUploadSub';
+import { eventManager } from '@utils/events';
+
 export function AddSubEntryForm({ itemID, parentID }) {
   //*    ---------------    CONST  ------------------ */
   const { setStatusMessage } = GameLogic();
@@ -322,7 +324,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
 
   async function removeCurrentEntry() {
     if (
-      await window.electronAPI.showConfirm(
+      await eventManager.showConfirm(
         `Are you sure you want to delete "${formValues.title}"?`,
       )
     ) {
