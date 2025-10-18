@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db, dbSubEntry, dbHelpers } from '@utils/db'; // import the database
+import { db, dbHelpers } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
@@ -11,8 +11,6 @@ import { researcherIDs } from '@utils/constants.js';
 export function ListSubEntries({ itemID }) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
   const navigate = useNavigate();
-  //const [subEntryOfParent, setSubEntries] = useState<dbSubEntry[]>([]);
-
 
 
 

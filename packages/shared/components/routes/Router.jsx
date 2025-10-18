@@ -6,11 +6,6 @@ import {
   useLocation,
 } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import './App.css';
-
-// import DescriptionEntry from './Components/DescriptionEntry';
-
 
 import Home from './Home';
 import UserProfile from '@components/login/UserProfile';

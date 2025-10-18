@@ -12,5 +12,15 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, '../shared/hooks'),
     }
   },
+  base: "https://blekkenhorst.ca/bleed/app/",
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    }
+  },
   publicDir: path.resolve(__dirname, '../../assets'),
 })

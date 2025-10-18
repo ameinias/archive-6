@@ -142,7 +142,7 @@ useEffect(() => {
   if (isLoading || !friends || !subentries) {
     return (
       <div className="List">
-        <h3>Loading...</h3>
+        <h3>Please wait while database populates...</h3>
       </div>
     );
   }

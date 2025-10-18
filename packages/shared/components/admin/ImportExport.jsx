@@ -297,15 +297,26 @@ const handleFileAppendChange = (event) => {
   };
 
 
-  const DataState =  () => {
-
+const DataState = () => {
   const entryCount = useLiveQuery(() => db.friends.count());
   const subentryCount = useLiveQuery(() => db.subentries.count());
   const availableCount = useLiveQuery(() => db.friends.filter(item => item.available === true).count());
   const availableSubCount = useLiveQuery(() => db.subentries.filter(item => item.available === true).count());
 
-   return `Records: ${availableCount}/${entryCount} \n Subentries ${availableSubCount}/${subentryCount}`;
+  // ✅ Handle loading state
+  if (entryCount === undefined || subentryCount === undefined || 
+      availableCount === undefined || availableSubCount === undefined) {
+    return <div>Loading database stats...</div>;
   }
+
+  // ✅ Return JSX instead of string for better formatting
+  return (
+    <div>
+      <div><strong>Records:</strong> {availableCount}/{entryCount}</div>
+      <div><strong>Subentries:</strong> {availableSubCount}/{subentryCount}</div>
+    </div>
+  );
+};
 
   return (
     <>
@@ -321,7 +332,7 @@ const handleFileAppendChange = (event) => {
               justifyContent: 'center',
             }}
           >
-            <Button variant="primary" onClick={newGameWithWarning}>
+            <Button className="btn-primary" onClick={newGameWithWarning}>
               New Game
             </Button>
             <Button
@@ -342,6 +353,8 @@ const handleFileAppendChange = (event) => {
               </div>
             )}
           </div>
+
+          Test new page
           <br />
           <div className="row align-items-start databasetable">
             <div className="col">

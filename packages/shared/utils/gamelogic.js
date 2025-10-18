@@ -179,7 +179,12 @@ export function GameLogic() {
   };
 
 
-
+const setAdminState = (adminState) => {
+  globalIsAdmin = adminState;
+  // Update localStorage and all components
+  localStorage.setItem('isAdmin', JSON.stringify(globalIsAdmin));
+  adminUpdateCallbacks.forEach(callback => callback(globalIsAdmin));
+};
 
   return {
     gameState,
@@ -188,7 +193,7 @@ export function GameLogic() {
     endGame,
     increaseScore,
     toggleAdmin,
-    setAdmin,
+    setAdmin: setAdminState, 
     globalStatus,
     setStatusMessage,
     removeText,

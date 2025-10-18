@@ -16,10 +16,7 @@ export default function App() {
 
 return (
   <div>
-    {/* <NavBar /> */}
     <NewAppInterface />
-    {/* <Test /> */}
-    {/* {appVersion === 'newapp' ? <NewAppInterface /> : <OldAppInterface />} */}
   </div>
 );
 }

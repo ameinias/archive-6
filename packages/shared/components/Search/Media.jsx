@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { db, dbMainEntry, bothEntries } from '@utils/db';
+import { db } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
 import { useNavigate, Link } from 'react-router-dom';

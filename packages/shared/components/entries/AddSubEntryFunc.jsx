@@ -9,7 +9,7 @@ import {
   hexHashes,
   metaData, editType,
 } from '@utils/constants';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { GameLogic } from '@utils/gamelogic';
 
 // import { availableMemory } from 'process';
@@ -30,6 +30,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
   const [isMeta, setMeta] = useState(false);
+
 
   /* ------------------------  Generate entry functions --------*/
   // Create async function to generate new ID
@@ -258,6 +259,8 @@ export function AddSubEntryForm({ itemID, parentID }) {
             setStatusMessage(idNumber + ' was updated to ' + formValues.title);
           else setStatusMessage('Nothing was updated - no key:' + idNumber);
         });
+        setStatusMessage(`Entry ${title} successfully updated.`);
+    FinishEdit();
 
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
@@ -265,8 +268,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
       setStatusMessage(`Failed to edit ${title} : ${error}`);
       return;
     }
-    setStatusMessage(`Entry ${title} successfully updated.`);
-    FinishEdit();
+    
   }
 
   async function addSubEntry() {
@@ -287,6 +289,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
       const id = await db.subentries.add(
         FormToEntry()
       );
+      FinishEdit();
 
       setStatusMessage(
         `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
@@ -295,11 +298,23 @@ export function AddSubEntryForm({ itemID, parentID }) {
     } catch (error) {
       setStatusMessage(`Failed to add subentry ${title}: ${error}`);
     }
-    FinishEdit();
+    
   }
 
   async function FinishEdit() {
-    navigate(`/edit-item/${parentID}/`); // Go back to parent
+    // navigate(0);
+
+
+
+
+  navigate(`/edit-item/${parentID}/`, { replace: true });
+  
+  // Small delay to ensure navigation completes, then refresh
+  setTimeout(() => {
+    navigate(`/`, { replace: true });
+  }, 10);
+
+
     setStatusMessage('Should return to parent');
 
     const newFauxID = await generateNewID();

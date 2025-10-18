@@ -136,7 +136,6 @@ export default function App() {
   <Login />
         ) : (
           <RouterPath />
-          // <TestComp />
         )}
         <StatusBar />
       </div>

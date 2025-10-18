@@ -14,6 +14,8 @@ const NavBar = () => {
     const CallNewGame = newGameWithWarning;
     const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage } = GameLogic();
 
+      const isElectron = eventManager.isElectron;
+
 
       const  LogOut = async () => {
           if (await eventManager.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
@@ -56,7 +58,8 @@ const NavBar = () => {
                     <Link to="/hashimport">
               <Button variant="outline-primary">Import</Button>
             </Link>{' '}
-        {isAdmin && (
+            isadmin: {isAdmin.toString()}
+        {(isAdmin || !isElectron) && (
           <>
           {/* <Link to="/media/">
               <Button variant="outline-primary">Media</Button>
@@ -79,6 +82,8 @@ const NavBar = () => {
           </>
         )}
         </div>
+
+        {isElectron && 
         <div>
          <div className='login-info'> Logged in as:
           <Link to="/user-profile">
@@ -93,7 +98,7 @@ const NavBar = () => {
           </Button> {' '}
            </div>
         </div>
-
+}
 
     </nav>
   );

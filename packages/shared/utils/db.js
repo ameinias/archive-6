@@ -5,65 +5,6 @@ import {setStartAvalability} from "../hooks/dbHooks.js"
 import {eventManager} from '@utils/events';
 
 
-// //  hexHash: 'aeoh-3q484-da232',
-// interface dbMainEntry {
-//   id: number; //real id
-//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
-//   hexHash: string; // Eventually used to pull from the other database
-//   title: string;
-//   description: string;
-//   media?: File[];
-//   category: string;
-//   // Remove subItems array - we'll query subentries by parentId instead
-//   date?: Date;
-//   entryDate: Date;
-//   available: boolean; //  field to indicate availability
-//   availableOnStart: boolean; //  field to indicate if available on start
-//   template: string; // Optional field for template
-//   bookmark?: boolean;
-//   unread: boolean;
-// }
-
-// interface dbSubEntry {
-//   id: number; //real id
-//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
-//   hexHash: string; // Eventually used to pull from the other database
-//   title: string;
-//   description?: string;
-//   mediaSub?: string;
-//   researcherID: ResearcherID; // researcher who added the entry
-//   subCategory: string;
-//   date?: Date;
-//   entryDate: Date;
-//   parentId: number; // Changed to number to match the main entry's id
-//   available: boolean; //  field to indicate availability
-//   availableOnStart: boolean; //  field to indicate if available on start
-//   template: string; // Optional field for template
-//   bookmark?: boolean;
-//   unread: boolean;
-// }
-
-
-// // This is for search and bookmark results
-// interface bothEntries {
-//   id: number; // id of search database
-//   origin: number; // index in og datrabase
-//   fauxID: string;  // Fake ID seen by the player - sometimes multiple entries have the same will share because they have changing game states.
-//   title: string;
-//   date?: Date;
-//   type: 'main' | 'sub'; // Type to distinguish between main and sub entries
-//   parentId?: number; // Include parentId for subentries
-// }
-
-// interface User {
-//   email: string;
-//   id: number;
-//   name: string;
-//   password: string;
-//   role: string;
-// }
-
-
 export const db = new Dexie('gb-current');
 
 
@@ -87,7 +28,43 @@ db.version(3).stores({
   attachments: '++id, parentId, fileName, fileType, filePath'
 });
 
-
+/*
+// ✅ BETTER: Use populate event instead of ready
+db.on('populate', async () => {
+  console.log('Database created for first time, importing default data...');
+  
+  try {
+    let importData;
+    
+    // Different loading methods for different environments
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      // Electron environment
+      const jsonString = await window.electronAPI.readAssetFile('assets/databases/dexie-import.json');
+      importData = JSON.parse(jsonString);
+    } else {
+      // Web environment
+      const response = await fetch('./databases/dexie-import.json');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      importData = await response.json();
+    }
+    
+    // Import the data
+    if (importData.friends?.length > 0) {
+      await db.friends.bulkAdd(importData.friends);
+      console.log(`Imported ${importData.friends.length} friends`);
+    }
+    if (importData.subentries?.length > 0) {
+      await db.subentries.bulkAdd(importData.subentries);
+      console.log(`Imported ${importData.subentries.length} subentries`);
+    }
+    
+    console.log('Default database populated successfully');
+  } catch (error) {
+    console.error('Failed to populate default database:', error);
+  }
+}); */
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
 export const dbHelpers = {

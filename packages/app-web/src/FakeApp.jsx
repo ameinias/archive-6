@@ -12,6 +12,8 @@ import TestComp from '@shared/components/testcomp';
 import { GameLogic } from '@utils/gamelogic';
 import { db, dbHelpers, newGame } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import RouterPath from '@components/routes/Router';
+import StatusBar from '@components/bars/StatusBar';
 
 function RouteTracker() {
   const location = useLocation();
@@ -26,10 +28,15 @@ function RouteTracker() {
 }
 
  export default function App() {
-   const { isAdmin, setAdmin } = GameLogic();
-   const { isLoggedIn, setLoggedIn } = GameLogic();
+   const { isAdmin, setAdmin, isLoggedIn, setLoggedIn} = GameLogic();
+//    const {  } = GameLogic();
    const [dbKey, setDbKey] = useState(0);
      const [refreshKey, setRefreshKey] = useState(0);
+
+    useEffect(() => {
+        setAdmin(true);
+        setLoggedIn(true);
+    },[setAdmin, setLoggedIn]);
     
   // Get the initial route synchronously before render
   const getInitialRoute = () => {
@@ -93,8 +100,8 @@ function RouteTracker() {
     <Router initialEntries={[initialRoute]}>
       <div className="wrapper"  key={dbKey}>
       <RouteTracker />
-          {/* <RouterPath /> */}
-           <TestComp />
+          <RouterPath />
+          <StatusBar />
       </div>
 </Router>
 </>
