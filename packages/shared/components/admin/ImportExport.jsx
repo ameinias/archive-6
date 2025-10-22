@@ -1,4 +1,4 @@
-import { Button } from 'react-bootstrap';
+import { Button, Tab, Tabs } from 'react-bootstrap';
 import { Navigate, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
@@ -303,13 +303,13 @@ const DataState = () => {
   const availableCount = useLiveQuery(() => db.friends.filter(item => item.available === true).count());
   const availableSubCount = useLiveQuery(() => db.subentries.filter(item => item.available === true).count());
 
-  // ✅ Handle loading state
-  if (entryCount === undefined || subentryCount === undefined || 
+
+  if (entryCount === undefined || subentryCount === undefined ||
       availableCount === undefined || availableSubCount === undefined) {
     return <div>Loading database stats...</div>;
   }
 
-  // ✅ Return JSX instead of string for better formatting
+
   return (
     <div>
       <div><strong>Records:</strong> {availableCount}/{entryCount}</div>
@@ -325,38 +325,18 @@ const DataState = () => {
         <>
           <h3>game import export</h3>
 
-          <div
-            className="row"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Button className="btn-primary" onClick={newGameWithWarning}>
+            <section className="center">
+            <button className="db-btn" onClick={newGameWithWarning}>
               New Game
-            </Button>
-            <Button
-              variant="toggleHelp"
-              onClick={() => setToggleHelp(!toggleHelp)}
-            >
-              {toggleHelp ? 'x' : 'TroubleShooting'}
-            </Button>
-            {toggleHelp && (
-              <div>
-                <p>
-                  If the database is still empty,ssssssssssss
-                </p>
-                <code>
-                  C:\path\to\app\archive-6\resources\assets\databases\dexie-import.json"
-                </code>
-                <p>Sorry, this will be fixed in future releases!</p>
-              </div>
-            )}
-          </div>
+            </button>
+            </section>
 
-          Test new page
-          <br />
-          <div className="row align-items-start databasetable">
+            <section class="tabs">
+  <menu role="tablist" aria-label="Tabs Template">
+    <button role="tab" aria-controls="tab-A" aria-selected="true">Database Info</button>
+    <button role="tab" aria-controls="tab-D">Troubleshooting</button>
+  </menu>
+  <article role="tabpanel" id="tab-A"><div className="row align-items-start databasetable">
             <div className="col">
               <b>Current Database: </b>
               {db.name}
@@ -367,31 +347,46 @@ const DataState = () => {
               <div className="col">
                {DataState()}
             </div>
-          </div>
-          <p>{status}</p>
+          </div></article>
+  <article role="tabpanel" id="tab-D" hidden>
+              <div>
+                <p>
+                  If the database is still empty,ssssssssssss
+                </p>
+                <code>
+                  C:\path\to\app\archive-6\resources\assets\databases\dexie-import.json"
+                </code>
+                <p>Sorry, this will be fixed in future releases!</p>
+              </div>
 
+            </article>
+            </section>
+
+<section>
+          <p>{status}</p>
+</section>
+<section>
           <div className="row align-items-start databasetable">
           </div>
 
           <div className="row align-items-start databasetable">
             <div className="col">
 
-              <Button variant="primary" onClick={saveAsDefaultDatabase}>
+              <button className="db-btn" onClick={saveAsDefaultDatabase}>
                 Save as Default Database
-              </Button>
+              </button>
 
 
-              <Button variant="primary" className="mt-3" onClick={handleExport}>
+              <button className="db-btn" onClick={handleExport}>
                 Export Database - JSON
-              </Button>
+              </button>
 
-              <Button variant="primary" className="mt-3" onClick={handleCSVExport}>
+              <button className="db-btn" onClick={handleCSVExport}>
                 Export Database - CSV
-              </Button>
+              </button>
 
-
-
-</div><div className="col">
+            </div>
+            <div className="col">
               <input
                 type="file"
                 accept=".json"
@@ -399,12 +394,12 @@ const DataState = () => {
                 style={{ display: 'none' }}
                 id="fileInput"
               />
-              <Button
-                variant="primary"
+              <button
+                className="db-btn"
                 onClick={() => document.getElementById('fileInput').click()}
               >
                 Import Database
-              </Button>
+              </button>
 
               <input
                 type="file"
@@ -413,30 +408,20 @@ const DataState = () => {
                 style={{ display: 'none' }}
                 id="fileAppend"
               />
-              <Button
-                variant="primary"
+              <button
+                className="db-btn"
                 onClick={() => document.getElementById('fileAppend').click()}
               >
                 Append Database
-              </Button>
+              </button>
 
 
-              <Button variant="primary" onClick={clearDatabase}>
+              <button className="db-btn" onClick={clearDatabase}>
                 Clear Database
-              </Button>
-
-              {/* <div
-                id="dropzone"
-                className="dropzone"
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-              >
-                Drop dexie export JSON file here
-              </div> */}
-            </div>
-
-
+              </button>
           </div>
+          </div>
+          </section>
         </>
       )}
     </>

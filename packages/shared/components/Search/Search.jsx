@@ -23,7 +23,7 @@ const Search = () => {
 
   const searchItem = (searchTerm) => {
     if (!searchTerm) {
-      events.showAlert('Please enter a search term.');
+      eventManager.showAlert('Please enter a search term.');
       return;
     }
 
@@ -96,9 +96,10 @@ const Search = () => {
   return (
     <>
     <h3>Search</h3>
-      <InputGroup className="searchBar">
+      {/* <InputGroup className="searchboxr"> */}
+      <div class="searchbox">
         <input
-          type="text"
+          type="search"
           onChange={handleChange}
           className="form-control"
           placeholder="Search by entry title"
@@ -106,10 +107,11 @@ const Search = () => {
           title="search entries"
           value={val}
         />
-        <Button variant="outline-primary" onClick={() => searchItem(val)}>
-          Search
-        </Button>
-      </InputGroup>
+        <button aria-label="search" onClick={() => searchItem(val)}>
+
+        </button>
+      {/* </InputGroup> */}
+      </div>
 
 
       <SearchResults results={results} />

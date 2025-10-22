@@ -26,9 +26,9 @@ export function EntryList() {
   const gameLogic = GameLogic();
     const { setStatusMessage } = GameLogic();
   const [editingHex, setEditingHex] = useState(null);
-  const [editingSubHex, setEditingSubHex] = useState(null); 
-  const [tempHexValue, setTempHexValue] = useState(''); 
-  const [tempSubHexValue, setTempSubHexValue] = useState(''); 
+  const [editingSubHex, setEditingSubHex] = useState(null);
+  const [tempHexValue, setTempHexValue] = useState('');
+  const [tempSubHexValue, setTempSubHexValue] = useState('');
 
   const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing
@@ -43,7 +43,7 @@ export function EntryList() {
     setTempSubHexValue(currentValue);
     setEditingSubHex(item.id);
   }
-    
+
   };
 
 
@@ -186,24 +186,24 @@ useEffect(() => {
           <table className="searchResults">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Collected</th>
-                <th>Hex</th>
-                <th>Subs</th>
-                <th>🖼️</th>
-                <th>🔛</th>
-                <th>🗑️</th>
+                <th width="auto">Name</th>
+                <th width="75px">Collected</th>
+                <th width="25px">Hex</th>
+                <th width="25px">Subs</th>
+                <th width="25px">🖼️</th>
+                <th width="25px">🔛</th>
+                <th width="25px">🗑️</th>
               </tr>
             </thead>
             <tbody>
               {sortedFriends.map((item) => (
                 <tr key={item.id}>
-                  <td width="70%" data-label="name">
+                  <td  data-label="name">
                     <Link to={`/edit-item/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>
                     </td>
-                    <td data-label="displayDate">
+                    <td width="50px" data-label="displayDate">
                                           <td>{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
                     </td>
                 <td data-label="hex">
@@ -255,12 +255,12 @@ useEffect(() => {
 
                   <td data-label="remove">
                     {' '}
-                    <Button
-                      className="remove-button button-small remove-button-small"
+                    <button
+                      className="remove-button-small" aria-label="Close"
                       onClick={() => removeItem(item)}
                     >
-                      {' '}
-                    </Button>
+                      x
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -273,13 +273,13 @@ useEffect(() => {
           <table className="searchResults">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Researcher</th>
-                <th> Hex</th>
-                <th>🖼️</th>
-                <th>🔛</th>
-                <th>🗑️</th>
+                <th width="auto">Name</th>
+                <th width="75px">Date</th>
+                <th width="75px">Researcher</th>
+                <th width="25px"> Hex</th>
+                <th width="25px">🖼️</th>
+                <th width="25px">🔛</th>
+                <th width="25px">🗑️</th>
               </tr>
             </thead>
 
@@ -291,10 +291,10 @@ useEffect(() => {
                       {item.fauxID} : {item.title}
                     </Link>
                   </td>
-                  <td>        
+                  <td>
                      {item.displayDate ? (
-                             typeof item.displayDate === 'string' 
-                               ? item.displayDate 
+                             typeof item.displayDate === 'string'
+                               ? item.displayDate
                                : new Date(item.displayDate).toLocaleDateString()
                            ) : 'No date'}
                            {/*  Below isn't working yet. Taking a break. TODO */}
@@ -366,10 +366,10 @@ useEffect(() => {
 
                   <td data-label="remove">
                     {' '}
-                    <Button
-                      className="remove-button button-small remove-button-small"
+                    <button
+                      className="remove-button-small"
                       onClick={() => removeSubentry(item)}
-                    ></Button>
+                    >x</button>
                   </td>
                 </tr>
               ))}

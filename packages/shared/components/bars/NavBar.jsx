@@ -37,70 +37,41 @@ const NavBar = () => {
     // <div className="NavBar">
     //     <nav className="navbar fixed-top navbar-light bg-light">
     // <div className="container-fluid">
-    <nav className="navbar navbar-blend navbar-fixed-top">
-      <div className="mainNavButtons">
-
-        <Button variant="outline-primary" style={{ width: '25px', padding:'2px' }} onClick={() => navigate(-1)}>
+    // <nav className="navbar navbar-blend navbar-fixed-top">
+    //   <div className="mainNavButtons">
+    <ul role="menubar" className="can-hover">
+         <li role="menuitem" tabindex="0" aria-haspopup="true"><Link variant="outline-primary" style={{ width: '25px', padding:'2px' }} to="" onClick={() => navigate(-1)}>
           {'<<'}
-        </Button>{' '}
-        <Link to="/" title="home-button">
-          <Button variant="outline-primary">Home</Button>
-        </Link>{' '}
-         <Link to="/search">
-          <Button variant="outline-primary">Search</Button>
-        </Link>{' '}
-
-
-                <Link to="/bookmarks">
-          <Button variant="outline-primary">Bookmarks</Button>
-        </Link>
-
-                    <Link to="/hashimport">
-              <Button variant="outline-primary">Import</Button>
-            </Link>{' '}
-            isadmin: {isAdmin.toString()}
+        </Link></li>{' '}
+        <li role="menuitem" tabindex="0" aria-haspopup="true"><Link to="/" title="home-button">
+          Home</Link></li>{' '}
+         <li role="menuitem" tabindex="0" aria-haspopup="true"> <Link to="/search">
+          Search</Link></li>{' '}
+        <li role="menuitem" tabindex="0" aria-haspopup="true">
+                <Link to="/bookmarks">Bookmarks</Link></li>
+        <li role="menuitem" tabindex="0" aria-haspopup="true">
+                  <Link to="/hashimport">Import</Link></li>{' '}
         {(isAdmin || !isElectron) && (
           <>
-          {/* <Link to="/media/">
-              <Button variant="outline-primary">Media</Button>
-            </Link>{' '}
-            {' '} */}
 
- <Dropdown>
-      <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" >
+<li role="menuitem" tabindex="0" aria-haspopup="true">
         Admin Tools
-      </Dropdown.Toggle>
-
-      <Dropdown.Menu>
-        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/media')}>Media List</Dropdown.Item>
-        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/hex')}>Hex List</Dropdown.Item>
-        <Dropdown.Divider />
-        <Dropdown.Item className="dropdown-item" onClick={() => navigate('/import-export')}>Database Actions</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+      <ul role="menu">
+         <li role="menuitem"><Link to='/media'>Media List</Link></li>
+        <li role="menuitem"><Link to='/hex'>Hex List</Link></li>
+        <li role="menuitem"><Link className="dropdown-item" to='/import-export'>Database Actions</Link></li>
+        </ul>
+        </li>
 
           </>
         )}
-        </div>
+        </ul>
+    //     </div>
 
-        {isElectron && 
-        <div>
-         <div className='login-info'> Logged in as:
-          <Link to="/user-profile">
 
-        {isAdmin ? 'Admin' : `${globalUser.username}`}</Link>{' '}
-          <Button
-            variant="outline-secondary"
-            onClick={LogOut}
-            title="This will delete your progress!"
-          >
-            {isAdmin ? 'Log Out' : 'Log Out '}
-          </Button> {' '}
-           </div>
-        </div>
-}
 
-    </nav>
+
+    // </nav>
   );
 };
 

@@ -88,3 +88,12 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID);
     </button>
   );
 }
+
+export function Spinner() {
+  return (
+    <>    <span className="loader" aria-label="Loading"></span>
+<span className="loader animate" aria-label="Processing your request"></span>
+</>
+
+  );
+}

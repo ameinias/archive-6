@@ -12,6 +12,7 @@ import UserProfile from '@components/login/UserProfile';
 import Register from '@components/login/Register';
 import Login from '@components/login/Login';
 import NavBar from '@components/bars/NavBar';
+import NavBarWin from '@components/bars/NavBarWin';
 
 import ImportExport from '@components/admin/ImportExport';
 import HashImport from '@components/admin/HashImport';
@@ -93,7 +94,8 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
         ) : (
         <>
         <NavBar />
-        <div className="content">
+         {/* <NavBarWin /> */}
+        <div className="content window-body has-space">
           <div className="container">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -104,7 +106,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
                <Route
                 path="/edit-subitem/:parentID/:itemID"
                 element={<AddSubEntry />}
-              /> 
+              />
               <Route path="/entry/:id" element={<StaticSingle />} />
  {/* admin tools -------------------            -------------------------*/}
               <Route path="/import-export" element={<ImportExport />} />

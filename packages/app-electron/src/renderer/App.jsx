@@ -1,5 +1,5 @@
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css';
 import React from 'react';
 import NewAppInterface from '@electron/renderer/newapp/AppNew';
@@ -15,7 +15,7 @@ export default function App() {
 // const appVersion = process.env.APP_VERSION || 'newapp';
 
 return (
-  <div>
+  <div className="win7">
     <NewAppInterface />
   </div>
 );
