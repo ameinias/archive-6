@@ -12,6 +12,7 @@ const srcMainPath = path.join(srcPath, 'main');
 const srcRendererPath = path.join(srcPath, 'renderer');
 
 
+
 const sharedPath = path.join(rootPath, 'packages/shared');
 
 const releasePath = path.join(rootPath, 'release');
@@ -33,7 +34,7 @@ module.exports = {
   srcPath,
   srcMainPath,
   srcRendererPath,
-  sharedPath, 
+  sharedPath,
   releasePath,
   appPath,
   appPackagePath,

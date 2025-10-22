@@ -146,7 +146,7 @@ const createWindow = async () => {
 
 
    const preloadPath ='../../.erb/dll/preload.js';
-  
+
 
   console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + preloadPath)
 
@@ -187,7 +187,7 @@ mainWindow.webContents.on('will-prevent-unload', (e) => {
 
   mainWindow.on('ready-to-show', () => {
 
-    console.log('>>>>>>>>>>>>>' + __dirname + '../../../.erb/dll/preload.js ' + app.isPackaged);
+    console.log('>>> ---  >>>> main window ready to show' + __dirname + '../../../.erb/dll/preload.js ' + app.isPackaged);
 
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');

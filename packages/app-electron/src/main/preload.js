@@ -4,7 +4,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 // import fs from 'fs';
 // import path from 'path';
 
-// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
+ console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
 
 const electronHandler = {
   ipcRenderer: {
@@ -79,6 +79,8 @@ window.addEventListener('DOMContentLoaded', () => {
       event.stopPropagation();
     }
   }, true);
+console.log('>>> preload.js is running - end');
+
 });
 
 

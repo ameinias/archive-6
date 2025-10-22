@@ -15,7 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
-
+console.log('>>> main.js is running - top');
 let config;
 const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
@@ -123,6 +123,7 @@ function saveWindowState(window) {
   fs.writeFileSync(WINDOW_STATE_PATH, JSON.stringify(bounds));
 }
 
+
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
@@ -146,7 +147,7 @@ const createWindow = async () => {
 
 
    const preloadPath ='../../.erb/dll/preload.js';
-  
+
 
   console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + preloadPath)
 
@@ -166,6 +167,7 @@ const createWindow = async () => {
 
     },
   });
+  console.log('main - dirname  -----------' +__dirname);
 
   console.log('Main window created with dimensions:', {
     width: windowState.width || 555,
@@ -174,6 +176,8 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html')); // old line
  // mainWindow.loadURL(resolveHtmlPath(path.join(__dirname, `${appVersion}/index.html`)));
+
+ console.log('---- MAIN - dirname  -----------' +__dirname);
 
 mainWindow.webContents.on('will-prevent-unload', (e) => {
   // code for showMessageBoxSync, prevent default if the user wants to close
@@ -231,7 +235,7 @@ mainWindow.webContents.on('will-prevent-unload', (e) => {
  * Add event listeners...
  */
 
-console.log('>>> main.js is running');
+console.log('>>> main.js is running  - after createWindow');
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed

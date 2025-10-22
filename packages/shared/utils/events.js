@@ -57,7 +57,7 @@ class EventManager {
 
   readAssetFile(path) {
     if (this.isElectron) {
-      return window.readAssetFile(path);
+      return window.electronAPI.readAssetFile(path);
     } else {
       return null;
     }
@@ -65,7 +65,7 @@ class EventManager {
 
   saveAssetFile(path, content) {
     if (this.isElectron) {
-      return window.readAssetFile(path, content);
+      return window.electronAPI.readAssetFile(path, content);
     } else {
       return null;
     }

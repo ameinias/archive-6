@@ -26,6 +26,7 @@ export default class MenuBuilder {
       this.setupProductionEnvironment();
     }
 
+
     // Create a simple menu template
     const fakeTemplate = [{
       label: '&File',

@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const port = process.env.PORT || 1212;
 const manifest = path.resolve(webpackPaths.dllPath, 'renderer.json');
-// commented it to fix an issue when moving this around for webpack structure. Fix this later. 
+// commented it to fix an issue when moving this around for webpack structure. Fix this later.
 // const skipDLLs =
 //   module.parent?.filename.includes('webpack.config.renderer.dev.dll') ||
 //   module.parent?.filename.includes('webpack.config.eslint');
@@ -47,18 +47,17 @@ const configuration = {
 
   target: ['web', 'electron-renderer'],
 
-  // entry: [
-  //   `webpack-dev-server/client?http://localhost:${port}/dist`,
-  //   'webpack/hot/only-dev-server',
-  //   path.join(webpackPaths.srcRendererPath, 'index.jsx'),
-  // ],
   entry: [
-  `webpack-dev-server/client?http://localhost:${port}/dist`,
-  'webpack/hot/only-dev-server',
+    `webpack-dev-server/client?http://localhost:${port}/dist`,
+    'webpack/hot/only-dev-server',
+    path.join(webpackPaths.srcRendererPath, 'index.jsx'),
+  ],
+  // entry: [
+  // `webpack-dev-server/client?http://localhost:${port}/dist`,
+  // 'webpack/hot/only-dev-server',
   // Temporarily hardcode to test
-  'C:\\Users\\gillian\\_Academic\\Thesis\\archive-5\\packages\\app-electron\\src\\renderer\\index.jsx',
-],
-
+  // 'C:\\Users\\gillian\\_Academic\\Thesis\\archive-5\\packages\\app-electron\\src\\renderer\\index.jsx',
+// ],
   output: {
     path: webpackPaths.distRendererPath,
     publicPath: '/',
@@ -188,6 +187,7 @@ const configuration = {
     },
     historyApiFallback: {
       verbose: true,
+      disableDotRule: true,
     },
     setupMiddlewares(middlewares) {
       console.log('Starting preload.js builder...');

@@ -24,7 +24,6 @@ const configuration = {
       use: {
         loader: 'babel-loader',
         options: {
-          // ✅ ADDED: Explicitly specify config file location
           configFile: path.resolve(webpackPaths.rootPath, 'babel.config.js'),
           presets: [
             ['@babel/preset-env', { targets: { electron: '35' } }],
@@ -48,7 +47,6 @@ const configuration = {
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     modules: [webpackPaths.srcPath, 'node_modules'],
-     // ✅ FIXED: Update the @electron alias
   alias: {
     '@shared': path.resolve(webpackPaths.rootPath, 'packages/shared'),
     '@electron': path.resolve(webpackPaths.rootPath, 'packages/app-electron/src'), // ✅ Fixed path
@@ -60,7 +58,7 @@ const configuration = {
 
   plugins: [new webpack.EnvironmentPlugin({ NODE_ENV: 'production' })],
 
- 
+
 };
 
 module.exports = configuration;
