@@ -19,6 +19,7 @@ import { eventManager } from '@utils/events';
 
 
 export function EntryList() {
+  // TODO: Clean these up. I think a lot of these aren't needed anymore.
     const [isLoading, setIsLoading] = useState(false);
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
@@ -29,6 +30,9 @@ export function EntryList() {
   const [editingSubHex, setEditingSubHex] = useState(null);
   const [tempHexValue, setTempHexValue] = useState('');
   const [tempSubHexValue, setTempSubHexValue] = useState('');
+        const [items, setItems] = useState([]);
+      const [sortColumn, setSortColumn] = useState('name');
+      const [sortDirection, setSortDirection] = useState('asc');
 
   const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing
@@ -89,7 +93,31 @@ export function EntryList() {
     setEditingSubHex(null);
     setTempHexValue('');
     setTempHexValue('');
+
+
   };
+
+   function MySortableTable() {
+      const [items, setItems] = useState([]);
+      const [sortColumn, setSortColumn] = useState('name');
+      const [sortDirection, setSortDirection] = useState('asc');
+   };
+
+      useEffect(() => {
+        const fetchItems = async () => {
+          let sortedItems;
+          if (sortDirection === 'asc') {
+            sortedItems = await db.friends.orderBy(sortColumn).toArray();
+          } else {
+            sortedItems = await db.friends.orderBy(sortColumn).reverse().toArray();
+          }
+          setItems(sortedItems);
+          sortedFriends = sortedItems
+        };
+        fetchItems();
+      }, [sortColumn, sortDirection]); // Re-fetch when sort order changes
+
+
 
 useEffect(() => {
     const handleNewGameStart = () => setIsLoading(true);
@@ -109,6 +137,14 @@ useEffect(() => {
   }, []);
 
 
+        const handleSort = (column) => {
+        if (column === sortColumn) {
+          setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+          setSortColumn(column);
+          setSortDirection('asc'); // Default to ascending when changing column
+        }
+      };
 
 
   // --------------------  Remove Entries
@@ -126,14 +162,23 @@ useEffect(() => {
     }
   };
 
-  // Sort friends by date
-  const sortedFriends = friends
-    ? [...friends].sort((a, b) => {
-        const dateA = a.date ? new Date(a.date).getTime() : 0;
-        const dateB = b.date ? new Date(b.date).getTime() : 0;
-        return dateB - dateA;
-      })
-    : [];
+  // // Sort friends by date
+  // const sortedFriends = friends
+  //   ? [...friends].sort((a, b) => {
+  //       const dateA = a.date ? new Date(a.date).getTime() : 0;
+  //       const dateB = b.date ? new Date(b.date).getTime() : 0;
+  //       return dateB - dateA;
+  //     })
+  //   : [];
+
+  //   // Sort friends by date
+  // const sortedFriends = friends
+  //   ? [...friends].sort((a, b) => {
+  //       const dateA = a.date ? new Date(a.date).getTime() : 0;
+  //       const dateB = b.date ? new Date(b.date).getTime() : 0;
+  //       return dateB - dateA;
+  //     })
+  //   : [];
 
 
 
@@ -186,6 +231,10 @@ useEffect(() => {
           <table className="searchResults">
             <thead>
               <tr>
+              <th onClick={() => handleSort('name')}>Name {sortColumn === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}</th>
+              <th onClick={() => handleSort('value')}>Value {sortColumn === 'value' && (sortDirection === 'asc' ? '▲' : '▼')}</th>
+              <th onClick={() => handleSort('category')}>Category {sortColumn === 'category' && (sortDirection === 'asc' ? '▲' : '▼')}</th>
+
                 <th width="auto">Name</th>
                 <th width="75px">Collected</th>
                 <th width="25px">Hex</th>
