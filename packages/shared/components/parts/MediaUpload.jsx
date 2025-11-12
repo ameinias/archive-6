@@ -159,7 +159,7 @@ export function MediaUpload({ mediaFiles }) {
 
       <input
         type="file"
-        accept="image/*,video/*"
+        accept="image/*,video/*, audio/*, application/pdf"
         onChange={handleFileInputChange}
         style={{ display: 'none' }}
         id="fileInput"

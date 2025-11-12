@@ -129,7 +129,7 @@ const Logs = () => {
           <tbody>
             {results.map((item) => (
               <tr key={item.id}>
-                <td width="80%">
+                <td >
                  {item.type === 'sub' ?
                  (
 
@@ -152,7 +152,7 @@ const Logs = () => {
                  )}
 
                 </td>
-                <td>
+                <td width="90px">
                  <i>                {item.hexHash != '1' ?
                       item.modEdit :  <i>migrated</i>
                       }
@@ -160,7 +160,7 @@ const Logs = () => {
                     {/* ? item.modEdit : <i>modified</i>} */}
                 </td>
 
-                <td>
+                <td width="90px">
                   {/* Logic:
                   if not startstate, editor is Player
                   otherwhise get last edit by
@@ -173,7 +173,7 @@ const Logs = () => {
                   }
                 </td>
 
-                < td > {
+                < td width="90px"> {
             item.modEditDate
                 ? item.modEditDate
                 : <i>unknown</i>

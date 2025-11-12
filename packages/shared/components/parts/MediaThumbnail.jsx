@@ -62,8 +62,7 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
     
     if (fileType?.startsWith('video/')) {
       return (
-        <div>
-          
+        <div className="media media-video">
           <video controls style={{ width: '100%', maxWidth: {maxWidth}, height: 'auto' }}>
             <source src={blobUrl}  />
             Your browser does not support the video tag.
@@ -75,16 +74,46 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
       );
     } else if (fileType?.startsWith('image/')) {
       return (
-        <div>
+        <div className="media media-img">
           <img src={blobUrl} alt={fileName} style={{ width: '100%', height: 'auto' }} />
           <span className="image-subinfo">
             {fileName} ({(fileSize / 1024).toFixed(2)} KB)
           </span>
         </div>
       );
-    } else {
+     } else if (fileType?.startsWith('application/pdf')) {
+        return (
+        <div className="media media-pdf">
+          <object data={blobUrl} type="application/pdf" style={{ width: '100%', height: '500px' }}>
+            <p>PDF cannot be displayed.</p>
+          </object>
+
+          
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+          </span>
+        </div>
+      );
+
+       } else if (fileType?.startsWith('audio/')) {
+          return (
+        <div className="media media-audio">
+          <audio controls style={{ width: '100%'}}>
+            <source src={blobUrl}  />
+            Your browser does not support the audio tag.
+          </audio>
+          <br></br>
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+          </span>
+        </div>
+      );
+    } 
+    
+    
+    else {
       return (
-        <div >
+        <div className="media">
           <p>Unsupported file type: {fileType}</p>
           <span className="image-subinfo">
             {fileName} ({(fileSize / 1024).toFixed(2)} KB)

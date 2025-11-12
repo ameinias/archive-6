@@ -846,3 +846,11 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 
   gap:5px;
 }
+
+
+/*       MEDIA      */
+
+.media {
+  padding: 20px;
+  border: var(--div-border);
+}
