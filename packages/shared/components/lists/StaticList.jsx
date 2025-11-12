@@ -40,14 +40,14 @@ export function StaticList() {
                   </td>
                 ) : (
                   <>
-                    <td><BookMarkCheck itemID={item.id} type="entry" /></td>
-                    <td><UnreadBadge itemId={item.id} type="entry" /></td>
-                    <td width="80%">
+                    <td width="35px"><BookMarkCheck itemID={item.id} type="entry" /></td>
+                    <td width="35px"><UnreadBadge itemId={item.id} type="entry" /></td>
+                    <td >
                       <Link to={`/entry/${item.id}`}>
                         {item.fauxID} : {item.title}
                       </Link>
                     </td>
-                    <td>{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
+                    <td width="75px">{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
                   </>
                 )}
               </tr>

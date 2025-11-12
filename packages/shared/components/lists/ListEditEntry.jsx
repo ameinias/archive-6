@@ -20,19 +20,42 @@ import { eventManager } from '@utils/events';
 
 export function EntryList() {
   // TODO: Clean these up. I think a lot of these aren't needed anymore.
-    const [isLoading, setIsLoading] = useState(false);
-  const friends = useLiveQuery(() => db.friends.toArray());
+
+    const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
-  const gameLogic = GameLogic();
-    const { setStatusMessage } = GameLogic();
+  const { setStatusMessage } = GameLogic();
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [sortColumn, setSortColumn] = useState('title');
+  const [sortDirection, setSortDirection] = useState('asc');
+  
   const [editingHex, setEditingHex] = useState(null);
   const [editingSubHex, setEditingSubHex] = useState(null);
   const [tempHexValue, setTempHexValue] = useState('');
   const [tempSubHexValue, setTempSubHexValue] = useState('');
-        const [items, setItems] = useState([]);
-      const [sortColumn, setSortColumn] = useState('name');
-      const [sortDirection, setSortDirection] = useState('asc');
+
+
+
+   const sortedFriends = useLiveQuery(
+    () => {
+      if (!sortColumn) return db.friends.toArray();
+      
+      const query = db.friends.orderBy(sortColumn);
+      return sortDirection === 'desc' ? query.reverse().toArray() : query.toArray();
+    },
+    [sortColumn, sortDirection]
+  );
+
+  const handleSort = (column) => {
+    if (column === sortColumn) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
 
   const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing
@@ -97,25 +120,24 @@ export function EntryList() {
 
   };
 
-   function MySortableTable() {
-      const [items, setItems] = useState([]);
-      const [sortColumn, setSortColumn] = useState('name');
-      const [sortDirection, setSortDirection] = useState('asc');
-   };
+  //  function MySortableTable() {
+  //     const [items, setItems] = useState([]);
+  //     const [sortColumn, setSortColumn] = useState('name');
+  //     const [sortDirection, setSortDirection] = useState('asc');
+  //  };
 
-      useEffect(() => {
-        const fetchItems = async () => {
-          let sortedItems;
-          if (sortDirection === 'asc') {
-            sortedItems = await db.friends.orderBy(sortColumn).toArray();
-          } else {
-            sortedItems = await db.friends.orderBy(sortColumn).reverse().toArray();
-          }
-          setItems(sortedItems);
-          sortedFriends = sortedItems
-        };
-        fetchItems();
-      }, [sortColumn, sortDirection]); // Re-fetch when sort order changes
+      // useEffect(() => {
+      //   const fetchItems = async () => {
+      //     let sortedItems;
+      //     if (sortDirection === 'asc') {
+      //       sortedItems = await db.friends.orderBy(sortColumn).toArray();
+      //     } else {
+      //       sortedItems = await db.friends.orderBy(sortColumn).reverse().toArray();
+      //     }
+      //     setItems(sortedItems);
+      //   };
+      //   fetchItems();
+      // }, [sortColumn, sortDirection]); // Re-fetch when sort order changes
 
 
 
@@ -137,14 +159,14 @@ useEffect(() => {
   }, []);
 
 
-        const handleSort = (column) => {
-        if (column === sortColumn) {
-          setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-        } else {
-          setSortColumn(column);
-          setSortDirection('asc'); // Default to ascending when changing column
-        }
-      };
+      //   const handleSort = (column) => {
+      //   if (column === sortColumn) {
+      //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      //   } else {
+      //     setSortColumn(column);
+      //     setSortDirection('asc'); // Default to ascending when changing column
+      //   }
+      // };
 
 
   // --------------------  Remove Entries
@@ -197,7 +219,7 @@ useEffect(() => {
   return (
 <>
 
-      {sortedFriends.length === 0 ?
+      {!sortedFriends ||sortedFriends.length === 0 ?
       (
         <div className="List">
         <table className="entryTable">
@@ -208,12 +230,13 @@ useEffect(() => {
                 <br />
                 Hit <Link to="/import-export">Admin</Link> / New Game to get the
                 starter database while work in progress.
-
+<div className="div">
                       <Link to="/edit-item/new"><Button
               className="btn-add-item">
               New Entry
             </Button>
             </Link>
+            </div>
               </td>
             </tr>
           </tbody>
@@ -231,16 +254,23 @@ useEffect(() => {
           <table className="searchResults">
             <thead>
               <tr>
-              <th onClick={() => handleSort('name')}>Name {sortColumn === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}</th>
-              <th onClick={() => handleSort('value')}>Value {sortColumn === 'value' && (sortDirection === 'asc' ? '▲' : '▼')}</th>
-              <th onClick={() => handleSort('category')}>Category {sortColumn === 'category' && (sortDirection === 'asc' ? '▲' : '▼')}</th>
 
-                <th width="auto">Name</th>
-                <th width="75px">Collected</th>
+                <th onClick={() => handleSort('title')}>
+                  Title {sortColumn === 'title' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                
+  
+                <th onClick={() => handleSort('displayDate')}>
+                  Display Date {sortColumn === 'displayDate' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                
+                   <th onClick={() => handleSort('date')}>
+                  Added Date {sortColumn === 'date' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
                 <th width="25px">Hex</th>
-                <th width="25px">Subs</th>
-                <th width="25px">🖼️</th>
-                <th width="25px">🔛</th>
+                <th width="25px" title="sub entries">Subs</th>
+                <th width="25px" title="media attachments">🖼️</th>
+                <th width="25px" title="active">🔛</th> 
                 <th width="25px">🗑️</th>
               </tr>
             </thead>
@@ -254,6 +284,9 @@ useEffect(() => {
                     </td>
                     <td width="50px" data-label="displayDate">
                                           <td>{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
+                    </td>
+                   < td width="50px" data-label="date">
+                                          <td>{item.date ? new Date(item.date).toLocaleDateString('en-US') : 'No Date'}</td>
                     </td>
                 <td data-label="hex">
       {editingHex === item.id ? (
@@ -322,8 +355,18 @@ useEffect(() => {
           <table className="searchResults">
             <thead>
               <tr>
-                <th width="auto">Name</th>
-                <th width="75px">Date</th>
+                                <th onClick={() => handleSort('title')}>
+                  Title {sortColumn === 'title' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                
+  
+                <th onClick={() => handleSort('displayDate')}>
+                  Display Date {sortColumn === 'displayDate' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
+                
+                   <th onClick={() => handleSort('date')}>
+                  Added Date {sortColumn === 'date' && (sortDirection === 'asc' ? '▲' : '▼')}
+                </th>
                 <th width="75px">Researcher</th>
                 <th width="25px"> Hex</th>
                 <th width="25px">🖼️</th>
@@ -349,6 +392,9 @@ useEffect(() => {
                            {/*  Below isn't working yet. Taking a break. TODO */}
                        {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
                           </td>
+                                          < td width="50px" data-label="date">
+                                          <td>{item.date ? new Date(item.date).toLocaleDateString('en-US') : 'No Date'}</td>
+                    </td>
                           <td>
 
                          <EditableFields.EditResearcher itemID={item.id} type="subentry" />

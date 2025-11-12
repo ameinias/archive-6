@@ -40,21 +40,21 @@ const NavBar = () => {
     // <nav className="navbar navbar-blend navbar-fixed-top">
     //   <div className="mainNavButtons">
     <ul role="menubar" className="can-hover">
-         <li role="menuitem" tabindex="0" aria-haspopup="true"><Link variant="outline-primary" style={{ width: '25px', padding:'2px' }} to="" onClick={() => navigate(-1)}>
+         <li role="menuitem" tabIndex="0" aria-haspopup="true"><Link variant="outline-primary" style={{ width: '25px', padding:'2px' }} to="" onClick={() => navigate(-1)}>
           {'<<'}
         </Link></li>{' '}
-        <li role="menuitem" tabindex="0" aria-haspopup="true"><Link to="/" title="home-button">
+        <li role="menuitem" tabIndex="0" aria-haspopup="true"><Link to="/" title="home-button">
           Home</Link></li>{' '}
-         <li role="menuitem" tabindex="0" aria-haspopup="true"> <Link to="/search">
+         <li role="menuitem" tabIndex="0" aria-haspopup="true"> <Link to="/search">
           Search</Link></li>{' '}
-        <li role="menuitem" tabindex="0" aria-haspopup="true">
+        <li role="menuitem" tabIndex="0" aria-haspopup="true">
                 <Link to="/bookmarks">Bookmarks</Link></li>
-        <li role="menuitem" tabindex="0" aria-haspopup="true">
+        <li role="menuitem" tabIndex="0" aria-haspopup="true">
                   <Link to="/hashimport">Import</Link></li>{' '}
         {(isAdmin || !isElectron) && (
           <>
 
-<li role="menuitem" tabindex="0" aria-haspopup="true">
+<li role="menuitem" tabIndex="0" aria-haspopup="true">
         Admin Tools
       <ul role="menu">
          <li role="menuitem"><Link to='/media'>Media List</Link></li>

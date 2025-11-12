@@ -2,6 +2,7 @@
 class EventManager {
   constructor() {
     this.isElectron = typeof window !== 'undefined' && window.electronAPI;
+    
   }
 
   on(eventName, callback) {

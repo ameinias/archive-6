@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
-import { StaticSubListItem } from '../../../../packages/shared/components/parts/StaticSubListItem';
-import { BookMarkCheck } from '../../../../packages/shared/components/parts/Badges';
-import { MediaDisplay } from '../../../../packages/shared/components/parts/MediaDisplay';
+import { StaticSubListItem } from '@components/parts/StaticSubListItem';
+import { BookMarkCheck } from '@components/parts/Badges';
+import { MediaDisplay } from '@components/parts/MediaDisplay';
+import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
 
 export function StaticSingleDefault({ itemID }) {
   const { id } = useParams(); // get the id from the route
@@ -55,12 +56,14 @@ export function StaticSingleDefault({ itemID }) {
     <div className={`List ${gameState.gameState.level > 0 ? 'haunted' : ''}`}>
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
-        <div>
+        <div className="entry-header">
           {' '}
-          <BookMarkCheck itemID={item.id} type="entry" />
-          <h2>
-            {item.fauxID} : {item.title}
-          </h2>
+          <div style={{}}><BookMarkCheck itemID={item.id} type="entry" /></div>
+                        <div className="entry-title">
+                <span className="parentIDSpan">{item.fauxID} 
+                  </span> 
+                  <span className="parentTitleSpan">{item.title}</span>
+                  </div>
         </div>
         <div title="Metadata">
           <div>
@@ -95,8 +98,14 @@ export function StaticSingleDefault({ itemID }) {
                 {item.media.map((file, index) => {
                   return (
                     <div key={index}>
-                      <MediaDisplay file={file} index={index} />
-                      {file.name} ({(file.size / 1024).toFixed(2)} KB)
+
+                              <MediaThumbnail 
+              key={index}
+              fileRef={file}
+              maxWidth={'700px'}
+              
+            /> 
+                      {/* {file.name} ({(file.size / 1024).toFixed(2)} KB) */}
                     </div>
                   );
                 })}

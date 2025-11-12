@@ -3,14 +3,19 @@ import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useActionState } from 'react';
+import {eventManager} from '@utils/events';
+import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
 
 export function MediaUploadSub({ mediaSubFiles }) {
   const [isOver, setIsOver] = useState(false);
   const [subFiles, setSubFiles] = useState([]);
   const { setStatusMessage } = GameLogic();
+  const gameLogic = GameLogic();
+
 
   useEffect(() => {
-    setSubFiles(mediaSubFiles);
+    setSubFiles(mediaSubFiles || []);
   }, [mediaSubFiles]);
 
   // Define the event handlers
@@ -34,23 +39,65 @@ export function MediaUploadSub({ mediaSubFiles }) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);
       }
 
-      //setFiles((prev) => [...prev, file]);
-      mediaSubFiles.push(subFiles);
+     
+      const blobRef = await processMediaToBlobs(subFiles);
+      
+      const newSubFiles = [...(mediaSubFiles || []), blobRef];
+      setSubFiles(newSubFiles);
+      
+      // Update the parent's mediaSubFiles array
+      if (mediaSubFiles) {
+        mediaSubFiles.length = 0; 
+        mediaSubFiles.push(...newSubFiles); 
+      }
+
       console.log('File imported: ', subFiles.name);
-      console.log('Total files: ', mediaSubFiles.length);
+      console.log('Total files: ', newSubFiles.length);
       setStatusMessage(`File imported: ${subFiles.name}`);
     } catch (error) {
-      setStatusMessage('An unknown error occurred during import.');
+      console.error('Import error:', error);
+      setStatusMessage(`Error importing file: ${error.message}`);
       return;
     }
   };
+
+  const processMediaToBlobs = async (subFiles) => {
+  try {
+    const mediaId = await db.media.add({
+      name: subFiles.name,
+      type: subFiles.type,
+      size: subFiles.size,
+      blob: subFiles, 
+      uploadedAt: new Date()
+    });
+
+
+    return `blob:${mediaId}`;
+  } catch (error) {
+    console.error('Error saving media to database:', error);
+    throw error;
+  }
+};
+
+
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       handleImport(file);
+      console.log('File input changed, file selected:', file.name);
     }
   };
+  const removeFile = (index) => {
+    const newSubFiles = subFiles.filter((_, i) => i !== index);
+    setSubFiles(newSubFiles);
+    // Update the parent's mediaSubFiles array
+    if (mediaSubFiles) {
+      mediaSubFiles.length = 0; // Clear existing
+      mediaSubFiles.push(...newSubFiles); // Add remaining files
+    }
+  };
+
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -58,54 +105,58 @@ export function MediaUploadSub({ mediaSubFiles }) {
 
     // Fetch the files
     const droppedFiles = Array.from(event.dataTransfer.files);
-    const mediaFiles = droppedFiles.filter(
+    const mediaSubFiles = droppedFiles.filter(
       (file) =>
         file.type.startsWith('image/') || file.type.startsWith('video/'),
     );
-    setSubFiles(mediaFiles);
+    setSubFiles(mediaSubFiles);
     setStatusMessage(
-      `Files dropped: ${mediaFiles.map((file) => file.name).join(', ')}`,
+      `Files dropped: ${mediaSubFiles.map((file) => file.name).join(', ')}`,
     );
   };
 
   return (
     <div>
-      <div className="subentry-add-list">
-        {subFiles.length === 0 ? (
-          <>No Attachments.</>
-        ) : (
-          <>
-            <table>
-              <tbody>
-                {subFiles.map((subFiles, index) => (
-                  <tr key={index}>
-                    <td width="80%">
-                      <img
-                        src={URL.createObjectURL(subFiles)}
-                        alt={subFiles.name}
-                        style={{ width: '100%', height: 'auto' }}
-                      />
-                      <span className="image-subinfo">
-                        {' '}
-                        {subFiles.name} ({(subFiles.size / 1024).toFixed(2)} KB)
-                      </span>{' '}
-                      <Button
-                        className="remove-button button-small remove-button-small"
-                        onClick={() =>
-                          setSubFiles(subFiles.filter((_, i) => i !== index))
-                        }
-                      >
-                        {' '}
-                      </Button>
-                    </td>
-                    <td></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        )}
-      </div>
+      {subFiles.length === 0 ? (
+        <div className="subentry-add-list">
+          {gameLogic.isAdmin ? <>No Attachments.</> : <></>}
+        </div>
+      ) : (
+        <div className="subentry-add-list">
+          {subFiles.map((subFiles, index) => (
+            <div className="media-thumbnail" key={index}>
+
+          
+                        <MediaThumbnail 
+              key={index}
+              fileRef={subFiles}
+ 
+              maxWidth={'700px'}
+              onRemove={removeFile}
+            /> 
+            <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
+              <Button
+                className="image-edit-button"
+                
+                onClick={() => removeFile(index)}
+              >
+                x
+              </Button>
+              {/* 
+              Adding a rename button is not a good use of my time right now. 
+              <Button
+                className="image-edit-button"
+                onClick={() => renameFile(index)}
+                
+              >
+                rename
+              </Button> */}
+              </div>
+
+            </div>
+          ))}
+        </div>
+      )}
 
       <input
         type="file"
@@ -114,9 +165,10 @@ export function MediaUploadSub({ mediaSubFiles }) {
         style={{ display: 'none' }}
         id="fileInputSub"
       />
+
       <Button
         className="btn-add-item"
-        onClick={() => document.getElementById('fileInputSub').click()}
+        onClick={() => document.getElementById('fileInputSub')?.click()}
       >
         Import Attachments
       </Button>

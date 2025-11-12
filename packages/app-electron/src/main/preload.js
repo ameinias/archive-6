@@ -44,6 +44,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     showAlert: (message) => ipcRenderer.invoke('show-alert', message),
     showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
     getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
+    saveMediaFile: (destPath, arrayBuffer) =>
+    ipcRenderer.invoke('save-media-file', destPath, arrayBuffer),
 
     // Add IPC listener methods
     on: (channel, func) => {

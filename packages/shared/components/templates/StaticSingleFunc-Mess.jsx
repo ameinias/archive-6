@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '../../../../packages/shared/components/parts/StaticSubListItem';
 import { BookMarkCheck } from '../../../../packages/shared/components/parts/Badges';
 import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
+import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
 
 export function StaticSingleMess({ itemID }) {
   const { id } = useParams(); // get the id from the route
@@ -87,46 +88,12 @@ export function StaticSingleMess({ itemID }) {
                         return (
                           <tr key={index}>
                             <td width="80%">
-                              <Link
-                                to={`/file-fullscreen/entry-${item.id}-${index}`}
-                              >
-                                {isFile && fileType === 'image' ? (
-                                  <img
-                                    src={URL.createObjectURL(file)}
-                                    alt={file.name}
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '300px',
-                                      height: 'auto',
-                                    }}
-                                    onLoad={() =>
-                                      URL.revokeObjectURL(
-                                        URL.createObjectURL(file),
-                                      )
-                                    } // Cleanup
-                                  />
-                                ) : isFile && fileType === 'video' ? (
-                                  <video
-                                    controls
-                                    style={{
-                                      width: '100%',
-                                      maxWidth: '300px',
-                                      height: 'auto',
-                                    }}
-                                  >
-                                    <source src={URL.createObjectURL(file)} />
-                                    Your browser does not support the video tag.
-                                  </video>
-                                ) : (
-                                  <div className="file-placeholder">
-                                    📎 {file.name || `File ${index + 1}`}
-                                  </div>
-                                )}
-                              </Link>
-
-                              <div>
-                                {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                              </div>
+                                                           <MediaThumbnail 
+                                           key={index}
+                                           fileRef={file}
+                                           maxWidth={'700px'}
+                                           
+                                         /> 
                             </td>
                             <td>{/* Empty for now */}</td>
                           </tr>

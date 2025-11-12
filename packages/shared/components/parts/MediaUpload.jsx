@@ -4,6 +4,8 @@ import { GameLogic } from '@utils/gamelogic';
 import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useActionState } from 'react';
+import {eventManager} from '@utils/events';
+import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
 
 export function MediaUpload({ mediaFiles }) {
   const [isOver, setIsOver] = useState(false);
@@ -37,21 +39,47 @@ export function MediaUpload({ mediaFiles }) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);
       }
 
-      const newFiles = [...(mediaFiles || []), file];
+     
+      const blobRef = await processMediaToBlobs(file);
+      
+      const newFiles = [...(mediaFiles || []), blobRef];
       setFiles(newFiles);
+      
       // Update the parent's mediaFiles array
       if (mediaFiles) {
-        mediaFiles.length = 0; // Clear existing
-        mediaFiles.push(...newFiles); // Add all files
+        mediaFiles.length = 0; 
+        mediaFiles.push(...newFiles); 
       }
+
       console.log('File imported: ', file.name);
       console.log('Total files: ', newFiles.length);
       setStatusMessage(`File imported: ${file.name}`);
     } catch (error) {
-      setStatusMessage('An unknown error occurred during import.');
+      console.error('Import error:', error);
+      setStatusMessage(`Error importing file: ${error.message}`);
       return;
     }
   };
+
+  const processMediaToBlobs = async (file) => {
+  try {
+    const mediaId = await db.media.add({
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      blob: file, 
+      uploadedAt: new Date()
+    });
+
+
+    return `blob:${mediaId}`;
+  } catch (error) {
+    console.error('Error saving media to database:', error);
+    throw error;
+  }
+};
+
+
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -68,6 +96,7 @@ export function MediaUpload({ mediaFiles }) {
       mediaFiles.push(...newFiles); // Add remaining files
     }
   };
+
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -96,34 +125,33 @@ export function MediaUpload({ mediaFiles }) {
           {files.map((file, index) => (
             <div className="media-thumbnail" key={index}>
 
-              {file instanceof File ? (
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={file.name}
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              ) : (
-                <div style={{
-                  width: '200px',
-                  height: '150px',
-                  backgroundColor: '#f0f0f0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '1px dashed #ccc'
-                }}>
-                  <span>📁 {file.name || 'Saved File'}</span>
-                </div>
-              )}
-              <span className="image-subinfo">
-                {file.name} ({(file.size / 1024).toFixed(2)} KB)
-              </span>
+          
+                        <MediaThumbnail 
+              key={index}
+              fileRef={file}
+ 
+              maxWidth={'700px'}
+              onRemove={removeFile}
+            /> 
+            <div style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}}>
               <Button
-                className="remove-button button-small remove-button-small"
+                className="image-edit-button"
+                
                 onClick={() => removeFile(index)}
               >
-
+                x
               </Button>
+              {/* 
+              Adding a rename button is not a good use of my time right now. 
+              <Button
+                className="image-edit-button"
+                onClick={() => renameFile(index)}
+                
+              >
+                rename
+              </Button> */}
+              </div>
+
             </div>
           ))}
         </div>

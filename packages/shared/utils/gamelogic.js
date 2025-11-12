@@ -64,7 +64,7 @@ export function GameLogic() {
   const [user, setUser] = useState(globalUser);
   const [adminUser, setAdminUser] = useState(globalAdminUser);
 
-  const statusTimeOut = 5000; // 5 seconds
+  const statusTimeOut = 15000; // 5 seconds
 
   const toggleAdmin = () => {
     globalIsAdmin = !globalIsAdmin;
@@ -153,7 +153,7 @@ export function GameLogic() {
     setStatus(globalStatus);
     gameStatusUpdateCallbacks.forEach(callback => callback(globalStatus));
 
-    // Clear status after 3 seconds
+    // Clear status after 3 seconds (statusTimeOut)
   setTimeout(() => {
     globalStatus = '';
     setStatus('');

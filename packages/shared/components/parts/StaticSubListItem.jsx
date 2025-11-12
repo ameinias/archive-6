@@ -8,6 +8,8 @@ import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
 import {MediaDisplay} from './MediaDisplay'
 import { researcherIDs } from '@utils/constants';
+import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { BookMarkCheck } from '@components/parts/Badges';
 
 export function StaticSubListItem({
   itemID,
@@ -42,22 +44,31 @@ export function StaticSubListItem({
       <div className="subentry-item">
         {/* <div > */}
           <div width="80%" key={item.id} className={item.unread ? 'unread-display' : '' }>
-            <h4>
+          {item.unread &&  <span className="unread-indicator" title="New Subentry Unread">● </span> }
               {' '}
               {/* <Link to={`/edit-subitem/${item.parentId}/${item.id}`}> */}
-                {item.fauxID} : {item.title}
+
+
+              <div className="subentry-title">
+                <div style={{}}><BookMarkCheck itemID={item.id} type="subentry" /></div>
+                <span className="subID">{item.fauxID} 
+                  </span> 
+                  <span className="subTitle">{item.title}</span>
+                  </div>
               {/* </Link> */}
-            </h4>
+           
           </div>
           <div className="subentry-desc">
             {item.description}
             {item.mediaSub?.map((file, index) => (
               <div key={index}>
 
-                <MediaDisplay file={file} index={index}/>
-                {/* <Link to={`/file-fullscreen/entry-${file.id}`}> */}
-                  {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                {/* </Link> */}
+                                              <MediaThumbnail 
+              key={index}
+              fileRef={file}
+              maxWidth={'700px'}
+              
+            /> 
               </div>
             ))}
 

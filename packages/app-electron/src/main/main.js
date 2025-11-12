@@ -15,6 +15,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
+
+
 console.log('>>> main.js is running - top');
 let config;
 const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
@@ -405,28 +407,30 @@ const getAppDataPath = () => {
 };
 
 // Save file to app directory
-ipcMain.handle('save-artifact-file', async (event, relativePath, data) => {
-  return new Promise((resolve, reject) => {
-    const appDataPath = app.isPackaged
-      ? path.join(process.resourcesPath, 'app')
-      : path.join(__dirname, '..','..');
+ipcMain.handle('save-artifact-file', async (event, relativePath, arrayBuffer) => {
+  try {
 
-    const fullPath = path.join(appDataPath, relativePath);
-
-    console.log('main js aves-artifact-file - Saving file to:', fullPath);
-
+        const projectRoot = app.isPackaged
+  ? path.dirname(process.execPath)  // When packaged, use exe location
+  : path.join(__dirname, '../..');  // In dev, go up from compiled main.js
+  
+    const userDataPath = app.getPath('userData');
+    const fullPath = path.join(userDataPath, relativePath);
+    
     // Ensure directory exists
+    const fs = require('fs');
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-
-
-    fs.writeFile(fullPath, Buffer.from(data), (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(relativePath);
-      }
-    });
-  });
+    
+    // Write file
+    fs.writeFileSync(fullPath, Buffer.from(arrayBuffer));
+    
+    console.log('File saved to:', fullPath);
+    
+    return { success: true, path: fullPath };
+  } catch (error) {
+    console.error('Error saving artifact:', error);
+    return { success: false, error: error.message };
+  }
 });
 
 // Get file URL for display
@@ -438,14 +442,35 @@ ipcMain.handle('get-artifact-url', async (event, relativePath) => {
 
     const fullPath = path.join(appDataPath, relativePath);
 
+
+    const absolutePath = path.resolve(fullPath);
+
     // Check if file exists
     await fs.access(fullPath);
 
+    console.log('Getting artifact URL for:', absolutePath);
+
     // Return file:// URL (normalize path separators)
-    return `file://${fullPath.replace(/\\/g, '/')}`;
+    return `file://${absolutePath.replace(/\\/g, '/')}`;
   } catch (error) {
     console.error('Error getting artifact URL:', error);
     return null;
+  }
+});
+
+// const { ipcMain } = require('electron');
+// const fs = require('fs');
+// const path = require('path');
+
+ipcMain.handle('save-media-file', async (event, destPath, arrayBuffer) => {
+  try {
+    // Ensure the directory exists
+    fs.mkdirSync(path.dirname(destPath), { recursive: true });
+    // Write the file
+    fs.writeFileSync(destPath, Buffer.from(arrayBuffer));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 });
 

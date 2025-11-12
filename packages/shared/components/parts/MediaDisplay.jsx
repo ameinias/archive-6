@@ -1,4 +1,4 @@
-import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
+import { getFileType } from '@hooks/dbHooks';
 import { Link } from 'react-router-dom';
 
 export function MediaDisplay({ file, index }) {
@@ -34,7 +34,7 @@ export function MediaDisplay({ file, index }) {
             </video>
           ) : (
             <div className="file-placeholder">
-               {file.name || 'file' }
+               {file.name || 'file' } {file.URL}
             </div>
           )}
         {/* </Link> */}

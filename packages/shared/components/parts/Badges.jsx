@@ -50,10 +50,10 @@ export function UnreadBadge({
 }
 
 export function BookMarkCheck({
-  itemID
+  itemID, type
 }) {
 
-const entry = dbHooks.useReturnEntryOrSubentry(itemID);
+const entry = dbHooks.useReturnEntryOrSubentry(itemID, type);
 
   const isBookmarked = entry?.bookmark || false;
 
@@ -62,8 +62,9 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID);
 
     try {
       const newBookmarkState = !isBookmarked;
+      console.log(`Toggling bookmark for itemID ${itemID} to ${newBookmarkState}`);
 
-      await dbHooks.updateEntryProperty(itemID, { bookmark: newBookmarkState });
+      await dbHooks.updateEntryProperty(itemID, type, { bookmark: newBookmarkState });
 
     //   }
  } catch (error) {
@@ -80,11 +81,11 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID);
   }
   return (
     <button
-      className='badger bookmark-btn'
+      className='badger bookmark-btn btn-override'
       onClick={toggleBookmark}
       title={isBookmarked ? 'unbookmark' : 'bookmark'}
     >
-      {isBookmarked ? '★' : '☆'}
+      {isBookmarked ? '⛊' : '⛉'}
     </button>
   );
 }

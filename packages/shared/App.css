@@ -163,7 +163,16 @@ margin: 10px;
 
 /* General styles */
 
+.image-edit-buttons{
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
 
+input[type=checkbox] {
+  opacity:1!important;
+  appearance: auto;
+}
 /* .btn-primary{
 --bs-btn-color: #fff;
   --bs-btn-bg: #7b899d;
@@ -547,10 +556,35 @@ background-color: transparent;
     border: none;
     appearance: none;
     font-size: 1rem;
+    min-width:15px
     /* transition: all ease-in 0.1s;
     cursor: pointer;
     opacity: 0.9; */
+
+
 }
+
+.btn-override{
+     background:transparent;
+    border: none;
+    border-radius: none;
+    box-shadow: none;
+    box-sizing: border-box;
+    background-image:none;
+    color: #222;
+    /* font: var(--w7-font); */
+    min-height: 23px;
+    min-width: 15px;
+     padding: 0;
+     margin: 0;
+     /*
+    position: relative;
+    text-align: center;
+    z-index: 0; */
+}
+
+
+
 
 .bookmark-btn:hover {
  opacity: 0.5;
@@ -776,4 +810,39 @@ a:focus, a:hover {
 ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>button:focus-visible, ul[role=menubar]>[role=menuitem]>button:hover, ul[role=menubar]>[role=menuitem]>label:focus-visible, ul[role=menubar]>[role=menuitem]>label:hover, ul[role=menubar]>[role=menuitem][aria-haspopup=true]:focus-visible, ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
     background: var(lightblue);
     border-color: var(rgb(90, 165, 190));
+}
+
+
+.subID {
+  display:block;
+  text-transform: capitalize;
+   font-size: 0.9rem;
+}
+.subTitle {
+  display:block;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: underline;
+}
+
+.parentIDSpan {
+  display:block;
+  text-transform: capitalize;
+  font-size: 0.9rem;
+}
+.parentTitleSpan {
+  display:block;
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-decoration: underline;
+}
+
+.entry-title{
+  padding-bottom:10px;
+}
+
+.entry-header{
+  display:flex;
+
+  gap:5px;
 }

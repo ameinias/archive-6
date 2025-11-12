@@ -86,13 +86,16 @@ export function CheckAvailable(itemId) {
 
   // The logic in these might need to get fixed if theire are overlapped IDs in both databases.
 
-export function useReturnEntryOrSubentry(itemId) {
+export function useReturnEntryOrSubentry(itemId, type) {
   return useLiveQuery(async () => {
     if (!itemId) return null;
 
+    if(type === 'entry'){
     if (db.friends.get(itemId)) return db.friends.get(itemId);
+    } else {
 
     if (db.subentries.get(itemId)) return db.subentries.get(itemId);
+    }
   }, [itemId]) || null;
   return null;
 }
@@ -212,19 +215,17 @@ export function useSubentry(itemId) {
   };
 
   // In dbHooks.js - add this regular function (not a hook)
-export const updateEntryProperty = async (itemId, updates) => {
+export const updateEntryProperty = async (itemId, type, updates) => {
   if (!itemId) return false;
 
   try {
     // Try to find which table the item is in
-    const mainEntry = await db.friends.get(Number(itemId));
-    if (mainEntry) {
+
+    if (type === 'entry' ) {
       await db.friends.update(Number(itemId), updates);
       return true;
     }
-
-    const subEntry = await db.subentries.get(Number(itemId));
-    if (subEntry) {
+else  {
       await db.subentries.update(Number(itemId), updates);
       return true;
     }
