@@ -31,25 +31,38 @@ export function MediaUpload({ mediaFiles }) {
 
   const processMediaToPath = async (file) => {
     try {
+
+      console.log('hit processMediaToPath', file.name);
+
+      // return;
+
       const arrayBuffer = await file.arrayBuffer();
 
+
       if (eventManager.isElectron) {
-        // ✅ Save file to disk via Electron
+        // Save file to disk 
+
+        console.log('hit after iselectron', file.name);
+
         const result = await window.electronAPI.saveMediaFile(file.name, arrayBuffer);
-        
+
+        console.log('hit after saveMediafile', file.name);
+        // return;
+
+
         console.log('Result type:', typeof result);
-console.log('Result value:', result);
+        console.log('Result value:', result);
 
         if (!result.success) {
           throw new Error(result.error);
         } else {console.log('File saved to disk at:', result.path);}
 
-        // ✅ Store path in database
+        //  Store path in database
         const mediaId = await db.media.add({
           name: file.name,
           type: file.type,
           size: file.size,
-          path: result.path, // ✅ Store relative path
+          path: result.path, //  Store relative path
           uploadedAt: new Date()
         });
 
@@ -57,7 +70,7 @@ console.log('Result value:', result);
         return mediaId; // Return the database ID
         
       } else {
-        // ✅ Web: Save to public/media folder or use a server endpoint
+        //  Web: Save to public/media folder or use a server endpoint
         // For now, store as blob (or implement server upload)
         const blob = new Blob([arrayBuffer], { type: file.type });
         
@@ -81,15 +94,23 @@ console.log('Result value:', result);
     try {
       if (!file) throw new Error(`Only files can be dropped here`);
 
+       //console.log('handleimport hit'); // needed this to hit process media path?! never mind, stopped working. 
+
       const maxSizeInMB = 50;
       const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
       if (file.size > maxSizeInBytes) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);
       }
 
-      // ✅ Save file and get media ID
+
+
+      //  Save file and get media ID
       const mediaId = await processMediaToPath(file);
       const newFiles = [...(mediaFiles || []), mediaId];
+
+            console.log('passed process media to path', mediaId);
+
+     // return;
       
       setFiles(newFiles);
       if (mediaFiles) {

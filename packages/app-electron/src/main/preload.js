@@ -41,13 +41,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAssetPath: (relativePath) => ipcRenderer.invoke('get-asset-path', relativePath),
   readAssetFile: (relativePath) => ipcRenderer.invoke('read-asset-file', relativePath),
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
-  saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content),
-    saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
+  // saves default database to app data
+  saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content), 
+   
     showAlert: (message) => ipcRenderer.invoke('show-alert', message),
     showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
+
+    //all this mess to try media files
+     saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
     getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
+
+
     saveMediaFile: (fileName, arrayBuffer) =>
     ipcRenderer.invoke('save-media-file', fileName, arrayBuffer),
+
+    
   getMediaPath: (relativePath) => 
     ipcRenderer.invoke('get-media-path', relativePath),
   deleteMediaFile: (relativePath) => 

@@ -20,61 +20,146 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
           setFileSize(mediaFile.size);
           setFileType(mediaFile.type);
 
-          if (mediaFile.path && eventManager.isElectron) {
-            // ✅ Electron: Get file:// URL from path
+ if (mediaFile.path && eventManager.isElectron) {
+            // ✅ Get media:// URL from Electron
             const url = await window.electronAPI.getMediaPath(mediaFile.path);
-            setMediaUrl(url);
-          } else if (mediaFile.blob) {
-            // ✅ Web: Create blob URL
+            console.log('📁 Media URL:', url);
+            setMediaUrl(url); // ✅ Changed from setBlobUrl
+          } 
+          else if (mediaFile.blob) {
+            // Web: use blob
             const url = URL.createObjectURL(mediaFile.blob);
-            setMediaUrl(url);
+            setMediaUrl(url); // ✅ Changed from setBlobUrl
           }
         }
+      } else if (fileRef instanceof File) {
+        // ✅ Handle File objects (before saving)
+        setFileName(fileRef.name);
+        setFileSize(fileRef.size);
+        setFileType(fileRef.type);
+        const url = URL.createObjectURL(fileRef);
+        setMediaUrl(url);
       }
     };
+  loadMedia();
 
-    loadMedia();
 
     return () => {
-      if (mediaUrl && mediaUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(mediaUrl);
-      }
-    };
-  }, [fileRef]);
+      // Only revoke blob: URLs, not media: URLs
+    if (mediaUrl && mediaUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(mediaUrl);
+    } 
+  };
+}, [fileRef]);
 
   if (!mediaUrl) {
     return <div>No mediaUrl. Loading media...</div>;
   }
 
+if (mediaUrl) {
+
   if (fileType?.startsWith('video/')) {
     return (
-      <div className="media-thumbnail">
-        <video controls style={{ width: '100%', maxWidth: '500px' }}>
+       <div className="media media-video">
+          
+          <video controls style={{ width: '100%', maxWidth: {maxWidth}, height: 'auto' }}>
           <source src={mediaUrl} type={fileType} />
+          Your browser does not support the video tag.
         </video>
         <span className="image-subinfo">
           {fileName} ({(fileSize / 1024).toFixed(2)} KB)
         </span>
-        {onRemove && (
-          <Button className="remove-button" onClick={onRemove}>×</Button>
-        )}
+
       </div>
     );
   }
 
-  if (fileType?.startsWith('image/')) {
+  else if (fileType?.startsWith('image/')) {
     return (
-      <div className="media-thumbnail">
-        <img src={mediaUrl} alt={fileName} style={{ width: '100%' }} />
+      <div className="media media-img">
+        <img src={mediaUrl} alt={fileName} style={{ width: '100%', height: 'auto' }} />
         <span className="image-subinfo">
           {fileName} ({(fileSize / 1024).toFixed(2)} KB)
         </span>
-        {onRemove && (
-          <Button className="remove-button" onClick={onRemove}>×</Button>
-        )}
+
       </div>
     );
-  }
+  } 
+  
+  else if (fileType?.startsWith('application/pdf')) {
+   // const pdfURL = {mediaUrl} + "#toolbar=0";
+    
+        return (
+               <div className="media media-pdf">
+          <object data={mediaUrl} type="application/pdf" style={{ width: '100%', height: '500px' }} >
+            <p>PDF cannot be displayed.</p>
+          </object>
 
-  return <div>Unsupported file type: {fileType}</div>;
+{/* <embed
+  src="https://example.com/test.pdf"
+  type="application/pdf"
+  width="100%"
+  height="500px"
+/> */}
+          {/* <iframe
+  src={mediaUrl ? `${mediaUrl}#toolbar=0` : ''} // mediaUrl
+
+  title="Non-downloadable PDF Viewer"
+></iframe> */}
+
+          
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+          </span>
+        </div>
+      );
+
+       } 
+       
+       
+      else if (fileType?.startsWith('audio/')) {
+          return (
+        <div className="media media-audio">
+          <audio controls style={{ width: '100%'}}>
+            <source src={mediaUrl}  />
+            Your browser does not support the audio tag.
+          </audio>
+          <br></br>
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+          </span>
+        </div>
+      );
+    } 
+      
+    
+
+      return (
+        <div className="media">
+          <p>Unsupported file type: {fileType}</p>
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+          </span>
+        </div>
+      );
+    }
+
+  return (
+    <div>
+       
+      <div style={{
+        width: '200px',
+        height: '150px',
+        backgroundColor: '#f0f0f0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px dashed #ccc'
+      }}>
+        <span>Loading...</span>
+      </div>
+
+    </div>
+  );
+
 };

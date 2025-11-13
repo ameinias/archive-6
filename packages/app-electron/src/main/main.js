@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcRenderer, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcRenderer, ipcMain, protocol } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -37,6 +37,8 @@ class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
+
+let RESOURCES_PATH;
 
 
 
@@ -136,9 +138,7 @@ const createWindow = async () => {
 }
   }
 
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
+
 
   const getAssetPath = (...paths) => {
     return path.join(RESOURCES_PATH, ...paths);
@@ -249,6 +249,29 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+
+       RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+
+ console.log('📁 RESOURCES_PATH:', RESOURCES_PATH);
+  
+
+  // ✅ Register custom protocol for serving media files
+  protocol.registerFileProtocol('media', (request, callback) => {
+    // Remove 'media://' from the URL
+    const url = request.url.substr(8); // Remove 'media://'
+    const filePath = path.join(RESOURCES_PATH, 'media', url);
+    
+    console.log('📁 Serving media file:', filePath);
+    
+    callback({ path: filePath });
+  });
+
+
+
+
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
@@ -370,13 +393,15 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
   ? path.dirname(process.execPath)  // When packaged, use exe location
   : path.join(__dirname, '../..');  // In dev, go up from compiled main.js
 
+  // diff 
+
     // Create directories if they don't exist
     const dir = path.dirname(fullPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    // Write the file
+    // Write the file SAVE ASSET (WORKS)
 
 
     const projectExportPath = path.join(projectRoot, 'assets/databases/', 'dexie-import.json');
@@ -406,25 +431,47 @@ const getAppDataPath = () => {
     : __dirname;
 };
 
-// Save file to app directory
+// Save file to app directory - this saves to Appdata!! 
 ipcMain.handle('save-artifact-file', async (event, relativePath, arrayBuffer) => {
   try {
+console.log('save artifact hit');
+    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
+    const fullPath = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+
 
         const projectRoot = app.isPackaged
   ? path.dirname(process.execPath)  // When packaged, use exe location
   : path.join(__dirname, '../..');  // In dev, go up from compiled main.js
   
-    const userDataPath = app.getPath('userData');
-    const fullPath = path.join(userDataPath, relativePath);
+
     
-    // Ensure directory exists
-    const fs = require('fs');
-    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+    // Create directories if they don't exist
+    const dir = path.dirname(fullPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    // Write the file  SAVE ARTIFACT
     
-    // Write file
-    fs.writeFileSync(fullPath, Buffer.from(arrayBuffer));
+
+    // fs.writeFileSync(fullPath, Buffer.from(arrayBuffer));
     
-    console.log('File saved to:', fullPath);
+    
+
+    const projectExportPath = path.join(projectRoot, 'assets/media/', 'file.png');
+
+    const exportDir = path.dirname(projectExportPath);
+if (!fs.existsSync(exportDir)) {
+  fs.mkdirSync(exportDir, { recursive: true });
+}
+
+    fs.writeFileSync(projectExportPath, content, 'utf8');
+    console.log('Saved media file to:', projectExportPath);
+
+    fs.writeFileSync(fullPath, content, 'utf8');
+    console.log('Saved media file to:', fullPath);
+
+
     
     return { success: true, path: fullPath };
   } catch (error) {
@@ -464,8 +511,19 @@ ipcMain.handle('get-artifact-url', async (event, relativePath) => {
 
 ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
   try {
-    // ✅ Save to project assets/media folder (shared with all users)
+        console.log('📁 Main save-media: Received request to save file:', fileName);
+    console.log('📁 RESOURCES_PATH:', RESOURCES_PATH);
+
+        // ✅ Check if RESOURCES_PATH is defined
+    if (!RESOURCES_PATH) {
+      throw new Error('RESOURCES_PATH is not initialized');
+    }
+
+    //  Save to project assets/media folder (shared with all users)
+    // return; // temp
+
     const mediaDir = path.join(RESOURCES_PATH, 'media');
+    
     
     // Create directory if it doesn't exist
     fs.mkdirSync(mediaDir, { recursive: true });
@@ -498,6 +556,12 @@ ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
 // Get full file:// URL for media files
 ipcMain.handle('get-media-path', async (event, relativePath) => {
   try {
+
+    if (!RESOURCES_PATH) {
+      throw new Error('RESOURCES_PATH is not initialized');
+    }
+
+
     // relativePath is like "media/filename.jpg"
     const fullPath = path.join(RESOURCES_PATH, relativePath);
     
@@ -510,8 +574,12 @@ ipcMain.handle('get-media-path', async (event, relativePath) => {
       return null;
     }
     
-    // Return file:// URL
-    return `file://${fullPath.replace(/\\/g, '/')}`;
+    // Return file:// URL - this caused "not allowed to load local resource" errors
+    // return `file://${fullPath.replace(/\\/g, '/')}`;
+     // ✅ Return media:// URL instead of file://
+    // Extract just the filename from the path
+    const fileName = path.basename(relativePath);
+    return `media://${fileName}`;
   } catch (error) {
     console.error('Error getting media path:', error);
     return null;
@@ -544,8 +612,11 @@ console.log('Registered IPC handlers:', ipcMain.eventNames());
 
 
 
-// ✅ Add handler to get resources path
 ipcMain.handle('get-resources-path', async () => {
+  if (!RESOURCES_PATH) {
+    throw new Error('RESOURCES_PATH is not initialized');
+  }
+  console.log('📁 Returning RESOURCES_PATH:', RESOURCES_PATH);
   return RESOURCES_PATH;
 });
 
