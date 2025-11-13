@@ -491,6 +491,7 @@ button {
   text-align: center;
   min-width: 5px;
   min-height:5px;
+  height: auto;
 }
 
 

@@ -166,7 +166,14 @@ export default class MenuBuilder {
         y
       } = props;
 
-      Menu.buildFromTemplate([{
+      Menu.buildFromTemplate([
+        {
+          label: 'Inspect element',
+          click: () => {
+            this.mainWindow.webContents.inspectElement(x, y);
+          },
+        },
+        {
           label: 'Excuse me, what are you doing?',
 
         },

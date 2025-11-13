@@ -1,7 +1,7 @@
 
 
 # archive-6
-Based on Electron-react-Boilerplate with Dexie db.  
+This is a game. I am doing my best to make it work. 
 
 ## how to update the db scheme
 * get it working in AddEntryBit
@@ -10,13 +10,10 @@ Based on Electron-react-Boilerplate with Dexie db.
 * catagory drop down options in constants.ts
 
 
-pulled from index.ejs
-'''
-    <!-- <title><%= require(htmlWebpackPlugin.options.packageJson).name %> <%= require(htmlWebpackPlugin.options.packageJson).version %></title> -->
-'''
 
 ## put assets
-projects>assets(check this)
+projects>assets
+
 
 ## todo
 [x] Populate SingleItem from edit button
@@ -63,7 +60,7 @@ projects>assets(check this)
 Start the app in the `dev` environment:
 
 ```bash
-npm start
+npm run dev:electron
 ```
 
 ## Packaging for Production
@@ -71,5 +68,6 @@ npm start
 To package apps for the local platform:
 
 ```bash
+cd packages/electron
 npm run package
 ```

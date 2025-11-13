@@ -81,6 +81,25 @@ export function MediaUpload({ mediaFiles }) {
     }
   };
 
+  const selectFromGallery = async () => {
+    try {
+      const selectedMediaIds = await gameLogic.openMediaGallery();
+      if (selectedMediaIds && selectedMediaIds.length > 0) {
+        const newFiles = [...(files || []), ...selectedMediaIds];
+        setFiles(newFiles);
+        // Update the parent's mediaFiles array
+        if (mediaFiles) {
+          mediaFiles.length = 0; // Clear existing
+          mediaFiles.push(...newFiles); // Add selected files
+        }
+        setStatusMessage(`Selected ${selectedMediaIds.length} files from gallery.`);
+      }
+    } catch (error) {
+      console.error('Error selecting from gallery:', error);
+      setStatusMessage(`Error selecting from gallery: ${error.message}`);
+    }
+  }
+
   const handleImport = async (file) => {
     try {
       if (!file) throw new Error(`Only files can be dropped here`);
@@ -207,6 +226,13 @@ export function MediaUpload({ mediaFiles }) {
         onClick={() => document.getElementById('fileInput')?.click()}
       >
         Import Attachments
+      </Button>
+
+            <Button
+        className="btn-add-item"
+        onClick={selectFromGallery}
+      >
+        Select Attachments
       </Button>
     </div>
   );
