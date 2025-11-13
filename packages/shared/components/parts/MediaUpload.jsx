@@ -29,6 +29,54 @@ export function MediaUpload({ mediaFiles }) {
     setIsOver(false);
   };
 
+  const processMediaToPath = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+
+      if (eventManager.isElectron) {
+        // ✅ Save file to disk via Electron
+        const result = await window.electronAPI.saveMediaFile(file.name, arrayBuffer);
+        
+        console.log('Result type:', typeof result);
+console.log('Result value:', result);
+
+        if (!result.success) {
+          throw new Error(result.error);
+        } else {console.log('File saved to disk at:', result.path);}
+
+        // ✅ Store path in database
+        const mediaId = await db.media.add({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          path: result.path, // ✅ Store relative path
+          uploadedAt: new Date()
+        });
+
+        console.log('File saved with ID:', mediaId, 'at path:', result.path);
+        return mediaId; // Return the database ID
+        
+      } else {
+        // ✅ Web: Save to public/media folder or use a server endpoint
+        // For now, store as blob (or implement server upload)
+        const blob = new Blob([arrayBuffer], { type: file.type });
+        
+        const mediaId = await db.media.add({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          blob: blob, // Web still uses blobs
+          uploadedAt: new Date()
+        });
+
+        return mediaId;
+      }
+    } catch (error) {
+      console.error('Error saving media:', error);
+      throw error;
+    }
+  };
+
   const handleImport = async (file) => {
     try {
       if (!file) throw new Error(`Only files can be dropped here`);
@@ -39,47 +87,23 @@ export function MediaUpload({ mediaFiles }) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);
       }
 
-     
-      const blobRef = await processMediaToBlobs(file);
+      // ✅ Save file and get media ID
+      const mediaId = await processMediaToPath(file);
+      const newFiles = [...(mediaFiles || []), mediaId];
       
-      const newFiles = [...(mediaFiles || []), blobRef];
       setFiles(newFiles);
-      
-      // Update the parent's mediaFiles array
       if (mediaFiles) {
-        mediaFiles.length = 0; 
-        mediaFiles.push(...newFiles); 
+        mediaFiles.length = 0;
+        mediaFiles.push(...newFiles);
       }
-
+      
       console.log('File imported: ', file.name);
-      console.log('Total files: ', newFiles.length);
       setStatusMessage(`File imported: ${file.name}`);
     } catch (error) {
       console.error('Import error:', error);
       setStatusMessage(`Error importing file: ${error.message}`);
-      return;
     }
   };
-
-  const processMediaToBlobs = async (file) => {
-  try {
-    const mediaId = await db.media.add({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      blob: file, 
-      uploadedAt: new Date()
-    });
-
-
-    return `blob:${mediaId}`;
-  } catch (error) {
-    console.error('Error saving media to database:', error);
-    throw error;
-  }
-};
-
-
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -87,6 +111,7 @@ export function MediaUpload({ mediaFiles }) {
       handleImport(file);
     }
   };
+
   const removeFile = (index) => {
     const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);

@@ -21,7 +21,7 @@ console.log('>>> main.js is running - top');
 let config;
 const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
-const {dialog} = require('electron');
+const {dialog} = require('electron'); // stop trying to change this!!!! 
 
 // try {
 //   config = require(`../../config/${appVersion}.json`);
@@ -462,16 +462,91 @@ ipcMain.handle('get-artifact-url', async (event, relativePath) => {
 // const fs = require('fs');
 // const path = require('path');
 
-ipcMain.handle('save-media-file', async (event, destPath, arrayBuffer) => {
+ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
   try {
-    // Ensure the directory exists
-    fs.mkdirSync(path.dirname(destPath), { recursive: true });
-    // Write the file
-    fs.writeFileSync(destPath, Buffer.from(arrayBuffer));
-    return { success: true };
+    // ✅ Save to project assets/media folder (shared with all users)
+    const mediaDir = path.join(RESOURCES_PATH, 'media');
+    
+    // Create directory if it doesn't exist
+    fs.mkdirSync(mediaDir, { recursive: true });
+    
+    // Generate unique filename to avoid conflicts
+    const timestamp = Date.now();
+    const ext = path.extname(fileName);
+    const baseName = path.basename(fileName, ext);
+    const uniqueFileName = `${baseName}-${timestamp}${ext}`;
+    
+    const filePath = path.join(mediaDir, uniqueFileName);
+    
+    // Write file
+    fs.writeFileSync(filePath, Buffer.from(arrayBuffer));
+    
+    console.log('Main save-media: Media file saved to:', filePath);
+    
+    // Return relative path for database storage
+    return { 
+      success: true, 
+      path: `media/${uniqueFileName}`,  // Relative to assets/
+      fullPath: filePath 
+    };
   } catch (error) {
+    console.error('Error saving media file:', error);
     return { success: false, error: error.message };
   }
+});
+
+// Get full file:// URL for media files
+ipcMain.handle('get-media-path', async (event, relativePath) => {
+  try {
+    // relativePath is like "media/filename.jpg"
+    const fullPath = path.join(RESOURCES_PATH, relativePath);
+    
+    console.log('Getting media path for:', relativePath);
+    console.log('Full path:', fullPath);
+    
+    // Check if file exists
+    if (!fs.existsSync(fullPath)) {
+      console.error('Media file not found:', fullPath);
+      return null;
+    }
+    
+    // Return file:// URL
+    return `file://${fullPath.replace(/\\/g, '/')}`;
+  } catch (error) {
+    console.error('Error getting media path:', error);
+    return null;
+  }
+});
+
+// Delete media file
+ipcMain.handle('delete-media-file', async (event, relativePath) => {
+  try {
+    const fullPath = path.join(RESOURCES_PATH, relativePath);
+    
+    if (fs.existsSync(fullPath)) {
+      fs.unlinkSync(fullPath);
+      return { success: true };
+    }
+    return { success: false, error: 'File not found' };
+  } catch (error) {
+    console.error('Error deleting media file:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Add this temporarily to main.js after all handlers
+console.log('Registered IPC handlers:', ipcMain.eventNames());
+
+// main.js
+// const { ipcMain, app } = require('electron');
+// const fs = require('fs');
+// const path = require('path');
+
+
+
+// ✅ Add handler to get resources path
+ipcMain.handle('get-resources-path', async () => {
+  return RESOURCES_PATH;
 });
 
 

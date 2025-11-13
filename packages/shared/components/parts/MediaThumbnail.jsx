@@ -1,143 +1,80 @@
 import { DragEvent, useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import { db } from '@utils/db'; // import the database
+import { eventManager} from '@utils/events';
 
 export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
-  const [blobUrl, setBlobUrl] = useState(null);
-  const [fileName, setfileName] = useState("");
-   const [fileSize, setfileSize] = useState();
-   const [fileType, setfileType] = useState("");
-
-  //  const [fileType, setfileType] = useState("");
+  const [mediaUrl, setMediaUrl] = useState(null);
+  const [fileName, setFileName] = useState('');
+  const [fileSize, setFileSize] = useState(0);
+  const [fileType, setFileType] = useState('');
 
   useEffect(() => {
-    
-    const loadBlob = async () => {
-      if (typeof fileRef === 'string' && fileRef.startsWith('blob:')) {
-        //  Extract ID from blob reference
-        const mediaId = parseInt(fileRef.replace('blob:', ''));
-        const mediaFile = await db.media.get(mediaId);
+    const loadMedia = async () => {
+      if (typeof fileRef === 'number') {
+        // ✅ It's a media ID, load from database
+        const mediaFile = await db.media.get(fileRef);
         
-        if (mediaFile && mediaFile.blob) {
-          const url = URL.createObjectURL(mediaFile.blob);
-          setBlobUrl(url);
-          setfileName(mediaFile.name);
-          setfileSize(mediaFile.size);
-          setfileType(mediaFile.type);
-          console.log(mediaId.size)
+        if (mediaFile) {
+          setFileName(mediaFile.name);
+          setFileSize(mediaFile.size);
+          setFileType(mediaFile.type);
+
+          if (mediaFile.path && eventManager.isElectron) {
+            // ✅ Electron: Get file:// URL from path
+            const url = await window.electronAPI.getMediaPath(mediaFile.path);
+            setMediaUrl(url);
+          } else if (mediaFile.blob) {
+            // ✅ Web: Create blob URL
+            const url = URL.createObjectURL(mediaFile.blob);
+            setMediaUrl(url);
+          }
         }
       }
     };
 
-    loadBlob();
+    loadMedia();
 
-    // Cleanup blob URL on unmount
     return () => {
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
+      if (mediaUrl && mediaUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(mediaUrl);
       }
     };
   }, [fileRef]);
 
+  if (!mediaUrl) {
+    return <div>No mediaUrl. Loading media...</div>;
+  }
 
-
-  if (fileRef instanceof File) {
+  if (fileType?.startsWith('video/')) {
     return (
       <div className="media-thumbnail">
-        fileref
-        <img
-          src={URL.createObjectURL(fileRef)}
-          alt={fileRef.name}
-          style={{ width: '100%', height: 'auto' }}
-        /> 
+        <video controls style={{ width: '100%', maxWidth: '500px' }}>
+          <source src={mediaUrl} type={fileType} />
+        </video>
         <span className="image-subinfo">
-          {fileRef.name} ({(fileRef.size / 1024).toFixed(2)} KB)
-        </span> 
-
-       </div>
+          {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+        </span>
+        {onRemove && (
+          <Button className="remove-button" onClick={onRemove}>×</Button>
+        )}
+      </div>
     );
   }
 
-  if (blobUrl) {
-    
-    if (fileType?.startsWith('video/')) {
-      return (
-        <div className="media media-video">
-          <video controls style={{ width: '100%', maxWidth: {maxWidth}, height: 'auto' }}>
-            <source src={blobUrl}  />
-            Your browser does not support the video tag.
-          </video>
-          <span className="image-subinfo">
-            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-          </span>
-        </div>
-      );
-    } else if (fileType?.startsWith('image/')) {
-      return (
-        <div className="media media-img">
-          <img src={blobUrl} alt={fileName} style={{ width: '100%', height: 'auto' }} />
-          <span className="image-subinfo">
-            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-          </span>
-        </div>
-      );
-     } else if (fileType?.startsWith('application/pdf')) {
-        return (
-        <div className="media media-pdf">
-          <object data={blobUrl} type="application/pdf" style={{ width: '100%', height: '500px' }}>
-            <p>PDF cannot be displayed.</p>
-          </object>
-
-          
-          <span className="image-subinfo">
-            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-          </span>
-        </div>
-      );
-
-       } else if (fileType?.startsWith('audio/')) {
-          return (
-        <div className="media media-audio">
-          <audio controls style={{ width: '100%'}}>
-            <source src={blobUrl}  />
-            Your browser does not support the audio tag.
-          </audio>
-          <br></br>
-          <span className="image-subinfo">
-            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-          </span>
-        </div>
-      );
-    } 
-    
-    
-    else {
-      return (
-        <div className="media">
-          <p>Unsupported file type: {fileType}</p>
-          <span className="image-subinfo">
-            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-          </span>
-        </div>
-      );
-    }
+  if (fileType?.startsWith('image/')) {
+    return (
+      <div className="media-thumbnail">
+        <img src={mediaUrl} alt={fileName} style={{ width: '100%' }} />
+        <span className="image-subinfo">
+          {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+        </span>
+        {onRemove && (
+          <Button className="remove-button" onClick={onRemove}>×</Button>
+        )}
+      </div>
+    );
   }
 
-  return (
-    <div>
-       
-      <div style={{
-        width: '200px',
-        height: '150px',
-        backgroundColor: '#f0f0f0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '1px dashed #ccc'
-      }}>
-        <span>Loading...</span>
-      </div>
-
-    </div>
-  );
+  return <div>Unsupported file type: {fileType}</div>;
 };

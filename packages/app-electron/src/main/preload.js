@@ -36,6 +36,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // readAssetFile: (relativePath) =>
   //  ipcRenderer.invoke('read-asset-file', relativePath),
   resizeToDefault: () => ipcRenderer.send('resize-to-default'),
+  getResourcesPath: () => 
+    ipcRenderer.invoke('get-resources-path'),
   getAssetPath: (relativePath) => ipcRenderer.invoke('get-asset-path', relativePath),
   readAssetFile: (relativePath) => ipcRenderer.invoke('read-asset-file', relativePath),
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
@@ -44,8 +46,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     showAlert: (message) => ipcRenderer.invoke('show-alert', message),
     showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
     getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
-    saveMediaFile: (destPath, arrayBuffer) =>
-    ipcRenderer.invoke('save-media-file', destPath, arrayBuffer),
+    saveMediaFile: (fileName, arrayBuffer) =>
+    ipcRenderer.invoke('save-media-file', fileName, arrayBuffer),
+  getMediaPath: (relativePath) => 
+    ipcRenderer.invoke('get-media-path', relativePath),
+  deleteMediaFile: (relativePath) => 
+    ipcRenderer.invoke('delete-media-file', relativePath),
 
     // Add IPC listener methods
     on: (channel, func) => {

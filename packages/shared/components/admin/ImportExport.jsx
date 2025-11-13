@@ -331,7 +331,7 @@ const DataState = () => {
             </button>
             </section>
 
-            <section class="tabs">
+            <section className="tabs">
   <menu role="tablist" aria-label="Tabs Template">
     <button role="tab" aria-controls="tab-A" aria-selected="true">Database Info</button>
     <button role="tab" aria-controls="tab-D">Troubleshooting</button>

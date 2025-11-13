@@ -286,7 +286,7 @@ useEffect(() => {
                                           <td>{item.displayDate ? new Date(item.displayDate).toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' }) : 'No Date'}</td>
                     </td>
                    < td width="50px" data-label="date">
-                                          <td>{item.date ? new Date(item.date).toLocaleDateString('en-US') : 'No Date'}</td>
+                                          {item.date ? new Date(item.date).toLocaleDateString('en-US') : 'No Date'}
                     </td>
                 <td data-label="hex">
       {editingHex === item.id ? (
