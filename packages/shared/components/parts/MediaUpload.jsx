@@ -96,7 +96,7 @@ export function MediaUpload({ mediaFiles }) {
 
        //console.log('handleimport hit'); // needed this to hit process media path?! never mind, stopped working. 
 
-      const maxSizeInMB = 50;
+      const maxSizeInMB = 500;
       const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
       if (file.size > maxSizeInBytes) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);

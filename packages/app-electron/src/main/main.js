@@ -44,6 +44,20 @@ let RESOURCES_PATH;
 
 let mainWindow = null;
 
+// ✅ This MUST come before app.whenReady()
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'media',
+    privileges: {
+      secure: true,
+      supportFetchAPI: true,
+      bypassCSP: true,
+      stream: true,
+      corsEnabled: true  // ✅ Add this
+    }
+  }
+]);
+
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
@@ -166,7 +180,11 @@ const createWindow = async () => {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, preloadPath), // ../../.erb/dll/preload.js
-
+    sandbox: false,  // ✅ Make sure this is false
+    webSecurity: true,
+    allowRunningInsecureContent: false,
+    experimentalFeatures: true,  // ✅ Add this
+    enableRemoteModule: false
     },
   });
   console.log('main - dirname  -----------' +__dirname);
@@ -258,18 +276,36 @@ app
  console.log('📁 RESOURCES_PATH:', RESOURCES_PATH);
   
 
-  // ✅ Register custom protocol for serving media files
-  protocol.registerFileProtocol('media', (request, callback) => {
-    // Remove 'media://' from the URL
-    const url = request.url.substr(8); // Remove 'media://'
+
+// Replace registerStreamProtocol with this:
+protocol.registerFileProtocol('media', (request, callback) => {
+  try {
+    const url = request.url.replace('media://', '');
     const filePath = path.join(RESOURCES_PATH, 'media', url);
     
-    console.log('📁 Serving media file:', filePath);
+          console.log('📁 File protocol request');
+      console.log('📁 URL:', request.url);
+      console.log('📁 Path:', filePath);
+      console.log('📁 Exists:', fs.existsSync(filePath));
     
-    callback({ path: filePath });
-  });
-
-
+    if (!fs.existsSync(filePath)) {
+      console.error('❌ File not found');
+      return callback({ error: -6 }); // FILE_NOT_FOUND
+    }
+    
+     // ✅ Normalize path for Windows - convert backslashes to forward slashes
+    const normalizedPath = filePath.replace(/\\/g, '/');
+    
+    console.log('✅ Serving Normalized file file:', normalizedPath);
+    
+    // Return normalized path
+    callback({ path: normalizedPath });
+    
+  } catch (error) {
+    console.error('❌ Protocol error:', error);
+    callback({ error: -2 }); // FAILED
+  }
+});
 
 
     createWindow();
