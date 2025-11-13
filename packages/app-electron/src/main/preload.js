@@ -54,8 +54,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     saveMediaFile: (fileName, arrayBuffer) =>
     ipcRenderer.invoke('save-media-file', fileName, arrayBuffer),
-
     
+  getMediaData: (relativePath) => ipcRenderer.invoke('get-media-data', relativePath),
+
+
   getMediaPath: (relativePath) => 
     ipcRenderer.invoke('get-media-path', relativePath),
   deleteMediaFile: (relativePath) => 

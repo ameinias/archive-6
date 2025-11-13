@@ -44,25 +44,27 @@ let RESOURCES_PATH;
 
 let mainWindow = null;
 
-// ✅ This MUST come before app.whenReady()
-protocol.registerSchemesAsPrivileged([
-  {
-    scheme: 'media',
-    privileges: {
-      secure: true,
-      supportFetchAPI: true,
-      bypassCSP: true,
-      stream: true,
-      corsEnabled: true  // ✅ Add this
-    }
-  }
-]);
+// // ✅ THIS MUST BE FIRST - Before app.whenReady()
+// protocol.registerSchemesAsPrivileged([
+//   {
+//     scheme: 'media',
+//     privileges: {
+//       standard: true,           // ✅ Add this - allows it to be treated like http/https
+//       secure: true,
+//       supportFetchAPI: true,
+//       bypassCSP: true,
+//       corsEnabled: true,
+//       allowServiceWorkers: false,
+//       stream: false             // ✅ Changed to false since we're using buffer
+//     }
+//   }
+// ]);
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+// ipcMain.on('ipc-example', async (event, arg) => {
+//   const msgTemplate = (pingPong) => `IPC test: ${pingPong}`;
+//   console.log(msgTemplate(arg));
+//   event.reply('ipc-example', msgTemplate('pong'));
+// });
 
 ipcMain.handle('show-alert', async (event, str) => {
   const options = {
@@ -89,6 +91,56 @@ ipcMain.handle('show-confirm', async (event, str) => {
   return dialog.showMessageBoxSync(null, options);
 });
 
+// Remove or comment out the protocol registration stuff for now
+// We'll use IPC instead
+
+ipcMain.handle('get-media-data', async (event, relativePath) => {
+  try {
+    const fileName = relativePath.replace('media/', '');
+    const filePath = path.join(RESOURCES_PATH, 'media', fileName);
+    
+    console.log('📁 IPC: get-media-data');
+    console.log('📁 File:', filePath);
+    console.log('📁 Exists:', fs.existsSync(filePath));
+    
+    if (!fs.existsSync(filePath)) {
+      throw new Error('File not found');
+    }
+    
+    // Read file as base64
+    const buffer = fs.readFileSync(filePath);
+    const base64 = buffer.toString('base64');
+    
+    // Get MIME type
+    const ext = path.extname(filePath).toLowerCase();
+    const mimeTypes = {
+      '.mp4': 'video/mp4',
+      '.webm': 'video/webm',
+      '.mov': 'video/mp4',
+      '.ogg': 'audio/ogg',
+      '.mp3': 'audio/mpeg',
+      '.wav': 'audio/wav',
+      '.m4a': 'audio/mp4',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.gif': 'image/gif'
+    };
+    const mimeType = mimeTypes[ext] || 'application/octet-stream';
+    
+    console.log('✅ Returning base64 data:', base64.length, 'chars');
+    console.log('✅ MIME type:', mimeType);
+    
+    return {
+      data: base64,
+      mimeType: mimeType
+    };
+    
+  } catch (error) {
+    console.error('❌ Error loading media:', error);
+    throw error;
+  }
+});
 
 
 ipcMain.on('resize-to-default', () => {
@@ -275,38 +327,58 @@ app
 
  console.log('📁 RESOURCES_PATH:', RESOURCES_PATH);
   
-
-
-// Replace registerStreamProtocol with this:
-protocol.registerFileProtocol('media', (request, callback) => {
-  try {
-    const url = request.url.replace('media://', '');
-    const filePath = path.join(RESOURCES_PATH, 'media', url);
-    
-          console.log('📁 File protocol request');
-      console.log('📁 URL:', request.url);
-      console.log('📁 Path:', filePath);
-      console.log('📁 Exists:', fs.existsSync(filePath));
-    
-    if (!fs.existsSync(filePath)) {
-      console.error('❌ File not found');
-      return callback({ error: -6 }); // FILE_NOT_FOUND
-    }
-    
-     // ✅ Normalize path for Windows - convert backslashes to forward slashes
-    const normalizedPath = filePath.replace(/\\/g, '/');
-    
-    console.log('✅ Serving Normalized file file:', normalizedPath);
-    
-    // Return normalized path
-    callback({ path: normalizedPath });
-    
-  } catch (error) {
-    console.error('❌ Protocol error:', error);
-    callback({ error: -2 }); // FAILED
-  }
-});
-
+  // // ✅ Use registerBufferProtocol instead
+  // protocol.registerBufferProtocol('media', (request, callback) => {
+  //   try {
+  //     const url = request.url.replace('media://', '');
+  //     const filePath = path.join(RESOURCES_PATH, 'media', url);
+      
+  //     console.log('📁 Buffer protocol request');
+  //     console.log('📁 URL:', request.url);
+  //     console.log('📁 Path:', filePath);
+  //     console.log('📁 Exists:', fs.existsSync(filePath));
+      
+  //     if (!fs.existsSync(filePath)) {
+  //       console.error('❌ File not found');
+  //       return callback({ error: -6 });
+  //     }
+      
+  //     // Get MIME type
+  //     const ext = path.extname(filePath).toLowerCase();
+  //     const mimeTypes = {
+  //       '.mp4': 'video/mp4',
+  //       '.webm': 'video/webm',
+  //       '.mov': 'video/mp4',
+  //       '.ogg': 'audio/ogg',
+  //       '.mp3': 'audio/mpeg',
+  //       '.wav': 'audio/wav',
+  //       '.m4a': 'audio/mp4',
+  //       '.png': 'image/png',
+  //       '.jpg': 'image/jpeg',
+  //       '.jpeg': 'image/jpeg',
+  //       '.gif': 'image/gif',
+  //       '.pdf': 'application/pdf'
+  //     };
+  //     const mimeType = mimeTypes[ext] || 'application/octet-stream';
+      
+  //     console.log('📁 MIME type:', mimeType);
+      
+  //     // Read file as buffer
+  //     const buffer = fs.readFileSync(filePath);
+  //     console.log('✅ Buffer size:', buffer.length, 'bytes');
+      
+  //     // Return buffer with MIME type
+  //     callback({
+  //       mimeType: mimeType,
+  //       data: buffer
+  //     });
+      
+  //   } catch (error) {
+  //     console.error('❌ Protocol error:', error);
+  //     console.error('Stack:', error.stack);
+  //     callback({ error: -2 });
+  //   }
+  // });
 
     createWindow();
     app.on('activate', () => {
