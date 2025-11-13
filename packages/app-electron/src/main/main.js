@@ -353,6 +353,43 @@ ipcMain.handle('read-asset-file', async (event, relativePath) => {
   }
 });
 
+
+// Add IPC handler to clear all data
+ipcMain.handle('clear-all-data', async () => {
+  try {
+    const session = mainWindow.webContents.session;
+    
+    // Clear all caches
+    await session.clearCache();
+    await session.clearStorageData();
+    
+    // Clear IndexedDB
+    const userDataPath = app.getPath('userData');
+    const fs = require('fs');
+    const path = require('path');
+
+    
+    // // Delete media files
+    // const mediaPath = path.join(userDataPath, 'assets', 'media');
+    // if (fs.existsSync(mediaPath)) {
+    //   fs.rmSync(mediaPath, { recursive: true, force: true });
+    // }
+    
+    // Delete database
+    const dbPath = path.join(userDataPath, 'IndexedDB');
+    if (fs.existsSync(dbPath)) {
+      fs.rmSync(dbPath, { recursive: true, force: true });
+    }
+    
+    console.log('✅ All data cleared');
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error clearing data:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+
 // copy bundled database to AppData on first run
 ipcMain.handle('setup-user-database', async () => {
   try {
@@ -511,6 +548,9 @@ if (!fs.existsSync(exportDir)) {
     return { success: false, error: error.message };
   }
 });
+
+
+
 
 // Get file URL for display
 ipcMain.handle('get-artifact-url', async (event, relativePath) => {

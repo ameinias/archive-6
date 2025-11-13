@@ -421,6 +421,15 @@ const DataState = () => {
               <button className="db-btn" onClick={clearDatabase}>
                 Clear Database
               </button>
+             
+<button onClick={async () => {
+  if (eventManager.showConfirm('Clear all data? This cannot be undone!')) {
+    await window.electronAPI.clearAllData();
+    window.location.reload();
+  }
+}}>
+  Clear All App Data
+</button>
           </div>
           </div>
           </section>

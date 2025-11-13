@@ -51,6 +51,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
      saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
     getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
 
+      clearAllData: () => ipcRenderer.invoke('clear-all-data'),
 
     saveMediaFile: (fileName, arrayBuffer) =>
     ipcRenderer.invoke('save-media-file', fileName, arrayBuffer),
