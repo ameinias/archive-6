@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { db } from '@utils/db';
 import { eventManager } from '@utils/events';
 import { Link } from 'react-router-dom';
+import { PdfViewer } from './pdfVeiwer';
 
 export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
   const [mediaDataUrl, setMediaDataUrl] = useState(null);
@@ -13,38 +14,36 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
 
   useEffect(() => {
     const loadMedia = async () => {
-      console.log('🎬 MediaThumbnail loadMedia called');
-      console.log('📦 fileRef:', fileRef);
+
       
       try {
         // Case 1: fileRef is a number (database ID)
         if (typeof fileRef === 'number') {
-          console.log('📁 Loading from database, ID:', fileRef);
+
           const mediaFile = await db.media.get(fileRef);
           
           if (mediaFile) {
-            console.log('📁 File details:', {
-              name: mediaFile.name,
-              type: mediaFile.type,
-              size: mediaFile.size,
-              path: mediaFile.path
-            });
+            // console.log(' File details:', {
+            //   name: mediaFile.name,
+            //   type: mediaFile.type,
+            //   size: mediaFile.size,
+            //   path: mediaFile.path
+            // });
 
             setFileName(mediaFile.name);
             setFileSize(mediaFile.size);
             setFileType(mediaFile.type);
 
-            // ✅ Electron: Load via IPC
+            //  Electron: Load via IPC
             if (mediaFile.path && eventManager.isElectron && window.electronAPI?.getMediaData) {
-              console.log('🚀 Loading via Electron IPC:', mediaFile.path);
               const { data, mimeType } = await window.electronAPI.getMediaData(mediaFile.path);
               const dataUrl = `data:${mimeType};base64,${data}`;
               setMediaDataUrl(dataUrl);
-              console.log('✅ Media loaded as data URL');
+
             } 
             // Web: use blob
             else if (mediaFile.blob) {
-              console.log('🌐 Loading blob for web');
+
               const url = URL.createObjectURL(mediaFile.blob);
               setMediaDataUrl(url);
             }
@@ -76,9 +75,9 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
     };
   }, [fileRef]);
 
-  console.log('🔍 Render state:', { loading, mediaDataUrl: mediaDataUrl ? 'SET' : 'NULL', fileType, fileName });
 
-  // Loading state
+
+  // Loading state fs
   if (loading) {
     return (
       <div style={{
@@ -113,9 +112,6 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
             height: 'auto', 
             backgroundColor: '#000' 
           }}
-          onLoadStart={() => console.log('🔄 Video load started')}
-          onLoadedMetadata={() => console.log('✅ Video metadata loaded')}
-          onCanPlay={() => console.log('✅ Video can play')}
           onError={(e) => {
             console.error('❌ Video error:', {
               error: e.target.error,
@@ -143,8 +139,6 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
           controls
           preload="metadata"
           style={{ width: '100%', maxWidth: maxWidth || '500px' }}
-          onLoadStart={() => console.log('🔄 Audio load started')}
-          onCanPlay={() => console.log('✅ Audio can play')}
           onError={(e) => {
             console.error('❌ Audio error:', {
               error: e.target.error,
@@ -179,27 +173,26 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
       </div>
     );
   }
-
-  // PDF
-  if (fileType === 'application/pdf') {
-    return (
-      <div className="media media-pdf">
-        <object 
-          data={mediaDataUrl} 
-          type="application/pdf" 
-          style={{ width: '100%', height: '500px' }}
-        >
-          <p>PDF cannot be displayed.</p>
-          <a href={mediaDataUrl} target="_blank" rel="noopener noreferrer">
-            Open PDF
-          </a>
-        </object>
-        <span className="image-subinfo">
-          {fileName} ({(fileSize / 1024 / 1024).toFixed(2)} MB)
-        </span>
-      </div>
-    );
-  }
+  
+  
+  //pdf
+// PDF - Simple version without pdf.js
+if (fileType === 'application/pdf') {
+  return (
+    <div className="media media-pdf">
+                  <embed
+              src={mediaDataUrl}
+              type="application/pdf"
+              style={{ 
+                width: '100%', 
+                height: '600px',
+                border: '1px solid #dee2e6',
+                borderRadius: '4px'
+              }}
+            />
+    </div>
+  );
+}
 
   // Unsupported
   return (

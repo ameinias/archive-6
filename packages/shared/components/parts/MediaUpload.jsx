@@ -32,9 +32,6 @@ export function MediaUpload({ mediaFiles }) {
   const processMediaToPath = async (file) => {
     try {
 
-      console.log('hit processMediaToPath', file.name);
-
-      // return;
 
       const arrayBuffer = await file.arrayBuffer();
 
@@ -42,16 +39,10 @@ export function MediaUpload({ mediaFiles }) {
       if (eventManager.isElectron) {
         // Save file to disk 
 
-        console.log('hit after iselectron', file.name);
-
         const result = await window.electronAPI.saveMediaFile(file.name, arrayBuffer);
 
-        console.log('hit after saveMediafile', file.name);
-        // return;
 
 
-        console.log('Result type:', typeof result);
-        console.log('Result value:', result);
 
         if (!result.success) {
           throw new Error(result.error);

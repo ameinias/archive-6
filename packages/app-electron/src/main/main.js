@@ -44,27 +44,6 @@ let RESOURCES_PATH;
 
 let mainWindow = null;
 
-// // ✅ THIS MUST BE FIRST - Before app.whenReady()
-// protocol.registerSchemesAsPrivileged([
-//   {
-//     scheme: 'media',
-//     privileges: {
-//       standard: true,           // ✅ Add this - allows it to be treated like http/https
-//       secure: true,
-//       supportFetchAPI: true,
-//       bypassCSP: true,
-//       corsEnabled: true,
-//       allowServiceWorkers: false,
-//       stream: false             // ✅ Changed to false since we're using buffer
-//     }
-//   }
-// ]);
-
-// ipcMain.on('ipc-example', async (event, arg) => {
-//   const msgTemplate = (pingPong) => `IPC test: ${pingPong}`;
-//   console.log(msgTemplate(arg));
-//   event.reply('ipc-example', msgTemplate('pong'));
-// });
 
 ipcMain.handle('show-alert', async (event, str) => {
   const options = {
@@ -99,9 +78,7 @@ ipcMain.handle('get-media-data', async (event, relativePath) => {
     const fileName = relativePath.replace('media/', '');
     const filePath = path.join(RESOURCES_PATH, 'media', fileName);
     
-    console.log('📁 IPC: get-media-data');
-    console.log('📁 File:', filePath);
-    console.log('📁 Exists:', fs.existsSync(filePath));
+
     
     if (!fs.existsSync(filePath)) {
       throw new Error('File not found');
@@ -128,8 +105,7 @@ ipcMain.handle('get-media-data', async (event, relativePath) => {
     };
     const mimeType = mimeTypes[ext] || 'application/octet-stream';
     
-    console.log('✅ Returning base64 data:', base64.length, 'chars');
-    console.log('✅ MIME type:', mimeType);
+
     
     return {
       data: base64,
@@ -137,7 +113,7 @@ ipcMain.handle('get-media-data', async (event, relativePath) => {
     };
     
   } catch (error) {
-    console.error('❌ Error loading media:', error);
+    console.error(' Error loading media:', error);
     throw error;
   }
 });
@@ -232,10 +208,10 @@ const createWindow = async () => {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, preloadPath), // ../../.erb/dll/preload.js
-    sandbox: false,  // ✅ Make sure this is false
+    sandbox: false,  
     webSecurity: true,
     allowRunningInsecureContent: false,
-    experimentalFeatures: true,  // ✅ Add this
+    experimentalFeatures: true,  
     enableRemoteModule: false
     },
   });
@@ -325,60 +301,8 @@ app
     : path.join(__dirname, '../../assets');
 
 
- console.log('📁 RESOURCES_PATH:', RESOURCES_PATH);
+//  console.log('RESOURCES_PATH:', RESOURCES_PATH);
   
-  // // ✅ Use registerBufferProtocol instead
-  // protocol.registerBufferProtocol('media', (request, callback) => {
-  //   try {
-  //     const url = request.url.replace('media://', '');
-  //     const filePath = path.join(RESOURCES_PATH, 'media', url);
-      
-  //     console.log('📁 Buffer protocol request');
-  //     console.log('📁 URL:', request.url);
-  //     console.log('📁 Path:', filePath);
-  //     console.log('📁 Exists:', fs.existsSync(filePath));
-      
-  //     if (!fs.existsSync(filePath)) {
-  //       console.error('❌ File not found');
-  //       return callback({ error: -6 });
-  //     }
-      
-  //     // Get MIME type
-  //     const ext = path.extname(filePath).toLowerCase();
-  //     const mimeTypes = {
-  //       '.mp4': 'video/mp4',
-  //       '.webm': 'video/webm',
-  //       '.mov': 'video/mp4',
-  //       '.ogg': 'audio/ogg',
-  //       '.mp3': 'audio/mpeg',
-  //       '.wav': 'audio/wav',
-  //       '.m4a': 'audio/mp4',
-  //       '.png': 'image/png',
-  //       '.jpg': 'image/jpeg',
-  //       '.jpeg': 'image/jpeg',
-  //       '.gif': 'image/gif',
-  //       '.pdf': 'application/pdf'
-  //     };
-  //     const mimeType = mimeTypes[ext] || 'application/octet-stream';
-      
-  //     console.log('📁 MIME type:', mimeType);
-      
-  //     // Read file as buffer
-  //     const buffer = fs.readFileSync(filePath);
-  //     console.log('✅ Buffer size:', buffer.length, 'bytes');
-      
-  //     // Return buffer with MIME type
-  //     callback({
-  //       mimeType: mimeType,
-  //       data: buffer
-  //     });
-      
-  //   } catch (error) {
-  //     console.error('❌ Protocol error:', error);
-  //     console.error('Stack:', error.stack);
-  //     callback({ error: -2 });
-  //   }
-  // });
 
     createWindow();
     app.on('activate', () => {
@@ -619,10 +543,9 @@ ipcMain.handle('get-artifact-url', async (event, relativePath) => {
 
 ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
   try {
-        console.log('📁 Main save-media: Received request to save file:', fileName);
-    console.log('📁 RESOURCES_PATH:', RESOURCES_PATH);
 
-        // ✅ Check if RESOURCES_PATH is defined
+
+
     if (!RESOURCES_PATH) {
       throw new Error('RESOURCES_PATH is not initialized');
     }
@@ -682,9 +605,7 @@ ipcMain.handle('get-media-path', async (event, relativePath) => {
       return null;
     }
     
-    // Return file:// URL - this caused "not allowed to load local resource" errors
-    // return `file://${fullPath.replace(/\\/g, '/')}`;
-     // ✅ Return media:// URL instead of file://
+
     // Extract just the filename from the path
     const fileName = path.basename(relativePath);
     return `media://${fileName}`;
