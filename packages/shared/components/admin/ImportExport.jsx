@@ -28,6 +28,68 @@ function ImportExport() {
     console.log('This feature is not hooked up yet. Please check back later.');
   };
 
+const ImportDI = async () => {
+  try {
+    setStatusMessage('Loading bundled database...');
+    
+    // Read the bundled file
+    const fileContents = await eventManager.readBundledFile('dexie-import.json');
+    
+ 
+    
+    // Confirm before replacing
+    if (!await eventManager.showConfirm(
+      'This will replace your current database with the default bundled version. Continue?'
+    )) {
+      setStatusMessage('Import cancelled');
+      return;
+    }
+    
+    // Convert string to Blob (same as File object)
+   const blob = new Blob([fileContents], { type: 'application/json' });
+
+      console.log('Read bundled database file, length:', blob.length);
+    
+    // Close current database
+    await db.close();
+    
+    // Delete current database
+    await db.delete();
+    
+    // ✅ Use Dexie.import instead of dbHelpers.importFromBlob
+    const importedDb = await Dexie.import(blob, {
+      progressCallback: (progress) => {
+        console.log(
+          `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
+        );
+        setStatusMessage(
+          `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
+        );
+      },
+    });
+    
+    console.log('✅ Bundled database loaded successfully');
+    setStatusMessage('Database reset to default version successfully!');
+    
+    // Reopen database
+    await db.open();
+    
+    // Reload page to reflect changes
+    window.location.reload();
+    
+  } catch (error) {
+    console.error('❌ Error loading bundled database:', error);
+    setStatusMessage(`Error: ${error.message}`);
+    
+    // Try to reopen database
+    try {
+      await db.open();
+    } catch (reopenError) {
+      console.error('Failed to reopen database:', reopenError);
+    }
+  }
+};
+  
 
   // this function fakes a bunch of clicking and interaction. could be useful later for database ghosts.
   const handleExport = async () => {
@@ -234,6 +296,8 @@ function ImportExport() {
       if (!file) throw new Error(`Only files can be dropped here`);
       console.log('Importing ' + file.name);
 
+      console.log('Read imported database file, length:', file.length);
+
       // Close the current database
       await db.close();
 
@@ -256,6 +320,10 @@ function ImportExport() {
 
       // Reopen the original database to refresh it
       await db.open();
+
+      // window.location.reload();
+
+
     } catch (error) {
       console.error('Import error:', error);
       // Try to reopen the database even if import failed
@@ -385,6 +453,10 @@ const DataState = () => {
 
               <button className="db-btn" onClick={handleCSVExport}>
                 Export Database - CSV
+              </button>
+
+                            <button className="db-btn" onClick={ImportDI}>
+                Import DB from DI
               </button>
 
             </div>

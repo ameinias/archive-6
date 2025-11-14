@@ -42,6 +42,12 @@ db.version(4).stores({
    media: '++id, name, type, size, path, uploadedAt'
 });
 
+db.version(4.5).stores({
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, availableOnStart, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', // Fixed spelling and added parentId index
+   media: '++id, name, type, size, path, uploadedAt'
+});
+
 /*
 //  BETTER: Use populate event instead of ready
 db.on('populate', async () => {
@@ -219,6 +225,8 @@ export const saveAsDefaultDatabase = async () => {
 export const newGame = async () => {
   try {
     // called main.js to set up the database in AppData
+
+    // takes resources db to appdata db
     const userDbPath = await eventManager.setupUserDatabase();
 
 

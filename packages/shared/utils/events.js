@@ -56,6 +56,34 @@ class EventManager {
     }
   }
 
+  async readBundledFile(fileName = 'dexie-import.json') {
+    console.log('📁 readBundledFile called with:', fileName);
+    
+    if (this.isElectron && window.electronAPI?.readBundledFile) {
+      try {
+        const result = await window.electronAPI.readBundledFile(fileName);
+        console.log('✅ readBundledFile result:', result);
+        
+        if (result.success) {
+          return result.data;
+        } else {
+          throw new Error(result.error || 'Failed to read bundle file');
+        }
+      } catch (error) {
+        console.error('❌ Error in readBundledFile:', error);
+        throw error;
+      }
+    } else {
+      // Web fallback - fetch from public folder
+      const response = await fetch(`/databases/${fileName}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${fileName}`);
+      }
+      return await response.text();
+    }
+  }
+
+
   readAssetFile(path) {
     if (this.isElectron) {
       return window.electronAPI.readAssetFile(path);
@@ -76,7 +104,7 @@ class EventManager {
     if (this.isElectron) {
       return window.electronAPI.getAssetPath(path);
     } else {
-      return windiow.getAssetPath(path);
+      return window.getAssetPath(path);
     }
   }
 

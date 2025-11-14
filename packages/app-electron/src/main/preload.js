@@ -38,8 +38,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
   resizeToDefault: () => ipcRenderer.send('resize-to-default'),
   getResourcesPath: () => 
     ipcRenderer.invoke('get-resources-path'),
+
   getAssetPath: (relativePath) => ipcRenderer.invoke('get-asset-path', relativePath),
+
+  // Reads from AppData
   readAssetFile: (relativePath) => ipcRenderer.invoke('read-asset-file', relativePath),
+
+  // reads from bundle 
+    readBundledFile: (fileName) => ipcRenderer.invoke('read-bundled-file', fileName),
+
+  // Copies from Resources to AppData
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
   // saves default database to app data
   saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content), 

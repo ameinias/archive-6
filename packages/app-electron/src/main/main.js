@@ -381,6 +381,7 @@ ipcMain.handle('clear-all-data', async () => {
       fs.rmSync(dbPath, { recursive: true, force: true });
     }
     
+    
     console.log('✅ All data cleared');
     return { success: true };
   } catch (error) {
@@ -419,6 +420,39 @@ ipcMain.handle('setup-user-database', async () => {
     throw error;
   }
 });
+
+
+
+// copy bundled database to AppData on first run
+ipcMain.handle('read-bundled-file', async (event,  fileName) => {
+  try {
+    // Read from resources/assets/databases folder
+    const filePath = path.join(RESOURCES_PATH, 'databases', fileName);
+    
+    console.log('📁 Reading bundled file:', filePath);
+    
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Bundled file not found: ${filePath}`);
+    }
+    
+    const fileContents = fs.readFileSync(filePath, 'utf-8');
+    
+    console.log('✅ Read bundled file, size:', fileContents.length);
+    
+    return { 
+      success: true, 
+      data: fileContents,
+      name: fileName
+    };
+  } catch (error) {
+    console.error('❌ Error reading bundled file:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
+});
+
 
 // copy bundled database to AppData on first run
 ipcMain.handle('overwrite-database', async () => {
