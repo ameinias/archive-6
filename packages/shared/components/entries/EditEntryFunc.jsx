@@ -541,7 +541,6 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                 </Button> < Button className = "remove-button" onClick = {
                     removeCurrentEntry
                 } > Remove </Button>
-                sfsdf
             </>)}
         </div>
     </div> < />

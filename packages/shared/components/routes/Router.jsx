@@ -38,6 +38,8 @@ import { GameLogic } from '@utils/gamelogic';
 import BadGateway from '@components/login/BadGateway';
 import { eventManager } from '@utils/events';
 
+import StatusBar from '@components/bars/StatusBar';
+
 
 
 // Component to track and restore route on hot reload
@@ -90,10 +92,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
 
   return (
 <>
-{!isLoggedIn ? (
-          <Login />
-        ) : (
-        <>
+
         <NavBar />
          {/* <NavBarWin /> */}
         <div className="content window-body has-space">
@@ -129,8 +128,8 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
             </Routes>
           </div>
         </div>
+         <StatusBar />
         </>
-        )}
-        </>
+
   );
 }

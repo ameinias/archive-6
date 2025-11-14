@@ -84,7 +84,7 @@ h4{
 }
 
 .login-info{
-  color:lightgrey;
+  color:rgb(77, 77, 77);
   font-size: 0.6rem;
   margin:3px;
 }
@@ -173,6 +173,11 @@ input[type=checkbox] {
   opacity:1!important;
   appearance: auto;
 }
+
+.btn-primary{
+--bs-btn-color: #000000;
+}
+
 /* .btn-primary{
 --bs-btn-color: #fff;
   --bs-btn-bg: #7b899d;
@@ -666,7 +671,7 @@ rotate: 90deg;
 
 .login {
 
-margin: 15% auto;
+margin: 25% auto;
     justify-content: center;
     align-items: center;
     border: 1px solid #ccc;

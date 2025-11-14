@@ -162,7 +162,7 @@ export function GetMediaCount(itemId, type) {
 
       if(type === 'entry'){
       const entry = await db.friends.get(itemId);
-      console.log(`Entry media for ${itemId} count:`, entry?.media?.length);
+      // console.log(`Entry media for ${itemId} count:`, entry?.media?.length);
       return entry?.media?.length || 0;
       }
 

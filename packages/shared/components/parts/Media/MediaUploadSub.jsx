@@ -6,12 +6,15 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useActionState } from 'react';
 import {eventManager} from '@utils/events';
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
+import { MediaSelector } from '@components/parts/Media/MediaSelector.jsx';
 
 export function MediaUploadSub({ mediaSubFiles }) {
   const [isOver, setIsOver] = useState(false);
   const [subFiles, setSubFiles] = useState([]);
   const { setStatusMessage } = GameLogic();
   const gameLogic = GameLogic();
+
+      const [showGalleryModal, setShowGalleryModal] = useState(false);
 
 
   useEffect(() => {
@@ -29,20 +32,100 @@ export function MediaUploadSub({ mediaSubFiles }) {
     setIsOver(false);
   };
 
+    const processMediaToPath = async (file) => {
+    try {
+
+
+      const arrayBuffer = await file.arrayBuffer();
+
+
+      if (eventManager.isElectron) {
+        // Save file to disk 
+
+        const result = await window.electronAPI.saveMediaFile(file.name, arrayBuffer);
+
+
+
+
+        if (!result.success) {
+          throw new Error(result.error);
+        } else {console.log('File saved to disk at:', result.path);}
+
+        //  Store path in database
+        const mediaId = await db.media.add({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          path: result.path, //  Store relative path
+          uploadedAt: new Date()
+        });
+
+        console.log('File saved with ID:', mediaId, 'at path:', result.path);
+        return mediaId; // Return the database ID
+        
+      } else {
+        //  Web: Save to public/media folder or use a server endpoint
+        // For now, store as blob (or implement server upload)
+        const blob = new Blob([arrayBuffer], { type: file.type });
+        
+        const mediaId = await db.media.add({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          blob: blob, // Web still uses blobs
+          uploadedAt: new Date()
+        });
+
+        return mediaId;
+      }
+    } catch (error) {
+      console.error('Error saving media:', error);
+      throw error;
+    }
+  };
+
+  const selectFromGallery = async () => {
+   // select from gallery here!!
+setShowGalleryModal(true);
+
+  }
+
+  
+
+  const handleGallerySelect = (selectedMediaIds) => {
+    if (selectedMediaIds && selectedMediaIds.length > 0) {
+      console.log('Selected media IDs:', selectedMediaIds);
+      
+      const updatedFiles = [...files, ...selectedMediaIds];
+      setFiles(updatedFiles);
+      
+      if (mediaFiles) {
+        mediaFiles.length = 0;
+        mediaFiles.push(...updatedFiles);
+      }
+      
+      setStatusMessage(`Selected ${selectedMediaIds.length} file(s) from gallery.`);
+    }
+    setShowGalleryModal(false);
+  };
+
+
+
+
   const handleImport = async (subFiles) => {
     try {
       if (!subFiles) throw new Error(`Only files can be dropped here`);
 
-      const maxSizeInMB = 50;
+      const maxSizeInMB = 100;
       const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
       if (subFiles.size > maxSizeInBytes) {
         throw new Error(`File size must be less than ${maxSizeInMB}MB`);
       }
 
      
-      const blobRef = await processMediaToBlobs(subFiles);
+     const mediaId = await processMediaToPath(subFiles);
       
-      const newSubFiles = [...(mediaSubFiles || []), blobRef];
+      const newSubFiles =  [...(mediaSubFiles || []), mediaId];
       setSubFiles(newSubFiles);
       
       // Update the parent's mediaSubFiles array
@@ -61,25 +144,7 @@ export function MediaUploadSub({ mediaSubFiles }) {
     }
   };
 
-  const processMediaToBlobs = async (subFiles) => {
-  try {
-    const mediaId = await db.media.add({
-      name: subFiles.name,
-      type: subFiles.type,
-      size: subFiles.size,
-      blob: subFiles, 
-      uploadedAt: new Date()
-    });
-
-
-    return `blob:${mediaId}`;
-  } catch (error) {
-    console.error('Error saving media to database:', error);
-    throw error;
-  }
-};
-
-
+  
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -172,6 +237,13 @@ export function MediaUploadSub({ mediaSubFiles }) {
       >
         Import Attachments
       </Button>
+
+            <MediaSelector
+        show={showGalleryModal}
+        onHide={() => setShowGalleryModal(false)}
+        onSelect={handleGallerySelect}
+        allowMultiple={true}
+      />
     </div>
   );
 }

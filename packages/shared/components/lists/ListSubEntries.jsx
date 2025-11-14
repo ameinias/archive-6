@@ -56,7 +56,10 @@ export function ListSubEntries({ itemID }) {
               {subEntryOfParentLQ.map((item) => (
                 <div key={item.id}>
 
-                  <div >
+                  <div > <Button
+                      variant="remove-button button-small remove-button-small"
+                      onClick={() => removeItem(item)}
+                    >x</Button>   __
                     <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>  <span className="subentry-meta"> 
@@ -71,14 +74,11 @@ export function ListSubEntries({ itemID }) {
     : 'Unknown User'
   }
 </span>
+                    
+                  </div>
+      
 
-                  </div>
-                  <div>
-                    <Button
-                      variant="remove-button"
-                      onClick={() => removeItem(item)}
-                    ></Button>
-                  </div>
+          
                   </div>
               ))}
             </div>

@@ -137,7 +137,7 @@ export default function App() {
         ) : (
           <RouterPath />
         )}
-        <StatusBar />
+       
       </div>
 </Router>
 </>

@@ -16,7 +16,6 @@ const defaultFormValue = {
 function Login() {
   const [formValues, setFormValue] = useState(defaultFormValue);
   const navigate = useNavigate();
-    // const { isAdmin, toggleAdmin } = GameLogic();
     const { isLoggedIn, setLoggedIn } = GameLogic();
       const { setStatusMessage } = GameLogic();
       const { globalUser, setPlayerUsername, setPlayerPassword } = GameLogic();
@@ -59,6 +58,12 @@ function Login() {
               setStatusMessage('Password is required');
               return;
             }
+
+                        if (!/^[a-zA-Z0-9_-]+$/.test(password)) {
+              setStatusMessage('Passwords can only contain letters, numbers, underscore, and hyphen (no spaces or special characters)');
+              return;
+            }
+
             setPlayerUsername(username);
             setPlayerPassword(password);
             setLoggedIn(true);
@@ -82,11 +87,25 @@ function Login() {
     });
   };
 
+
+
+  if(!globalUser.username){
+      return (<>
+      <div className="login">
+        <div className=" row login-info-text">
+      Never been here BeforeUnloadEvent.
+      </div>
+      </div>
+      </>
+        
+      );
+      }
   return (
 
       <div className="login">
         <div className=" row login-info-text">
-          Please enter your user name and password.
+          Please register your user name and password.
+          
         </div>
         <div className=" row">
 
