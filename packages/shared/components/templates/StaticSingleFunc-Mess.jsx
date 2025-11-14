@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '../../../../packages/shared/components/parts/StaticSubListItem';
 import { BookMarkCheck } from '../../../../packages/shared/components/parts/Badges';
 import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
-import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 
 export function StaticSingleMess({ itemID }) {
   const { id } = useParams(); // get the id from the route

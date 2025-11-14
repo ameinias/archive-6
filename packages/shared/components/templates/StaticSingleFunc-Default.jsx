@@ -8,8 +8,8 @@ import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
 import { StaticSubListItem } from '@components/parts/StaticSubListItem';
 import { BookMarkCheck } from '@components/parts/Badges';
-import { MediaDisplay } from '@components/parts/MediaDisplay';
-import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { MediaDisplay } from '@components/parts/Media/MediaDisplay';
+import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 
 export function StaticSingleDefault({ itemID }) {
   const { id } = useParams(); // get the id from the route

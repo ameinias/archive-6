@@ -21,6 +21,7 @@ import HashImport from '@components/admin/HashImport';
 import StaticSingle from '@components/entries/StaticSingle';
 import AddSubEntry from '@components/entries/AddSubEntry';
 import  AddEntry from '@components/entries/EditEntry';
+import  Entry from '@components/entries/Entry';
 
 // Lists
 import Search from '@components/search/Search';
@@ -107,7 +108,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
                 path="/edit-subitem/:parentID/:itemID"
                 element={<AddSubEntry />}
               />
-              <Route path="/entry/:id" element={<StaticSingle />} />
+              <Route path="/entry/:id" element={<Entry />} />
  {/* admin tools -------------------            -------------------------*/}
               <Route path="/import-export" element={<ImportExport />} />
   {/* Lists   ------------------------------------------------------------ */}

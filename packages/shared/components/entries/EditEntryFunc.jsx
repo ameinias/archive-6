@@ -5,7 +5,7 @@ import {categories, subCategories, researcherIDs, entryTemplate, hexHashes, edit
 import {Form, useNavigate} from 'react-router-dom';
 import {GameLogic} from '@utils/gamelogic';
 import {ListSubEntries} from '@components/lists/ListSubEntries';
-import {MediaUpload} from '@components/parts/MediaUpload';
+import {MediaUpload} from '@components/parts/Media/MediaUpload';
 import * as FormAssets from '@components/parts/FormAssets';
 import {eventManager} from '@utils/events';
 
@@ -202,7 +202,7 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
     }
 
     async function removeCurrentEntry() {
-        if (await events.showConfirm(`Are you sure you want to delete "${formValues.title}"?`)) {
+        if (await eventManager.showConfirm(`Are you sure you want to delete "${formValues.title}"?`)) {
             try {
                 const id = Number(itemID);
                 if (isNaN(id)) {
@@ -540,8 +540,9 @@ export function AddEntryForm({itemID, parentID, isSubEntry}) {
                     Save
                 </Button> < Button className = "remove-button" onClick = {
                     removeCurrentEntry
-                } > Remove < /Button>
-            </ >)}
+                } > Remove </Button>
+                sfsdf
+            </>)}
         </div>
     </div> < />
   );

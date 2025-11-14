@@ -211,7 +211,7 @@ const createWindow = async () => {
     sandbox: false,  
     webSecurity: true,
     allowRunningInsecureContent: false,
-    experimentalFeatures: true,  
+    // experimentalFeatures: true,  
     enableRemoteModule: false
     },
   });

@@ -222,6 +222,7 @@ useEffect(() => {
       {!sortedFriends ||sortedFriends.length === 0 ?
       (
         <div className="List">
+      
         <table className="entryTable">
           <tbody>
             <tr>
@@ -245,8 +246,8 @@ useEffect(() => {
       ) : (
         <>
     <div className="List">
-      <h3>Entries:</h3>
-      <Link to="/edit-item/new"><Button
+      <h3>Entries:</h3> 
+      <Link to="/entry/new"><Button
               className="btn-add-item">
               New Entry
             </Button>
@@ -278,7 +279,7 @@ useEffect(() => {
               {sortedFriends.map((item) => (
                 <tr key={item.id}>
                   <td  data-label="name">
-                    <Link to={`/edit-item/${item.id}`}>
+                    <Link to={`/entry/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>
                     </td>

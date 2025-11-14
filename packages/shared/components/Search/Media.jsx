@@ -4,11 +4,12 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
-import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 import { eventManager } from '@utils/events';
 
 const Media = () => {
   const [mediaFiles, setMediaFiles] = useState([]);
+  const [replacingMediaId, setReplacingMediaId] = useState(null);
   const gameLogic = GameLogic();
 
   const friends = useLiveQuery(() => db.friends.toArray());
@@ -41,7 +42,7 @@ const Media = () => {
       for (const friend of friendsWithMedia) {
         tempMediaFiles.push({
           id: nextID++,
-          mediaId: mediaItem.id, // Reference to db.media
+          mediaId: mediaItem.id,
           name: mediaItem.name,
           size: mediaItem.size,
           type: 'main',
@@ -56,7 +57,7 @@ const Media = () => {
       for (const subentry of subentriesWithMedia) {
         tempMediaFiles.push({
           id: nextID++,
-          mediaId: mediaItem.id, // Reference to db.media
+          mediaId: mediaItem.id,
           name: mediaItem.name,
           size: mediaItem.size,
           type: 'sub',
@@ -89,14 +90,12 @@ const Media = () => {
   const removeMediaFile = async (mediaId, entryId, entryType) => {
     try {
       if (entryType === 'main') {
-        // Remove from friend's media array
         const friend = await db.friends.get(entryId);
         if (friend && friend.media) {
           const updatedMedia = friend.media.filter(id => id !== mediaId);
           await db.friends.update(entryId, { media: updatedMedia });
         }
       } else if (entryType === 'sub') {
-        // Remove from subentry's mediaSub array
         const subentry = await db.subentries.get(entryId);
         if (subentry && subentry.mediaSub) {
           const updatedMedia = subentry.mediaSub.filter(id => id !== mediaId);
@@ -104,36 +103,90 @@ const Media = () => {
         }
       }
 
-      // Refresh the list
       findMedia();
     } catch (error) {
       console.error('Error removing media reference:', error);
     }
   };
 
+  const replaceMedia = async (mediaId) => {
+    // Store which media we're replacing
+    setReplacingMediaId(mediaId);
+    
+    // Trigger file picker
+    const fileInput = document.getElementById('replace-media-input');
+    if (fileInput) {
+      fileInput.click();
+    }
+  };
 
-  const replaceMedia = async (mediaId, entryId, entryType) => {
-  try {
-      if (entryType === 'main') {
-        // Remove from friend's media array
-        const friend = await db.friends.get(entryId);
-        if (friend && friend.media) {
-          const updatedMedia = friend.media.filter(id => id !== mediaId);
-          await db.friends.update(entryId, { media: updatedMedia });
-        }
-      } else if (entryType === 'sub') {
-        // Remove from subentry's mediaSub array
-        const subentry = await db.subentries.get(entryId);
-        if (subentry && subentry.mediaSub) {
-          const updatedMedia = subentry.mediaSub.filter(id => id !== mediaId);
-          await db.subentries.update(entryId, { mediaSub: updatedMedia });
-        }
+  const handleReplaceFileSelected = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !replacingMediaId) return;
+
+    try {
+      const oldMedia = await db.media.get(replacingMediaId);
+      if (!oldMedia) {
+        throw new Error('Original media not found');
       }
 
+      console.log(' Replacing media:', oldMedia.name, 'with:', file.name);
+
+      // Process the new file
+      const arrayBuffer = await file.arrayBuffer();
+      
+      if (eventManager.isElectron) {
+        // Delete old file from disk
+        if (oldMedia.path && window.electronAPI?.deleteMediaFile) {
+          await window.electronAPI.deleteMediaFile(oldMedia.path);
+        }
+
+        // Save new file to disk
+        const result = await window.electronAPI.saveMediaFile(file.name, arrayBuffer);
+        
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+
+        // Update database record with new file info
+        await db.media.update(replacingMediaId, {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          path: result.path,
+          uploadedAt: new Date()
+        });
+
+        
+        
+      } else {
+        // Web: Replace blob
+        const blob = new Blob([arrayBuffer], { type: file.type });
+        
+        await db.media.update(replacingMediaId, {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          blob: blob,
+          uploadedAt: new Date()
+        });
+
+       
+      }
+
+      // Clear the replacing state
+      setReplacingMediaId(null);
+      
+      // Clear the file input
+      event.target.value = '';
+      
       // Refresh the list
       findMedia();
+      
     } catch (error) {
-      console.error('Error removing media reference:', error);
+      console.error(' Error replacing media:', error);
+      alert(`Error replacing file: ${error.message}`);
+      setReplacingMediaId(null);
     }
   };
   
@@ -188,6 +241,15 @@ const Media = () => {
       <p>Total media references: {mediaFiles.length}</p>
       <p>Unique media files: {allMedia?.length || 0}</p>
 
+      {/* Hidden file input for replacing media */}
+      <input
+        type="file"
+        id="replace-media-input"
+        accept="image/*,video/*,audio/*,application/pdf"
+        onChange={handleReplaceFileSelected}
+        style={{ display: 'none' }}
+      />
+
       {sortedMedia.length === 0 ? (
         <div className="subentry-add-list">
           <p>No media files found in any entries.</p>
@@ -195,25 +257,23 @@ const Media = () => {
       ) : (
         <div className="subentry-add-list">
           {sortedMedia.map((mediaFile, index) => (
-            <div className="media-thumbnail" key={index}>
+            <div className="media-thumbnail-list" key={index}>
               <MediaThumbnail 
                 fileRef={mediaFile.mediaId}
                 maxWidth={'700px'}
               /> 
 
               <div className="image-subinfo">
-                <strong>{mediaFile.name}</strong><br />
-                {mediaFile.size && `Size: ${(mediaFile.size / 1024).toFixed(2)} KB`}<br />
+                
                 {mediaFile.uploadedAt && (
                   <>Uploaded: {new Date(mediaFile.uploadedAt).toLocaleDateString()}<br /></>
                 )}
                 
                 {mediaFile.type !== 'orphan' ? (
                   <>
-                    From: <Link to={`/${mediaFile.type === 'main' ? 'entry' : 'subentry'}/${mediaFile.entryId}`}>
+                    {mediaFile.type === 'main' ? 'Entry' : 'Sub Entry'}: <Link to={`/${mediaFile.type === 'main' ? 'entry' : 'subentry'}/${mediaFile.entryId}`}>
                       {mediaFile.fauxID} - {mediaFile.entryTitle}
-                    </Link><br />
-                    Type: {mediaFile.type === 'main' ? 'Main Entry' : 'Sub Entry'}
+                    </Link>
                   </>
                 ) : (
                   <span style={{ color: '#999' }}>
@@ -231,7 +291,7 @@ const Media = () => {
                       variant="warning"
                       size="sm"
                     >
-                      Unlink from Entry
+                      Unlink
                     </Button>
                   )}
                   
@@ -245,7 +305,7 @@ const Media = () => {
                     variant="danger"
                     size="sm"
                   >
-                    Delete Completely
+                    Delete
                   </Button>
                                     <Button
                     className="remove-button button-small remove-button-small"

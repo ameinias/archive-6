@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import { db } from '@utils/db';
 import { eventManager } from '@utils/events';
 import { Link } from 'react-router-dom';
-import { PdfViewer } from './pdfVeiwer';
+
 
 export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
   const [mediaDataUrl, setMediaDataUrl] = useState(null);
@@ -51,7 +51,6 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
         } 
         // Case 2: fileRef is a File object (preview before saving)
         else if (fileRef instanceof File) {
-          console.log('📁 File object preview:', fileRef.name);
           setFileName(fileRef.name);
           setFileSize(fileRef.size);
           setFileType(fileRef.type);
@@ -59,7 +58,7 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
           setMediaDataUrl(url);
         }
       } catch (error) {
-        console.error('❌ Failed to load media:', error);
+        console.error('Failed to load media:', error);
       } finally {
         setLoading(false);
       }

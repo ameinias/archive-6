@@ -15,7 +15,7 @@ import { GameLogic } from '@utils/gamelogic';
 // import { availableMemory } from 'process';
 import { useLiveQuery } from 'dexie-react-hooks';
 import * as FormAssets from '@components/parts/FormAssets';
-import { MediaUploadSub } from '@components/parts/MediaUploadSub';
+import { MediaUploadSub } from '@components/parts/Media/MediaUploadSub';
 import { eventManager } from '@utils/events';
 
 export function AddSubEntryForm({ itemID, parentID }) {

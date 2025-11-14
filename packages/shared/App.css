@@ -399,10 +399,22 @@ table.entryTable td {
 
 }
 
+.media-thumbnail-list {
+
+  border: var(--div-border);
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+  display: inline-block;
+  align-items: center;
+  max-width:220px;
+
+}
+
 .media-thumbnail img {
-  width:100%;
-  max-height: 100px;
-  margin-right: 10px;
+  width: unset;
+   height: 200px;
+  /* margin-right: 10px; */
 }
 
 
@@ -852,6 +864,7 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 /*       MEDIA      */
 
 .media {
-  padding: 20px;
+  padding: 15px;
+  margin: 2px;
   border: var(--div-border);
 }

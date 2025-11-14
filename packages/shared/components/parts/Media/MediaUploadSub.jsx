@@ -5,7 +5,7 @@ import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useActionState } from 'react';
 import {eventManager} from '@utils/events';
-import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 
 export function MediaUploadSub({ mediaSubFiles }) {
   const [isOver, setIsOver] = useState(false);

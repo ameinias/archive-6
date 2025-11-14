@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { eventManager } from '@utils/events';
 
+
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
 let globalIsAdmin = (() => {
   try {
@@ -88,7 +89,7 @@ export function GameLogic() {
       toggleAdmin();
     };
 
-    // ✅ Works in both environments
+    //  Works in both environments
     eventManager.on('toggle-admin', handleToggleAdmin);
 
     // Cleanup when component unmounts

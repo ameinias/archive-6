@@ -5,13 +5,16 @@ import { db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useActionState } from 'react';
 import {eventManager} from '@utils/events';
-import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
+import { MediaSelector } from '@components/parts/Media/MediaSelector.jsx';
 
 export function MediaUpload({ mediaFiles }) {
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState([]);
   const { setStatusMessage } = GameLogic();
-  const gameLogic = GameLogic();
+  const gameLogic = GameLogic(); 
+
+    const [showGalleryModal, setShowGalleryModal] = useState(false);
 
 
   useEffect(() => {
@@ -82,23 +85,27 @@ export function MediaUpload({ mediaFiles }) {
   };
 
   const selectFromGallery = async () => {
-    try {
-      const selectedMediaIds = await gameLogic.openMediaGallery();
-      if (selectedMediaIds && selectedMediaIds.length > 0) {
-        const newFiles = [...(files || []), ...selectedMediaIds];
-        setFiles(newFiles);
-        // Update the parent's mediaFiles array
-        if (mediaFiles) {
-          mediaFiles.length = 0; // Clear existing
-          mediaFiles.push(...newFiles); // Add selected files
-        }
-        setStatusMessage(`Selected ${selectedMediaIds.length} files from gallery.`);
-      }
-    } catch (error) {
-      console.error('Error selecting from gallery:', error);
-      setStatusMessage(`Error selecting from gallery: ${error.message}`);
-    }
+   // select from gallery here!!
+setShowGalleryModal(true);
+
   }
+
+  const handleGallerySelect = (selectedMediaIds) => {
+    if (selectedMediaIds && selectedMediaIds.length > 0) {
+      console.log('Selected media IDs:', selectedMediaIds);
+      
+      const updatedFiles = [...files, ...selectedMediaIds];
+      setFiles(updatedFiles);
+      
+      if (mediaFiles) {
+        mediaFiles.length = 0;
+        mediaFiles.push(...updatedFiles);
+      }
+      
+      setStatusMessage(`Selected ${selectedMediaIds.length} file(s) from gallery.`);
+    }
+    setShowGalleryModal(false);
+  };
 
   const handleImport = async (file) => {
     try {
@@ -234,6 +241,14 @@ export function MediaUpload({ mediaFiles }) {
       >
         Select Attachments
       </Button>
+
+      <MediaSelector
+        show={showGalleryModal}
+        onHide={() => setShowGalleryModal(false)}
+        onSelect={handleGallerySelect}
+        allowMultiple={true}
+      />
+
     </div>
   );
 }

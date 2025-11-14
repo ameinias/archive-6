@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
-import {MediaDisplay} from './MediaDisplay'
+import {MediaDisplay} from './Media/MediaDisplay'
 import { researcherIDs } from '@utils/constants';
-import { MediaThumbnail } from '@components/parts/MediaThumbnail.jsx';
+import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 import { BookMarkCheck } from '@components/parts/Badges';
 
 export function StaticSubListItem({
