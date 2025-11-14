@@ -90,11 +90,37 @@ const ImportDI = async () => {
   }
 };
   
+const UpdateDBCount = async () => {
+    // get db.gamedata.version = highest entry
+    const lastEntry = await db.gamedata.orderBy('expVersion').last().expVersion;
+
+    let lastVerno;
+
+    if(!lastEntry)
+      {await db.gamedata.add({expVersion: db.verno, uploadedAt: new Date()});
+
+    lastVerno =lastVerno
+  
+    } else {
+      lastVerno = lastEntry.expVersion;;
+    }
+
+    console.log('Last DB version entry is:', lastVerno, 'current DB version is', db.verno);
+
+
+
+};
 
   // this function fakes a bunch of clicking and interaction. could be useful later for database ghosts.
   const handleExport = async () => {
     try {
       // Ensure the export function is available
+
+
+      // Not working for now. Plan to use to
+      // reset the DB if the assets/databases/dexie-import.json is a newer version than current.
+      //UpdateDBCount();
+
       if (typeof db.export !== 'function') {
         throw new Error('dexie-export-import addon not properly loaded');
       }
@@ -370,6 +396,8 @@ const DataState = () => {
   const subentryCount = useLiveQuery(() => db.subentries.count());
   const availableCount = useLiveQuery(() => db.friends.filter(item => item.available === true).count());
   const availableSubCount = useLiveQuery(() => db.subentries.filter(item => item.available === true).count());
+
+ 
 
 
   if (entryCount === undefined || subentryCount === undefined ||

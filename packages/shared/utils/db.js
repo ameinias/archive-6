@@ -48,6 +48,16 @@ db.version(4.5).stores({
    media: '++id, name, type, size, path, uploadedAt'
 });
 
+// no hyphens
+db.version(4.6).stores({
+  gamedata: 'expVersion, uploadedAt',
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, availableOnStart, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', // Removed subItems
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', // Fixed spelling and added parentId index
+   media: '++id, name, type, size, path, uploadedAt'
+   
+});
+
+
 /*
 //  BETTER: Use populate event instead of ready
 db.on('populate', async () => {
@@ -98,6 +108,16 @@ export const dbHelpers = {
   async addSubentry(subentry) {
     return await db.subentries.add(subentry);
   },
+
+  async getExpectedDBVersion(){
+    // check if the currently loaded database is 
+
+  },
+
+  async GetDBVersion() {
+    return db.verno;
+  },
+
 
   // Delete a main entry and all its subentries
   async deleteEntryWithSubentries(entryId) {
