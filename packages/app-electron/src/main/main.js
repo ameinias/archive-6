@@ -23,12 +23,6 @@ const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
 const {dialog} = require('electron'); // stop trying to change this!!!! 
 
-// try {
-//   config = require(`../../config/${appVersion}.json`);
-// } catch (error) {
-//   console.error(`Error loading config for ${appVersion}:`, error);
-//   app.quit();
-// }
 
 class AppUpdater {
   constructor() {
@@ -70,8 +64,7 @@ ipcMain.handle('show-confirm', async (event, str) => {
   return dialog.showMessageBoxSync(null, options);
 });
 
-// Remove or comment out the protocol registration stuff for now
-// We'll use IPC instead
+
 
 ipcMain.handle('get-media-data', async (event, relativePath) => {
   try {
@@ -211,6 +204,8 @@ const createWindow = async () => {
     sandbox: false,  
     webSecurity: true,
     allowRunningInsecureContent: false,
+    allowFileAccessFromFileURLs: true,
+    allowUniversalAccessFromFileURLs: true,
     // experimentalFeatures: true,  
     enableRemoteModule: false
     },
@@ -296,6 +291,7 @@ app
   .whenReady()
   .then(() => {
 
+    
        RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../../assets');
@@ -303,6 +299,30 @@ app
 
 //  console.log('RESOURCES_PATH:', RESOURCES_PATH);
   
+    // Register safe local file protocol
+    protocol.registerFileProtocol('safe-file', (request, callback) => {
+      try {
+        // Remove 'safe-file:///' prefix
+        let filePath = request.url.replace('safe-file:///', '');
+        
+        // Decode URL encoding
+        filePath = decodeURIComponent(filePath);
+        
+        console.log('📹 Safe-file protocol serving:', filePath);
+        
+        if (!fs.existsSync(filePath)) {
+          console.error('❌ File not found:', filePath);
+          callback({ error: -6 }); // FILE_NOT_FOUND
+          return;
+        }
+        
+        callback({ path: filePath });
+      } catch (error) {
+        console.error('❌ Protocol handler error:', error);
+        callback({ error: -2 }); // FAILED
+      }
+    });
+    
 
     createWindow();
     app.on('activate', () => {
@@ -661,30 +681,30 @@ ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
 // Get full file:// URL for media files
 ipcMain.handle('get-media-path', async (event, relativePath) => {
   try {
-
     if (!RESOURCES_PATH) {
       throw new Error('RESOURCES_PATH is not initialized');
     }
 
-
-    // relativePath is like "media/filename.jpg"
-    const fullPath = path.join(RESOURCES_PATH, relativePath);
+    const fileName = relativePath.replace('media/', '');
+    const fullPath = path.join(RESOURCES_PATH, 'media', fileName);
     
-    console.log('Getting media path for:', relativePath);
-    console.log('Full path:', fullPath);
+    console.log('📁 Gettingdd  media path for:', fullPath);
+    console.log('📁 File exists?', fs.existsSync(fullPath));
     
-    // Check if file exists
     if (!fs.existsSync(fullPath)) {
-      console.error('Media file not found:', fullPath);
-      return null;
+      throw new Error('File not found: ' + fullPath);
     }
     
-
-    // Extract just the filename from the path
-    const fileName = path.basename(relativePath);
-    return `media://${fileName}`;
+    
+    // ✅ Return safe-file:// URL instead of file://
+    const normalizedPath = fullPath.replace(/\\/g, '/');
+    const safeUrl = `safe-file:///${normalizedPath}`;
+    
+    console.log('✅ Returning safe URL:', safeUrl);
+    
+    return safeUrl;
   } catch (error) {
-    console.error('Error getting media path:', error);
+    console.error('❌ Error getting media path:', error);
     return null;
   }
 });
@@ -722,5 +742,6 @@ ipcMain.handle('get-resources-path', async () => {
   console.log('📁 Returning RESOURCES_PATH:', RESOURCES_PATH);
   return RESOURCES_PATH;
 });
+
 
 

@@ -14,52 +14,68 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
 
   useEffect(() => {
     const loadMedia = async () => {
+      if (!fileRef || !db) return;
 
-      
       try {
-        // Case 1: fileRef is a number (database ID)
-        if (typeof fileRef === 'number') {
+        setLoading(true);
+        const mediaFile = await db.media.get(fileRef);
 
-          const mediaFile = await db.media.get(fileRef);
-          
-          if (mediaFile) {
-            // console.log(' File details:', {
-            //   name: mediaFile.name,
-            //   type: mediaFile.type,
-            //   size: mediaFile.size,
-            //   path: mediaFile.path
-            // });
+        if (!mediaFile) {
+          console.error('Media file not found:', fileRef);
+          setLoading(false);
+          return;
+        }
 
-            setFileName(mediaFile.name);
-            setFileSize(mediaFile.size);
-            setFileType(mediaFile.type);
+        
+      // ✅ SET ALL THE STATE VARIABLES
+      setFileName(mediaFile.name);
+      setFileSize(mediaFile.size || 0);
+      setFileType(mediaFile.type || '');
 
-            //  Electron: Load via IPC
-            if (mediaFile.path && eventManager.isElectron && window.electronAPI?.getMediaData) {
-              const { data, mimeType } = await window.electronAPI.getMediaData(mediaFile.path);
-              const dataUrl = `data:${mimeType};base64,${data}`;
-              setMediaDataUrl(dataUrl);
+      const okFileSize =  mediaFile.size < 5 * 1024 * 1024;
 
-            } 
-            // Web: use blob
-            else if (mediaFile.blob) {
+      console.log('📦 Loaded media:', {
+        name: mediaFile.name,
+        type: mediaFile.type,
+        size: mediaFile.size,
+        lessmax: okFileSize,
+        path: mediaFile.path
+      });
 
-              const url = URL.createObjectURL(mediaFile.blob);
-              setMediaDataUrl(url);
+        setFileName(mediaFile.name);
+
+        // ✅ For Electron, use file:// URLs for large files (videos, PDFs)
+        if (mediaFile.path && eventManager.isElectron) {
+          const isLargeFile = mediaFile.type?.startsWith('video/') || 
+                             mediaFile.type === 'application/pdf' ||
+                             (mediaFile.size && mediaFile.size > 5 * 1024 * 1024); // > 5MB
+
+          if (isLargeFile) {
+            // Use direct file path
+            const result = await window.electronAPI.getMediaPath(mediaFile.path);
+            console.log('📹 Using file:// URL for large file:', result);
+            setMediaDataUrl(result);
+          } else {
+            // Use base64 for small files (images)
+            const result = await window.electronAPI.getMediaData(mediaFile.path);
+            if (result.error) {
+              console.error('Failed to get media data:', result.error);
+              setLoading(false);
+              return;
             }
+            const dataUrl = `data:${result.mimeType};base64,${result.data}`;
+            setMediaDataUrl(dataUrl);
           }
         } 
-        // Case 2: fileRef is a File object (preview before saving)
-        else if (fileRef instanceof File) {
-          setFileName(fileRef.name);
-          setFileSize(fileRef.size);
-          setFileType(fileRef.type);
-          const url = URL.createObjectURL(fileRef);
+        // Web: use blob
+        else if (mediaFile.blob) {
+          const url = URL.createObjectURL(mediaFile.blob);
           setMediaDataUrl(url);
         }
+
+        setLoading(false);
       } catch (error) {
-        console.error('Failed to load media:', error);
-      } finally {
+        console.error('Error loading media:', error);
         setLoading(false);
       }
     };
@@ -97,40 +113,67 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
   if (!mediaDataUrl) {
     return <div>Failed to load media</div>;
   }
+// VIDEO
+if (fileType?.startsWith('video/')) {
+  return (
+    <div className="media media-video">
+      <video 
+        controls 
+        preload="metadata"
+        style={{ 
+          width: '100%', 
+          maxWidth: maxWidth || '500px', 
+          height: 'auto', 
+          backgroundColor: '#000' 
+        }}
+        onError={(e) => {
+          const error = e.target.error;
+          console.error('❌ Video error details:', {
+            error: error,
+            code: error?.code,
+            message: error?.message,
+            src: e.target.src,
+            networkState: e.target.networkState,
+            readyState: e.target.readyState,
+            currentSrc: e.target.currentSrc
+          });
+          
+          // Decode error codes
+          if (error) {
+            const errorMessages = {
+              1: 'MEDIA_ERR_ABORTED - Fetching aborted by user',
+              2: 'MEDIA_ERR_NETWORK - Network error',
+              3: 'MEDIA_ERR_DECODE - Decoding error',
+              4: 'MEDIA_ERR_SRC_NOT_SUPPORTED - Format not supported or file not found'
+            };
+            console.error('Error code meaning:', errorMessages[error.code] || 'Unknown error');
+          }
+        }}
+        onLoadStart={(e) => {
+          console.log('✅ Video load started:', e.target.src);
+        }}
+        onLoadedMetadata={(e) => {
+          console.log('✅ Video metadata loaded:', {
+            duration: e.target.duration,
+            videoWidth: e.target.videoWidth,
+            videoHeight: e.target.videoHeight
+          });
+        }}
+        onCanPlay={(e) => {
+          console.log('✅ Video can play');
+        }}
+      >
+        <source src={mediaDataUrl} type={fileType} />
+        Your browser does not support the video tag.
+      </video>
+      <span className="image-subinfo">
+        {fileName} ({(fileSize / 1024 / 1024).toFixed(2)} MB)
+      </span>
+    </div>
+  );
+}
 
-  // VIDEO
-  if (fileType?.startsWith('video/')) {
-    return (
-      <div className="media media-video">
-        <video 
-          controls 
-          preload="metadata"
-          style={{ 
-            width: '100%', 
-            maxWidth: maxWidth || '500px', 
-            height: 'auto', 
-            backgroundColor: '#000' 
-          }}
-          onError={(e) => {
-            console.error('❌ Video error:', {
-              error: e.target.error,
-              code: e.target.error?.code,
-              message: e.target.error?.message,
-              src: e.target.src
-            });
-          }}
-        >
-          <source src={mediaDataUrl} type={fileType} />
-          Your browser does not support the video tag.
-        </video>
-        <span className="image-subinfo">
-          {fileName} ({(fileSize / 1024 / 1024).toFixed(2)} MB)
-        </span>
-      </div>
-    );
-  }
-
-  // AUDIO
+  // AUDIO hh
   if (fileType?.startsWith('audio/')) {
     return (
       <div className="media media-audio">
@@ -189,6 +232,9 @@ if (fileType === 'application/pdf') {
                 borderRadius: '4px'
               }}
             />
+             <span className="image-subinfo">
+          {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+        </span>
     </div>
   );
 }
