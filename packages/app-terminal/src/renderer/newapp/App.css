@@ -102,6 +102,27 @@ height: var(--navbar-bottom-height);
 
 }
 
+.media-thumbnail-list>.pdf{
+  width: "200px";
+  height: "200px";
+  border:#18db43 1px solid; 
+}
+
+.media-thumbnail>.pdf{
+  width: "100%";
+  height: "600px";
+}
+
+
+
+.pdf{
+  border:#f509ce 1px solid; 
+  /* width: "100%"; */
+  /* height: "600px"; */
+  /* border: "1px solid #dee2e6"; */
+  border-Radius: "4px";
+}
+
 .navbar-fixed-bottom:before {
   /* content: 'bottom bar!!'; */
 }

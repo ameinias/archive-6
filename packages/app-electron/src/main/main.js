@@ -24,6 +24,24 @@ const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 const {dialog} = require('electron'); // stop trying to change this!!!! 
 
 
+// Register the custom protocol as privileged before app is ready
+// from https://github.com/BillelMessaadi/electronjs-local-video-player
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'safe-file',
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+      stream: true, // Important for video/audio streaming
+      bypassCSP: true
+    }
+  }
+]);
+
+
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -110,6 +128,58 @@ ipcMain.handle('get-media-data', async (event, relativePath) => {
     throw error;
   }
 });
+
+
+// Verify video file by checking magic bytes
+async function verifyVideoFile(filePath, ext) {
+  return new Promise((resolve) => {
+    const stream = createReadStream(filePath, { start: 0, end: 11 });
+    const chunks = [];
+    
+    stream.on('data', (chunk) => chunks.push(chunk));
+    stream.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      
+      // Check magic bytes for common video formats
+      const hex = buffer.toString('hex');
+      
+      // MP4/M4V: starts with ftyp
+      if (hex.includes('66747970')) {
+        resolve(true);
+        return;
+      }
+      
+      // WebM: starts with 1a45dfa3
+      if (hex.startsWith('1a45dfa3')) {
+        resolve(true);
+        return;
+      }
+      
+      // AVI: starts with RIFF and contains AVI
+      if (hex.startsWith('52494646') && hex.includes('415649')) {
+        resolve(true);
+        return;
+      }
+      
+      // MOV: similar to MP4, contains ftyp
+      if (hex.includes('66747970')) {
+        resolve(true);
+        return;
+      }
+      
+      // MKV: starts with 1a45dfa3
+      if (hex.startsWith('1a45dfa3')) {
+        resolve(true);
+        return;
+      }
+      
+      // If we can't verify by magic bytes, trust the extension
+      resolve(true);
+    });
+    
+    stream.on('error', () => resolve(false));
+  });
+}
 
 
 ipcMain.on('resize-to-default', () => {
@@ -300,29 +370,103 @@ app
 //  console.log('RESOURCES_PATH:', RESOURCES_PATH);
   
     // Register safe local file protocol
-    protocol.registerFileProtocol('safe-file', (request, callback) => {
-      try {
-        // Remove 'safe-file:///' prefix
-        let filePath = request.url.replace('safe-file:///', '');
+    // protocol.registerFileProtocol('safe-file', (request, callback) => {
+    //   try {
+    //     // Remove 'safe-file:///' prefix
+    //     let filePath = request.url.replace('safe-file:///', '');
         
-        // Decode URL encoding
-        filePath = decodeURIComponent(filePath);
+    //     // Decode URL encoding
+    //     filePath = decodeURIComponent(filePath);
         
-        console.log('📹 Safe-file protocol serving:', filePath);
+    //     console.log('📹 Safe-file protocol serving:', filePath);
         
-        if (!fs.existsSync(filePath)) {
-          console.error('❌ File not found:', filePath);
-          callback({ error: -6 }); // FILE_NOT_FOUND
-          return;
-        }
+    //     if (!fs.existsSync(filePath)) {
+    //       console.error('❌ File not found:', filePath);
+    //       callback({ error: -6 }); // FILE_NOT_FOUND
+    //       return;
+    //     }
         
-        callback({ path: filePath });
-      } catch (error) {
-        console.error('❌ Protocol handler error:', error);
-        callback({ error: -2 }); // FAILED
-      }
+    //     callback({ path: filePath });
+    //   } catch (error) {
+    //     console.error('❌ Protocol handler error:', error);
+    //     callback({ error: -2 }); // FAILED
+    //   }
+    // });
+    
+
+    protocol.registerStreamProtocol('safe-file', (request, callback) => {
+  try {
+    // Handle both safe-file:/// and safe-file://
+    let url = request.url;
+    
+    // Remove protocol and normalize
+    url = url.replace('safe-file://', '');
+    url = url.replace(/^\/+/, ''); // Remove leading slashes
+    
+    // Decode URL encoding
+    let filePath = decodeURIComponent(url);
+    
+    // On Windows, ensure we have the drive letter with colon
+    // Convert "C/Users/..." to "C:/Users/..."
+    if (process.platform === 'win32' && filePath.match(/^[a-zA-Z]\//)) {
+      filePath = filePath.charAt(0) + ':' + filePath.slice(1);
+    }
+    
+    console.log('📹 Stream protocol serving:', filePath);
+    console.log('📹 Original URL:', request.url);
+    
+    if (!fs.existsSync(filePath)) {
+      console.error('❌ File not found:', filePath);
+      callback({ statusCode: 404 });
+      return;
+    }
+    
+    // Get file info
+    const ext = path.extname(filePath).toLowerCase();
+    const stats = fs.statSync(filePath);
+    
+    // MIME types
+    const mimeTypes = {
+      '.mp4': 'video/mp4',
+      '.webm': 'video/webm',
+      '.mov': 'video/mp4',
+      '.ogg': 'video/ogg',
+      '.ogv': 'video/ogg',
+      '.mp3': 'audio/mpeg',
+      '.wav': 'audio/wav',
+      '.m4a': 'audio/mp4',
+      '.pdf': 'application/pdf',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.gif': 'image/gif'
+    };
+    
+    const mimeType = mimeTypes[ext] || 'application/octet-stream';
+    
+    console.log('✅ Streaming file:', {
+      size: stats.size,
+      mimeType: mimeType,
+      ext: ext
     });
     
+    // Stream the file
+    callback({
+      statusCode: 200,
+      headers: {
+        'Content-Type': mimeType,
+        'Content-Length': stats.size,
+        'Accept-Ranges': 'bytes'
+      },
+      data: fs.createReadStream(filePath)
+    });
+    
+  } catch (error) {
+    console.error('❌ Stream protocol error:', error);
+    callback({ statusCode: 500 });
+  }
+});
+
 
     createWindow();
     app.on('activate', () => {
@@ -678,6 +822,10 @@ ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
   }
 });
 
+
+const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v'];
+
+
 // Get full file:// URL for media files
 ipcMain.handle('get-media-path', async (event, relativePath) => {
   try {
@@ -687,6 +835,7 @@ ipcMain.handle('get-media-path', async (event, relativePath) => {
 
     const fileName = relativePath.replace('media/', '');
     const fullPath = path.join(RESOURCES_PATH, 'media', fileName);
+    // const ext = path.extname(fileName).toLowerCase();
     
     console.log('📁 Gettingdd  media path for:', fullPath);
     console.log('📁 File exists?', fs.existsSync(fullPath));

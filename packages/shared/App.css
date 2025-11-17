@@ -870,6 +870,32 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 
 .media {
   padding: 15px;
-  margin: 2px;
+  margin: 12px;
   border: var(--div-border);
+}
+.media-thumbnail-list>.pdf{
+  width: "200px";
+  height: "200px";
+  /* border:#18db43 1px solid;  */
+}
+
+.media-pdf{
+  width: 100%;
+  height: 620px;
+  /* border:#18db43 1px solid;  */
+}
+
+.media-thumbnail>.media-pdf{
+  width: "100%";
+  height: "600px";
+}
+
+
+
+.pdf{
+  border:#f509ce 1px solid; 
+  width: 100%;
+   height: 100%; 
+  /* border: "1px solid #dee2e6"; */
+  border-Radius: "4px";
 }
