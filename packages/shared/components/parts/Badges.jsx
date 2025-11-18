@@ -98,3 +98,42 @@ export function Spinner() {
 
   );
 }
+
+
+export const DataState = ({ refreshTrigger }) => {
+  const entryCount = useLiveQuery(() => 
+    db.isOpen() ? db.friends.count() : 0
+  );
+
+  const subentryCount = useLiveQuery(() => 
+    db.isOpen() ? db.subentries.count() : 0
+  );
+  
+  const availableCount = useLiveQuery(() =>
+    db.isOpen() ? db.friends.filter((item) => item.available === true).count() : 0
+  );
+  
+  const availableSubCount = useLiveQuery(() =>
+    db.isOpen() ? db.subentries.filter((item) => item.available === true).count() : 0
+  );
+
+  if (
+    entryCount === undefined ||
+    subentryCount === undefined ||
+    availableCount === undefined ||
+    availableSubCount === undefined
+  ) {
+    return <div>Loading database stats...</div>;
+  }
+
+  return (
+    <div>
+      <div>
+        <strong>Records:</strong> {availableCount}/{entryCount}
+      </div>
+      <div>
+        <strong>Subentries:</strong> {availableSubCount}/{subentryCount}
+      </div>
+    </div>
+  );
+};

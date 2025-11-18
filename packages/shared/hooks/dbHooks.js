@@ -140,18 +140,22 @@ export function useReturnDatabase(itemId) {
 // };
 
 
-export const setStartAvalability = async () => {
+export const setStartAvalability = async (startHash) => {
   try {
 
-    await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(1) || item.hexHash?.includes('1');
+    await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(startHash) || item.hexHash?.includes(startHash);
       console.log(item.id, item.hexHash, "available: ", item.available);
     });
-    await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(1) || item.hexHash?.includes('1') });
-    return "Set starting availability";
+
+    await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(startHash) || item.hexHash?.includes(startHash) });
+
+
+    return { friendsUpdated: db.friends.length, subentriesUpdated: db.subentries.length };
   } catch (error) {
     return "Error.";
   }
 };
+
 
 // picks between entries and wubentries and poulls out their respective media query.
 export function GetMediaCount(itemId, type) {

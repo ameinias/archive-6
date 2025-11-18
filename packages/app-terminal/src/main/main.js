@@ -267,6 +267,9 @@ ipcMain.handle('get-asset-path', (event, relativePath) => {
   return path.join(APP_DATA_PATH, relativePath);
 });
 
+
+
+
 ipcMain.handle('read-asset-file', async (event, relativePath) => {
   try {
 // use appdata or resources
@@ -275,7 +278,7 @@ ipcMain.handle('read-asset-file', async (event, relativePath) => {
 
     // If file exists in AppData, use it
     if (fs.existsSync(appDataFile)) {
-      console.log('Reading from AppData:', appDataFile);
+      console.log('Term - Reading from AppData:', appDataFile);
       return fs.readFileSync(appDataFile, 'utf8');
     }
 

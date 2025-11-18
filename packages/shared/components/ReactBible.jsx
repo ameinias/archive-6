@@ -57,10 +57,23 @@ const ComponentName = () => {
   }, [sortColumn, sortDirection]); // Re-fetch when sort order changes
 
 
-  return ( <
-    div >
-    Content <
-    /div>
+    const removeFile = (index) => {
+    console.log(index);
+  };
+
+  return ( 
+    <div>
+    Content 
+
+                  <Button
+                className="image-edit-button"
+                
+                onClick={() => removeFile(index)}
+              >
+                x
+              </Button>
+
+    </div>
   );
 };
 

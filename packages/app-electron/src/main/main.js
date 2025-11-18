@@ -9,20 +9,25 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcRenderer, ipcMain, protocol } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcRenderer,
+  ipcMain,
+  protocol,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import fs from 'fs';
 
-
 console.log('>>> main.js is running - top');
 let config;
 const appVersion = process.env.APP_VERSION || 'newapp'; // Default to newapp
 
-const {dialog} = require('electron'); // stop trying to change this!!!! 
-
+const { dialog } = require('electron'); // stop trying to change this!!!!
 
 // Register the custom protocol as privileged before app is ready
 // from https://github.com/BillelMessaadi/electronjs-local-video-player
@@ -35,12 +40,10 @@ protocol.registerSchemesAsPrivileged([
       supportFetchAPI: true,
       corsEnabled: true,
       stream: true, // Important for video/audio streaming
-      bypassCSP: true
-    }
-  }
+      bypassCSP: true,
+    },
+  },
 ]);
-
-
 
 class AppUpdater {
   constructor() {
@@ -52,20 +55,16 @@ class AppUpdater {
 
 let RESOURCES_PATH;
 
-
-
 let mainWindow = null;
-
 
 ipcMain.handle('show-alert', async (event, str) => {
   const options = {
     type: 'none',
-    buttons: ["Ok"],
+    buttons: ['Ok'],
     defaultId: 0,
     cancelId: 0,
     detail: str,
     message: '',
-
   };
   return dialog.showMessageBoxSync(null, options);
 });
@@ -73,32 +72,28 @@ ipcMain.handle('show-alert', async (event, str) => {
 ipcMain.handle('show-confirm', async (event, str) => {
   const options = {
     type: 'question',
-    buttons: ["Cancel", "Ok"],
+    buttons: ['Cancel', 'Ok'],
     defaultId: 1,
     cancelId: 0,
     detail: str,
-    message: ''
+    message: '',
   };
   return dialog.showMessageBoxSync(null, options);
 });
-
-
 
 ipcMain.handle('get-media-data', async (event, relativePath) => {
   try {
     const fileName = relativePath.replace('media/', '');
     const filePath = path.join(RESOURCES_PATH, 'media', fileName);
-    
 
-    
     if (!fs.existsSync(filePath)) {
       throw new Error('File not found');
     }
-    
+
     // Read file as base64
     const buffer = fs.readFileSync(filePath);
     const base64 = buffer.toString('base64');
-    
+
     // Get MIME type
     const ext = path.extname(filePath).toLowerCase();
     const mimeTypes = {
@@ -112,75 +107,70 @@ ipcMain.handle('get-media-data', async (event, relativePath) => {
       '.png': 'image/png',
       '.jpg': 'image/jpeg',
       '.jpeg': 'image/jpeg',
-      '.gif': 'image/gif'
+      '.gif': 'image/gif',
     };
     const mimeType = mimeTypes[ext] || 'application/octet-stream';
-    
 
-    
     return {
       data: base64,
-      mimeType: mimeType
+      mimeType: mimeType,
     };
-    
   } catch (error) {
     console.error(' Error loading media:', error);
     throw error;
   }
 });
 
-
 // Verify video file by checking magic bytes
 async function verifyVideoFile(filePath, ext) {
   return new Promise((resolve) => {
     const stream = createReadStream(filePath, { start: 0, end: 11 });
     const chunks = [];
-    
+
     stream.on('data', (chunk) => chunks.push(chunk));
     stream.on('end', () => {
       const buffer = Buffer.concat(chunks);
-      
+
       // Check magic bytes for common video formats
       const hex = buffer.toString('hex');
-      
+
       // MP4/M4V: starts with ftyp
       if (hex.includes('66747970')) {
         resolve(true);
         return;
       }
-      
+
       // WebM: starts with 1a45dfa3
       if (hex.startsWith('1a45dfa3')) {
         resolve(true);
         return;
       }
-      
+
       // AVI: starts with RIFF and contains AVI
       if (hex.startsWith('52494646') && hex.includes('415649')) {
         resolve(true);
         return;
       }
-      
+
       // MOV: similar to MP4, contains ftyp
       if (hex.includes('66747970')) {
         resolve(true);
         return;
       }
-      
+
       // MKV: starts with 1a45dfa3
       if (hex.startsWith('1a45dfa3')) {
         resolve(true);
         return;
       }
-      
+
       // If we can't verify by magic bytes, trust the extension
       resolve(true);
     });
-    
+
     stream.on('error', () => resolve(false));
   });
 }
-
 
 ipcMain.on('resize-to-default', () => {
   if (mainWindow) {
@@ -214,7 +204,10 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-const WINDOW_STATE_PATH = path.join(app.getPath('userData'), 'window-state.json');
+const WINDOW_STATE_PATH = path.join(
+  app.getPath('userData'),
+  'window-state.json',
+);
 
 function loadWindowState() {
   try {
@@ -232,18 +225,14 @@ function saveWindowState(window) {
   fs.writeFileSync(WINDOW_STATE_PATH, JSON.stringify(bounds));
 }
 
-
 const createWindow = async () => {
   if (isDebug) {
     await installExtensions();
 
-
-  if (typeof window !== 'undefined') {
-     window.React = React;
-}
+    if (typeof window !== 'undefined') {
+      window.React = React;
+    }
   }
-
-
 
   const getAssetPath = (...paths) => {
     return path.join(RESOURCES_PATH, ...paths);
@@ -252,11 +241,9 @@ const createWindow = async () => {
   // Load previous window state
   const windowState = loadWindowState();
 
+  const preloadPath = '../../.erb/dll/preload.js';
 
-   const preloadPath ='../../.erb/dll/preload.js';
-
-
-  console.log('>>>>>>>>>>>>>>>>>>'+ RESOURCES_PATH + preloadPath)
+  console.log('>>>>>>>>>>>>>>>>>>' + RESOURCES_PATH + preloadPath);
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -267,44 +254,51 @@ const createWindow = async () => {
     icon: getAssetPath('icons/folder.png'),
     webPreferences: {
       contextIsolation: true,
-        nodeIntegration: false,
+      nodeIntegration: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, preloadPath), // ../../.erb/dll/preload.js
-    sandbox: false,  
-    webSecurity: true,
-    allowRunningInsecureContent: false,
-    allowFileAccessFromFileURLs: true,
-    allowUniversalAccessFromFileURLs: true,
-    // experimentalFeatures: true,  
-    enableRemoteModule: false
+      sandbox: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      allowFileAccessFromFileURLs: true,
+      allowUniversalAccessFromFileURLs: true,
+      // experimentalFeatures: true,
+      enableRemoteModule: false,
     },
   });
-  console.log('main - dirname  -----------' +__dirname);
+  console.log('main - dirname  -----------' + __dirname);
 
-  console.log('Main window created with dimensions:', {
-    width: windowState.width || 555,
-    height: windowState.height || 555
-  }, 'app is packed: ', app.isPackaged);
+  console.log(
+    'Main window created with dimensions:',
+    {
+      width: windowState.width || 555,
+      height: windowState.height || 555,
+    },
+    'app is packed: ',
+    app.isPackaged,
+  );
 
   mainWindow.loadURL(resolveHtmlPath('index.html')); // old line
- // mainWindow.loadURL(resolveHtmlPath(path.join(__dirname, `${appVersion}/index.html`)));
+  // mainWindow.loadURL(resolveHtmlPath(path.join(__dirname, `${appVersion}/index.html`)));
 
- console.log('---- MAIN - dirname  -----------' +__dirname);
+  console.log('---- MAIN - dirname  -----------' + __dirname);
 
-mainWindow.webContents.on('will-prevent-unload', (e) => {
-  // code for showMessageBoxSync, prevent default if the user wants to close
-  if (process.platform === 'win32') {
-    mainWindow.hide();
-    setTimeout(() => mainWindow.show());
-  }
-});
-
-
+  mainWindow.webContents.on('will-prevent-unload', (e) => {
+    // code for showMessageBoxSync, prevent default if the user wants to close
+    if (process.platform === 'win32') {
+      mainWindow.hide();
+      setTimeout(() => mainWindow.show());
+    }
+  });
 
   mainWindow.on('ready-to-show', () => {
-
-    console.log('>>>>>>>>>>>>>' + __dirname + '../../../.erb/dll/preload.js ' + app.isPackaged);
+    console.log(
+      '>>>>>>>>>>>>>' +
+        __dirname +
+        '../../../.erb/dll/preload.js ' +
+        app.isPackaged,
+    );
 
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -318,25 +312,22 @@ mainWindow.webContents.on('will-prevent-unload', (e) => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
-      if (BrowserWindow.getAllWindows().length === 0) {
-    app.quit();
-  }
+    if (BrowserWindow.getAllWindows().length === 0) {
+      app.quit();
+    }
   });
 
   mainWindow.on('close', () => {
     saveWindowState(mainWindow);
   });
 
-
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
-
-
-          shell.openExternal(edata.url);
-      return { action: 'deny' };
+    shell.openExternal(edata.url);
+    return { action: 'deny' };
   });
 
   // Remove this if your app does not use auto updates
@@ -360,113 +351,107 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    RESOURCES_PATH = app.isPackaged
+      ? path.join(process.resourcesPath, 'assets')
+      : path.join(__dirname, '../../assets');
 
-    
-       RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
+    //  console.log('RESOURCES_PATH:', RESOURCES_PATH);
 
-
-//  console.log('RESOURCES_PATH:', RESOURCES_PATH);
-  
     // Register safe local file protocol
     // protocol.registerFileProtocol('safe-file', (request, callback) => {
     //   try {
     //     // Remove 'safe-file:///' prefix
     //     let filePath = request.url.replace('safe-file:///', '');
-        
+
     //     // Decode URL encoding
     //     filePath = decodeURIComponent(filePath);
-        
+
     //     console.log('📹 Safe-file protocol serving:', filePath);
-        
+
     //     if (!fs.existsSync(filePath)) {
     //       console.error('❌ File not found:', filePath);
     //       callback({ error: -6 }); // FILE_NOT_FOUND
     //       return;
     //     }
-        
+
     //     callback({ path: filePath });
     //   } catch (error) {
     //     console.error('❌ Protocol handler error:', error);
     //     callback({ error: -2 }); // FAILED
     //   }
     // });
-    
 
     protocol.registerStreamProtocol('safe-file', (request, callback) => {
-  try {
-    // Handle both safe-file:/// and safe-file://
-    let url = request.url;
-    
-    // Remove protocol and normalize
-    url = url.replace('safe-file://', '');
-    url = url.replace(/^\/+/, ''); // Remove leading slashes
-    
-    // Decode URL encoding
-    let filePath = decodeURIComponent(url);
-    
-    // On Windows, ensure we have the drive letter with colon
-    // Convert "C/Users/..." to "C:/Users/..."
-    if (process.platform === 'win32' && filePath.match(/^[a-zA-Z]\//)) {
-      filePath = filePath.charAt(0) + ':' + filePath.slice(1);
-    }
-    
-    console.log('📹 Stream protocol serving:', filePath);
-    console.log('📹 Original URL:', request.url);
-    
-    if (!fs.existsSync(filePath)) {
-      console.error('❌ File not found:', filePath);
-      callback({ statusCode: 404 });
-      return;
-    }
-    
-    // Get file info
-    const ext = path.extname(filePath).toLowerCase();
-    const stats = fs.statSync(filePath);
-    
-    // MIME types
-    const mimeTypes = {
-      '.mp4': 'video/mp4',
-      '.webm': 'video/webm',
-      '.mov': 'video/mp4',
-      '.ogg': 'video/ogg',
-      '.ogv': 'video/ogg',
-      '.mp3': 'audio/mpeg',
-      '.wav': 'audio/wav',
-      '.m4a': 'audio/mp4',
-      '.pdf': 'application/pdf',
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.gif': 'image/gif'
-    };
-    
-    const mimeType = mimeTypes[ext] || 'application/octet-stream';
-    
-    console.log('✅ Streaming file:', {
-      size: stats.size,
-      mimeType: mimeType,
-      ext: ext
-    });
-    
-    // Stream the file
-    callback({
-      statusCode: 200,
-      headers: {
-        'Content-Type': mimeType,
-        'Content-Length': stats.size,
-        'Accept-Ranges': 'bytes'
-      },
-      data: fs.createReadStream(filePath)
-    });
-    
-  } catch (error) {
-    console.error('❌ Stream protocol error:', error);
-    callback({ statusCode: 500 });
-  }
-});
+      try {
+        // Handle both safe-file:/// and safe-file://
+        let url = request.url;
 
+        // Remove protocol and normalize
+        url = url.replace('safe-file://', '');
+        url = url.replace(/^\/+/, ''); // Remove leading slashes
+
+        // Decode URL encoding
+        let filePath = decodeURIComponent(url);
+
+        // On Windows, ensure we have the drive letter with colon
+        // Convert "C/Users/..." to "C:/Users/..."
+        if (process.platform === 'win32' && filePath.match(/^[a-zA-Z]\//)) {
+          filePath = filePath.charAt(0) + ':' + filePath.slice(1);
+        }
+
+        console.log('📹 Stream protocol serving:', filePath);
+        console.log('📹 Original URL:', request.url);
+
+        if (!fs.existsSync(filePath)) {
+          console.error('❌ File not found:', filePath);
+          callback({ statusCode: 404 });
+          return;
+        }
+
+        // Get file info
+        const ext = path.extname(filePath).toLowerCase();
+        const stats = fs.statSync(filePath);
+
+        // MIME types
+        const mimeTypes = {
+          '.mp4': 'video/mp4',
+          '.webm': 'video/webm',
+          '.mov': 'video/mp4',
+          '.ogg': 'video/ogg',
+          '.ogv': 'video/ogg',
+          '.mp3': 'audio/mpeg',
+          '.wav': 'audio/wav',
+          '.m4a': 'audio/mp4',
+          '.pdf': 'application/pdf',
+          '.png': 'image/png',
+          '.jpg': 'image/jpeg',
+          '.jpeg': 'image/jpeg',
+          '.gif': 'image/gif',
+        };
+
+        const mimeType = mimeTypes[ext] || 'application/octet-stream';
+
+        console.log('✅ Streaming file:', {
+          size: stats.size,
+          mimeType: mimeType,
+          ext: ext,
+        });
+
+        // Stream the file
+        callback({
+          statusCode: 200,
+          headers: {
+            'Content-Type': mimeType,
+            'Content-Length': stats.size,
+            'Accept-Ranges': 'bytes',
+          },
+          data: fs.createReadStream(filePath),
+        });
+      } catch (error) {
+        console.error('❌ Stream protocol error:', error);
+        callback({ statusCode: 500 });
+      }
+    });
 
     createWindow();
     app.on('activate', () => {
@@ -480,8 +465,6 @@ app
 
 // Replace your existing handlers with these:
 ipcMain.handle('get-asset-path', (event, relativePath) => {
-
-
   const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
 
   // Create the directory if it doesn't exist
@@ -494,13 +477,16 @@ ipcMain.handle('get-asset-path', (event, relativePath) => {
 
 ipcMain.handle('read-asset-file', async (event, relativePath) => {
   try {
-// use appdata or resources
+    // use appdata or resources
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
-    const appDataFile = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+    const appDataFile = path.join(
+      APP_DATA_PATH,
+      relativePath.replace('assets/', ''),
+    );
 
     // If file exists in AppData, use it
     if (fs.existsSync(appDataFile)) {
-      console.log('Reading from AppData:', appDataFile);
+      console.log('Trace - Reading from AppData:', appDataFile);
       return fs.readFileSync(appDataFile, 'utf8');
     }
 
@@ -517,35 +503,62 @@ ipcMain.handle('read-asset-file', async (event, relativePath) => {
   }
 });
 
+ipcMain.handle('update-version-file', async () => {
+  const bundleVer = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets/version.txt')
+    : path.join(__dirname, '../../assets/version.txt');
+
+  if (!fs.existsSync(bundleVer)) {
+    fs.mkdirSync(bundleVer, { recursive: true });
+  }
+  const oldVer = fs.readFileSync(bundleVer, 'utf8');
+
+  const newVer = (parseInt(oldVer) || 0) + 1;
+
+  fs.writeFileSync(bundleVer, newVer.toString(), 'utf8');
+  return newVer;
+});
+
+ipcMain.handle('check-version-file', async (curVersion) => {
+  const bundleVerText = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets/version.txt')
+    : path.join(__dirname, '../../assets/version.txt');
+
+  // If file exists in AppData, use it
+  if (fs.existsSync(bundleVer)) {
+    const saveVer = fs.readFileSync(bundleVerText, 'utf8');
+    return saveVer;
+  } else {
+    return { success: false };
+  }
+});
 
 // Add IPC handler to clear all data
 ipcMain.handle('clear-all-data', async () => {
   try {
     const session = mainWindow.webContents.session;
-    
+
     // Clear all caches
     await session.clearCache();
     await session.clearStorageData();
-    
+
     // Clear IndexedDB
     const userDataPath = app.getPath('userData');
     const fs = require('fs');
     const path = require('path');
 
-    
     // // Delete media files
     // const mediaPath = path.join(userDataPath, 'assets', 'media');
     // if (fs.existsSync(mediaPath)) {
     //   fs.rmSync(mediaPath, { recursive: true, force: true });
     // }
-    
+
     // Delete database
     const dbPath = path.join(userDataPath, 'IndexedDB');
     if (fs.existsSync(dbPath)) {
       fs.rmSync(dbPath, { recursive: true, force: true });
     }
-    
-    
+
     console.log('✅ All data cleared');
     return { success: true };
   } catch (error) {
@@ -554,11 +567,14 @@ ipcMain.handle('clear-all-data', async () => {
   }
 });
 
-
 // copy bundled database to AppData on first run
 ipcMain.handle('setup-user-database', async () => {
   try {
-    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets', 'databases');
+    const APP_DATA_PATH = path.join(
+      app.getPath('userData'),
+      'assets',
+      'databases',
+    );
     const userDbPath = path.join(APP_DATA_PATH, 'dexie-import.json');
 
     // If user database doesn't exist, copy from bundled assets
@@ -585,43 +601,44 @@ ipcMain.handle('setup-user-database', async () => {
   }
 });
 
-
-
 // copy bundled database to AppData on first run
-ipcMain.handle('read-bundled-file', async (event,  fileName) => {
+ipcMain.handle('read-bundled-file', async (event, fileName) => {
   try {
     // Read from resources/assets/databases folder
     const filePath = path.join(RESOURCES_PATH, 'databases', fileName);
-    
+
     console.log('📁 Reading bundled file:', filePath);
-    
+
     if (!fs.existsSync(filePath)) {
       throw new Error(`Bundled file not found: ${filePath}`);
     }
-    
+
     const fileContents = fs.readFileSync(filePath, 'utf-8');
-    
+
     console.log('✅ Read bundled file, size:', fileContents.length);
-    
-    return { 
-      success: true, 
+
+    return {
+      success: true,
       data: fileContents,
-      name: fileName
+      name: fileName,
     };
   } catch (error) {
     console.error('❌ Error reading bundled file:', error);
-    return { 
-      success: false, 
-      error: error.message 
+    return {
+      success: false,
+      error: error.message,
     };
   }
 });
 
-
 // copy bundled database to AppData on first run
 ipcMain.handle('overwrite-database', async () => {
   try {
-    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets', 'databases');
+    const APP_DATA_PATH = path.join(
+      app.getPath('userData'),
+      'assets',
+      'databases',
+    );
     const userDbPath = path.join(APP_DATA_PATH, 'dexie-import.json');
 
     // If user database doesn't exist, copy from bundled assets
@@ -648,41 +665,53 @@ ipcMain.handle('overwrite-database', async () => {
   }
 });
 
-
-    // If there are build issues with saving default database, the problem is here in this fuction with projectExportPath
+// If there are build issues with saving default database, the problem is here in this fuction with projectExportPath
 // export database as file
 ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
   try {
+    // app data path
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
-    const fullPath = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+    const fullPath = path.join(
+      APP_DATA_PATH,
+      relativePath.replace('assets/', ''),
+    );
 
-    const projectRoot = app.isPackaged
-  ? path.dirname(process.execPath)  // When packaged, use exe location
-  : path.join(__dirname, '../..');  // In dev, go up from compiled main.js
 
-  // diff 
 
-    // Create directories if they don't exist
+    // diff
+
+    // Create appdata  directories if they don't exist
     const dir = path.dirname(fullPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    // Write the file SAVE ASSET (WORKS)
-
-
-    const projectExportPath = path.join(projectRoot, 'assets/databases/', 'dexie-import.json');
-
-    const exportDir = path.dirname(projectExportPath);
-if (!fs.existsSync(exportDir)) {
-  fs.mkdirSync(exportDir, { recursive: true });
-}
-
-    fs.writeFileSync(projectExportPath, content, 'utf8');
-    console.log('Saved asset file to:', projectExportPath);
-
     fs.writeFileSync(fullPath, content, 'utf8');
-    console.log('Saved asset file to:', fullPath);
+    console.log('-- Saved asset file to:', fullPath);
+
+
+    // Write the file SAVE ASSET TO RESOURCES (WORKS)
+
+        // resources path
+    const projectRoot = app.isPackaged
+      ? path.dirname(process.execPath) // When packaged, use exe location
+      : path.join(__dirname, '../..'); // In dev, go up from compiled main.js
+
+    const resourcePath = path.join(
+      projectRoot,
+      'assets/databases/',
+      'dexie-import.json',
+    );
+
+    const exportDir = path.dirname(resourcePath);
+    if (!fs.existsSync(exportDir)) {
+      fs.mkdirSync(exportDir, { recursive: true });
+    }
+
+    fs.writeFileSync(resourcePath, content, 'utf8');
+    console.log('-- Saved asset file to:', resourcePath);
+
+
 
     return fullPath;
   } catch (error) {
@@ -693,62 +722,59 @@ if (!fs.existsSync(exportDir)) {
 
 // Get the app's data directory (works in both dev and packaged)
 const getAppDataPath = () => {
-  return app.isPackaged
-    ? path.join(process.resourcesPath, 'app')
-    : __dirname;
+  return app.isPackaged ? path.join(process.resourcesPath, 'app') : __dirname;
 };
 
-// Save file to app directory - this saves to Appdata!! 
-ipcMain.handle('save-artifact-file', async (event, relativePath, arrayBuffer) => {
-  try {
-console.log('save artifact hit');
-    const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
-    const fullPath = path.join(APP_DATA_PATH, relativePath.replace('assets/', ''));
+// Save file to app directory - this saves to Appdata!!
+ipcMain.handle(
+  'save-artifact-file',
+  async (event, relativePath, arrayBuffer) => {
+    try {
+      console.log('save artifact hit');
+      const APP_DATA_PATH = path.join(app.getPath('userData'), 'assets');
+      const fullPath = path.join(
+        APP_DATA_PATH,
+        relativePath.replace('assets/', ''),
+      );
 
+      const projectRoot = app.isPackaged
+        ? path.dirname(process.execPath) // When packaged, use exe location
+        : path.join(__dirname, '../..'); // In dev, go up from compiled main.js
 
-        const projectRoot = app.isPackaged
-  ? path.dirname(process.execPath)  // When packaged, use exe location
-  : path.join(__dirname, '../..');  // In dev, go up from compiled main.js
-  
+      // Create directories if they don't exist
+      const dir = path.dirname(fullPath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
 
-    
-    // Create directories if they don't exist
-    const dir = path.dirname(fullPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+      // Write the file  SAVE ARTIFACT
+
+      // fs.writeFileSync(fullPath, Buffer.from(arrayBuffer));
+
+      const projectExportPath = path.join(
+        projectRoot,
+        'assets/media/',
+        'file.png',
+      );
+
+      const exportDir = path.dirname(projectExportPath);
+      if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true });
+      }
+
+      fs.writeFileSync(projectExportPath, content, 'utf8');
+      console.log('Saved media file to:', projectExportPath);
+
+      fs.writeFileSync(fullPath, content, 'utf8');
+      console.log('Saved media file to:', fullPath);
+
+      return { success: true, path: fullPath };
+    } catch (error) {
+      console.error('Error saving artifact:', error);
+      return { success: false, error: error.message };
     }
-
-    // Write the file  SAVE ARTIFACT
-    
-
-    // fs.writeFileSync(fullPath, Buffer.from(arrayBuffer));
-    
-    
-
-    const projectExportPath = path.join(projectRoot, 'assets/media/', 'file.png');
-
-    const exportDir = path.dirname(projectExportPath);
-if (!fs.existsSync(exportDir)) {
-  fs.mkdirSync(exportDir, { recursive: true });
-}
-
-    fs.writeFileSync(projectExportPath, content, 'utf8');
-    console.log('Saved media file to:', projectExportPath);
-
-    fs.writeFileSync(fullPath, content, 'utf8');
-    console.log('Saved media file to:', fullPath);
-
-
-    
-    return { success: true, path: fullPath };
-  } catch (error) {
-    console.error('Error saving artifact:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-
-
+  },
+);
 
 // Get file URL for display
 ipcMain.handle('get-artifact-url', async (event, relativePath) => {
@@ -758,7 +784,6 @@ ipcMain.handle('get-artifact-url', async (event, relativePath) => {
       : path.join(__dirname, '..');
 
     const fullPath = path.join(appDataPath, relativePath);
-
 
     const absolutePath = path.resolve(fullPath);
 
@@ -781,9 +806,6 @@ ipcMain.handle('get-artifact-url', async (event, relativePath) => {
 
 ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
   try {
-
-
-
     if (!RESOURCES_PATH) {
       throw new Error('RESOURCES_PATH is not initialized');
     }
@@ -792,29 +814,28 @@ ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
     // return; // temp
 
     const mediaDir = path.join(RESOURCES_PATH, 'media');
-    
-    
+
     // Create directory if it doesn't exist
     fs.mkdirSync(mediaDir, { recursive: true });
-    
+
     // Generate unique filename to avoid conflicts
     const timestamp = Date.now();
     const ext = path.extname(fileName);
     const baseName = path.basename(fileName, ext);
     const uniqueFileName = `${baseName}-${timestamp}${ext}`;
-    
+
     const filePath = path.join(mediaDir, uniqueFileName);
-    
+
     // Write file
     fs.writeFileSync(filePath, Buffer.from(arrayBuffer));
-    
+
     console.log('Main save-media: Media file saved to:', filePath);
-    
+
     // Return relative path for database storage
-    return { 
-      success: true, 
-      path: `media/${uniqueFileName}`,  // Relative to assets/
-      fullPath: filePath 
+    return {
+      success: true,
+      path: `media/${uniqueFileName}`, // Relative to assets/
+      fullPath: filePath,
     };
   } catch (error) {
     console.error('Error saving media file:', error);
@@ -822,9 +843,15 @@ ipcMain.handle('save-media-file', async (event, fileName, arrayBuffer) => {
   }
 });
 
-
-const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v'];
-
+const VIDEO_EXTENSIONS = [
+  '.mp4',
+  '.webm',
+  '.ogg',
+  '.mov',
+  '.avi',
+  '.mkv',
+  '.m4v',
+];
 
 // Get full file:// URL for media files
 ipcMain.handle('get-media-path', async (event, relativePath) => {
@@ -836,24 +863,20 @@ ipcMain.handle('get-media-path', async (event, relativePath) => {
     const fileName = relativePath.replace('media/', '');
     const fullPath = path.join(RESOURCES_PATH, 'media', fileName);
     // const ext = path.extname(fileName).toLowerCase();
-    
-    console.log('📁 Gettingdd  media path for:', fullPath);
-    console.log('📁 File exists?', fs.existsSync(fullPath));
-    
+
     if (!fs.existsSync(fullPath)) {
       throw new Error('File not found: ' + fullPath);
     }
-    
-    
-    // ✅ Return safe-file:// URL instead of file://
+
+    //  Return safe-file:// URL instead of file://
     const normalizedPath = fullPath.replace(/\\/g, '/');
     const safeUrl = `safe-file:///${normalizedPath}`;
-    
-    console.log('✅ Returning safe URL:', safeUrl);
-    
+
+    console.log(' Returning safe URL:', safeUrl);
+
     return safeUrl;
   } catch (error) {
-    console.error('❌ Error getting media path:', error);
+    console.error(' Error getting media path:', error);
     return null;
   }
 });
@@ -862,7 +885,7 @@ ipcMain.handle('get-media-path', async (event, relativePath) => {
 ipcMain.handle('delete-media-file', async (event, relativePath) => {
   try {
     const fullPath = path.join(RESOURCES_PATH, relativePath);
-    
+
     if (fs.existsSync(fullPath)) {
       fs.unlinkSync(fullPath);
       return { success: true };
@@ -882,8 +905,6 @@ console.log('Registered IPC handlers:', ipcMain.eventNames());
 // const fs = require('fs');
 // const path = require('path');
 
-
-
 ipcMain.handle('get-resources-path', async () => {
   if (!RESOURCES_PATH) {
     throw new Error('RESOURCES_PATH is not initialized');
@@ -891,6 +912,3 @@ ipcMain.handle('get-resources-path', async () => {
   console.log('📁 Returning RESOURCES_PATH:', RESOURCES_PATH);
   return RESOURCES_PATH;
 });
-
-
-

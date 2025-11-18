@@ -62,12 +62,10 @@ const Entry = () => {
         <>
           {isAdmin ? (
             <>
-            Admin 
               <AddEntryForm itemID={id} />
             </>
           ) : (
             <>
-            Not Admin
               <StaticSingleDefault itemID={id} />
             </>
           )}

@@ -231,7 +231,7 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
         <embed
           src={mediaDataUrl}
           type="application/pdf"
-          class="pdf" 
+          className="pdf" 
           style={{
             width: "100%",
             // height: "600px",

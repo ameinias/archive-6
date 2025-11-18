@@ -47,6 +47,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // reads from bundle 
     readBundledFile: (fileName) => ipcRenderer.invoke('read-bundled-file', fileName),
 
+// checks saved versions to see if database needs new set up
+      updateVersionFile: () => ipcRenderer.invoke('update-version-file'),
+      checkVersionFile: (curVersion) => ipcRenderer.invoke('check-version-file', curVersion),
+
   // Copies from Resources to AppData
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
   // saves default database to app data

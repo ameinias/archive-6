@@ -1,4 +1,8 @@
 // utils/events.js
+
+// This intervenes in a lot of electron calls, and chooses what to do if it's not electron. Right now it's mostly just throwing null. 
+
+
 class EventManager {
   constructor() {
     this.isElectron = typeof window !== 'undefined' && window.electronAPI;
@@ -56,6 +60,22 @@ class EventManager {
     }
   }
 
+    updateVersionFile() {
+    if (this.isElectron) {
+      return window.electronAPI.updateVersionFile();
+    } else {
+      return null;
+    }
+  }
+
+    checkVersionFile(curVersion) {
+    if (this.isElectron) {
+      return window.electronAPI.checkVersionFile(curVersion);
+    } else {
+      return null;
+    }
+  }
+
   async readBundledFile(fileName = 'dexie-import.json') {
     console.log('📁 readBundledFile called with:', fileName);
     
@@ -94,7 +114,7 @@ class EventManager {
 
   saveAssetFile(path, content) {
     if (this.isElectron) {
-      return window.electronAPI.readAssetFile(path, content);
+      return window.electronAPI.saveAssetFile(path, content);
     } else {
       return null;
     }

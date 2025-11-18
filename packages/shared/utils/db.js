@@ -4,7 +4,6 @@ import "dexie-export-import";
 import {setStartAvalability} from "../hooks/dbHooks.js"
 import {eventManager} from '@utils/events';
 
-
 export const db = new Dexie('gb-current');
 
 
@@ -119,6 +118,7 @@ export const dbHelpers = {
   },
 
 
+
   // Delete a main entry and all its subentries
   async deleteEntryWithSubentries(entryId) {
     await db.subentries.where('parentId').equals(entryId).delete();
@@ -129,6 +129,7 @@ export const dbHelpers = {
     return count === 0;
   },
 
+  //depreciated
    async importFromBlob(blob) {
     await db.close();
     await db.delete();
@@ -222,6 +223,7 @@ export const saveAsDefaultDatabase = async () => {
 
     const content = await blob.text();
 
+    // doesn't seem to be updating app data right now 
     await eventManager.saveAssetFile(
       'assets/databases/dexie-import.json',
       content
@@ -231,18 +233,13 @@ export const saveAsDefaultDatabase = async () => {
     const fullPath = await eventManager.getAssetPath('databases/dexie-import.json');
     console.log('Database saved successfully to:', fullPath);
 
-          // await window.electronAPI.showAlert(`Make sure you are also saving into the VS code project, to assets/databases/dexie-import.json.`);
-
-
-   console.log('Database saved successfully to:', fullPath);
-
 
   } catch (error) {
     console.error('Error saving default database:', error);
   }
 };
 
-export const newGame = async () => {
+export const newGame = async (startHash) => {
   try {
     // called main.js to set up the database in AppData
 
@@ -255,14 +252,24 @@ export const newGame = async () => {
       relativePath
     );
 
-    await dbHelpers.importFromBlob(
-      new Blob([fileContents], { type: 'application/json' }),
-    );
+   
+        await db.close();
+    await db.delete();
 
+    await Dexie.import( new Blob([fileContents], { type: 'application/json' }), {
+      progressCallback: (progress) => {
+        console.log(`Import progress: ${progress.completedRows}/${progress.totalRows} rows`);
+      },
+    });
+
+    await db.open();
+
+    await setStartAvalability(startHash);
     await setDefaultParameters();
-
+    // window.location.reload(); // this did wrk to force datastate refresh
 
     console.log('New game started successfully! ' + userDbPath);
+    return true;
   } catch (error) {
     console.error('Error starting new game:', error);
   }
@@ -271,10 +278,6 @@ export const newGame = async () => {
 export const setDefaultParameters = async () =>
 {
   try{
-
-
-
-      await setStartAvalability();
 
     await db.subentries.toCollection().modify({ bookmark: false });
     await db.friends.toCollection().modify({ bookmark: false });
@@ -287,9 +290,9 @@ export const setDefaultParameters = async () =>
   }
 }
 
-export const newGameWithWarning = async () => {
+export const newGameWithWarning = async (startHash) => {
   if (await eventManager.showConfirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
-    await newGame();
+    await newGame(startHash);
   }
 
 
