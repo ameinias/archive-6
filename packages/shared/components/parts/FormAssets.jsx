@@ -82,3 +82,29 @@ export function FormDropDown({
         </div>
     );
 }
+
+
+export function FormHexes({
+    label,
+    name,
+    formValue,
+    readOnly = false,
+    onChange,
+    options
+}) {
+    return (
+        <div className='row'>
+            {label && (<div className="formLabel">{label}</div>)}
+            <select
+                name={name}
+                className="form-control form-control-dropdown col hex-select"
+                multiple={true}
+                value={formValue}
+                onChange={onChange}
+                disabled={readOnly}
+                >
+                {options}
+            </select>
+        </div>
+    );
+}

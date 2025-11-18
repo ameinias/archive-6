@@ -134,7 +134,6 @@ export default function App() {
       <RouteTracker />
           <RouterPath />
            {/* <TestComp /> */}
- sfsddsf dsds
         <StatusBar />
       </div>
 </Router>

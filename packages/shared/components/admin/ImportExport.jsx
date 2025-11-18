@@ -315,6 +315,24 @@ function ImportExport() {
     }
   };
 
+
+  const peeak= async (file) => {
+
+    const importMeta = await peakImportFile(file);
+
+assert.areEqual(importMeta.formatName, "dexie");
+assert.isTrue(importMeta.formatVersion === 1);
+console.log("Database name:", importMeta.data.databaseName);
+console.log("Database version:", importMeta.data.databaseVersion);
+console.log("Database version:", importMeta.data.databaseVersion);
+console.log("Tables:", importMeta.data.tables.map(t =>
+  `${t.name} (${t.rowCount} rows)`
+).join('\n\t'));
+
+  };
+
+
+  // MIGHT NOT BE ABLE TO ACTUALLY APPEND https://github.com/dexie/Dexie.js/issues/1123#event-3767742826
   const handleImportAppend = async (file) => {
     try {
       if (!file) throw new Error(`Only files can be dropped here`);
@@ -324,17 +342,28 @@ function ImportExport() {
       await db.close();
 
       // Import the file and get the new database instance
-      const importedDb = await Dexie.import(file, {
-        overwriteValues: true,
-        progressCallback: (progress) => {
-          console.log(
-            `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
-          );
-          setStatusMessage(
-            `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
-          );
-        },
-      });
+      // const importedDb = await Dexie.import(file, {
+      //   overwriteValues: false,
+      //   acceptVersionDiff: true,
+      //   progressCallback: (progress) => {
+      //     console.log(
+      //       `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
+      //     );
+      //     setStatusMessage(
+      //       `Import progress: ${progress.completedRows}/${progress.totalRows} rows`,
+      //     );
+      //   },
+      // });
+
+      // peeak(importedDb);
+
+      await Dexie.importInto(db, file, 
+        {
+ acceptChangedPrimaryKey: true,
+
+        }
+      );
+
 
       console.log("Import complete");
 

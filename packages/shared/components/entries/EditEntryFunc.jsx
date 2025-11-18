@@ -565,9 +565,10 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             </div>
             <div className="col">
               {" "}
-              <FormAssets.FormDropDown
+              <FormAssets.FormHexes
                 name="hexHash"
                 multiple={true}
+                rows={3}
                 formValue={formValues.hexHash}
                 readOnly={false}
                 onChange={handleArrayChange}

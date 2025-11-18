@@ -224,6 +224,34 @@ export const dbHelpers = {
 };
 
 
+export const handleJSONExport = async (fileName = 'dexie-export-web.json') => {
+    try {
+      // Ensure the export function is available
+
+      // Not working for now. Plan to use to
+      // reset the DB if the assets/databases/dexie-import.json is a newer version than current.
+      //UpdateDBCount();
+
+      if (typeof db.export !== "function") {
+        throw new Error("dexie-export-import addon not properly loaded");
+      }
+      const blob = await db.export({ prettyJson: true });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      console.log("Export complete");
+      setStatusMessage("Export started, check your downloads folder.");
+    } catch (error) {
+      console.error("" + error);
+    }
+  };
+
+
 
 export const saveAsDefaultDatabase = async () => {
   try {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
-import { dbHelpers, newGame, newGameWithWarning } from '@utils/db';
+import { dbHelpers, newGame, newGameWithWarning, saveAsDefaultDatabase, handleJSONExport } from '@utils/db';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { eventManager } from '@utils/events';
 
@@ -31,6 +31,20 @@ const NavBar = () => {
 
 
 
+    const SaveOut= async () => {
+
+
+    // setStatusMessage("sdfsfsdf");
+      console.log("should be?");
+
+      if(isElectron)
+        if(await eventManager.showConfirm("Overwrite?"))
+        {saveAsDefaultDatabase();} else {console.log("canceled overwrite.");}
+          
+      else
+        handleJSONExport('dexie-export-web.json');
+
+    }
 
 
   return (
@@ -62,7 +76,9 @@ const NavBar = () => {
         <li role="menuitem"><Link className="dropdown-item" to='/import-export'>Database Actions</Link></li>
         </ul>
         </li>
-
+{isElectron ? (<li role="menuitem" tabIndex="0" aria-haspopup="true">
+                <Link  onClick={SaveOut }>Dev Backup</Link></li>):(<div><li role="menuitem" >
+                <Link onClick={SaveOut }>Web Backup</Link></li></div>)}
           </>
         )}
         </ul>

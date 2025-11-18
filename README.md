@@ -16,17 +16,20 @@ projects>assets
 
 
 ## todo
-7.0.1
+### 7.0.1
 []  ImportExport UpdateDBVersion() - check that bunblded resource is newer than existing DB and replace, so palytesters get net version. Maybe replace in the log in screen?
-[]  Check that media files save and load properly in electron package
+[x]  Check that media files save and load properly in electron package
 [] check that media files save and load properly in web version - if not, just disable that feature for web
 [x] get media files - audio, mp4 and pdf working 
 [] multiple start state bools - ImportExport NewGame(hexhash)
 [] Set default hexhash for game start (in log in with db version ?!)
 [x] fix hydration error on ListEditEntry
-[] Set default hexhash for new entries (easily changable - probably from importexport? maybe set in gamelogic?)
 
-0.6.*
+
+#### Abandoned features 
+[-] Set default hexhash for new entries (easily changable - probably from importexport? maybe set in gamelogic?) (Abandoned for now)
+
+### 0.6.*
 [x] Populate SingleItem from edit button
 [x]  Cross referencing
     - Needs to be able to select and cross reference two entries together (updates both entries on save)

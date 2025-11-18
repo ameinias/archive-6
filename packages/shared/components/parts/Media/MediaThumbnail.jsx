@@ -32,13 +32,13 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
 
         const okFileSize = mediaFile.size < 5 * 1024 * 1024;
 
-        console.log("📦 Loaded media:", {
-          name: mediaFile.name,
-          type: mediaFile.type,
-          size: mediaFile.size,
-          lessmax: okFileSize,
-          path: mediaFile.path,
-        });
+        // console.log(" Loaded media:", {
+        //   name: mediaFile.name,
+        //   type: mediaFile.type,
+        //   size: mediaFile.size,
+        //   lessmax: okFileSize,
+        //   path: mediaFile.path,
+        // });
 
         setFileName(mediaFile.name);
 

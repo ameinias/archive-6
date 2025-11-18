@@ -97,7 +97,7 @@ const Search = () => {
     <>
     <h3>Search</h3>
       {/* <InputGroup className="searchboxr"> */}
-      <div class="searchbox">
+      <div className="searchbox">
         <input
           type="search"
           onChange={handleChange}

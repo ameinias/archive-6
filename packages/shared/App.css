@@ -899,3 +899,7 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
   /* border: "1px solid #dee2e6"; */
   border-Radius: "4px";
 }
+
+.hex-select{
+  height:300px;
+}

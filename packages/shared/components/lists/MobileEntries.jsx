@@ -129,16 +129,16 @@ useEffect(() => {
               {sortedFriends.map((item) => (
                 <tr key={item.id}>
                   <td  data-label="name">
-                    <Link to={`/edit-item/${item.id}`}>
+                   {item.id}{" "} <Link to={`/entry/${item.id}`}>
                       {item.fauxID} : {item.title}
                     </Link>
                     </td>
                 
 
-                  <td width="20px" data-label="remove">
+                  <td width="25px" data-label="remove">
                     {' '}
                     <Button
-                      className="remove-button button-small remove-button-small"
+                      className="remove-button-small"
                       onClick={() => removeItem(item)}
                     >
                       {' '}
