@@ -140,22 +140,92 @@ export function useReturnDatabase(itemId) {
 // };
 
 
+// export const setStartAvalability = async (startHash) => {
+//   try {
+
+//     await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(startHash) || item.hexHash?.includes(startHash);
+//       console.log(item.id, item.hexHash, "available: ", item.available);
+//     });
+
+//     await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(startHash) || item.hexHash?.includes(startHash) });
+
+
+//     return { friendsUpdated: db.friends.length, subentriesUpdated: db.subentries.length };
+//   } catch (error) {
+//     return "Error.";
+//   }
+// };
+
+
+// this shold fix array issues
 export const setStartAvalability = async (startHash) => {
+  console.log('🎮 Setting start availability for hash:', startHash);
+  
   try {
+    // Get all entries
+    const subentries = await db.subentries.toArray();
+    const friends = await db.friends.toArray();
+    
+    console.log(`Processing ${friends.length} friends and ${subentries.length} subentries`);
+    
+    // Update subentries
+    const subentryUpdates = subentries.map(entry => {
+            let shouldBeAvailable = false;
+      
 
-    await db.friends.toCollection().modify(item => { item.available = item.hexHash?.includes(startHash) || item.hexHash?.includes(startHash);
-      console.log(item.id, item.hexHash, "available: ", item.available);
+        //  Handle both array and single number cases
+        if (Array.isArray(entry.hexHash)) {
+          shouldBeAvailable = entry.hexHash.includes(startHash);
+        } else if (typeof entry.hexHash === 'number') {
+          shouldBeAvailable = entry.hexHash === startHash;
+        }
+    
+      
+      return {
+        key: entry.id,
+        changes: { available: shouldBeAvailable }
+      };
     });
+    
+    if (subentryUpdates.length > 0) {
+      await db.subentries.bulkUpdate(subentryUpdates);
+    }
+    
+    // Update friends based on startHash
+    const friendUpdates = friends.map(entry => {
+      let shouldBeAvailable = false;
+      
 
-    await db.subentries.toCollection().modify(item => { item.available = item.hexHash?.includes(startHash) || item.hexHash?.includes(startHash) });
-
-
-    return { friendsUpdated: db.friends.length, subentriesUpdated: db.subentries.length };
+        //  Handle both array and single number cases
+        if (Array.isArray(entry.hexHash)) {
+          shouldBeAvailable = entry.hexHash.includes(startHash);
+        } else if (typeof entry.hexHash === 'number') {
+          shouldBeAvailable = entry.hexHash === startHash;
+        }
+    
+      
+      return {
+        key: entry.id,
+        changes: { available: shouldBeAvailable }
+      };
+    });
+    
+    if (friendUpdates.length > 0) {
+      await db.friends.bulkUpdate(friendUpdates);
+    }
+    
+    // Verify updates
+    const availableFriends = await db.friends.filter(f => f.available === true).count();
+    const availableSubs = await db.subentries.filter(s => s.available === true).count();
+    
+    console.log(' Start availability set:', { availableFriends, availableSubs });
+    
+    return { friendsUpdated: friendUpdates.length, subentriesUpdated: subentryUpdates.length };
   } catch (error) {
-    return "Error.";
+    console.error('❌ Error setting start availability:', error);
+    throw error;
   }
 };
-
 
 // picks between entries and wubentries and poulls out their respective media query.
 export function GetMediaCount(itemId, type) {

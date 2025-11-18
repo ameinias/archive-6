@@ -34,20 +34,20 @@ projects>assets
     - use this "entry" object type to trigger from open entry. 
       - Logic -> Open Entry -> Check Game State Conditionals -> If trigger effect, do so -> if trigger entry unlock, wait until next navigation step
 [x] bool for "start state" JSON
-[] button switch between admin and player mode
-[] image database (https://stackblitz.com/edit/dexie-images?file=console.ts)
+[x] button switch between admin and player mode
+[?] image database (https://stackblitz.com/edit/dexie-images?file=console.ts)
 [x] Make delete item work
-[] Need object that can seach for
-[] (Wishlist) format JSON new entry
-[] Is this importnat? https://dexie.org/docs/StorageManager
-[] https://www.fastdev.com/blog/blog/dexie-local-file-storage/
-[] search function 
-[] Display Media
-[] Form upload media
-[] Add Child Report to entry
-[] Display child report
-[] Auth route
-[] textbox edit based on auth route
+[x] Need object that can seach for
+[-] (Wishlist) format JSON new entry
+[-] Is this importnat? https://dexie.org/docs/StorageManager
+[-] https://www.fastdev.com/blog/blog/dexie-local-file-storage/
+[x] search function 
+[x] Display Media
+[x] Form upload media
+[x] Add Child Report to entry
+[x] Display child report
+[x] Auth route
+[x] textbox edit based on auth route
 [x] change new item to a form
 [] https://stackoverflow.com/questions/33211672/how-to-submit-a-form-using-enter-key-in-react-js
 []https://codepen.io/dfahlander/pen/RqwoaB/ 

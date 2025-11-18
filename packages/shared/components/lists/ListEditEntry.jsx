@@ -76,8 +76,8 @@ export function EntryList() {
       if (type === "subentry") {
         const hexArray = tempSubHexValue
           .split(",")
-          .map((hex) => hex.trim())
-          .filter((hex) => hex.length > 0);
+          .map((hex) => parseInt(hex.trim(), 10))
+          .filter((num) => !isNaN(num));
 
         await db.subentries.update(itemId, {
           hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null,
@@ -87,8 +87,8 @@ export function EntryList() {
       } else {
         const hexArray = tempHexValue
           .split(",")
-          .map((hex) => hex.trim())
-          .filter((hex) => hex.length > 0);
+          .map((hex) => parseInt(hex.trim(), 10))
+          .filter((num) => !isNaN(num));
 
         await db.friends.update(itemId, {
           hexHash: hexArray.length > 1 ? hexArray : hexArray[0] || null,
@@ -97,7 +97,9 @@ export function EntryList() {
         setTempHexValue("");
       }
 
-      setStatusMessage(itemId + " Hex hash updated successfully");
+      setStatusMessage(
+        itemId + " Hex hash " + tempSubHexValue + "updated successfully",
+      );
     } catch (error) {
       console.error("Error updating hex hash:", error);
       setStatusMessage("Error updating hex hash");
@@ -271,6 +273,7 @@ export function EntryList() {
                 {sortedFriends.map((item) => (
                   <tr key={item.id}>
                     <td data-label="name">
+                      {item.id}{" "}
                       <Link to={`/entry/${item.id}`}>
                         {item.fauxID} : {item.title}
                       </Link>
@@ -410,11 +413,9 @@ export function EntryList() {
                       {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
                     </td>
                     <td width="50px" data-label="date">
-    
-                        {item.date
-                          ? new Date(item.date).toLocaleDateString("en-US")
-                          : "No Date"}
-        
+                      {item.date
+                        ? new Date(item.date).toLocaleDateString("en-US")
+                        : "No Date"}
                     </td>
                     <td>
                       <EditableFields.EditResearcher

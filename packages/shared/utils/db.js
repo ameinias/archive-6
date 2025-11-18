@@ -57,6 +57,16 @@ db.version(4.6).stores({
 });
 
 
+// get rid of available on start
+db.version(4.7).stores({
+  gamedata: 'expVersion, uploadedAt',
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', 
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', 
+   media: '++id, name, type, size, path, uploadedAt'
+   
+});
+
+
 /*
 //  BETTER: Use populate event instead of ready
 db.on('populate', async () => {

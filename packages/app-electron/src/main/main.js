@@ -486,7 +486,7 @@ ipcMain.handle('read-asset-file', async (event, relativePath) => {
 
     // If file exists in AppData, use it
     if (fs.existsSync(appDataFile)) {
-      console.log('Trace - Reading from AppData:', appDataFile);
+      // console.log('Trace - Reading from AppData:', appDataFile);
       return fs.readFileSync(appDataFile, 'utf8');
     }
 
@@ -687,7 +687,7 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
     }
 
     fs.writeFileSync(fullPath, content, 'utf8');
-    console.log('-- Saved asset file to:', fullPath);
+
 
 
     // Write the file SAVE ASSET TO RESOURCES (WORKS)
@@ -709,7 +709,7 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
     }
 
     fs.writeFileSync(resourcePath, content, 'utf8');
-    console.log('-- Saved asset file to:', resourcePath);
+
 
 
 
