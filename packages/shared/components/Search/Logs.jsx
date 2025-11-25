@@ -33,7 +33,7 @@ const Logs = () => {
     const urlDirect = !gameLog.isAdmin
         ? 'entry'
         : 'edit-item';
-    const urlSubDirect = 'edit-subitem'; // Same for both admin and non-admin
+    const urlSubDirect = 'edit-subitem'; 
 
     useEffect(() => {
         generateLogs();
@@ -65,6 +65,7 @@ const Logs = () => {
                     displayDate: item.displayDate,
                     lastEditedBy: item.lastEditedBy,
                     hexHash: item.hexHash,
+                    unread: item.unread,
                 });
                 nextID = nextID + 1;
             }
@@ -86,6 +87,8 @@ const Logs = () => {
                     displayDate: subItem.displayDate,
                     lastEditedBy: subItem.lastEditedBy,
                     hexHash: subItem.hexHash,
+                    unread: subItem.unread,
+                    subCategory: subItem.subCategory,
 
                 });
                 nextID = nextID + 1;
@@ -128,24 +131,27 @@ const Logs = () => {
         <table className="searchResults">
           <tbody>
             {results.map((item) => (
-              <tr key={item.id}>
+              <tr key={item.id} className={item.unread ? 'unread-display' : 'dickie' }>
                 <td >
                  {item.type === 'sub' ?
                  (
 
-                 <>
+                 <> &nbsp; &nbsp;
                  {(!gameLog.isAdmin ?  (
-                 <Link to={`/entry/${item.parentId}/`}>{item.fauxID} : {item.title}</Link>
+                 <Link to={`/entry/${item.parentId}/`}>{item.fauxID}:{' '}   
+                 {item.subCategory != 'MetaData' &&  item.subCategory }
+                 {' '}
+                  {item.title}</Link>
                  )
                  :  (
-                 <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.title}</Link>)
+                 <Link to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}>{item.fauxID} : {item.subCategory} {item.title}</Link>)
                  )}
 
                 </>
                  )
                  : (  // main entry
                  <>
-                    <Link to={`/${urlDirect}/${item.origin}`}>
+                    <Link to={`/${urlDirect}/${item.origin}`} className='log-parent-title'>
                             {item.fauxID} : {item.title}
                     </Link>
                 </>

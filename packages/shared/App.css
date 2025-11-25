@@ -151,6 +151,8 @@ height: var(--navbar-bottom-height);
 /* Page Specific Styles */
 
 .subentry-add-list{
+      display: flex
+;
 margin: 10px;
     padding: 10px;
     border: var(--div-border);
@@ -720,12 +722,21 @@ margin-bottom:0.5rem;
   background-color: #f9f9f9;
 }
 
+.searchResults tr:nth-child(even).unread-display {
+  background-color: #d6ecf4;
+}
+
 .searchResults tr:hover {
   background-color: #f1f1f1;
 }
 
 .login-info-text{
   margin-bottom:13px;
+}
+
+.log-parent-title{
+font-size: medium;
+    font-weight: 500;
 }
 
 .altSignIn{
@@ -743,7 +754,8 @@ margin-bottom:0.5rem;
 }
 
 .unread-display{
-  /* background-color: #d6ecf4 */
+  background-color: #d6ecf4;
+  border: blue 1px solid;
 }
 
 .bad-gateway{
@@ -843,11 +855,19 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
   text-decoration: underline;
 }
 
+.subIDSpan h3 {
+  display:block;
+  text-transform: capitalize;
+  font-size: 1rem;
+  text-align:left;
+}
+
 .parentIDSpan {
   display:block;
   text-transform: capitalize;
   font-size: 0.9rem;
 }
+
 .parentTitleSpan {
   display:block;
   font-weight: 600;
@@ -869,8 +889,8 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 /*       MEDIA      */
 
 .media {
-  padding: 15px;
-  margin: 12px;
+  padding: 5px;
+  margin: 5px;
   border: var(--div-border);
 }
 .media-thumbnail-list>.pdf{

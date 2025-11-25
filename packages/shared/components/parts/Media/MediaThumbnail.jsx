@@ -4,7 +4,7 @@ import { db } from "@utils/db";
 import { eventManager } from "@utils/events";
 import { Link } from "react-router-dom";
 
-export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
+export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) => {
   const [mediaDataUrl, setMediaDataUrl] = useState(null);
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState(0);
@@ -125,13 +125,13 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
           preload="metadata"
           style={{
             width: "100%",
-            maxWidth: maxWidth || "500px",
+            maxHeight: maxHeight || "500px",
             height: "auto",
             backgroundColor: "#000",
           }}
           onError={(e) => {
             const error = e.target.error;
-            console.error("❌ Video error details:", {
+            console.error("Video error details:", {
               URL: mediaDataUrl,
               error: error,
               code: error?.code,
@@ -157,25 +157,25 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
             }
           }}
           onLoadStart={(e) => {
-            console.log("✅ Video load started:", e.target.src);
+            console.log("Video load started:", e.target.src);
           }}
           onLoadedMetadata={(e) => {
-            console.log("✅ Video metadata loaded:", {
+            console.log("Video metadata loaded:", {
               duration: e.target.duration,
               videoWidth: e.target.videoWidth,
               videoHeight: e.target.videoHeight,
             });
           }}
           onCanPlay={(e) => {
-            console.log("✅ Video can play");
+            console.log("Video can play");
           }}
         >
           <source src={mediaDataUrl} type={fileType} />
           Your browser does not support the video tag.
         </video>
-        <span className="image-subinfo">
+       {hasData &&  <span className="image-subinfo">
           {fileName} ({(fileSize / 1024 / 1024).toFixed(2)} MB)
-        </span>
+        </span> }
       </div>
     );
   }
@@ -187,9 +187,9 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
         <audio
           controls
           preload="metadata"
-          style={{ width: "100%", maxWidth: maxWidth || "500px" }}
+          style={{ width: "100%", maxHeight: maxHeight || "500px" }}
           onError={(e) => {
-            console.error("❌ Audio error:", {
+            console.error(" Audio error:", {
               error: e.target.error,
               code: e.target.error?.code,
               src: e.target.src,
@@ -210,15 +210,15 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxWidth }) => {
   // IMAGE
   if (fileType?.startsWith("image/")) {
     return (
-      <div className="media media-img">
+      <div className="media media-img" max-height={maxHeight}>
         <img
           src={mediaDataUrl}
           alt={fileName}
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "100%" }}
         />
-        <span className="image-subinfo">
+      {hasData &&   <span className="image-subinfo">
           {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-        </span>
+        </span> }
       </div>
     );
   }

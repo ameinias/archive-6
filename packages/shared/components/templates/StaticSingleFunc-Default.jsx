@@ -97,12 +97,13 @@ export function StaticSingleDefault({ itemID }) {
               <>
                 {item.media.map((file, index) => {
                   return (
-                    <div key={index}>
+                    <div key={index}  className="media-thumbnail" style={{maxWidth:"150px"}} > 
 
                               <MediaThumbnail 
               key={index}
               fileRef={file}
-              maxWidth={'700px'}
+              maxHeight={'100px'}
+              hasData={false}
               
             /> 
                       {/* {file.name} ({(file.size / 1024).toFixed(2)} KB) */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent, useRef } from 'react';
 import { db, dbHelpers } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useParams } from 'react-router-dom';
@@ -19,11 +19,61 @@ export function StaticSubListItem({
   const gameState = GameLogic();
   const navigate = useNavigate();
   const [statusMessage, setStatusMessage] = useState('');
+  const [freshUnread, setFreshUnread] = useState(true);
+    const itemRef = useRef(null);
 
   const item = useLiveQuery(async () => {
     if (!itemID) return null;
     return await db.subentries.get(Number(itemID));
   }, [itemID]);
+
+  // useEffect(() => {
+  //   if (!item || !item.available || !item.unread) return;
+  //   if (!itemRef.current) return;
+
+  //   const observer = new IntersectionObserver(
+  //     async (entries) => {
+  //       const [entry] = entries;
+        
+  //       if (entry.isIntersecting) {
+  //         // Item is visible in viewport
+  //         console.log(item.fauxID + " is now visible, marking as read");
+          
+  //         try {
+  //           await db.subentries.update(Number(itemID), { unread: false });
+  //           setFreshUnread(false);
+  //           console.log(item.fauxID + " marked as read ✅");
+  //         } catch (error) {
+  //           console.error("Error marking as read:", error);
+  //         }
+          
+  //         // Stop observing after marking as read
+  //         observer.disconnect();
+  //       }
+  //     },
+  //     {
+  //       threshold: 0.5, // 50% of item must be visible
+  //       rootMargin: '0px' // No margin
+  //     }
+  //   );
+
+  //   observer.observe(itemRef.current);
+
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, [item, itemID]);
+
+  useEffect(() => {
+  // Mark as read when user navigates away
+  return () => {
+    if (!item || !item.available || !item.unread) return;
+    
+    console.log(item.fauxID + " marking as read on unmount");
+    db.subentries.update(Number(itemID), { unread: false });
+    // Note: Don't await in cleanup, it's synchronous
+  };
+}, [item, itemID]); // Runs cleanup when component unmounts
 
   if (!item) {
     return <div>Loading...</div>;
@@ -31,24 +81,28 @@ export function StaticSubListItem({
 
   if (item.available === false) {
     return (
-      <div className="subentry-staticentry subEntry-not-available">
-        <h3>{item.fauxID} : </h3> *****NOT AVAILABLE : DATA CORRUPTED*******
+      <div 
+      ref={itemRef}
+      className="subentry-staticentry subEntry-not-available"> 
+        <span className="subIDSpan"><h3>{item.fauxID} </h3> </span> 
+        <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span> {freshUnread ?  <>freshunread</> : <>!freshunread</> } 
       </div>
     );
   }
 
   return (
     <div
-      className={`subentry-staticentry ${gameState.gameState.level > 0 ? 'haunted' : ''}`}
+ref={itemRef} 
+      className={`subentry-staticentry ${gameState.gameState.level > 0 ? 'haunted' : ''} ${item.unread ? 'unread-display' : 'dickie' }`}
     >
       <div className="subentry-item">
         {/* <div > */}
-          <div width="80%" key={item.id} className={item.unread ? 'unread-display' : '' }>
-          {item.unread &&  <span className="unread-indicator" title="New Subentry Unread">● </span> }
+          <div width="80%"      key={item.id} >
+          {/* {item.unread ?  <span className="unread-indicator" title="New Subentry Unread">Unread </span> : <>read</> } {freshUnread ?  <>freshunread</> : <>!freshunread</> }  */}
               {' '}
               {/* <Link to={`/edit-subitem/${item.parentId}/${item.id}`}> */}
 
-
+             
               <div className="subentry-title">
                 <div style={{}}><BookMarkCheck itemID={item.id} type="subentry" /></div>
                 <span className="subID">{item.fauxID} 
