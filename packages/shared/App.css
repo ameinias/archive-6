@@ -151,8 +151,7 @@ height: var(--navbar-bottom-height);
 /* Page Specific Styles */
 
 .subentry-add-list{
-      display: flex
-;
+
 margin: 10px;
     padding: 10px;
     border: var(--div-border);

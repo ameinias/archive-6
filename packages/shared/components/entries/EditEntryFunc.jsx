@@ -22,9 +22,7 @@ const defaultFormValue = {
   description: "",
   category: "Object",
   date: new Date(),
-  entryDate: new Date(),
   available: true,
-  researcherID: researcherIDs[0] || "",
   media: [],
   template: "default",
   bookmark: false,
@@ -72,8 +70,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             : [entry.hexHash] || [1],
           description: entry.description || "",
           category: entry.category || "Object",
-          date: entry.date || new Date(),
-          entryDate: entry.entryDate || new Date(),
+          date: entry.date || new Date().toLocaleDateString() ,
           available: entry.available || false,
           media: entry.media || [],
           template: entry.template || "default",
@@ -111,7 +108,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     } else if (typeof hexHashValue === "string") {
       hexHashValue = parseInt(hexHashValue, 10);
     }
-
+//toLocaleDateString() 
     return {
       title: formValues.title,
       fauxID: formValues.fauxID,
@@ -119,7 +116,6 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       description: formValues.description,
       category: formValues.category,
       date: formValues.date,
-      entryDate: formValues.entryDate,
       available: formValues.available,
       media: formValues.media,
       template: formValues.template,
@@ -128,7 +124,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       modEditDate: formValues.modEditDate,
       modEdit: formValues.modEdit,
       displayDate: formValues.displayDate,
-      lastEditedBy: formValues.lastEditedBy,
+      lastEditedBy: parseInt(formValues.lastEditedBy, 10) 
     };
   };
 
@@ -158,7 +154,6 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       description: "",
       category: formValues.category,
       date: formValues.date,
-      entryDate: formValues.entryDate,
       available: false,
       media: [],
       template: formValues.template,
@@ -205,6 +200,11 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
         setStatusMessage("Title is required");
         return;
       }
+
+      // if fauxID has changed 
+      // find subentries with parent ID
+      // update child title 
+
 
       let idNumber = Number(itemID);
       if (isNaN(idNumber)) {
@@ -516,6 +516,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                 </option>
               ))}
             />
+            
           </div>
         </div>
         <div className="row">

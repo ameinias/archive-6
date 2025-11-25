@@ -90,7 +90,7 @@ export function StaticSingleDefault({ itemID }) {
           {' '}
           {/* Show media entries if they exist */}
           <br />
-          <div className="subentry-add-list">
+          <div className="subentry-add-list flex">
             {!item.media || item.media.length === 0 ? (
               <>No Attachments.</>
             ) : (
