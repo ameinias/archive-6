@@ -31,7 +31,7 @@ const defaultFormValue = {
   modEditDate: "2008-07-21",
   modEdit: "added",
   displayDate: "1970-01-01", // YYYY-MM-DD
-  lastEditedBy: researcherIDs[0] || "",
+  lastEditedBy: researcherIDs[0] || 0,
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {

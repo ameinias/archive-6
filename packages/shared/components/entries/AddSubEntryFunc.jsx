@@ -27,7 +27,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
   let savedID = 0;
   const [isNewEntry, setNewEntry] = useState(false);
   const { isAdmin, toggleAdmin } = GameLogic();
-  const [parentFauxFauxID, setparentFauxID] = useState("");
+  const [parentFauxID, setparentFauxID] = useState("");
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
   const [isMeta, setMeta] = useState(false);
@@ -90,6 +90,18 @@ export function AddSubEntryForm({ itemID, parentID }) {
     }
   }
 
+    async function returnParentFauxID() {
+            const parent = await db.friends.get(Number(parentID));
+            const parentFauxID = parent?.fauxID || "";
+            setparentFauxID(parentFauxID);
+
+            return parentFauxID; 
+    }
+
+      async function generateNewID() {
+      }
+  
+
   /* ------------------------  Handlers --------*/
   // Manage state and input field
 
@@ -103,6 +115,8 @@ export function AddSubEntryForm({ itemID, parentID }) {
   /* ------------------------  Default Form Value --------*/
   const defaultFormValue = {
     fauxID: "tempID",
+    parentFauxID: "tempID",
+    subID: 1,
     title: "",
     description: "",
     parentId: Number(parentID) || 0,
@@ -110,7 +124,6 @@ export function AddSubEntryForm({ itemID, parentID }) {
     available: false, // Default to false
     mediaSub: [],
     subCategory: subCategories[0], // Default to first subcategory
-    researcherID: researcherIDs[0],
     template: "default", // Optional field for template
     bookmark: false,
     hexHash: [1],
@@ -118,7 +131,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
     modEditDate: "2008-07-21",
     modEdit: "added",
     displayDate: "1970-01-01", // YYYY-MM-DD
-    lastEditedBy: researcherIDs[0] || "",
+    lastEditedBy: researcherIDs[0] || 0,
   };
 
   const FormToEntry = () => {
@@ -141,6 +154,8 @@ export function AddSubEntryForm({ itemID, parentID }) {
     
     return {
       title: formValues.title,
+      parentFauxID: returnParentFauxID(),
+      subID: returnSubID(),
       fauxID: formValues.fauxID,
       hexHash: hexHashValue,
       description: formValues.description,
@@ -148,7 +163,6 @@ export function AddSubEntryForm({ itemID, parentID }) {
       parentId: formValues.parentId,
       mediaSub: formValues.mediaSub,
       subCategory: formValues.subCategory,
-      researcherID: formValues.researcherID,
       available: formValues.available,
       template: formValues.template,
       bookmark: formValues.bookmark,
@@ -170,6 +184,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
           ...prev,
           fauxID: newFauxID,
         }));
+        returnParentFauxID();
       }
     }
 
@@ -190,6 +205,8 @@ export function AddSubEntryForm({ itemID, parentID }) {
       if (entry) {
         setFormValue({
           fauxID: entry.fauxID,
+          parentFauxID: entry.parentFauxID,
+          subID: entry.subID,
           title: entry.title,
           description: entry.description || "",
           subCategory: entry.subCategory,
@@ -199,7 +216,6 @@ export function AddSubEntryForm({ itemID, parentID }) {
           mediaSub: entry.mediaSub || [],
           template: entry.template || "default",
           bookmark: entry.bookmark || false,
-          researcherID: entry.researcherID,
           hexHash: Array.isArray(entry.hexHash)
             ? entry.hexHash // Keep the IDs as-is
             : [entry.hexHash] || [1],
@@ -311,11 +327,12 @@ export function AddSubEntryForm({ itemID, parentID }) {
   async function FinishEdit() {
     // navigate(0);
 
-    navigate(`/edit-item/${parentID}/`, { replace: true });
+    
 
     // Small delay to ensure navigation completes, then refresh
     setTimeout(() => {
-      navigate(`/`, { replace: true });
+      // navigate(`/`, { replace: true });
+      navigate(`/edit-item/${parentID}/`, { replace: true });
     }, 10);
 
     setStatusMessage("Should return to parent");
@@ -529,24 +546,10 @@ export function AddSubEntryForm({ itemID, parentID }) {
             </select>{" "}
           </div>
 
-          <div className="col">
-            {" "}
-            {/*// ------ Researcher  ------*/}
-            <div className="formLabel">Researcher:</div>
-            <select
-              className="form-control form-control-dropdown"
-              multiple={false}
-              value={formValues.researcherID}
-              onChange={handleChange}
-              name="researcherID"
-            >
-              {researcherIDs.map((sub, i) => (
-                <option key={i} value={sub.id}>
-                  {sub.name}
-                </option>
-              ))}
-            </select>
-          </div>
+
+        Parent ID: {parentFauxID}
+        
+        
         </div>
 
         <div className="row">

@@ -67,6 +67,17 @@ db.version(4.7).stores({
 });
 
 
+// remove researcher id and fix some ID stuff for subentries 
+db.version(4.8).stores({
+  gamedata: 'expVersion, uploadedAt',
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', 
+  subentries: '++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', 
+   media: '++id, name, type, size, path, uploadedAt'
+   
+});
+
+
+
 /*
 //  BETTER: Use populate event instead of ready
 db.on('populate', async () => {
