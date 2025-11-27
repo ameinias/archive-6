@@ -8,31 +8,68 @@ import {
   entryTemplate,
   hexHashes,
   metaData,
-  editType
-} from '@utils/constants';
-import { useNavigate } from 'react-router-dom';
-import { GameLogic } from '@utils/gamelogic';
-
+  editType,
+} from "@utils/constants";
+import { useNavigate } from "react-router-dom";
+import { GameLogic } from "@utils/gamelogic";
 
 import { useLiveQuery } from "dexie-react-hooks";
 import * as FormAssets from "@components/parts/FormAssets";
 import { MediaUploadSub } from "@components/parts/Media/MediaUploadSub";
 import { eventManager } from "@utils/events";
+import { useToggle } from '@hooks/hooks'
 
-export function AddSubEntryForm ({ itemID, parentID }) {
-  //*    ---------------    CONST  ------------------ */
-  const { setStatusMessage } = GameLogic();
+export function AddSubEntryForm({ itemID, parentID }) {
+
+  //#region    ---------------    CONST  ------------------ */
+
   const [title, setName] = useState("");
-  const navigate = useNavigate();
-  let savedID = 0;
   const [isNewEntry, setNewEntry] = useState(false);
-  const { isAdmin, toggleAdmin } = GameLogic();
   const [parentFauxID, setparentFauxID] = useState("");
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
   const [isMeta, setMeta] = useState(false);
 
-  /* ------------------------  Generate entry functions --------*/
+    // Custom hooks
+  const [toggleMetaData, setToggleMetaData] = useToggle(false);
+  const [toggleAdminSection, setToggleAdminSection] = useToggle(false);
+
+    const { setStatusMessage } = GameLogic();
+  const { isAdmin, toggleAdmin } = GameLogic();
+  const navigate = useNavigate();
+
+
+
+  let savedID = 0;
+  const defaultHex = 10;
+
+  const defaultFormValue = {
+    fauxID: "tempID",
+    parentFauxID: "tempID",
+    // subID: 1,
+    title: "",
+    description: "",
+    parentId: Number(parentID) || 0,
+    date: new Date(),
+    available: false, // Default to false
+    mediaSub: [],
+    subCategory: subCategories[0], // Default to first subcategory
+    template: "default", // Optional field for template
+    bookmark: false,
+    hexHash: [defaultHex],
+    devNotes: "",
+    modEditDate: "2008-07-21",
+    modEdit: "added",
+    displayDate: "1970-01-01", // YYYY-MM-DD
+    lastEditedBy: researcherIDs[0] || 0,
+    triggerEvent: "",
+  };
+
+  const [formValues, setFormValue] = useState(defaultFormValue);
+
+  //#endregion
+
+  //#region  ------------  Generate entry functions --------*/
   // Create async function to generate new ID
   async function generateNewID() {
     if (!parentID) return "NEW-001";
@@ -45,39 +82,39 @@ export function AddSubEntryForm ({ itemID, parentID }) {
       const lengthOfSiblings = await db.subentries
         .where("parentId")
         .equals(Number(parentID))
-        .toArray()
+        .toArray();
 
-      function findLowestGap (siblings) {
+      function findLowestGap(siblings) {
         // Extract numbers after the '-' from fauxIDs
         const existingNumbers = siblings
           .map((sibling) => {
             const fauxID = sibling.fauxID || "";
             const parts = fauxID.split("-");
             if (parts.length >= 2) {
-              const number = parseInt(parts[1])
-              return isNaN(number) ? null : number
+              const number = parseInt(parts[1]);
+              return isNaN(number) ? null : number;
             }
-            return null
+            return null;
           })
-          .filter(num => num !== null) // Remove null values
-          .sort((a, b) => a - b) // Sort ascending
+          .filter((num) => num !== null) // Remove null values
+          .sort((a, b) => a - b); // Sort ascending
 
         console.log("Existing numbers:", existingNumbers);
 
         // If no existing numbers, start at 1
         if (existingNumbers.length === 0) {
-          return 1
+          return 1;
         }
 
         // Check for gap starting from 1
         for (let i = 1; i <= existingNumbers.length + 1; i++) {
           if (!existingNumbers.includes(i)) {
-            return i // Found the first missing number
+            return i; // Found the first missing number
           }
         }
 
         // If no gaps found, return next number in sequence
-        return Math.max(...existingNumbers) + 1
+        return Math.max(...existingNumbers) + 1;
       }
 
       const nextNumber = findLowestGap(lengthOfSiblings);
@@ -90,19 +127,19 @@ export function AddSubEntryForm ({ itemID, parentID }) {
     }
   }
 
-    async function returnParentFauxID() {
-            const parent = await db.friends.get(Number(parentID));
-            const parentFauxID = parent?.fauxID || "";
-            setparentFauxID(parentFauxID);
+  async function returnParentFauxID() {
+    const parent = await db.friends.get(Number(parentID));
+    const parentFauxID = parent?.fauxID || "";
+    setparentFauxID(parentFauxID);
 
-            return parentFauxID; 
-    }
+    return parentFauxID;
+  }
 
-      async function generateNewID() {
-      }
-  
+  async function generateNewIDwhat() {}
 
-  /* ------------------------  Handlers --------*/
+  //#endregion
+
+  //#region------------  I don't remember what this is --------*/
   // Manage state and input field
 
   const setIDValidWithMessage = (isValid, message) => {
@@ -112,32 +149,12 @@ export function AddSubEntryForm ({ itemID, parentID }) {
     if (!message && isValid) setStatusMessage(""); // Clear on success
   };
 
-  /* ------------------------  Default Form Value --------*/
-  const defaultFormValue = {
-    fauxID: "tempID",
-    parentFauxID: "tempID",
-    subID: 1,
-    title: "",
-    description: "",
-    parentId: Number(parentID) || 0,
-    date: new Date(),
-    available: false, // Default to false
-    mediaSub: [],
-    subCategory: subCategories[0], // Default to first subcategory
-    template: "default", // Optional field for template
-    bookmark: false,
-    hexHash: [1],
-    devNotes: "",
-    modEditDate: "2008-07-21",
-    modEdit: "added",
-    displayDate: "1970-01-01", // YYYY-MM-DD
-    lastEditedBy: researcherIDs[0] || 0,
-    triggerEvent: ''
-  };
+  //#endregion
+
+  //#region ---------------  Default Form Value --------*/
 
   const FormToEntry = () => {
-
-        let hexHashValue = formValues.hexHash;
+    let hexHashValue = formValues.hexHash;
 
     // convert array of strings to numbers
     if (Array.isArray(hexHashValue)) {
@@ -152,11 +169,11 @@ export function AddSubEntryForm ({ itemID, parentID }) {
     } else if (typeof hexHashValue === "string") {
       hexHashValue = parseInt(hexHashValue, 10);
     }
-    
+
     return {
       title: formValues.title,
       parentFauxID: returnParentFauxID(),
-      subID: returnSubID(),
+      // subID: returnSubID(),
       fauxID: formValues.fauxID,
       hexHash: hexHashValue,
       description: formValues.description,
@@ -171,17 +188,20 @@ export function AddSubEntryForm ({ itemID, parentID }) {
       modEditDate: formValues.modEditDate,
       modEdit: formValues.modEdit,
       displayDate: formValues.displayDate,
-      lastEditedBy: parseInt(formValues.lastEditedBy, 10) 
+      lastEditedBy: parseInt(formValues.lastEditedBy, 10),
+      triggerEvent: formValues.triggerEvent,
     };
   };
 
-  //*    ---------------    UseEffect   ------------------ */
+  //#endregion
+
+  //#region    ---------------    UseEffect   ------------------ */
   // Generate the fauxID when component mounts or parentID changes
   useEffect(() => {
-    async function setupNewEntry () {
+    async function setupNewEntry() {
       if (isNewEntry && parentID) {
-        const newFauxID = await generateNewID()
-        setFormValue(prev => ({
+        const newFauxID = await generateNewID();
+        setFormValue((prev) => ({
           ...prev,
           fauxID: newFauxID,
         }));
@@ -189,8 +209,8 @@ export function AddSubEntryForm ({ itemID, parentID }) {
       }
     }
 
-    setupNewEntry()
-  }, [isNewEntry, parentID])
+    setupNewEntry();
+  }, [isNewEntry, parentID]);
 
   // Initialize form values - if an ID came through, get that. If not, default empty.
   useEffect(() => {
@@ -202,12 +222,12 @@ export function AddSubEntryForm ({ itemID, parentID }) {
         return;
       }
 
-      const entry = await db.subentries.get(Number(itemID))
+      const entry = await db.subentries.get(Number(itemID));
       if (entry) {
         setFormValue({
           fauxID: entry.fauxID,
           parentFauxID: entry.parentFauxID,
-          subID: entry.subID,
+          // subID: entry.subID,
           title: entry.title,
           description: entry.description || "",
           subCategory: entry.subCategory,
@@ -218,15 +238,15 @@ export function AddSubEntryForm ({ itemID, parentID }) {
           template: entry.template || "default",
           bookmark: entry.bookmark || false,
           researcherID: entry.researcherID,
-           hexHash: Array.isArray(entry.hexHash)
-                        ? entry.hexHash // Keep the IDs as-is
-                        : [entry.hexHash] || [1],
-                        devNotes: entry.devNotes || '',
-                    modEditDate: entry.modEditDate || '2008-07-21',
-                    modEdit: entry.modEdit,
-                    displayDate: entry.displayDate ||'1970-01-01',
-                    lastEditedBy: entry.lastEditedBy,
-                    triggerEvent: entry.triggerEvent || ''
+          hexHash: Array.isArray(entry.hexHash)
+            ? entry.hexHash // Keep the IDs as-is
+            : [entry.hexHash] || [1],
+          devNotes: entry.devNotes || "",
+          modEditDate: entry.modEditDate || "2008-07-21",
+          modEdit: entry.modEdit,
+          displayDate: entry.displayDate || "1970-01-01",
+          lastEditedBy: entry.lastEditedBy,
+          triggerEvent: entry.triggerEvent || "",
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -234,7 +254,7 @@ export function AddSubEntryForm ({ itemID, parentID }) {
         console.log(
           itemID + " Fetched entry:",
           entry.fauxID,
-          ' and ',
+          " and ",
           formValues.fauxID,
         );
         setStatusMessage(
@@ -242,7 +262,7 @@ export function AddSubEntryForm ({ itemID, parentID }) {
             entry.fauxID +
             " and ID:" +
             entry.id +
-            ' and ' +
+            " and " +
             savedID,
         );
       } else {
@@ -253,24 +273,24 @@ export function AddSubEntryForm ({ itemID, parentID }) {
 
       console.log("is new entry: ", isNewEntry);
     }
-    fetchData()
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemID])
+  }, [itemID]);
 
-  const [formValues, setFormValue] = useState(defaultFormValue)
+  //#endregion
 
-  //*    ---------------    ENTRY FUNCTIONS  ------------------ */
+  //#region    ---------------    ENTRY FUNCTIONS  ------------------ */
 
-  async function returnToParent () {
+  async function returnToParent() {
     try {
-      navigate(`/entry/${parentID}/`)
+      navigate(`/entry/${parentID}/`);
     } catch (error) {
       console.error("Error navigating to parent:", error);
     }
   }
 
   // Save the entry to the database.
-  async function updateSubEntry () {
+  async function updateSubEntry() {
     try {
       const title = formValues.title || "Untitled";
       if (!title) {
@@ -278,7 +298,7 @@ export function AddSubEntryForm ({ itemID, parentID }) {
         return;
       }
 
-      let idNumber = Number(itemID)
+      let idNumber = Number(itemID);
       if (isNaN(idNumber)) {
         setStatusMessage(savedID + "is not a number");
         return;
@@ -295,12 +315,12 @@ export function AddSubEntryForm ({ itemID, parentID }) {
       // setFormValue(defaultFormValue);
       //navigate('/'); // <-- Go to Home
     } catch (error) {
-      setStatusMessage(`Failed to edit ${title} : ${error}`)
-      return
+      setStatusMessage(`Failed to edit ${title} : ${error}`);
+      return;
     }
   }
 
-  async function addSubEntry () {
+  async function addSubEntry() {
     try {
       const title = formValues.title || "Untitled";
       if (!title) {
@@ -309,7 +329,7 @@ export function AddSubEntryForm ({ itemID, parentID }) {
       }
 
       // Ensure we have a valid parent ID
-      const parentIdCast = parentID ? Number(parentID) : Number(itemID)
+      const parentIdCast = parentID ? Number(parentID) : Number(itemID);
       if (isNaN(parentIdCast)) {
         setStatusMessage("Invalid parent ID for subentry");
         return;
@@ -319,21 +339,18 @@ export function AddSubEntryForm ({ itemID, parentID }) {
       FinishEdit();
 
       setStatusMessage(
-        `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`
-      )
-      setFormValue(defaultFormValue)
+        `Subentry ${title} successfully added to parent ${parentIdCast}. Got id ${id}`,
+      );
+      setFormValue(defaultFormValue);
     } catch (error) {
-      setStatusMessage(`Failed to add subentry ${title}: ${error}`)
+      setStatusMessage(`Failed to add subentry ${title}: ${error}`);
     }
   }
 
-  async function FinishEdit () {
+  async function FinishEdit() {
     // navigate(0);
 
-
-
-
-  navigate(`/entry/${parentID}/`, { replace: true });
+    navigate(`/entry/${parentID}/`, { replace: true });
 
     // Small delay to ensure navigation completes, then refresh
     setTimeout(() => {
@@ -352,149 +369,140 @@ export function AddSubEntryForm ({ itemID, parentID }) {
     console.log("FinishEdit called, new entry state:", isNewEntry);
   }
 
+  async function removeCurrentEntry() {
+    if (
+      await eventManager.showConfirm(
+        `Are you sure you want to delete "${formValues.title}"?`,
+      )
+    ) {
+      try {
+        const id = Number(itemID);
+        if (isNaN(id)) {
+          setStatusMessage("Invalid ID: " + itemID);
+          return;
+        }
+        navigate(`/entry/${parentID}/`); // Go back to parent
+        await db.subentries.delete(id);
+        setStatusMessage(`Entry ${formValues.title} successfully deleted.`);
+      } catch (error) {
+        setStatusMessage(`Failed to delete ${formValues.title}: ${error}`);
+      }
+    }
+  }
+  //#endregion
+
+  //#region    ---------- media entry display ------------------ */
   const ListMediaEntriesLength =
     useLiveQuery(async () => {
       if (!itemID || itemID === "new" || isNaN(Number(itemID))) {
         return [];
       }
 
-      const entry = await db.subentries.get(Number(itemID))
-      const mediaFiles = entry?.mediaSub || []
-      return mediaFiles
-    }, [itemID]) || []
+      const entry = await db.subentries.get(Number(itemID));
+      const mediaFiles = entry?.mediaSub || [];
+      return mediaFiles;
+    }, [itemID]) || [];
 
-  async function removeCurrentEntry () {
-    if (
-      await eventManager.showConfirm(
-        `Are you sure you want to delete "${formValues.title}"?`
-      )
-    ) {
-      try {
-        const id = Number(itemID)
-        if (isNaN(id)) {
-          setStatusMessage("Invalid ID: " + itemID);
-          return;
-        }
-        navigate(`/entry/${parentID}/`) // Go back to parent
-        await db.subentries.delete(id)
-        setStatusMessage(`Entry ${formValues.title} successfully deleted.`)
-      } catch (error) {
-        setStatusMessage(`Failed to delete ${formValues.title}: ${error}`)
-      }
-    }
-  }
+  //#endregion
 
-  //*    ---------------    HANDLERS  ------------------ */
+  //#region    ---------------    HANDLERS  ------------------ */
   // Manage state and input field
-  const handleChange = e => {
-    const { name, value } = e.target
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormValue({
       ...formValues,
-      [name]: value
-    })
-  }
+      [name]: value,
+    });
+  };
 
-  const handleCatChange = e => {
-    const { name, value } = e.target
+  const handleCatChange = (e) => {
+    const { name, value } = e.target;
     setFormValue({
       ...formValues,
-      [name]: value
-    })
+      [name]: value,
+    });
 
     if (value === "MetaData") {
       setMeta(true);
     } else {
-      setMeta(false)
+      setMeta(false);
     }
-  }
+  };
 
-  const handleIDChange = e => {
-    const { name, value } = e.target
+  const handleIDChange = (e) => {
+    const { name, value } = e.target;
     // Ensure the ID starts with 'MX' and is followed by numbers
     if (!/^MX\d+$/.test(value)) {
       setIDValidWithMessage(
         false,
-        `ID ${value} must start with "MX" followed by numbers.`
-      )
-      return
+        `ID ${value} must start with "MX" followed by numbers.`,
+      );
+      return;
     }
     //check if the ID is unique
     db.subentries
       .where("fauxID")
       .equals(value)
       .count()
-      .then(count => {
+      .then((count) => {
         if (count > 0) {
           //setStatusMessage(`ID ${value} already exists. Please choose a different ID.`);
-          setIDValidWithMessage(false, `ID ${value} already exists.`)
+          setIDValidWithMessage(false, `ID ${value} already exists.`);
         } else {
-          setIDValidWithMessage(true)
+          setIDValidWithMessage(true);
         }
         setFormValue({
           ...formValues,
-          [name]: value
-        })
-      })
-  }
+          [name]: value,
+        });
+      });
+  };
 
-  const handleCheckboxChange = e => {
-    const { name, checked } = e.target
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
     setFormValue({
       ...formValues,
-      [name]: checked
-    })
-  }
+      [name]: checked,
+    });
+  };
 
-  const handleArrayChange = e => {
-    const { name, options } = e.target
+  const handleArrayChange = (e) => {
+    const { name, options } = e.target;
     const selectedValues = Array.from(options)
-      .filter(option => option.selected)
-      .map(option => option.value)
+      .filter((option) => option.selected)
+      .map((option) => option.value);
 
     setFormValue({
       ...formValues,
-      [name]: selectedValues
-    })
-  }
+      [name]: selectedValues,
+    });
+  };
 
-  //*    --------------------------    RETURN  ------------------------------- */
+  //#endregion
 
   return (
-    <>
-      <div className='SubEntry'>
+      <div className="SubEntry">
         {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>}
-        <div className='row'>
-          {/* <div className="col-3">
-                          <input
+        <div title="ID and title" className="row">
+          <div className="col-3">
+            {" "}
+            {/*// ------ ID  ------*/}
+            <div className="formLabel">ID:</div>
+            {isNewEntry || isAdmin ? (
+              <input
                 className="form-control"
                 type="text"
                 name="fauxID"
                 placeholder="ID"
-                value={parentFauxFauxID}
-                onChange={handleChange}
-                readOnly
-              />
-          </div> */}
-
-          <div className="col-3">
-            {" "}
-            {/*// ------ ID  ------*/}
-            <div className='formLabel'>ID:</div>
-            {isNewEntry || isAdmin ? (
-              <input
-                className='form-control'
-                type='text'
-                name='fauxID'
-                placeholder='ID'
                 value={formValues.fauxID}
                 onChange={handleIDChange}
               />
             ) : (
               <input
-                className='form-control-disabled'
-                type='text'
-                name='fauxID'
-                placeholder='ID'
+                className="form-control-disabled"
+                type="text"
+                name="fauxID"
+                placeholder="ID"
                 value={formValues.fauxID}
                 onChange={handleChange}
                 // readOnly
@@ -532,17 +540,28 @@ export function AddSubEntryForm ({ itemID, parentID }) {
             )}
           </div>
         </div>
-        <div className="row">
+
+
+<div title="metadata">
+        <div className="button-row div-dash">
+          <button onClick={setToggleMetaData} className="toggle-button ">
+            Metadata
+          </button>
+        </div>
+
+        {toggleMetaData && (
+<div title=" Metadata">
+        <div title="types" className="row">
           <div className="col-3">
             {" "}
             {/*// ------ Category  ------*/}
-            <div className='formLabel'>Type:</div>
+            <div className="formLabel">Type:</div>
             <select
-              className='form-control form-control-dropdown'
+              className="form-control form-control-dropdown"
               multiple={false}
               value={formValues.subCategory}
               onChange={handleCatChange}
-              name='subCategory'
+              name="subCategory"
             >
               {subCategories.map((sub, i) => (
                 <option key={i} value={sub}>
@@ -551,14 +570,9 @@ export function AddSubEntryForm ({ itemID, parentID }) {
               ))}
             </select>{" "}
           </div>
-
-
-    
-        
-        
         </div>
 
-        <div className="row">
+        <div title="dates" className="row">
           <div className="col">
             <FormAssets.FormDate
               label="Last Modified"
@@ -576,8 +590,8 @@ export function AddSubEntryForm ({ itemID, parentID }) {
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col">
+        <div title="edits" className="row">
+          <div title="mod edit" className="col">
             <FormAssets.FormDropDown
               label="Edit Type"
               name="modEdit"
@@ -590,7 +604,7 @@ export function AddSubEntryForm ({ itemID, parentID }) {
               ))}
             />
           </div>
-          <div className="col">
+          <div title="last edit" className="col">
             <FormAssets.FormDropDown
               label="Last Edit By"
               name="lastEditedBy"
@@ -604,52 +618,62 @@ export function AddSubEntryForm ({ itemID, parentID }) {
             />
           </div>
         </div>
-
-        <div className="row">
+          </div>
+         )} 
+         </div>
+        <div title="descrioptn" className="row">
           {" "}
           {/*// ------ Description  ------*/}
           <textarea
             rows={4}
-            className='form-control'
-            type='textarea'
-            name='description'
-            placeholder='Description'
+            className="form-control"
+            type="textarea"
+            name="description"
+            placeholder="Description"
             value={formValues.description}
             onChange={handleChange}
           />
         </div>
 
-        <div className="row">
+        <div title="media" className="row">
           {" "}
           {/*// ------ Media Upload  ------*/}
           <MediaUploadSub mediaSubFiles={formValues.mediaSub} />
         </div>
 
-        {isAdmin && (
-          <div className="adminOnly">
+<div title="admin">
+         <div className="button-row div-dash">
+           <button onClick={setToggleAdminSection} className="toggle-button">
+            {" "}
+            Admin
+                   </button>
+         </div>
+
+        {toggleAdminSection && ( 
+          <div className="row adminOnly">
             <div className="row">
               {" "}
               {/*// ------ available  ------*/}
-              <label className='formLabel'>available</label>
+              <label className="formLabel">available</label>
               <input
-                type='checkbox'
-                className='formLabel'
+                type="checkbox"
+                className="formLabel"
                 checked={formValues.available}
                 onChange={handleCheckboxChange}
-                name='available'
+                name="available"
               />
             </div>
 
             <div className="row">
               {" "}
               {/*// ------ bookmark  ------*/}
-              <label className='formLabel'>bookmark</label>
+              <label className="formLabel">bookmark</label>
               <input
-                type='checkbox'
-                className='formLabel'
+                type="checkbox"
+                className="formLabel"
                 checked={formValues.bookmark}
                 onChange={handleCheckboxChange}
-                name='bookmark'
+                name="bookmark"
               />
             </div>
             <div className="row">
@@ -664,8 +688,8 @@ export function AddSubEntryForm ({ itemID, parentID }) {
 
             <div className="row">
               <FormAssets.FormDropDown
-                name='hexHash'
-                label='HexHash:'
+                name="hexHash"
+                label="HexHash:"
                 multiple={true}
                 formValue={formValues.hexHash}
                 readOnly={false}
@@ -678,14 +702,14 @@ export function AddSubEntryForm ({ itemID, parentID }) {
               />
             </div>
 
-            <div className='row'>
-              <div className='col-1 formLabel'>Template:</div>
+            <div className="row">
+              <div className="col-1 formLabel">Template:</div>
               <select
-                className='form-control form-control-dropdown col'
+                className="form-control form-control-dropdown col"
                 multiple={false}
                 value={formValues.template}
                 onChange={handleChange}
-                name='template'
+                name="template"
               >
                 {entryTemplate.map((sub, i) => (
                   <option key={i} value={sub}>
@@ -695,92 +719,69 @@ export function AddSubEntryForm ({ itemID, parentID }) {
               </select>{" "}
             </div>
 
-<div className='row'>
-              <div className='formLabel'>Dev Notes:</div>
+            <div className="row">
+              <div className="formLabel">Dev Notes:</div>
               <textarea
                 rows={3}
-                className='form-control'
-                name='devNotes'
+                className="form-control"
+                name="devNotes"
                 value={formValues.devNotes}
                 onChange={handleChange}
               />
             </div>
 
-<div className='row'>
-                          <div className='formLabel'>Triggers:</div>
-                          <p>Comma seperated strings. function-parameter format.</p>
+            <div className="row">
+              <div className="formLabel">Triggers:</div>
+              <p>Comma seperated strings. function-parameter format.</p>
               <textarea
                 rows={3}
-                className='form-control'
-                name='triggerEvent'
+                className="form-control"
+                name="triggerEvent"
                 value={formValues.triggerEvent}
                 onChange={handleChange}
               />
             </div>
-
-<div className='row'>
-              <div className='formLabel'>Dev Notes:</div>
-              <textarea
-                rows={3}
-                className='form-control'
-                name='devNotes'
-                value={formValues.devNotes}
-                onChange={handleChange}
-              />
-            </div>
-
-<div className='row'>
-                          <div className='formLabel'>Triggers:</div>
-                          <p>Comma seperated strings. function-parameter format.</p>
-              <textarea
-                rows={3}
-                className='form-control'
-                name='triggerEvent'
-                value={formValues.triggerEvent}
-                onChange={handleChange}
-              />
-            </div>
-
 
           </div>
+
         )}
+        </div>
 
         <div className="save-buttons">
           {" "}
           {/*// ------ Save Buttons  ------*/}
           {isNewEntry ? (
             <>
-              <Button
-                className='btn-save-add-item'
+              <button
+                className="btn-save-add-item"
                 onClick={addSubEntry}
                 disabled={!isFormValid}
               >
                 Add
-              </Button>
+              </button>
             </>
           ) : (
             <>
-              <Button
-                className='btn-save-add-item'
+              <button
+                className="btn-save-add-item"
                 onClick={updateSubEntry}
                 disabled={!isFormValid}
               >
                 Save
-              </Button>
-              <Button
-                className='btn-save-add-item'
+              </button>
+              <button
+                className="btn-save-add-item"
                 onClick={returnToParent}
                 disabled={!isFormValid}
               >
                 &laquo; Return
-              </Button>
-              <Button className='remove-button' onClick={removeCurrentEntry}>
+              </button>
+              <button className="remove-button" onClick={removeCurrentEntry}>
                 Remove
-              </Button>
+              </button>
             </>
           )}
         </div>
       </div>
-    </>
-  )
+  );
 }

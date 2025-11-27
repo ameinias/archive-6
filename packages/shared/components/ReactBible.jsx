@@ -11,6 +11,47 @@ import { useLiveQuery } from "dexie-react-hooks";
 // Help:
 // Insert Snippet: rxc
 
+// Don’t call Hooks inside loops, conditions, nested functions, or try/catch/finally blocks. 
+
+/*    ---- HOOk ORDER
+useState hooks
+ useToggle hooks (custom hooks using useState)
+ GameLogic() (custom hook)
+ useNavigate() (React Router hook)
+ useEffect hooks
+
+
+ ---- HOOk ORDER    */ 
+
+
+  //#region ---------    REGION   -------- */ 
+
+  //#endregion
+
+  //#region ---------    PARENT CHILD useEFFECT  -------- */ 
+
+const Parent = () => {
+  useEffect(() => {
+    // runs last
+  }, []);
+
+  return (
+    <div>
+      <Child />
+    </div>
+  );
+};
+
+const Child = () => {
+  useEffect(() => {
+    // runs first
+  }, []);
+
+  return <p>Hello World!</p>;
+};
+
+//#endregion
+
 const ComponentName = () => {
   // UseState hooks here
   const [isLoading, setIsLoading] = useState(false);
