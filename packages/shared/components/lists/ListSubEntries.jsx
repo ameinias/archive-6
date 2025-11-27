@@ -95,6 +95,16 @@ export function ListSubEntries({ itemID }) {
             itemID={item.id}
             onCancel={() => setToggleShowCurrentSubEntry(false)}
           />
+ <div title="Toggle Button" className="button-row">
+        <button title="add or remove"
+          variant={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
+          className={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
+          onClick={() => setToggleShowCurrentSubEntry(!toggleShowCurrentSubEntry)}
+        >
+          Close
+        </button>
+      </div>
+
 
           </>
         )}

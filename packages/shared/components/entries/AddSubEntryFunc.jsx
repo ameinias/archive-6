@@ -132,6 +132,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
     const parentFauxID = parent?.fauxID || "";
     setparentFauxID(parentFauxID);
 
+
     return parentFauxID;
   }
 
@@ -170,9 +171,11 @@ export function AddSubEntryForm({ itemID, parentID }) {
       hexHashValue = parseInt(hexHashValue, 10);
     }
 
+    returnParentFauxID();
+
     return {
       title: formValues.title,
-      parentFauxID: returnParentFauxID(),
+      parentFauxID: parentFauxID, //4, // returnParentFauxID(),
       // subID: returnSubID(),
       fauxID: formValues.fauxID,
       hexHash: hexHashValue,
@@ -348,25 +351,31 @@ export function AddSubEntryForm({ itemID, parentID }) {
   }
 
   async function FinishEdit() {
-    // navigate(0);
 
-    navigate(`/entry/${parentID}/`, { replace: true });
+    setToggleMetaData(false);
 
-    // Small delay to ensure navigation completes, then refresh
-    setTimeout(() => {
-      // navigate(`/`, { replace: true });
-      navigate(`/entry/${parentID}/`, { replace: true });
-    }, 10);
 
-    setStatusMessage("Should return to parent");
+    // // navigate(0);
 
-    const newFauxID = await generateNewID();
-    setFormValue({
-      ...defaultFormValue,
-      fauxID: newFauxID,
-    });
-    setNewEntry(true);
-    console.log("FinishEdit called, new entry state:", isNewEntry);
+    // navigate(`/entry/${parentID}/`, { replace: true });
+
+    // // Small delay to ensure navigation completes, then refresh
+    // setTimeout(() => {
+    //   // navigate(`/`, { replace: true });
+    //   navigate(`/entry/${parentID}/`, { replace: true });
+    // }, 10);
+
+    // setStatusMessage("Should return to parent");
+
+    // const newFauxID = await generateNewID();
+    // setFormValue({
+    //   ...defaultFormValue,
+    //   fauxID: newFauxID,
+    // });
+    // setNewEntry(true);
+    // console.log("FinishEdit called, new entry state:", isNewEntry);
+
+
   }
 
   async function removeCurrentEntry() {
