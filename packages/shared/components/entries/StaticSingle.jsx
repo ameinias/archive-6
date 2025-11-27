@@ -7,6 +7,8 @@ import { db } from '@utils/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect } from 'react'; //
 
+
+//  ------------- DO NOT USE! StaticSingleDefault instead for now
 const StaticSingle = () => {
   const { id } = useParams();
   const { isAdmin } = GameLogic();
@@ -58,6 +60,10 @@ const StaticSingle = () => {
       return <StaticSingleMess itemID={id} />;
     } else {
       return <StaticSingleDefault itemID={id} />;
+    }
+
+    if (entryData.triggerEvent) {
+      GameLogic().triggerEvent(event);
     }
   };
 
