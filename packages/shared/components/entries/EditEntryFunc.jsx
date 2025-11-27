@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { db, dbHelpers } from "@utils/db"; // import the database
-import Button from "react-bootstrap/Button";
+import React, { useState, useEffect } from 'react';
+import { db, dbHelpers } from '@utils/db'; // import the database
+import Button from 'react-bootstrap/Button';
 import {
   categories,
   subCategories,
   researcherIDs,
   entryTemplate,
   hexHashes,
-  editType,
-} from "@utils/constants";
-import { Form, useNavigate } from "react-router-dom";
-import { GameLogic } from "@utils/gamelogic";
-import { ListSubEntries } from "@components/lists/ListSubEntries";
-import { MediaUpload } from "@components/parts/Media/MediaUpload";
-import * as FormAssets from "@components/parts/FormAssets";
-import { eventManager } from "@utils/events";
+  editType
+} from '@utils/constants';
+import { Form, useNavigate } from 'react-router-dom';
+import { GameLogic } from '@utils/gamelogic';
+import { ListSubEntries } from '@components/lists/ListSubEntries';
+import { MediaUpload } from '@components/parts/Media/MediaUpload';
+import * as FormAssets from '@components/parts/FormAssets';
+import { eventManager } from '@utils/events';
 
 const defaultFormValue = {
-  fauxID: "MX0000",
-  title: "Entry",
-  description: "",
-  category: "Object",
+  fauxID: 'MX0000',
+  title: 'Entry',
+  description: '',
+  category: 'Object',
   date: new Date(),
   available: true,
   media: [],
-  template: "default",
+  template: 'default',
   bookmark: false,
   hexHash: [1],
   devNotes: "",
@@ -32,39 +32,40 @@ const defaultFormValue = {
   modEdit: "added",
   displayDate: "1970-01-01", // YYYY-MM-DD
   lastEditedBy: researcherIDs[0] || 0,
+   triggerEvent: ''
 };
 
-export function AddEntryForm({ itemID, parentID, isSubEntry }) {
-  const [formValues, setFormValue] = useState(defaultFormValue);
+export function AddEntryForm ({ itemID, parentID, isSubEntry }) {
+  const [formValues, setFormValue] = useState(defaultFormValue)
 
-  const { setStatusMessage } = GameLogic();
-  const [title, setName] = useState("");
-  const navigate = useNavigate();
-  const [status, setStatus] = useState("");
-  let savedID = 0;
-  const [isNewEntry, setNewEntry] = useState(false);
-  const [isFormValid, setFormValid] = useState(true);
-  const [isIDValid, setIDValid] = useState(true);
+  const { setStatusMessage } = GameLogic()
+  const [title, setName] = useState('')
+  const navigate = useNavigate()
+  const [status, setStatus] = useState('')
+  let savedID = 0
+  const [isNewEntry, setNewEntry] = useState(false)
+  const [isFormValid, setFormValid] = useState(true)
+  const [isIDValid, setIDValid] = useState(true)
 
-  const { isAdmin, toggleAdmin } = GameLogic();
+  const { isAdmin, toggleAdmin } = GameLogic()
 
   useEffect(() => {
-    async function fetchData() {
-      if (!itemID || itemID === "new") {
-        const newID = await generateNewID();
+    async function fetchData () {
+      if (!itemID || itemID === 'new') {
+        const newID = await generateNewID()
         setFormValue({
           ...defaultFormValue,
-          fauxID: newID,
-        });
-        setNewEntry(true);
-        return;
+          fauxID: newID
+        })
+        setNewEntry(true)
+        return
       }
 
-      const entry = await db.friends.get(Number(itemID));
+      const entry = await db.friends.get(Number(itemID))
       if (entry) {
         setFormValue({
-          fauxID: entry.fauxID || "",
-          title: entry.title || "",
+          fauxID: entry.fauxID || '',
+          title: entry.title || '',
           hexHash: Array.isArray(entry.hexHash)
             ? entry.hexHash // Keep the IDs as-is
             : [entry.hexHash] || [1],
@@ -73,42 +74,43 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           date: entry.date || new Date().toLocaleDateString() ,
           available: entry.available || false,
           media: entry.media || [],
-          template: entry.template || "default",
+          template: entry.template || 'default',
           bookmark: entry.bookmark || false,
-          devNotes: entry.devNotes || "",
-          modEditDate: entry.modEditDate || "1996-07-21",
+          devNotes: entry.devNotes || '',
+          modEditDate: entry.modEditDate || '1996-07-21',
           modEdit: entry.modEdit,
-          displayDate: entry.displayDate || "1970-01-01",
+          displayDate: entry.displayDate || '1970-01-01',
           lastEditedBy: entry.lastEditedBy,
-        });
-        savedID = entry.id;
-        setNewEntry(false);
+          triggerEvent: entry.triggerEvent
+        })
+        savedID = entry.id
+        setNewEntry(false)
       } else {
-        setFormValue(defaultFormValue);
-        setNewEntry(true);
+        setFormValue(defaultFormValue)
+        setNewEntry(true)
       }
     }
 
-    fetchData();
-  }, [itemID]);
+    fetchData()
+  }, [itemID])
 
   const FormToEntry = () => {
-    let hexHashValue = formValues.hexHash;
+    let hexHashValue = formValues.hexHash
 
     // convert array of strings to numbers
     if (Array.isArray(hexHashValue)) {
       hexHashValue = hexHashValue
-        .map((h) => parseInt(h, 10))
-        .filter((n) => !isNaN(n));
+        .map(h => parseInt(h, 10))
+        .filter(n => !isNaN(n))
 
       // save int as itself
       if (hexHashValue.length === 1) {
-        hexHashValue = hexHashValue[0];
+        hexHashValue = hexHashValue[0]
       }
-    } else if (typeof hexHashValue === "string") {
-      hexHashValue = parseInt(hexHashValue, 10);
+    } else if (typeof hexHashValue === 'string') {
+      hexHashValue = parseInt(hexHashValue, 10)
     }
-//toLocaleDateString() 
+//toLocaleDateString()
     return {
       title: formValues.title,
       fauxID: formValues.fauxID,
@@ -124,34 +126,34 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       modEditDate: formValues.modEditDate,
       modEdit: formValues.modEdit,
       displayDate: formValues.displayDate,
-      lastEditedBy: parseInt(formValues.lastEditedBy, 10) 
+      lastEditedBy: parseInt(formValues.lastEditedBy, 10),
+            triggerEvent: formValues.triggerEvent
     };
   };
 
-
-    const FormToTemplate = () => {
-    let hexHashValue = formValues.hexHash;
+  const FormToTemplate = () => {
+    let hexHashValue = formValues.hexHash
 
     // convert array of strings to numbers
     if (Array.isArray(hexHashValue)) {
       hexHashValue = hexHashValue
-        .map((h) => parseInt(h, 10))
-        .filter((n) => !isNaN(n));
+        .map(h => parseInt(h, 10))
+        .filter(n => !isNaN(n))
 
       // save int as itself
       if (hexHashValue.length === 1) {
-        hexHashValue = hexHashValue[0];
+        hexHashValue = hexHashValue[0]
       }
-    } else if (typeof hexHashValue === "string") {
-      hexHashValue = parseInt(hexHashValue, 10);
+    } else if (typeof hexHashValue === 'string') {
+      hexHashValue = parseInt(hexHashValue, 10)
     }
 
     return {
-        id:0,
-      title: "Template",
-      fauxID: "MX0000",
+      id: 0,
+      title: 'Template',
+      fauxID: 'MX0000',
       hexHash: hexHashValue,
-      description: "",
+      description: '',
       category: formValues.category,
       date: formValues.date,
       available: false,
@@ -163,292 +165,279 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       modEdit: formValues.modEdit,
       displayDate: formValues.displayDate,
       lastEditedBy: formValues.lastEditedBy,
-    };
-  };
+      triggerEvent: formValues.triggerEvent
+    }
+  }
 
   const generateNewID = async () => {
     try {
-      const items = await db.friends.toArray();
-      const existingIDs = items.map((item) => item.fauxID);
+      const items = await db.friends.toArray()
+      const existingIDs = items.map(item => item.fauxID)
       const numericIDs = existingIDs
-        .filter((id) => id.startsWith("MX"))
-        .map((id) => parseInt(id.replace("MX", "")))
-        .filter((num) => !isNaN(num));
+        .filter(id => id.startsWith('MX'))
+        .map(id => parseInt(id.replace('MX', '')))
+        .filter(num => !isNaN(num))
 
-      const highestID = numericIDs.length > 0 ? Math.max(...numericIDs) : 999;
-      let newID = Math.max(highestID + 1, 1000);
+      const highestID = numericIDs.length > 0 ? Math.max(...numericIDs) : 999
+      let newID = Math.max(highestID + 1, 1000)
 
-      while (existingIDs.includes("MX" + newID)) {
-        newID++;
+      while (existingIDs.includes('MX' + newID)) {
+        newID++
       }
 
-      setStatusMessage(`Generated new ID: MX${newID}`);
-      return "MX" + newID;
+      setStatusMessage(`Generated new ID: MX${newID}`)
+      return 'MX' + newID
     } catch (error) {
-      console.error("Error generating ID:", error);
-      const randomID = Math.floor(Math.random() * 9000) + 1000;
-      return "MX" + randomID;
+      console.error('Error generating ID:', error)
+      const randomID = Math.floor(Math.random() * 9000) + 1000
+      return 'MX' + randomID
     }
-  };
+  }
 
   //*    ---------------    ENTRY FUNCTIONS  ------------------ */
 
-  async function updateEntry() {
+  async function updateEntry () {
     try {
-      const title = formValues.title || "Untitled";
+      const title = formValues.title || 'Untitled'
       if (!title) {
-        setStatusMessage("Title is required");
-        return;
+        setStatusMessage('Title is required')
+        return
       }
 
-      // if fauxID has changed 
+      // if fauxID has changed
       // find subentries with parent ID
-      // update child title 
+      // update child title
 
 
       let idNumber = Number(itemID);
       if (isNaN(idNumber)) {
-        setStatusMessage(savedID + "is not a number");
-        return;
+        setStatusMessage(savedID + 'is not a number')
+        return
       }
 
       db.friends.update(idNumber, FormToEntry()).then(function (updated) {
         if (updated)
           setStatusMessage(
             idNumber +
-              " " +
+              ' ' +
               formValues.fauxID +
-              " was updated with " +
+              ' was updated with ' +
               formValues.media.length +
-              " attachments",
-          );
-        else setStatusMessage("Nothing was updated - no key:" + idNumber);
-      });
+              ' attachments'
+          )
+        else setStatusMessage('Nothing was updated - no key:' + idNumber)
+      })
 
       // setFormValue(defaultFormValue); navigate('/'); // <-- Go to Home
     } catch (error) {
       setStatusMessage(
-        `Failed to edit ${title}  & ${formValues.title}: ${error}`,
-      );
-      return;
+        `Failed to edit ${title}  & ${formValues.title}: ${error}`
+      )
+      return
     }
   }
 
   // Add the entry to the database
-  async function addEntry() {
+  async function addEntry () {
     try {
-      const title = formValues.title || "Untitled";
+      const title = formValues.title || 'Untitled'
       if (!title) {
-        setStatusMessage("Title is required");
-        return;
+        setStatusMessage('Title is required')
+        return
       }
 
-      const id = await db.friends.add(FormToEntry());
-
-
+      const id = await db.friends.add(FormToEntry())
 
       setStatusMessage(
-        `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
-      );
+        `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`
+      )
 
-      navigate(`/entry/${id}`); // <-- Reset Page to show subitems
+      navigate(`/entry/${id}`) // <-- Reset Page to show subitems
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
-      setStatusMessage(`Failed to add ${title}: ${error}`);
+      setStatusMessage(`Failed to add ${title}: ${error}`)
     }
   }
 
-
-  async function saveToTemplate() {
-
-        try {
-      const title = formValues.title || "Untitled";
+  async function saveToTemplate () {
+    try {
+      const title = formValues.title || 'Untitled'
       if (!title) {
-        setStatusMessage("Title is required");
-        return;
+        setStatusMessage('Title is required')
+        return
       }
 
-    //   db.friends.update(0, 
-    //         FormToTemplate()
-    //         );
+      //   db.friends.update(0,
+      //         FormToTemplate()
+      //         );
 
-    //   db.friends.add(0, FormToTemplate()).then(function (updated) {
-    //     if (updated)
-    //       setStatusMessage(
-    //         "Updated template"
-    //       );
-    //     else setStatusMessage("Could not update template");
-    //   });
+      //   db.friends.add(0, FormToTemplate()).then(function (updated) {
+      //     if (updated)
+      //       setStatusMessage(
+      //         "Updated template"
+      //       );
+      //     else setStatusMessage("Could not update template");
+      //   });
 
-    
+      db.friends.update(0, FormToTemplate())
 
+      //     .then(function (updated) {
+      //     if (updated)
+      //       setStatusMessage(
+      //         "Updated template"
+      //       );
+      //     else setStatusMessage("Could not update template");
+      //   });
 
-        db.friends.update(0, FormToTemplate());
-        
-    //     .then(function (updated) {
-    //     if (updated)
-    //       setStatusMessage(
-    //         "Updated template"
-    //       );
-    //     else setStatusMessage("Could not update template");
-    //   });
+      //   setStatusMessage(
+      //     `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
+      //   );
 
-    //   setStatusMessage(
-    //     `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
-    //   );
-
-    //   navigate(`/entry/${id}`); // <-- Reset Page to show subitems
-    // window.location.reload();
+      //   navigate(`/entry/${id}`); // <-- Reset Page to show subitems
+      // window.location.reload();
       // setFormValue(defaultFormValue);  // Reset to defaults
- console.log("uopdate tempalte");
-
+      console.log('uopdate tempalte')
     } catch (error) {
-      setStatusMessage(`Failed to add ${title}: ${error}`);
+      setStatusMessage(`Failed to add ${title}: ${error}`)
     }
-
-
-
   }
 
-    async function updateFromTemplate() {}
+  async function updateFromTemplate () {}
 
-
-
-
-  async function removeCurrentEntry() {
+  async function removeCurrentEntry () {
     if (
       await eventManager.showConfirm(
-        `Are you sure you want to delete "${formValues.title}"?`,
+        `Are you sure you want to delete "${formValues.title}"?`
       )
     ) {
       try {
-        const id = Number(itemID);
+        const id = Number(itemID)
         if (isNaN(id)) {
-          setStatusMessage("Invalid ID: " + itemID);
-          return;
+          setStatusMessage('Invalid ID: ' + itemID)
+          return
         }
 
-        await db.friends.delete(id);
-        setStatusMessage(`Entry ${formValues.title} successfully deleted.`);
-        navigate("/"); // Go back to home
+        await db.friends.delete(id)
+        setStatusMessage(`Entry ${formValues.title} successfully deleted.`)
+        navigate('/') // Go back to home
       } catch (error) {
-        setStatusMessage(`Failed to delete ${formValues.title}: ${error}`);
+        setStatusMessage(`Failed to delete ${formValues.title}: ${error}`)
       }
     }
   }
 
   //*    ---------------    HANDLERS  ------------------ */ Checkbox handler
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
+  const handleCheckboxChange = e => {
+    const { name, checked } = e.target
     setFormValue({
       ...formValues,
-      [name]: checked,
-    });
-  };
+      [name]: checked
+    })
+  }
 
   // Manage state and input field
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = e => {
+    const { name, value } = e.target
     setFormValue({
       ...formValues,
-      [name]: value,
-    });
-  };
+      [name]: value
+    })
+  }
 
-  const handleArrayChange = (e) => {
-    const { name, options } = e.target;
+  const handleArrayChange = e => {
+    const { name, options } = e.target
     const selectedValues = Array.from(options)
-      .filter((option) => option.selected)
-      .map((option) => option.value);
+      .filter(option => option.selected)
+      .map(option => option.value)
 
     setFormValue({
       ...formValues,
-      [name]: selectedValues,
-    });
-  };
+      [name]: selectedValues
+    })
+  }
 
   // Manage state and input field
-  const handleIDChange = (e) => {
-    const { name, value } = e.target;
+  const handleIDChange = e => {
+    const { name, value } = e.target
     // Ensure the ID starts with 'MX' and is followed by numbers
     if (!/^MX\d+$/.test(value)) {
       setIDValidWithMessage(
         false,
-        `ID ${value} must start with "MX" followed by numbers.`,
-      );
-      return;
+        `ID ${value} must start with "MX" followed by numbers.`
+      )
+      return
     }
     //check if the ID is unique
     db.friends
-      .where("fauxID")
+      .where('fauxID')
       .equals(value)
       .count()
-      .then((count) => {
+      .then(count => {
         if (count > 0) {
           //setStatusMessage(`ID ${value} already exists. Please choose a different ID.`);
-          setIDValidWithMessage(false, `ID ${value} already exists.`);
+          setIDValidWithMessage(false, `ID ${value} already exists.`)
         } else {
-          setIDValidWithMessage(true);
+          setIDValidWithMessage(true)
         }
         setFormValue({
           ...formValues,
-          [name]: value,
-        });
-      });
-  };
+          [name]: value
+        })
+      })
+  }
 
   const setIDValidWithMessage = (isValid, message) => {
-    setIDValid(isValid);
-    setFormValid(isValid);
-    if (message) setStatusMessage(message);
-    if (!message && isValid) setStatusMessage(""); // Clear on success
-  };
+    setIDValid(isValid)
+    setFormValid(isValid)
+    if (message) setStatusMessage(message)
+    if (!message && isValid) setStatusMessage('') // Clear on success
+  }
 
-  const checkExistingID = async (id) => {
-    const count = await db.friends.where("fauxID").equals(id).count();
-    return count > 0;
-  };
+  const checkExistingID = async id => {
+    const count = await db.friends.where('fauxID').equals(id).count()
+    return count > 0
+  }
 
   //*    --------------------------    RETURN  ------------------------------- */
   return (
     <>
-      {" "}
-      <div className="Single">
+      {' '}
+      <div className='Single'>
         {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
         <p>
           {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
         </p>
-        <div className="row">
+        <div className='row'>
           <FormAssets.FormTextBox
-            label="Title:"
-            name="title"
+            label='Title:'
+            name='title'
             formValue={formValues.title}
             readOnly={false}
             onChange={handleChange}
           />
         </div>
-        <div className="row">
-          <div className="col">
-            <div className="row">
-              <div className="formLabel">ID:</div>
+        <div className='row'>
+          <div className='col'>
+            <div className='row'>
+              <div className='formLabel'>ID:</div>
               {isNewEntry || isAdmin ? (
                 <input
                   className={`form-control ${
-                    !isIDValid ? "is-invalid" : ""
+                    !isIDValid ? 'is-invalid' : ''
                   } col`}
-                  type="text"
-                  name="fauxID"
-                  placeholder="ID"
+                  type='text'
+                  name='fauxID'
+                  placeholder='ID'
                   value={formValues.fauxID}
                   onChange={handleIDChange}
                   // readOnly={!isNewEntry && !isAdmin}
                 />
               ) : (
                 <input
-                  className="form-control col"
-                  type="text"
-                  name="fauxID"
-                  placeholder="ID"
+                  className='form-control col'
+                  type='text'
+                  name='fauxID'
+                  placeholder='ID'
                   value={formValues.fauxID}
                   onChange={handleChange}
                 />
@@ -456,10 +445,10 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             </div>
           </div>
 
-          <div className="col-6">
+          <div className='col-6'>
             <FormAssets.FormDropDown
-              name="category"
-              label="Type:"
+              name='category'
+              label='Type:'
               multiple={false}
               formValue={formValues.category}
               readOnly={false}
@@ -472,29 +461,29 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col">
+        <div className='row'>
+          <div className='col'>
             <FormAssets.FormDate
-              label="Last Modified"
-              name="modEditDate"
+              label='Last Modified'
+              name='modEditDate'
               formValue={formValues.modEditDate}
               onChange={handleChange}
             />
           </div>
-          <div className="col">
+          <div className='col'>
             <FormAssets.FormDate
-              label="Collection Date"
-              name="displayDate"
+              label='Collection Date'
+              name='displayDate'
               formValue={formValues.displayDate}
               onChange={handleChange}
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col">
+        <div className='row'>
+          <div className='col'>
             <FormAssets.FormDropDown
-              label="Edit Type"
-              name="modEdit"
+              label='Edit Type'
+              name='modEdit'
               formValue={formValues.modEdit}
               onChange={handleChange}
               options={editType.map((sub, i) => (
@@ -504,10 +493,10 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               ))}
             />
           </div>
-          <div className="col">
+          <div className='col'>
             <FormAssets.FormDropDown
-              label="Last Edit By"
-              name="lastEditedBy"
+              label='Last Edit By'
+              name='lastEditedBy'
               formValue={formValues.lastEditedBy}
               onChange={handleChange}
               options={researcherIDs.map((sub, i) => (
@@ -516,58 +505,58 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                 </option>
               ))}
             />
-            
+
           </div>
         </div>
-        <div className="row">
-          {" "}
+        <div className='row'>
+          {' '}
           {/*// ------ Description  ------*/}
           <textarea
             rows={4}
-            className="form-control"
-            name="description"
-            placeholder="Description"
+            className='form-control'
+            name='description'
+            placeholder='Description'
             value={formValues.description}
             onChange={handleChange}
           />
         </div>
 
-        <div className="row">
-          {" "}
+        <div className='row'>
+          {' '}
           {/*// ------ Media   ------*/}
           <MediaUpload mediaFiles={formValues.media} />
         </div>
 
         {isAdmin && (
-          <div className="row adminOnly">
-            <div className="row">
-              {" "}
+          <div className='row adminOnly'>
+            <div className='row'>
+              {' '}
               {/*// ------ available  ------*/}
-              <label className="formLabel">available</label>
+              <label className='formLabel'>available</label>
               <input
-                type="checkbox"
-                className="formLabel"
+                type='checkbox'
+                className='formLabel'
                 checked={formValues.available}
                 onChange={handleCheckboxChange}
-                name="available"
+                name='available'
               />
             </div>
-            <div className="row">
-              {" "}
+            <div className='row'>
+              {' '}
               {/*// ------ bookmark  ------*/}
-              <label className="formLabel">bookmark</label>
+              <label className='formLabel'>bookmark</label>
               <input
-                type="checkbox"
-                className="formLabel"
+                type='checkbox'
+                className='formLabel'
                 checked={formValues.bookmark}
                 onChange={handleCheckboxChange}
-                name="bookmark"
+                name='bookmark'
               />
             </div>
-            <div className="col">
-              {" "}
+            <div className='col'>
+              {' '}
               <FormAssets.FormHexes
-                name="hexHash"
+                name='hexHash'
                 multiple={true}
                 rows={3}
                 formValue={formValues.hexHash}
@@ -590,55 +579,67 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                     onChange={handleChange}
                     name="hexHash"/>
             </div> */}
-            <div className="row">
-              {" "}
+            <div className='row'>
+              {' '}
               {/*// ------ Description  ------*/}
-              <div className="formLabel">Dev Notes:</div>
+              <div className='formLabel'>Dev Notes:</div>
               <textarea
                 rows={3}
-                className="form-control"
-                name="devNotes"
+                className='form-control'
+                name='devNotes'
                 value={formValues.devNotes}
                 onChange={handleChange}
               />
             </div>
 
+            <div className='row'>
+                          <div className='formLabel'>Triggers:</div>
+                          <p>Comma seperated strings. function-parameter format.</p>
+              <textarea
+                rows={3}
+                className='form-control'
+                name='triggerEvent'
+                value={formValues.triggerEvent}
+                onChange={handleChange}
+              />
+            </div>
+
             {/*// ------ Template  ------*/}
-            <div className="row">
-              <div className="col-1 formLabel">Template:</div>
+            <div className='row'>
+              <div className='col-1 formLabel'>Template:</div>
               <select
-                className="form-control form-control-dropdown col"
+                className='form-control form-control-dropdown col'
                 multiple={false}
                 value={formValues.template}
                 onChange={handleChange}
-                name="template"
+                name='template'
               >
                 {entryTemplate.map((sub, i) => (
                   <option key={i} value={sub}>
                     {sub}
                   </option>
                 ))}
-              </select>{" "}
+              </select>{' '}
             </div>
           </div> // admin row
         )}
 
         {/* Only show Add Subentry button when not already a subentry. */}
-        {!isSubEntry && itemID != "new" ? (
-          <div className="row">
-            {" "}
+        {!isSubEntry && itemID != 'new' ? (
+          <div className='row'>
+            {' '}
             {/*// ------ subentries   ------*/}
             <ListSubEntries itemID={itemID} />
           </div>
         ) : (
           <></>
         )}
-        <div className="save-buttons">
-          {" "}
+        <div className='save-buttons'>
+          {' '}
           {/*// ------ Save Buttons  ------*/}
           {isNewEntry ? (
             <Button
-              className="btn-save-add-item"
+              className='btn-save-add-item'
               onClick={addEntry}
               disabled={!isFormValid}
             >
@@ -646,19 +647,20 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             </Button>
           ) : (
             <>
-              {" "}
-             <div> <Button
-                className="btn-save-add-item"
-                onClick={updateEntry}
-                disabled={!isFormValid}
-              >
-                Save
-              </Button>{" "}
-              <Button className="remove-button" onClick={removeCurrentEntry}>
-                Remove{" "}
-              </Button>
+              {' '}
+              <div>
+                {' '}
+                <Button
+                  className='btn-save-add-item'
+                  onClick={updateEntry}
+                  disabled={!isFormValid}
+                >
+                  Save
+                </Button>{' '}
+                <Button className='remove-button' onClick={removeCurrentEntry}>
+                  Remove{' '}
+                </Button>
               </div>
-              
             </>
           )}
         </div>
@@ -673,7 +675,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               </Button>
 
               </div> */}
-      </div>{" "}
+      </div>{' '}
     </>
-  );
+  )
 }

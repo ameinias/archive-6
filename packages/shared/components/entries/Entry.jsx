@@ -11,6 +11,7 @@ import { AddEntryForm } from "@components/entries/EditEntryFunc.jsx";
 const Entry = () => {
   const { id } = useParams();
   const { isAdmin } = GameLogic();
+  const gameLog = GameLogic();
 
   const entryData = useLiveQuery(async () => {
     const numericID = Number(id);
@@ -42,18 +43,28 @@ const Entry = () => {
     markAsRead();
   }, [entryData, id]);
 
-  const CheckConditionals = () => {
+ const CheckConditionals = () => {
     if (!entryData) {
       return <div>No valid ID provided.</div>;
     }
 
-    if (entryData.hexHash === "50" || entryData.hexHash === 50) {
-      <div>NO ENTRY</div>;
-    } else if (entryData.template === "messed up") {
-      return <StaticSingleMess itemID={id} />;
-    } else {
-      return <StaticSingleDefault itemID={id} />;
+    if(entryData.hexHash === '50' || entryData.hexHash === 50) {
+      <div>
+         NO ENTRY
+      </div>
+
     }
+    else {
+
+    //       if (entryData.triggerEvent.length > 0) {
+    //   gameLog.triggerEvent(event);
+    //   console.log("Triggered events for entry ID:", id);
+
+    // }
+       return <StaticSingleDefault itemID={id} />;
+     }
+
+
   };
 
   return (
@@ -66,7 +77,8 @@ const Entry = () => {
             </>
           ) : (
             <>
-              <StaticSingleDefault itemID={id} />
+            {CheckConditionals()}
+              {/* <StaticSingleDefault itemID={id} /> */}
             </>
           )}
         </>
