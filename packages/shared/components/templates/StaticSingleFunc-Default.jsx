@@ -131,7 +131,11 @@ export function StaticSingleDefault({ itemID }) {
                 </div>
               ))}
           </div>
+
         )}
+                  {gameState.gameState.editAccess ?
+           ( 'add record'):('sfsdfsd')
+          }
       </div>
     </div>
   );

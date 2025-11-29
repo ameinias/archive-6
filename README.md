@@ -17,6 +17,7 @@ projects>assets
 
 ## todo
 ### 7.0.1
+[] finish ReTitleSubentrys
 []  ImportExport UpdateDBVersion() - check that bunblded resource is newer than existing DB and replace, so palytesters get net version. Maybe replace in the log in screen?
 [x]  Check that media files save and load properly in electron package
 [] check that media files save and load properly in web version - if not, just disable that feature for web

@@ -13,56 +13,19 @@ import { BookMarkCheck } from '@components/parts/Badges';
 
 export function StaticSubListItem({
   itemID,
-  parentID,
+  parentID
 }) {
   const { id } = useParams(); // get the id from the route
   const gameState = GameLogic();
   const navigate = useNavigate();
   const [statusMessage, setStatusMessage] = useState('');
   const [freshUnread, setFreshUnread] = useState(true);
-    const itemRef = useRef(null);
+  const itemRef = useRef(null);
 
   const item = useLiveQuery(async () => {
     if (!itemID) return null;
     return await db.subentries.get(Number(itemID));
   }, [itemID]);
-
-  // useEffect(() => {
-  //   if (!item || !item.available || !item.unread) return;
-  //   if (!itemRef.current) return;
-
-  //   const observer = new IntersectionObserver(
-  //     async (entries) => {
-  //       const [entry] = entries;
-        
-  //       if (entry.isIntersecting) {
-  //         // Item is visible in viewport
-  //         console.log(item.fauxID + " is now visible, marking as read");
-          
-  //         try {
-  //           await db.subentries.update(Number(itemID), { unread: false });
-  //           setFreshUnread(false);
-  //           console.log(item.fauxID + " marked as read ✅");
-  //         } catch (error) {
-  //           console.error("Error marking as read:", error);
-  //         }
-          
-  //         // Stop observing after marking as read
-  //         observer.disconnect();
-  //       }
-  //     },
-  //     {
-  //       threshold: 0.5, // 50% of item must be visible
-  //       rootMargin: '0px' // No margin
-  //     }
-  //   );
-
-  //   observer.observe(itemRef.current);
-
-  //   return () => {
-  //     observer.disconnect();
-  //   };
-  // }, [item, itemID]);
 
   useEffect(() => {
   // Mark as read when user navigates away
@@ -89,6 +52,8 @@ export function StaticSubListItem({
       </div>
     );
   }
+
+
 
   return (
     <div

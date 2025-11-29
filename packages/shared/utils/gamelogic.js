@@ -28,7 +28,11 @@ let globalGameState = {
   score: 0,
   isGameOver: false,
   level: 0,
-  lastRoute: '/'
+  lastRoute: '/',
+  editAccess: true,
+  sortColumn:'title',
+  sortDirection:'asc'
+
 };
 let globalStatus = '';
 let globalRemoveText = 'remove';
@@ -124,7 +128,10 @@ export function GameLogic() {
       score: 0,
       isGameOver: false,
       level: 0,
-      lastRoute: '/'
+      lastRoute: '/',
+      editAccess: true,
+        sortColumn:'title',
+  sortDirection:'asc'
     };
     // Update all components
     gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
@@ -139,6 +146,8 @@ export function GameLogic() {
     globalGameState = { ...globalGameState, score: globalGameState.score + points };
     gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
   };
+
+
 
   const setLoggedInState = (loggedIn) => {
     globalIsLoggedIn = loggedIn;
@@ -163,7 +172,16 @@ export function GameLogic() {
 
   };
 
+      const setColumn = (column) => {
+    globalGameState = { ...globalGameState, sortColumn: column };
+    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+  };
 
+    const setSort = (sort) => {
+    globalGameState = { ...globalGameState, sortDirection: sort };
+    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+  };
+  
   const setPlayerUsername = (username) => {
     globalUser.username = username;
     localStorage.setItem('globalUser', JSON.stringify(globalUser));
@@ -203,6 +221,8 @@ const setAdminState = (adminState) => {
     isLoggedIn,
     setLoggedIn: setLoggedInState,
     setPlayerUsername,
-    setPlayerPassword
+    setPlayerPassword,
+    setColumn,
+    setSort
    };
 }

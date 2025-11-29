@@ -20,37 +20,74 @@ import { eventManager } from "@utils/events";
 export function EntryList() {
   // TODO: Clean these up. I think a lot of these aren't needed anymore.
 
+  //#region     ---------------    CONST  ------------------ */
+
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
-  const { setStatusMessage } = GameLogic();
+
+
+  const { setStatusMessage, gameState, setColumn, setSort } = GameLogic();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [sortColumn, setSortColumn] = useState("title");
-  const [sortDirection, setSortDirection] = useState("asc");
-
   const [editingHex, setEditingHex] = useState(null);
   const [editingSubHex, setEditingSubHex] = useState(null);
   const [tempHexValue, setTempHexValue] = useState("");
   const [tempSubHexValue, setTempSubHexValue] = useState("");
 
-  const sortedFriends = useLiveQuery(() => {
-    if (!sortColumn) return db.friends.toArray();
+  //#endregion
 
-    const query = db.friends.orderBy(sortColumn);
-    return sortDirection === "desc"
+  //#region  ---------------    SORTING  ------------------ */
+
+  const sortedFriends = useLiveQuery(() => {
+
+    const column = gameState?.sortColumn || "title";
+    const direction = gameState?.sortDirection || "asc";
+
+    const query = db.friends.orderBy(column);
+    return direction === "desc"
       ? query.reverse().toArray()
       : query.toArray();
-  }, [sortColumn, sortDirection]);
+  }, [gameState?.sortColumn, gameState?.sortDirection]);
 
   const handleSort = (column) => {
-    if (column === sortColumn) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+
+    if (column === gameState?.sortColumn) {
+      // Toggle direction
+      const newDirection =
+        gameState.sortDirection === "asc" ? "desc" : "asc";
+      setSort(newDirection);
     } else {
-      setSortColumn(column);
-      setSortDirection("asc");
+      // New column, reset to ascending
+      setColumn(column);
+      setSort("asc");
     }
   };
+
+  //#endregion
+
+  // //#region  ---------------    ???  ------------------ */
+  // const sortedFriends2 = useLiveQuery(() => {
+  //   if (!sortColumn) return db.friends.toArray();
+
+  //   const query = db.friends.orderBy(sortColumn);
+  //   return sortDirection === "desc"
+  //     ? query.reverse().toArray()
+  //     : query.toArray();
+  // }, [sortColumn, sortDirection]);
+
+  // const handleSort2 = (column) => {
+  //   if (column === gameState.gameState.sortColumn) {
+
+  //     {gameState.gameState.sortDirection === "asc" ? gameState.setSort("desc") : gameState.setSort("asc")};
+
+  //   } else {
+  //     gameState.setSort("asc");
+  //     gameState.setColumn(column);
+  //     // sortColumn = column;
+  //     // setSortDirection("asc");
+  //   }
+  // };
 
   const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing
@@ -113,24 +150,6 @@ export function EntryList() {
     setTempHexValue("");
   };
 
-  //  function MySortableTable() {
-  //     const [items, setItems] = useState([]);
-  //     const [sortColumn, setSortColumn] = useState('name');
-  //     const [sortDirection, setSortDirection] = useState('asc');
-  //  };
-
-  // useEffect(() => {
-  //   const fetchItems = async () => {
-  //     let sortedItems;
-  //     if (sortDirection === 'asc') {
-  //       sortedItems = await db.friends.orderBy(sortColumn).toArray();
-  //     } else {
-  //       sortedItems = await db.friends.orderBy(sortColumn).reverse().toArray();
-  //     }
-  //     setItems(sortedItems);
-  //   };
-  //   fetchItems();
-  // }, [sortColumn, sortDirection]); // Re-fetch when sort order changes
 
   useEffect(() => {
     const handleNewGameStart = () => setIsLoading(true);
@@ -149,16 +168,9 @@ export function EntryList() {
     };
   }, []);
 
-  //   const handleSort = (column) => {
-  //   if (column === sortColumn) {
-  //     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  //   } else {
-  //     setSortColumn(column);
-  //     setSortDirection('asc'); // Default to ascending when changing column
-  //   }
-  // };
+//#endregion
 
-  // --------------------  Remove Entries
+  //#region --------------------  Remove Entries
   const removeItem = async (item) => {
     if (
       await eventManager.showConfirm(
@@ -181,24 +193,7 @@ export function EntryList() {
     }
   };
 
-  // // Sort friends by date
-  // const sortedFriends = friends
-  //   ? [...friends].sort((a, b) => {
-  //       const dateA = a.date ? new Date(a.date).getTime() : 0;
-  //       const dateB = b.date ? new Date(b.date).getTime() : 0;
-  //       return dateB - dateA;
-  //     })
-  //   : [];
-
-  //   // Sort friends by date
-  // const sortedFriends = friends
-  //   ? [...friends].sort((a, b) => {
-  //       const dateA = a.date ? new Date(a.date).getTime() : 0;
-  //       const dateB = b.date ? new Date(b.date).getTime() : 0;
-  //       return dateB - dateA;
-  //     })
-  //   : [];
-
+//#endregion
   if (isLoading || !friends || !subentries) {
     return (
       <div className="List">
@@ -241,31 +236,25 @@ export function EntryList() {
                 <tr>
                   <th onClick={() => handleSort("title")}>
                     Title{" "}
-                    {sortColumn === "title" &&
-                      (sortDirection === "asc" ? "▲" : "▼")}
+                    {gameState?.sortColumn === "title" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
 
                   <th width="75px" onClick={() => handleSort("displayDate")}>
                     Display Date{" "}
-                    {sortColumn === "displayDate" &&
-                      (sortDirection === "asc" ? "▲" : "▼")}
+                    {gameState?.sortColumn === "displayDate" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
 
                   <th width="75px" onClick={() => handleSort("date")}>
                     Added Date{" "}
-                    {sortColumn === "date" &&
-                      (sortDirection === "asc" ? "▲" : "▼")}
+                    {gameState?.sortColumn === "date" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
                   <th width="25px">Hex</th>
-                  <th width="25px" title="sub entries">
-                    Subs
-                  </th>
-                  <th width="25px" title="media attachments">
-                    🖼️
-                  </th>
-                  <th width="25px" title="active">
-                    🔛
-                  </th>
+                  <th width="25px" title="sub entries">Subs</th>
+                  <th width="25px" title="media attachments">🖼️</th>
+                  <th width="25px" title="active">🔛</th>
                   <th width="30px">🗑️</th>
                 </tr>
               </thead>
@@ -372,20 +361,20 @@ export function EntryList() {
                 <tr>
                   <th onClick={() => handleSort("title")}>
                     Title{" "}
-                    {sortColumn === "title" &&
-                      (sortDirection === "asc" ? "▲" : "▼")}
+                    {gameState?.sortColumn === "title" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
 
                   <th width="75px" onClick={() => handleSort("displayDate")}>
                     Display Date{" "}
-                    {sortColumn === "displayDate" &&
-                      (sortDirection === "asc" ? "▲" : "▼")}
+                    {gameState?.sortColumn === "displayDate" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
 
                   <th width="75px" onClick={() => handleSort("date")}>
                     Added Date{" "}
-                    {sortColumn === "date" &&
-                      (sortDirection === "asc" ? "▲" : "▼")}
+                    {gameState?.sortColumn === "date" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
                   <th width="110px">Researcher</th>
                   <th width="25px"> Hex</th>

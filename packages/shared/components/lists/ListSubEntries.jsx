@@ -74,7 +74,7 @@ export function ListSubEntries({ itemID }) {
             // </div>
 
 <div title="new-entry-form">         <div title="Toggle Add Subentry">
-      <div title="Toggle Button" className="button-row">
+      {/* <div title="Toggle Button" className="button-row">
         <button title="add or remove"
           variant={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
           className={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
@@ -84,18 +84,18 @@ export function ListSubEntries({ itemID }) {
 
           {item.fauxID} : {item.title}
         </button>
-      </div>
+      </div> */}
 
       <div title="embeded add subentry form">
-        {toggleShowCurrentSubEntry && (
-          <>
+        {/* {toggleShowCurrentSubEntry && (
+          <> */}
      
           <AddSubEntryForm
             parentID={item.parentId}
             itemID={item.id}
-            onCancel={() => setToggleShowCurrentSubEntry(false)}
+            onCancel={() => setCollapsed(false)}
           />
- <div title="Toggle Button" className="button-row">
+ {/* <div title="Toggle Button" className="button-row">
         <button title="add or remove"
           variant={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
           className={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
@@ -107,7 +107,7 @@ export function ListSubEntries({ itemID }) {
 
 
           </>
-        )}
+        )} */}
       </div>
       </div>         </div>
           ))}
@@ -132,7 +132,8 @@ export function ListSubEntries({ itemID }) {
             itemID="new"
             onCancel={() => setToggleShowNewSubEntry(false)}
           />
-        )}
+         )
+        }
       </div>
       </div>
 

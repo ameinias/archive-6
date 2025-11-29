@@ -39,6 +39,41 @@ try{
   }, [entryId]);
 }
 
+// TODO: finish ReTitleSubentrys
+/* 
+export function ReTitleSubentrys(entryId, newFauxID) {
+  return useLiveQuery(async () => {
+    if (!entryId) return [];
+try{
+    // 
+    const subArray = await db.subentries
+    .where('parentId').equals(entryId).toArray();
+
+   // sort by editDate
+   // map
+   // iterate ID
+   // tempID 
+    subArray.map(sub =>
+
+    )
+
+
+    const fauxID
+
+
+
+    subArray.toCollection().modify({ fauxID: false });
+
+
+    return subArray;
+ }catch (error) {
+    console.log('Error, database may be closed');
+    return 0;
+  }
+  }, [entryId]);
+}
+*/
+
 
 export function GetAvailableSubCount(parentID){
   return useLiveQuery(async () => {

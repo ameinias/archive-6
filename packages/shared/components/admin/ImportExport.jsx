@@ -405,6 +405,8 @@ console.log("Tables:", importMeta.data.tables.map(t =>
         },
       });
 
+      
+
       console.log("Import complete");
 
       // Reopen the original database to refresh it

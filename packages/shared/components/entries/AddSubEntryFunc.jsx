@@ -29,6 +29,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
   const [isMeta, setMeta] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
     // Custom hooks
   const [toggleMetaData, setToggleMetaData] = useToggle(false);
@@ -350,31 +351,37 @@ export function AddSubEntryForm({ itemID, parentID }) {
     }
   }
 
+  async function revertEntry() {
+    const entry = await db.subentries.get(Number(itemID));
+
+     setFormValue({
+          fauxID: entry.fauxID,
+          parentFauxID: entry.parentFauxID,
+          // subID: entry.subID,
+          title: entry.title,
+          description: entry.description || "",
+          subCategory: entry.subCategory,
+          parentId: entry.parentId,
+          date: entry.date || new Date(),
+          available: entry.available || false,
+          mediaSub: entry.mediaSub || [],
+          template: entry.template || "default",
+          bookmark: entry.bookmark || false,
+          researcherID: entry.researcherID,
+          hexHash: Array.isArray(entry.hexHash)
+            ? entry.hexHash // Keep the IDs as-is
+            : [entry.hexHash] || [1],
+          devNotes: entry.devNotes || "",
+          modEditDate: entry.modEditDate || "2008-07-21",
+          modEdit: entry.modEdit,
+          displayDate: entry.displayDate || "1970-01-01",
+          lastEditedBy: entry.lastEditedBy,
+          triggerEvent: entry.triggerEvent || "",
+        });
+  }
   async function FinishEdit() {
 
     setToggleMetaData(false);
-
-
-    // // navigate(0);
-
-    // navigate(`/entry/${parentID}/`, { replace: true });
-
-    // // Small delay to ensure navigation completes, then refresh
-    // setTimeout(() => {
-    //   // navigate(`/`, { replace: true });
-    //   navigate(`/entry/${parentID}/`, { replace: true });
-    // }, 10);
-
-    // setStatusMessage("Should return to parent");
-
-    // const newFauxID = await generateNewID();
-    // setFormValue({
-    //   ...defaultFormValue,
-    //   fauxID: newFauxID,
-    // });
-    // setNewEntry(true);
-    // console.log("FinishEdit called, new entry state:", isNewEntry);
-
 
   }
 
@@ -489,14 +496,58 @@ export function AddSubEntryForm({ itemID, parentID }) {
 
   //#endregion
 
+
+  if(collapsed)
+  {
+    return(
+<div title="Toggle Button" >
+        <button title="add or remove"
+          variant={collapsed ? "remove-item" : "btn-add-item"}
+          className='button-small'
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {collapsed ? "▷" : "▽"}
+
+          
+        </button> {formValues.fauxID} : {formValues.title}
+
+               <span className="subentry-meta right">
+               {formValues.displayDate
+                 ? typeof formValues.displayDate === "string"
+                   ? formValues.displayDate
+                     : new Date(formValues.displayDate).toLocaleDateString()
+                   : "No date"}
+               {"   "} | {"   "}
+                 {formValues.lastEditedBy !== null && formValues.researcherID !== undefined
+                   ? researcherIDs.find(
+                       (researcher) =>
+                         researcher.id === parseInt(formValues.lastEditedBy),
+                     )?.name || "Unknown"
+                   : "Unknown User"}
+               </span>
+
+      </div> 
+    );
+  }
   return (
       <div className="SubEntry">
-        {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>}
+        {/* {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>} */}
         <div title="ID and title" className="row">
+          <div title="Toggle Button" className="button-row col-1">
+        <button title="add or remove"
+          variant={collapsed ? "remove-item" : "btn-add-item"}
+          className='button-small'
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {collapsed ? "▷" : "▽"}
+
+          
+        </button> 
+      </div> 
           <div className="col-3">
             {" "}
             {/*// ------ ID  ------*/}
-            <div className="formLabel">ID:</div>
+            {/* <div className="formLabel">ID:</div> */}
             {isNewEntry || isAdmin ? (
               <input
                 className="form-control"
@@ -539,7 +590,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
             ) : (
               <>
                 <FormAssets.FormTextBox
-                  label="Title:"
+                  label=""
                   name="title"
                   formValue={formValues.title}
                   readOnly={false}
@@ -762,7 +813,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
           {isNewEntry ? (
             <>
               <button
-                className="btn-save-add-item"
+                // className="btn-save-add-item"
                 onClick={addSubEntry}
                 disabled={!isFormValid}
               >
@@ -772,20 +823,22 @@ export function AddSubEntryForm({ itemID, parentID }) {
           ) : (
             <>
               <button
-                className="btn-save-add-item"
+                // className="btn-save-add-item"
                 onClick={updateSubEntry}
                 disabled={!isFormValid}
               >
                 Save
               </button>
               <button
-                className="btn-save-add-item"
-                onClick={returnToParent}
+                // className="btn-save-add-item"
+                onClick={revertEntry}
                 disabled={!isFormValid}
               >
-                &laquo; Return
+                Revert
               </button>
-              <button className="remove-button" onClick={removeCurrentEntry}>
+              <button 
+              // className="remove-button" 
+              onClick={removeCurrentEntry}>
                 Remove
               </button>
             </>
