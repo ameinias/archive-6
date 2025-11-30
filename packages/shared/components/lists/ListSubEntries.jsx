@@ -10,7 +10,8 @@ import { researcherIDs } from "@utils/constants.js";
 
 export function ListSubEntries({ itemID }) {
   // HOOKS
-     const [toggleShowCurrentSubEntry, setToggleShowCurrentSubEntry] = useState(false);
+  const [toggleShowCurrentSubEntry, setToggleShowCurrentSubEntry] =
+    useState(false);
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
   const navigate = useNavigate();
 
@@ -23,7 +24,19 @@ export function ListSubEntries({ itemID }) {
       if (isNaN(parentId) || parentId <= 0) return [];
 
       try {
-        return await db.subentries.where("parentId").equals(parentId).toArray();
+        const subArray = await db.subentries
+          .where("parentId")
+          .equals(parentId)
+          .toArray();
+
+        const sortedSubs = subArray.sort((a, b) => {
+          const dateA = a.displayDate || "0000-00-00";
+          const dateB = b.displayDate || "0000-00-00";
+
+          return dateA.localeCompare(dateB);
+        });
+
+        return sortedSubs;
       } catch (error) {
         console.error("Error fetching subentries:", error);
         return [];
@@ -45,98 +58,39 @@ export function ListSubEntries({ itemID }) {
       {subEntryOfParentLQ.length != 0 && (
         <div title="list existing entries">
           {subEntryOfParentLQ.map((item) => (
-            // <div className="single-subentry-listing" key={item.id}>
-            //   <button title="remove"
-            //     className="remove-button-small right"
-            //     onClick={() => removeItem(item)}
-            //   >
-            //     x
-            //   </button>{" "}
-              
-            //   <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-            //     {item.fauxID} : {item.title}
-            //   </Link>{" "}
-
-            //   <span className="subentry-meta right">
-            //     {item.displayDate
-            //       ? typeof item.displayDate === "string"
-            //         ? item.displayDate
-            //         : new Date(item.displayDate).toLocaleDateString()
-            //       : "No date"}
-            //    {"   "} | {"   "}
-            //     {item.researcherID !== null && item.researcherID !== undefined
-            //       ? researcherIDs.find(
-            //           (researcher) =>
-            //             researcher.id === parseInt(item.researcherID),
-            //         )?.name || "Unknown"
-            //       : "Unknown User"}
-            //   </span>
-            // </div>
-
-<div title="new-entry-form">         <div title="Toggle Add Subentry">
-      {/* <div title="Toggle Button" className="button-row">
-        <button title="add or remove"
-          variant={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
-          className={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
-          onClick={() => setToggleShowCurrentSubEntry(!toggleShowCurrentSubEntry)}
-        >
-          {toggleShowCurrentSubEntry ? "xxxx" : ""}
-
-          {item.fauxID} : {item.title}
-        </button>
-      </div> */}
-
-      <div title="embeded add subentry form">
-        {/* {toggleShowCurrentSubEntry && (
-          <> */}
-     
-          <AddSubEntryForm
-            parentID={item.parentId}
-            itemID={item.id}
-            onCancel={() => setCollapsed(false)}
-          />
- {/* <div title="Toggle Button" className="button-row">
-        <button title="add or remove"
-          variant={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
-          className={toggleShowCurrentSubEntry ? "remove-item" : "btn-add-item"}
-          onClick={() => setToggleShowCurrentSubEntry(!toggleShowCurrentSubEntry)}
-        >
-          Close
-        </button>
-      </div>
-
-
-          </>
-        )} */}
-      </div>
-      </div>         </div>
+            <div title="existing entrie" className="row">
+              <AddSubEntryForm
+                parentID={item.parentId}
+                itemID={item.id}
+                onCancel={() => setCollapsed(true)}
+              />
+            </div>
           ))}
         </div>
       )}
 
       <div title="Toggle Add Subentry">
-      <div title="Toggle Button" className="button-row">
-        <button
-          variant={toggleShowNewSubEntry ? "remove-item" : "btn-add-item"}
-          className={toggleShowNewSubEntry ? "remove-item" : "btn-add-item"}
-          onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
-        >
-          {toggleShowNewSubEntry ? "x" : "Add SubEntry"}
-        </button>
-      </div>
+        <div title="Toggle Button" className="button-row">
+          <button
+            variant={toggleShowNewSubEntry ? "remove-item" : "btn-add-item"}
+            className={toggleShowNewSubEntry ? "remove-item" : "btn-add-item"}
+            onClick={() => setToggleShowNewSubEntry(!toggleShowNewSubEntry)}
+          >
+            {toggleShowNewSubEntry ? "x" : "Add SubEntry"}
+          </button>
+        </div>
 
-      <div title="embeded add subentry form">
-        {toggleShowNewSubEntry && (
-          <AddSubEntryForm
-            parentID={itemID?.toString()}
-            itemID="new"
-            onCancel={() => setToggleShowNewSubEntry(false)}
-          />
-         )
-        }
+        <div title="embeded add subentry form">
+          {toggleShowNewSubEntry && (
+            <AddSubEntryForm
+              parentID={itemID?.toString()}
+              itemID="new"
+              onCancel={() => setToggleShowNewSubEntry(false)}
+              isCollapsed={false}
+            />
+          )}
+        </div>
       </div>
-      </div>
-
     </div>
   );
 }

@@ -19,7 +19,7 @@ import { MediaUploadSub } from "@components/parts/Media/MediaUploadSub";
 import { eventManager } from "@utils/events";
 import { useToggle } from '@hooks/hooks'
 
-export function AddSubEntryForm({ itemID, parentID }) {
+export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
 
   //#region    ---------------    CONST  ------------------ */
 
@@ -219,6 +219,8 @@ export function AddSubEntryForm({ itemID, parentID }) {
   // Initialize form values - if an ID came through, get that. If not, default empty.
   useEffect(() => {
     async function fetchData() {
+      setCollapsed(isCollapsed);
+
       if (!itemID || itemID === "new") {
         setFormValue(defaultFormValue);
         setNewEntry(true);
@@ -255,27 +257,27 @@ export function AddSubEntryForm({ itemID, parentID }) {
         savedID = entry.id;
         setNewEntry(false);
 
-        console.log(
-          itemID + " Fetched entry:",
-          entry.fauxID,
-          " and ",
-          formValues.fauxID,
-        );
-        setStatusMessage(
-          "Fetched entry:" +
-            entry.fauxID +
-            " and ID:" +
-            entry.id +
-            " and " +
-            savedID,
-        );
+        // console.log(
+        //   itemID + " Fetched entry:",
+        //   entry.fauxID,
+        //   " and ",
+        //   formValues.fauxID,
+        // );
+        // setStatusMessage(
+        //   "Fetched entry:" +
+        //     entry.fauxID +
+        //     " and ID:" +
+        //     entry.id +
+        //     " and " +
+        //     savedID,
+        // );
       } else {
         setFormValue(defaultFormValue);
         console.log("No Fetched entry, creating new");
         setNewEntry(true);
       }
 
-      console.log("is new entry: ", isNewEntry);
+      // console.log("is new entry: ", isNewEntry);
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -381,7 +383,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
   }
   async function FinishEdit() {
 
-    setToggleMetaData(false);
+    setCollapsed(true);
 
   }
 
@@ -518,7 +520,7 @@ export function AddSubEntryForm({ itemID, parentID }) {
                      : new Date(formValues.displayDate).toLocaleDateString()
                    : "No date"}
                {"   "} | {"   "}
-                 {formValues.lastEditedBy !== null && formValues.researcherID !== undefined
+                 {formValues.lastEditedBy !== null 
                    ? researcherIDs.find(
                        (researcher) =>
                          researcher.id === parseInt(formValues.lastEditedBy),
@@ -813,9 +815,10 @@ export function AddSubEntryForm({ itemID, parentID }) {
           {isNewEntry ? (
             <>
               <button
-                // className="btn-save-add-item"
+                className="btn-add-item btn-taller"
                 onClick={addSubEntry}
                 disabled={!isFormValid}
+
               >
                 Add
               </button>
@@ -823,14 +826,14 @@ export function AddSubEntryForm({ itemID, parentID }) {
           ) : (
             <>
               <button
-                // className="btn-save-add-item"
+                className="btn-save-add-item btn-taller"
                 onClick={updateSubEntry}
                 disabled={!isFormValid}
               >
                 Save
               </button>
               <button
-                // className="btn-save-add-item"
+                className="remove-button  btn-taller"
                 onClick={revertEntry}
                 disabled={!isFormValid}
               >

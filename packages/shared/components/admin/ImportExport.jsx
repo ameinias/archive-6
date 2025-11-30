@@ -16,7 +16,7 @@ import HashImport from "./HashImport";
 import { useLiveQuery } from "dexie-react-hooks";
 import { subCategories } from "@utils/constants";
 import { eventManager } from "@utils/events";
-import { setStartAvalability } from "@hooks/dbHooks.js";
+// import { setStartAvalability } from "@hooks/dbHooks.js";
 import { DataState } from "../parts/Badges";
 
 
@@ -405,7 +405,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
         },
       });
 
-      
+
 
       console.log("Import complete");
 

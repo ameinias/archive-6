@@ -3,13 +3,25 @@ import Button from "react-bootstrap/Button";
 import { db } from "@utils/db";
 import { eventManager } from "@utils/events";
 import { Link } from "react-router-dom";
+import { Icon } from "../Badges";
+import audioIcon from "@assets/icons/audio.png";
+import videoIcon from "@assets/icons/film.png";
+import pdfIcon from "@assets/icons/docs.png";
 
-export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) => {
+export const MediaThumbnail = ({
+  fileRef,
+  onRemove,
+  maxHeight,
+  hasData = true,
+  isThumb = false,
+}) => {
   const [mediaDataUrl, setMediaDataUrl] = useState(null);
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState(0);
   const [fileType, setFileType] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [iconUrl, setIconUrl] = useState(null);
 
   useEffect(() => {
     const loadMedia = async () => {
@@ -25,20 +37,11 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
           return;
         }
 
-        
         setFileName(mediaFile.name);
         setFileSize(mediaFile.size || 0);
         setFileType(mediaFile.type || "");
 
         const okFileSize = mediaFile.size < 5 * 1024 * 1024;
-
-        // console.log(" Loaded media:", {
-        //   name: mediaFile.name,
-        //   type: mediaFile.type,
-        //   size: mediaFile.size,
-        //   lessmax: okFileSize,
-        //   path: mediaFile.path,
-        // });
 
         setFileName(mediaFile.name);
 
@@ -54,7 +57,7 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
             const result = await window.electronAPI.getMediaPath(
               mediaFile.path,
             );
-            
+
             setMediaDataUrl(result);
           } else {
             // Use base64 for small files (images)
@@ -93,20 +96,46 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
     };
   }, [fileRef]);
 
+  //  const loadMedia = async (mediaFilePath) => {
+
+  //       if (!mediaFilePath) return;
+
+  //       try {
+
+  //         // bigger files use safe-path
+  //         if (mediaFilePath && eventManager.isElectron) {
+
+  //             // Use base64 for small files (images)
+  //             const result = await window.electronAPI.getMediaData(
+  //               mediaFilePath,
+  //             );
+  //             const dataUrl = `data:${result.mimeType};base64,${result.data}`;
+  //             console.log(dataUrl);
+  //             return dataUrl;
+
+  //         }
+  //         // Web: use blob
+  //         else if (mediaFile.blob) {
+  //           const url = URL.createObjectURL(mediaFile.blob);
+  //           console.log(url);
+  //           return url;
+  //         }
+  //       }
+  //  catch (error) {
+  //         console.error("Error loading media:", error);
+  //       }
+
+  //     };
+
+  const truncateString = (str, maxLength) => {
+  return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+};
+
+
   // Loading state fs
   if (loading) {
     return (
-      <div
-        style={{
-          width: "200px",
-          height: "150px",
-          backgroundColor: "#f0f0f0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: "1px dashed #ccc",
-        }}
-      >
+      <div className="media media-img" style={{ maxHeight }}>
         <span>Loading...</span>
       </div>
     );
@@ -118,6 +147,22 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
   }
   // VIDEO
   if (fileType?.startsWith("video/")) {
+        if (isThumb) {
+      return (
+        <div className="media media-img" max-height={maxHeight}>
+          <img
+            src={videoIcon}
+            alt={fileName}
+            style={{ width: "70%", height: "70%" }}
+            className="thumb-symbol"
+          />
+                    <span className="image-subinfo">
+                        {truncateString(fileName,20)} ({(fileSize / 1024 / 1024).toFixed(1)} MB)
+          </span>
+        </div>
+      );
+    }
+
     return (
       <div className="media media-video">
         <video
@@ -173,15 +218,33 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
           <source src={mediaDataUrl} type={fileType} />
           Your browser does not support the video tag.
         </video>
-       {hasData &&  <span className="image-subinfo">
-          {fileName} ({(fileSize / 1024 / 1024).toFixed(2)} MB)
-        </span> }
+        {hasData && (
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024 / 1024).toFixed(2)} MB)
+          </span>
+        )}
       </div>
     );
   }
 
   // AUDIO hh
   if (fileType?.startsWith("audio/")) {
+    if (isThumb) {
+      return (
+        <div className="media media-img" max-height={maxHeight}>
+          <img
+            src={audioIcon}
+          alt={fileName}
+            style={{ width: "70%", height: "70%" }}
+            className="thumb-symbol"
+          />
+                    <span className="image-subinfo">
+                       {truncateString(fileName,20)} ({(fileSize / 1024 / 1024).toFixed(1)} MB)
+          </span>
+        </div>
+      );
+    }
+
     return (
       <div className="media media-audio">
         <audio
@@ -209,6 +272,18 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
 
   // IMAGE
   if (fileType?.startsWith("image/")) {
+    if (isThumb) {
+      return (
+        <div className="media media-img" max-height={maxHeight}>
+          <img
+            src={mediaDataUrl}
+            alt={fileName}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </div>
+      );
+    }
+
     return (
       <div className="media media-img" max-height={maxHeight}>
         <img
@@ -216,9 +291,11 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
           alt={fileName}
           style={{ width: "100%", height: "100%" }}
         />
-      {hasData &&   <span className="image-subinfo">
-          {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-        </span> }
+        {hasData && (
+          <span className="image-subinfo">
+            {fileName} ({(fileSize / 1024).toFixed(2)} KB)
+          </span>
+        )}
       </div>
     );
   }
@@ -226,12 +303,28 @@ export const MediaThumbnail = ({ fileRef, onRemove, maxHeight, hasData=true }) =
   //pdf
   // PDF - Simple version without pdf.js
   if (fileType === "application/pdf") {
+        if (isThumb) {
+      return (
+        <div className="media media-img" max-height={maxHeight}>
+          <img
+            src={pdfIcon}
+          alt={fileName}
+            style={{ width: "70%", height: "70%" }}
+            className="thumb-symbol"
+          />
+                    <span className="image-subinfo">
+            {truncateString(fileName,20)} ({(fileSize / 1024 / 1024).toFixed(1)} MB)
+          </span>
+        </div>
+      );
+    }
+
     return (
       <div className="media media-pdf">
         <embed
           src={mediaDataUrl}
           type="application/pdf"
-          className="pdf" 
+          className="pdf"
           style={{
             width: "100%",
             // height: "600px",

@@ -196,6 +196,8 @@ export function MediaUpload({ mediaFiles }) {
                 fileRef={file}
                 maxWidth={"700px"}
                 onRemove={removeFile}
+                isThumb={true}
+              
               />
               <div
                 style={{

@@ -76,6 +76,15 @@ db.version(4.8).stores({
    
 });
 
+//add related and triggerEvent
+db.version(4.9).stores({
+  gamedata: 'expVersion, uploadedAt',
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent', 
+  subentries: '++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent', 
+   media: '++id, name, type, size, path, uploadedAt'
+   
+});
+
 
 
 /*

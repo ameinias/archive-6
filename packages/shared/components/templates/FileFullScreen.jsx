@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@utils/db';
-import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
+import { getFileType } from '@hooks/dbHooks';
 
 // Not using this yet - eventually want to open media full screen to make it easier to read.
 

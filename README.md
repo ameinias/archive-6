@@ -17,18 +17,21 @@ projects>assets
 
 ## todo
 ### 7.0.1
-[] finish ReTitleSubentrys
+[x] Big clean up to make writing subentries way faster
+[x] Use [link parser](https://github.com/amir2mi/react-link-parser) with DescriptionEntry to parse links in subentry descriptions to other entries using ##entryID 
+[x] finish ReTitleSubentrys - now sorts by date and renumbers
 []  ImportExport UpdateDBVersion() - check that bunblded resource is newer than existing DB and replace, so palytesters get net version. Maybe replace in the log in screen?
 [x]  Check that media files save and load properly in electron package
 [] check that media files save and load properly in web version - if not, just disable that feature for web
 [x] get media files - audio, mp4 and pdf working 
-[] multiple start state bools - ImportExport NewGame(hexhash)
-[] Set default hexhash for game start (in log in with db version ?!)
+[x] multiple start state bools - ImportExport NewGame(hexhash)
+[x] Set default hexhash for game start (in log in with db version ?!)
 [x] fix hydration error on ListEditEntry
 
 
 #### Abandoned features 
-[-] Set default hexhash for new entries (easily changable - probably from importexport? maybe set in gamelogic?) (Abandoned for now)
+[-] Set default hexhash for new entries (easily changable - probably from importexport? maybe set in gamelogic?) 
+[-] Save and load entries from template
 
 ### 0.6.*
 [x] Populate SingleItem from edit button
@@ -61,9 +64,10 @@ projects>assets
 
 <img src=".erb/img/erb-banner.svg" width="100%" />
 <a href="https://www.flaticon.com/free-icons/bookmark" title="bookmark icons">Bookmark icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/speaker" title="speaker icons">Speaker icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/document" title="document icons">Document icons created by Freepik - Flaticon</a>
 
-
-<br>
+<a href="https://www.flaticon.com/free-icon/film_1146203?term=video&page=1&position=27&origin=search&related_id=1146203" title="document icons">Video icons created by Freepik - Flaticon</a>
 
 <a href="https://www.flaticon.com/free-icons/code" title="code icons">Code icons created by HideMaru - Flaticon</a>
 <br>

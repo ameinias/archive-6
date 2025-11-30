@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 
 import * as dbHooks from '@hooks/dbHooks';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -90,6 +91,62 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID, type);
   );
 }
 
+
+// export function Icon({ path = "assets/icons/audio.png" }) {
+//   const [iconUrl, setIconUrl] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const loadIcon = async () => {
+//       try {
+//         setLoading(true);
+        
+//         // Check if we're in Electron
+//         if (window.electronAPI) {
+//           const result = await window.electronAPI.getMediaData(path);
+          
+//           if (!result.error) {
+//             const dataUrl = `data:${result.mimeType};base64,${result.data}`;
+//             setIconUrl(dataUrl);
+//           } else {
+//             // Fallback to public path
+//             setIconUrl(`/assets/${path}`);
+//           }
+//         } else {
+//           // Web environment - use public path
+//           setIconUrl(`/assets/${path}`);
+//         }
+        
+//         setLoading(false);
+//       } catch (error) {
+//         console.error('Error loading icon:', error);
+//         setIconUrl(`/assets/${path}`); // Fallback
+//         setLoading(false);
+//       }
+//     };
+
+//     loadIcon();
+//   }, [path]); // Re-run if path changes
+
+//   if (loading) {
+//     return <span>Loading...</span>;
+//   }
+
+//   if (!iconUrl) {
+//     return <span>Failed to load icon</span>;
+//   }
+
+//   return (
+//     <img
+//       src={iconUrl}
+//       alt={path}
+//       style={{ width: "100%", height: "100%" }}
+//     />
+//   );
+// }
+
+
+
 export function Spinner() {
   return (
     <>    <span className="loader" aria-label="Loading"></span>
@@ -137,3 +194,5 @@ export const DataState = ({ refreshTrigger }) => {
     </div>
   );
 };
+
+

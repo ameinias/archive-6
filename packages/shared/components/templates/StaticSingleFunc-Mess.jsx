@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { Link } from 'react-router-dom';
-import { StaticSubListItem } from '../../../../packages/shared/components/parts/StaticSubListItem';
-import { BookMarkCheck } from '../../../../packages/shared/components/parts/Badges';
-import { getFileType } from '../../../../packages/shared/hooks/dbHooks';
+import { StaticSubListItem } from '@components/parts/StaticSubListItem';
+import { BookMarkCheck } from '@components/parts/Badges';
+import { getFileType } from '@hooks/dbHooks';
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 
 export function StaticSingleMess({ itemID }) {

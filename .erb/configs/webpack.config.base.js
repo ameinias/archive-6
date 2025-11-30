@@ -49,10 +49,11 @@ const configuration = {
     modules: [webpackPaths.srcPath, 'node_modules'],
   alias: {
     '@shared': path.resolve(webpackPaths.rootPath, 'packages/shared'),
-    '@electron': path.resolve(webpackPaths.rootPath, 'packages/app-electron/src'), // ✅ Fixed path
+    '@electron': path.resolve(webpackPaths.rootPath, 'packages/app-electron/src'), 
     '@components': path.resolve(webpackPaths.rootPath, 'packages/shared/components'),
     '@utils': path.resolve(webpackPaths.rootPath, 'packages/shared/utils'),
     '@hooks': path.resolve(webpackPaths.rootPath, 'packages/shared/hooks'),
+        '@assets': path.resolve(webpackPaths.rootPath, 'assets'),
   },
   },
 

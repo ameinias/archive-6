@@ -128,11 +128,21 @@ class EventManager {
     }
   }
 
+    getMediaPath(path) {
+    if (this.isElectron) {
+      return window.electronAPI.getMediaPath(path);
+    } else {
+      return window.getMediaPath(path);
+    }
+  }
 
-
-
-
-
+      getMediaData(path) {
+    if (this.isElectron) {
+      return window.electronAPI.getMediaData(path);
+    } else {
+      return `/${path}`;
+    }
+  }
 
 
 
@@ -141,3 +151,34 @@ class EventManager {
 }
 
 export const eventManager = new EventManager();
+
+  export const loadAsset = async (assetPath) => {
+  // Ensure path doesn't start with slash
+  const cleanPath = assetPath.startsWith('/') ? assetPath.slice(1) : assetPath;
+  
+  // Ensure path starts with 'assets/'
+  const fullPath = cleanPath.startsWith('assets/') ? cleanPath : `assets/${cleanPath}`;
+
+  if (eventManager.isElectron) {
+    try {
+      const result = await window.electronAPI.getMediaData(fullPath);
+      
+      if (result.error) {
+        console.error(`Failed to load asset: ${fullPath}`, result.error);
+        // Fallback to public path
+        return `/${fullPath}`;
+      }
+      
+      // Return base64 data URL
+      return `data:${result.mimeType};base64,${result.data}`;
+    } catch (error) {
+      console.error(`Error loading asset: ${fullPath}`, error);
+      // Fallback to public path
+      return `/${fullPath}`;
+    }
+  } else {
+    // Web: Use public path
+    return `/${fullPath}`;
+  }
+};
+

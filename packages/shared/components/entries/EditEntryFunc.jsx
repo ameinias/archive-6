@@ -16,6 +16,8 @@ import { MediaUpload } from "@components/parts/Media/MediaUpload";
 import * as FormAssets from "@components/parts/FormAssets";
 import { eventManager } from "@utils/events";
 import { useToggle } from '@hooks/hooks'
+import { UpdateFauxIDAndReorderSubs } from '@hooks/dbHooks'
+import { useLiveQuery } from 'dexie-react-hooks';
 
 const defaultHex = 10;
 
@@ -46,6 +48,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   const [isNewEntry, setNewEntry] = useState(false);
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
+    const [dbKey, setDbKey] = useState(0);
 
   // Custom hooks
   const [toggleMetaData, setToggleMetaData] = useToggle(false);
@@ -54,6 +57,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   // import functions
   const { setStatusMessage, isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
+  // const UpdateFauxIDAndReorderSubs = UpdateFauxIDAndReorderSubs(itemID, "MX000"); 
 
   // other const
   let savedID = 0;
@@ -103,7 +107,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     }
 
     fetchData();
-  }, [itemID]);
+  }, [itemID, dbKey]);
 
   //#region ---------------    CREATE ENTRY  ------------- */
   const FormToEntry = () => {
@@ -273,6 +277,8 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     }
   }
 
+  // abandoned template feature
+  /*  
   async function saveToTemplate() {
     try {
       const title = formValues.title || "Untitled";
@@ -317,6 +323,70 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   }
 
   async function updateFromTemplate() {}
+
+  */
+
+//  function UpdateFauxIDAndReorderSubs(entryId, newFauxID) {
+//   return useLiveQuery(async () => {
+//     if (!entryId) return [];
+// try{
+    
+//     const parentEntry =  await db.friends
+//     .where(id).equals(entryId);
+
+//     parentEntry.modify({fauxID: newFauxID});
+
+//     const subArray = await db.subentries
+//     .where('parentId').equals(entryId).toArray();
+
+//         if (subentries.length === 0) {
+//       console.log('No subentries found for parent:', entryId);
+//       return true;
+//     }
+
+//     const sortedSubs = subentries
+//     .sort((a, b) => {
+//           const dateA = a.displayDate ? new Date(a.date).getTime() : 0;
+//           const dateB = b.displayDate ? new Date(b.date).getTime() : 0;
+//            return dateB - dateA;
+//          });
+      
+      
+//           const updates = sortedSubs.map((sub, index) => ({
+//       key: sub.id,
+//       changes: {
+//         fauxID: `${newFauxID}-${index + 1}` // e.g., "ABC-1", "ABC-2", "ABC-3"
+//       }
+//     }));
+
+//     await db.subentries.bulkUpdate(updates);
+
+//     console.log(`Updated ${updates.length} subentries with new fauxIDs based on ${newFauxID}`);
+    
+//     return true;
+
+//  }catch (error) {
+//     console.log('Error, database may be closed');
+//     return false;
+//   }
+//   }, []);
+// }
+
+ 
+ const handleRenumberSubs  = async () => {
+
+
+      console.log('🔵 Calling UpdateFauxIDAndReorderSubs with:', {
+      itemID,
+      fauxID: formValues.fauxID
+    });
+
+       const success = await UpdateFauxIDAndReorderSubs(itemID, formValues.fauxID); 
+       // update sub list  
+       setDbKey((prev) => prev + 1);   
+  }
+
+
 
   async function removeCurrentEntry() {
     if (
@@ -419,7 +489,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 
 //#endregion
 
-  //*    --------------------------    RETURN  ------------------------------- */
+  //*    ----------------    RETURN  -------------- */
   return (
       <div className="Single">
         {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
@@ -667,7 +737,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 </div>
 
 
-<div title="subentries">
+<div title="subentries" key={dbKey}>
         {/* Only show Add Subentry button when not already a subentry. */}
         {!isSubEntry && itemID != "new" && (
           <div className="row">
@@ -689,16 +759,23 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           ) : (
             <>
               {" "}
-              <div>
+              <div className="button-row">
                 {" "}
                 <button
-                  className="btn-save-add-item"
+                  className="btn-save-add-item btn-taller"
                   onClick={updateEntry}
                   disabled={!isFormValid}
                 >
                   Save
                 </button>{" "}
-                <button className="remove-button" onClick={removeCurrentEntry}>
+                <button
+                  className="btn-save-add-item btn-taller"
+                  onClick={handleRenumberSubs}
+                  disabled={!isFormValid}
+                >
+                  Update IDs
+                </button>{" "}
+                <button className="remove-button  btn-taller" onClick={removeCurrentEntry}>
                   Remove{" "}
                 </button>
               </div>

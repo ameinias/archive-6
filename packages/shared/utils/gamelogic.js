@@ -1,53 +1,66 @@
-import React, { useState, useEffect} from 'react';
-import { eventManager } from '@utils/events';
-
+import React, { useState, useEffect } from "react";
+import { eventManager } from "@utils/events";
 
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
 let globalIsAdmin = (() => {
   try {
-    return localStorage.getItem('isAdmin') === 'true';
+    return localStorage.getItem("isAdmin") === "true";
   } catch (error) {
     // Fallback for SSR or environments without localStorage
-    console.warn('localStorage not available:', error);
+    console.warn("localStorage not available:", error);
     return false;
   }
 })();
 
 let globalIsLoggedIn = (() => {
   try {
-    return localStorage.getItem('isLoggedIn') === 'true';
+    return localStorage.getItem("isLoggedIn") === "true";
   } catch (error) {
     // Fallback for SSR or environments without localStorage
-    console.warn('localStorage not available:', error);
+    console.warn("localStorage not available:", error);
     return false;
   }
 })();
-
 
 let globalGameState = {
   score: 0,
   isGameOver: false,
   level: 0,
-  lastRoute: '/',
-  editAccess: true,
-  sortColumn:'title',
-  sortDirection:'asc'
-
+  lastRoute: "/",
+  editAccess: false,
+  sortColumn: "title",
+  sortDirection: "asc",
 };
-let globalStatus = '';
-let globalRemoveText = 'remove';
+let globalStatus = "";
+let globalRemoveText = "remove";
 let globalUser = (() => {
   try {
-    const savedUser = localStorage.getItem('globalUser');
-    return savedUser ? JSON.parse(savedUser) : { username: 'playerName', password: 'password', firstname:"firstname", lastname:"lastname" };
+    const savedUser = localStorage.getItem("globalUser");
+    return savedUser
+      ? JSON.parse(savedUser)
+      : {
+          username: "playerName",
+          password: "password",
+          firstname: "firstname",
+          lastname: "lastname",
+        };
   } catch (error) {
     // Fallback for SSR or environments without localStorage
-    console.warn('localStorage not available:', error);
-    return { username: 'admin', password: 'password', firstname:"firstname", lastname:"lastname" };
+    console.warn("localStorage not available:", error);
+    return {
+      username: "admin",
+      password: "password",
+      firstname: "firstname",
+      lastname: "lastname",
+    };
   }
 })();
-let globalAdminUser = { username: 'admin', password: 'password', firstname:"firstname", lastname:"lastname" };
-
+let globalAdminUser = {
+  username: "admin",
+  password: "password",
+  firstname: "firstname",
+  lastname: "lastname",
+};
 
 // Array to store all update functions from components
 const adminUpdateCallbacks = [];
@@ -57,7 +70,6 @@ const gameStatusUpdateCallbacks = [];
 const removeTextUpdateCallbacks = [];
 const userUpdateCallbacks = [];
 const adminUserUpdateCallbacks = [];
-
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);
@@ -74,13 +86,12 @@ export function GameLogic() {
   const toggleAdmin = () => {
     globalIsAdmin = !globalIsAdmin;
     // Update all components that use this state
-    localStorage.setItem('isAdmin', JSON.stringify(globalIsAdmin));
-    adminUpdateCallbacks.forEach(callback => callback(globalIsAdmin));
+    localStorage.setItem("isAdmin", JSON.stringify(globalIsAdmin));
+    adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
   };
 
   // Register  update functions - so they can work globally in other scripts.
   useEffect(() => {
-
     adminUpdateCallbacks.push(setAdmin);
     gameStateUpdateCallbacks.push(setGameState);
     gameStatusUpdateCallbacks.push(setStatus);
@@ -94,7 +105,7 @@ export function GameLogic() {
     };
 
     //  Works in both environments
-    eventManager.on('toggle-admin', handleToggleAdmin);
+    eventManager.on("toggle-admin", handleToggleAdmin);
 
     // Cleanup when component unmounts
     return () => {
@@ -104,11 +115,12 @@ export function GameLogic() {
       const gameIndex = gameStateUpdateCallbacks.indexOf(setGameState);
       if (gameIndex > -1) gameStateUpdateCallbacks.splice(gameIndex, 1);
 
-       const statusIndex = gameStatusUpdateCallbacks.indexOf(setStatus);
+      const statusIndex = gameStatusUpdateCallbacks.indexOf(setStatus);
       if (statusIndex > -1) gameStatusUpdateCallbacks.splice(statusIndex, 1);
 
       const removeTextIndex = removeTextUpdateCallbacks.indexOf(setRemoveText);
-      if (removeTextIndex > -1) removeTextUpdateCallbacks.splice(removeTextIndex, 1);
+      if (removeTextIndex > -1)
+        removeTextUpdateCallbacks.splice(removeTextIndex, 1);
 
       const loggedInIndex = loggedInUpdateCallbacks.indexOf(setLoggedIn);
       if (loggedInIndex > -1) loggedInUpdateCallbacks.splice(loggedInIndex, 1);
@@ -117,9 +129,10 @@ export function GameLogic() {
       if (userIndex > -1) userUpdateCallbacks.splice(userIndex, 1);
 
       const adminUserIndex = adminUserUpdateCallbacks.indexOf(setAdminUser);
-      if (adminUserIndex > -1) adminUserUpdateCallbacks.splice(adminUserIndex, 1);
+      if (adminUserIndex > -1)
+        adminUserUpdateCallbacks.splice(adminUserIndex, 1);
 
-      eventManager.removeListener('toggle-admin', handleToggleAdmin);
+      eventManager.removeListener("toggle-admin", handleToggleAdmin);
     };
   }, []);
 
@@ -128,32 +141,33 @@ export function GameLogic() {
       score: 0,
       isGameOver: false,
       level: 0,
-      lastRoute: '/',
-      editAccess: true,
-        sortColumn:'title',
-  sortDirection:'asc'
+      lastRoute: "/",
+      editAccess: false,
+      sortColumn: "title",
+      sortDirection: "asc",
     };
     // Update all components
-    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+    gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
   const endGame = () => {
     globalGameState = { ...globalGameState, isGameOver: true };
-    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+    gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
   const increaseScore = (points) => {
-    globalGameState = { ...globalGameState, score: globalGameState.score + points };
-    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+    globalGameState = {
+      ...globalGameState,
+      score: globalGameState.score + points,
+    };
+    gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
-
-
 
   const setLoggedInState = (loggedIn) => {
     globalIsLoggedIn = loggedIn;
     // Update localStorage and all components
-    localStorage.setItem('isLoggedIn', JSON.stringify(globalIsLoggedIn));
-    loggedInUpdateCallbacks.forEach(callback => callback(globalIsLoggedIn));
+    localStorage.setItem("isLoggedIn", JSON.stringify(globalIsLoggedIn));
+    loggedInUpdateCallbacks.forEach((callback) => callback(globalIsLoggedIn));
   };
 
   const setStatusMessage = (thestatus) => {
@@ -161,49 +175,46 @@ export function GameLogic() {
     globalStatus = "status: " + thestatus;
     console.log(`${globalStatus}`);
     setStatus(globalStatus);
-    gameStatusUpdateCallbacks.forEach(callback => callback(globalStatus));
+    gameStatusUpdateCallbacks.forEach((callback) => callback(globalStatus));
 
     // Clear status after 3 seconds (statusTimeOut)
-  setTimeout(() => {
-    globalStatus = '';
-    setStatus('');
-    gameStatusUpdateCallbacks.forEach(callback => callback(''));
-  }, statusTimeOut);
-
+    setTimeout(() => {
+      globalStatus = "";
+      setStatus("");
+      gameStatusUpdateCallbacks.forEach((callback) => callback(""));
+    }, statusTimeOut);
   };
 
-      const setColumn = (column) => {
+  const setColumn = (column) => {
     globalGameState = { ...globalGameState, sortColumn: column };
-    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+    gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
-    const setSort = (sort) => {
+  const setSort = (sort) => {
     globalGameState = { ...globalGameState, sortDirection: sort };
-    gameStateUpdateCallbacks.forEach(callback => callback(globalGameState));
+    gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
-  
+
   const setPlayerUsername = (username) => {
     globalUser.username = username;
-    localStorage.setItem('globalUser', JSON.stringify(globalUser));
-    userUpdateCallbacks.forEach(callback => callback(globalUser));
+    localStorage.setItem("globalUser", JSON.stringify(globalUser));
+    userUpdateCallbacks.forEach((callback) => callback(globalUser));
     console.log(`Player username set to: ${username}`);
   };
 
-
   const setPlayerPassword = (password) => {
     globalUser.password = password;
-    localStorage.setItem('globalUser', JSON.stringify(globalUser));
-    userUpdateCallbacks.forEach(callback => callback(globalUser));
+    localStorage.setItem("globalUser", JSON.stringify(globalUser));
+    userUpdateCallbacks.forEach((callback) => callback(globalUser));
     console.log(`Player password set to: ${password}`);
   };
 
-
-const setAdminState = (adminState) => {
-  globalIsAdmin = adminState;
-  // Update localStorage and all components
-  localStorage.setItem('isAdmin', JSON.stringify(globalIsAdmin));
-  adminUpdateCallbacks.forEach(callback => callback(globalIsAdmin));
-};
+  const setAdminState = (adminState) => {
+    globalIsAdmin = adminState;
+    // Update localStorage and all components
+    localStorage.setItem("isAdmin", JSON.stringify(globalIsAdmin));
+    adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
+  };
 
   return {
     gameState,
@@ -212,7 +223,7 @@ const setAdminState = (adminState) => {
     endGame,
     increaseScore,
     toggleAdmin,
-    setAdmin: setAdminState, 
+    setAdmin: setAdminState,
     globalStatus,
     setStatusMessage,
     removeText,
@@ -223,6 +234,6 @@ const setAdminState = (adminState) => {
     setPlayerUsername,
     setPlayerPassword,
     setColumn,
-    setSort
-   };
+    setSort,
+  };
 }

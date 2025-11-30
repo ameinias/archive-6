@@ -67,27 +67,7 @@ export function EntryList() {
   //#endregion
 
   // //#region  ---------------    ???  ------------------ */
-  // const sortedFriends2 = useLiveQuery(() => {
-  //   if (!sortColumn) return db.friends.toArray();
-
-  //   const query = db.friends.orderBy(sortColumn);
-  //   return sortDirection === "desc"
-  //     ? query.reverse().toArray()
-  //     : query.toArray();
-  // }, [sortColumn, sortDirection]);
-
-  // const handleSort2 = (column) => {
-  //   if (column === gameState.gameState.sortColumn) {
-
-  //     {gameState.gameState.sortDirection === "asc" ? gameState.setSort("desc") : gameState.setSort("asc")};
-
-  //   } else {
-  //     gameState.setSort("asc");
-  //     gameState.setColumn(column);
-  //     // sortColumn = column;
-  //     // setSortDirection("asc");
-  //   }
-  // };
+ 
 
   const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing
@@ -388,7 +368,7 @@ export function EntryList() {
                 {subentries?.map((item) => (
                   <tr key={item.id}>
                     <td width="70%" data-label="title">
-                      <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                      <Link to={`/entry/${item.parentId}/${item.id}`}>
                         {item.fauxID} : {item.title}
                       </Link>
                     </td>
@@ -441,22 +421,7 @@ export function EntryList() {
                             }}
                             autoFocus
                           />
-                          {/* <Button
-            size="sm"
-            variant="success"
-            onClick={() => saveHexHash(item.id, 'subentry')}
-            style={{ padding: '2px 8px' }}
-          >
-            ✓
-          </Button>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={cancelEditingHex}
-            style={{ padding: '2px 8px' }}
-          >
-            ✕
-          </Button> */}
+
                         </div>
                       ) : (
                         <div

@@ -73,6 +73,7 @@ getVideoFiles: () => ipcRenderer.invoke('get-video-files'),
 
   getMediaPath: (relativePath) => 
     ipcRenderer.invoke('get-media-path', relativePath),
+  
   deleteMediaFile: (relativePath) => 
     ipcRenderer.invoke('delete-media-file', relativePath),
 
