@@ -106,27 +106,29 @@ export function StaticSingleDefault({ itemID }) {
                 })
               : "No Date"}
           </div>
-          <div>
-            <DescriptionEntry string={item.description} />
-          </div>
+
 
           {subEntryOfParent
             .filter((item) => item.subCategory.toLowerCase() === "metadata")
             .map((item) => (
               <div key={item.id}>
-                <span className={item.unread ? "unread-display" : ""}>
-                  <strong>{item.title}:</strong>{" "}
-                  {!item.available ? (
-                    <span className="unavailablemeta">
-                      '----- DATA UNAVAILABLE -----'
-                    </span>
-                  ) : (
-                    item.description
-                  )}{" "}
-                  <br />
-                </span>
+
+                <StaticSubListItem
+                    itemID={item.id}
+                    parentID={item.parentId}
+                    meta={true}
+                  />
+
+
+
+
+
               </div>
             ))}
+
+                      <div>
+            <DescriptionEntry string={item.description} />
+          </div>
         </div>
 
         <div className="subentry-add-list flex">

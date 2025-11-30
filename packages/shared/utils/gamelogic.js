@@ -30,6 +30,7 @@ let globalGameState = {
   editAccess: false,
   sortColumn: "title",
   sortDirection: "asc",
+  cheatCode: true,
 };
 let globalStatus = "";
 let globalRemoveText = "remove";
@@ -145,6 +146,7 @@ export function GameLogic() {
       editAccess: false,
       sortColumn: "title",
       sortDirection: "asc",
+      cheatCode: true,
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -195,6 +197,11 @@ export function GameLogic() {
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
+    const setCheatCode = (sort) => {
+    globalGameState = { ...globalGameState, cheatCode: sort };
+    gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
+  };
+
   const setPlayerUsername = (username) => {
     globalUser.username = username;
     localStorage.setItem("globalUser", JSON.stringify(globalUser));
@@ -235,5 +242,6 @@ export function GameLogic() {
     setPlayerPassword,
     setColumn,
     setSort,
+    setCheatCode,
   };
 }

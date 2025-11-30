@@ -128,9 +128,8 @@ export const MediaThumbnail = ({
   //     };
 
   const truncateString = (str, maxLength) => {
-  return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
-};
-
+    return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
+  };
 
   // Loading state fs
   if (loading) {
@@ -147,7 +146,7 @@ export const MediaThumbnail = ({
   }
   // VIDEO
   if (fileType?.startsWith("video/")) {
-        if (isThumb) {
+    if (isThumb) {
       return (
         <div className="media media-img" max-height={maxHeight}>
           <img
@@ -156,8 +155,9 @@ export const MediaThumbnail = ({
             style={{ width: "70%", height: "70%" }}
             className="thumb-symbol"
           />
-                    <span className="image-subinfo">
-                        {truncateString(fileName,20)} ({(fileSize / 1024 / 1024).toFixed(1)} MB)
+          <span className="image-subinfo">
+            {truncateString(fileName, 20)} (
+            {(fileSize / 1024 / 1024).toFixed(1)} MB)
           </span>
         </div>
       );
@@ -234,12 +234,13 @@ export const MediaThumbnail = ({
         <div className="media media-img" max-height={maxHeight}>
           <img
             src={audioIcon}
-          alt={fileName}
+            alt={fileName}
             style={{ width: "70%", height: "70%" }}
             className="thumb-symbol"
           />
-                    <span className="image-subinfo">
-                       {truncateString(fileName,20)} ({(fileSize / 1024 / 1024).toFixed(1)} MB)
+          <span className="image-subinfo">
+            {truncateString(fileName, 20)} (
+            {(fileSize / 1024 / 1024).toFixed(1)} MB)
           </span>
         </div>
       );
@@ -303,17 +304,18 @@ export const MediaThumbnail = ({
   //pdf
   // PDF - Simple version without pdf.js
   if (fileType === "application/pdf") {
-        if (isThumb) {
+    if (isThumb) {
       return (
         <div className="media media-img" max-height={maxHeight}>
           <img
             src={pdfIcon}
-          alt={fileName}
+            alt={fileName}
             style={{ width: "70%", height: "70%" }}
             className="thumb-symbol"
           />
-                    <span className="image-subinfo">
-            {truncateString(fileName,20)} ({(fileSize / 1024 / 1024).toFixed(1)} MB)
+          <span className="image-subinfo">
+            {truncateString(fileName, 20)} (
+            {(fileSize / 1024 / 1024).toFixed(1)} MB)
           </span>
         </div>
       );

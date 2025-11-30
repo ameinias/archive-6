@@ -85,46 +85,6 @@ db.version(4.9).stores({
    
 });
 
-
-
-/*
-//  BETTER: Use populate event instead of ready
-db.on('populate', async () => {
-  console.log('Database created for first time, importing default data...');
-  
-  try {
-    let importData;
-    
-    // Different loading methods for different environments
-    if (typeof window !== 'undefined' && window.electronAPI) {
-      // Electron environment
-      const jsonString = await window.electronAPI.readAssetFile('assets/databases/dexie-import.json');
-      importData = JSON.parse(jsonString);
-    } else {
-      // Web environment
-      const response = await fetch('./databases/dexie-import.json');
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      importData = await response.json();
-    }
-    
-    // Import the data
-    if (importData.friends?.length > 0) {
-      await db.friends.bulkAdd(importData.friends);
-      console.log(`Imported ${importData.friends.length} friends`);
-    }
-    if (importData.subentries?.length > 0) {
-      await db.subentries.bulkAdd(importData.subentries);
-      console.log(`Imported ${importData.subentries.length} subentries`);
-    }
-    
-    console.log('Default database populated successfully');
-  } catch (error) {
-    console.error('Failed to populate default database:', error);
-  }
-}); */
-
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
 export const dbHelpers = {
 
@@ -346,20 +306,93 @@ export const setDefaultParameters = async () =>
       } catch (error) {
     return "Error.";
   }
-}
+};
 
 export const newGameWithWarning = async (startHash) => {
   if (await eventManager.showConfirm('Starting a new game will delete all current database entries. Proceed anyway?')) {
     await newGame(startHash);
   }
 
-
-
-
-
-
-
-
 };
+
+ export const importHashff = async (hashValue) => {
+
+  const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue);
+console.log("find you doing something " + hexHashID);
+ };
+
+export const importHash = async (hashValue) => {
+    const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue);
+
+
+
+    console.log(hashValue, '  ===================== ', hexHashID)
+
+    const foundItems = db.friends?.filter(item => {
+      if (Array.isArray(item.hexHash)) {
+        return item.hexHash.includes(hexHashID)
+      }
+      return parseInt(item.hexHash) === hexHashID
+    })
+
+
+
+    const foundSubItems = db.subentries?.filter(item => {
+      if (Array.isArray(item.hexHash)) {
+        return item.hexHash.includes(hexHashID)
+      }
+
+      if (item.hexHash === hexHashID) {
+        console.log('found subitem with hex: ', item.title)
+      } else {
+        console.log(
+          'not found subitem with hex: ',
+          item.title,
+          item.hexHash,
+          hexHashID
+        )
+      }
+
+      return item.hexHash === hexHashID
+    })
+console.log(hashValue + " fff " + foundSubItems.length);
+            return;
+
+    foundItems.map(item => {
+      db.friends.update(item.id, {
+        available: true,
+        modEditDate: new Date()
+          .toISOString()
+          .replace('T', ' ')
+          .substring(0, 19),
+        modEdit: 'migrated'
+      })
+    })
+
+    foundSubItems.map(item => {
+      db.subentries.update(item.id, {
+        available: true,
+        modEditDate: new Date()
+          .toISOString()
+          .replace('T', ' ')
+          .substring(0, 19),
+        modEdit: 'migrated'
+      })
+    })
+
+
+
+    const message = `Hash: ${hashValue} | ${dbHelpers.getIdsFromHexHashes(
+      hashValue
+    )} | Entries unlocked: ${foundItems.length} | Subentries unlocked: ${
+      foundSubItems.length
+    }`
+
+    //  const result = await findByHashAndUnLock(hashValue);
+    //   console.log(result);
+    eventManager.showAlert(message)
+    // setHashVal(''); // Clear input field after import
+    //  hashInput = '';
+  };
 
 // export { dbMainEntry, dbSubEntry, bothEntries, User };

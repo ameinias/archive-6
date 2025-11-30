@@ -5,7 +5,7 @@ import React, {
   KeyboardEvent,
   useRef,
 } from "react";
-import { db, dbHelpers } from "@utils/db";
+import { db, dbHelpers, importHash } from "@utils/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ import { MediaThumbnail } from "@components/parts/Media/MediaThumbnail.jsx";
 import { BookMarkCheck } from "@components/parts/Badges";
 import DescriptionEntry from "./DescriptionEntry";
 
-export function StaticSubListItem({ itemID, parentID }) {
+export function StaticSubListItem({ itemID, parentID, meta=false }) {
   const { id } = useParams(); // get the id from the route
   const gameState = GameLogic();
   const navigate = useNavigate();
@@ -42,6 +42,15 @@ export function StaticSubListItem({ itemID, parentID }) {
     };
   }, [item, itemID]); // Runs cleanup when component unmounts
 
+  async function unlockHex(hexes) {
+    try {
+      // do stuff
+      importHash(hexes);
+    } catch (error) {
+      console.error("can't unlockhex:", error);
+    }
+  }
+
   if (!item) {
     return <div>Loading...</div>;
   }
@@ -56,8 +65,35 @@ export function StaticSubListItem({ itemID, parentID }) {
           <h3>{item.fauxID} </h3>{" "}
         </span>
         <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{" "}
+        {/* Abandoned feature for now */}
+        {/* {!gameState.cheatCode ?    (     
+        <button title="add or remove"
+         
+          className='button-small'
+          onClick={() => unlockHex(item.hexHash)}
+        >
+          Import
+        </button>) : (<>sfsdf {gameState.cheatCode} </>)}  */}
       </div>
     );
+  }
+
+  if(meta)
+  {
+return (
+                <span className={item.unread ? "unread-display" : ""}>
+                  <strong>{item.title}:</strong>{" "}
+                  {!item.available ? (
+                    <span className="unavailablemeta">
+                      '----- DATA UNAVAILABLE -----'
+                    </span>
+                  ) : (
+                    item.description
+                  )}{" "}
+                  <br />
+                </span>
+
+);
   }
 
   return (
