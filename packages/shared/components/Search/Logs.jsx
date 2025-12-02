@@ -158,7 +158,7 @@ const Logs = () => {
                       </>
                     )}
                   </td>
-                  <td width="90px">
+                  <td width="60px">
                     <i>
                       {" "}
                       {item.hexHash != "1" ? item.modEdit : <i>migrated</i>}
@@ -186,8 +186,8 @@ const Logs = () => {
                     {" "}
                     {item.modEditDate ? item.modEditDate : <i>unknown</i>}{" "}
                   </td>
-                  <td width="55px">{item.available ? "NaN" : "active"}</td>
-                  <td width="55px">{item.unread ? "unread" : "read"}</td>
+                  {/* <td width="55px">{item.available ? "NaN" : "active"}</td>
+                  <td width="55px">{item.unread ? "unread" : "read"}</td> */}
                 </tr>
               ))}{" "}
             </tbody>
