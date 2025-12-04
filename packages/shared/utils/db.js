@@ -263,6 +263,8 @@ export const saveAsDefaultDatabase = async () => {
   }
 };
 
+
+// eventually will need a way to list entries by modEditDate - that is what is saving when entries were unlocked.
 export const exportTelemetrisToAppData = async (username) => {
   try {
 
@@ -323,10 +325,10 @@ export const newGame = async (startHash) => {
 
     await db.open();
 
-    // TODO this doesn't seem to be working yet
-    await db.gamedata.put({
-        sessionStart: new Date(),
-      });
+    // TODO this doesn't seem to be working yet. iF FACT IT BREAKS THE APP IF UNCOMMENTED. i'LL DEAL WIH THIS LATER.
+    // await db.gamedata.put({
+    //     sessionStart: new Date(),
+    //   });
 
 
     // reset states

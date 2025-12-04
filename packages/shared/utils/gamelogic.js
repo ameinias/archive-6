@@ -24,7 +24,7 @@ let globalIsLoggedIn = (() => {
 })();
 
 let globalGameState = {
-  defaultStartHash: 1,    //   Game with start with this hash on new game or logout
+  defaultStartHash: 10,    //   Game with start with this hash on new game or logout
   score: 0,
   isGameOver: false,
   level: 0,

@@ -23,8 +23,8 @@ const UserInfoButtons = () => {
 
             updateGameState("editAccess", false);
             console.log("restart with hash" + gameState.defaultStartHash);
-
-            exportTelemetrisToAppData(globalUser.username);
+          if (await eventManager.showConfirm('Export telemetry data to app data folder?')) {
+            exportTelemetrisToAppData(globalUser.username);}
 
             navigate('/');
             setLoggedIn(false);
