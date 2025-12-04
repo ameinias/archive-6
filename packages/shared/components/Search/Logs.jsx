@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { db } from "@utils/db"; // import the database
-import { useLiveQuery } from "dexie-react-hooks";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { AddSubEntryForm } from "@components/entries/AddSubEntryFunc";
-import { GameLogic } from "@utils/gamelogic";
+import React, { useState, useEffect } from 'react'
+import { db } from '@utils/db' // import the database
+import { useLiveQuery } from 'dexie-react-hooks'
+import Table from 'react-bootstrap/Table'
+import Button from 'react-bootstrap/Button'
+import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { AddSubEntryForm } from '@components/entries/AddSubEntryFunc'
+import { GameLogic } from '@utils/gamelogic'
 
 import {
   categories,
@@ -15,34 +15,34 @@ import {
   entryTemplate,
   hexHashes,
   metaData,
-  editType,
-} from "@utils/constants";
+  editType
+} from '@utils/constants'
 
 const Logs = () => {
-  const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
+  const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false)
 
-  const navigate = useNavigate();
-  const gameLog = GameLogic();
-  const [results, setResults] = useState([]);
+  const navigate = useNavigate()
+  const gameLog = GameLogic()
+  const [results, setResults] = useState([])
 
-  const friends = useLiveQuery(() => db.friends.toArray());
-  const subentries = useLiveQuery(() => db.subentries.toArray());
+  const friends = useLiveQuery(() => db.friends.toArray())
+  const subentries = useLiveQuery(() => db.subentries.toArray())
 
-  const { globalUser } = GameLogic();
-  const urlDirect = !gameLog.isAdmin ? "entry" : "edit-item";
-  const urlSubDirect = "edit-subitem";
+  const { globalUser } = GameLogic()
+  const urlDirect = !gameLog.isAdmin ? 'entry' : 'edit-item'
+  const urlSubDirect = 'edit-subitem'
 
   useEffect(() => {
-    generateLogs();
-  }, [friends, subentries]);
+    generateLogs()
+  }, [friends, subentries])
 
   const generateLogs = () => {
-    let tempItems = [];
-    let nextID = 0;
+    let tempItems = []
+    let nextID = 0
 
-    const foundItems = friends?.filter((item) => item.available === true);
+    const foundItems = friends?.filter(item => item.available === true)
 
-    const foundSubItems = subentries?.filter((item) => item.available === true);
+    const foundSubItems = subentries?.filter(item => item.available === true)
 
     // Add main entries
     if (foundItems) {
@@ -53,15 +53,15 @@ const Logs = () => {
           origin: item.id,
           title: item.title,
           date: item.date,
-          type: "main",
+          type: 'main',
           modEditDate: item.modEditDate,
           modEdit: item.modEdit,
           displayDate: item.displayDate,
           lastEditedBy: item.lastEditedBy,
           hexHash: item.hexHash,
-          unread: item.unread,
-        });
-        nextID = nextID + 1;
+          unread: item.unread
+        })
+        nextID = nextID + 1
       }
     }
     // Add subs
@@ -75,67 +75,67 @@ const Logs = () => {
           fauxID: subItem.fauxID, // Ensure fauxID is included
           title: subItem.title, // Ensure title is included
           date: subItem.date, // Include date if available
-          type: "sub", // Mark as sub entry
+          type: 'sub', // Mark as sub entry
           modEditDate: subItem.modEditDate,
           modEdit: subItem.modEdit,
           displayDate: subItem.displayDate,
           lastEditedBy: subItem.lastEditedBy,
           hexHash: subItem.hexHash,
           unread: subItem.unread,
-          subCategory: subItem.subCategory,
-        });
-        nextID = nextID + 1;
+          subCategory: subItem.subCategory
+        })
+        nextID = nextID + 1
       }
     }
 
     tempItems.sort((a, b) => {
-      const dateA = a.modEditDate ? new Date(a.modEditDate) : new Date(0);
-      const dateB = b.modEditDate ? new Date(b.modEditDate) : new Date(0);
-      return dateB - dateA; // Sort descending
-    });
+      const dateA = a.modEditDate ? new Date(a.modEditDate) : new Date(0)
+      const dateB = b.modEditDate ? new Date(b.modEditDate) : new Date(0)
+      return dateB - dateA // Sort descending
+    })
 
     if (
       (foundItems && foundItems.length > 0) ||
       (foundSubItems && foundSubItems.length > 0)
     ) {
-      setResults(tempItems); // update state
+      setResults(tempItems) // update state
     } else {
-      setResults([]); // clear results if nothing found
+      setResults([]) // clear results if nothing found
     }
-  };
+  }
 
   const displayUserLink = () => {
     return (
       <>
-        {" "}
-        <Link to={`/user-profile`}>@{globalUser.username}</Link>{" "}
+        {' '}
+        <Link to={`/user-profile`}>@{globalUser.username}</Link>{' '}
       </>
-    );
-  };
+    )
+  }
 
   return (
     <>
-      <h3>Logs</h3>{" "}
-      <div className="subentry-add-list">
+      <h3>Logs</h3>{' '}
+      <div className='subentry-add-list'>
         {results.length === 0 ? (
           <> No results to show. </>
         ) : (
-          <table className="searchResults">
+          <table className='searchResults'>
             <tbody>
-              {results.map((item) => (
+              {results.map(item => (
                 <tr
                   key={item.id}
-                  className={item.unread ? "unread-display" : "dickie"}
+                  className={item.unread ? 'unread-display' : 'dickie'}
                 >
                   <td>
-                    {item.type === "sub" ? (
+                    {item.type === 'sub' ? (
                       <>
-                        {" "}
+                        {' '}
                         &nbsp; &nbsp;
                         {!gameLog.isAdmin ? (
                           <Link to={`/entry/${item.parentId}/`}>
-                            {item.fauxID}:{" "}
-                            {item.subCategory != "MetaData" && item.subCategory}{" "}
+                            {item.fauxID}:{' '}
+                            {item.subCategory != 'MetaData' && item.subCategory}{' '}
                             {item.title}
                           </Link>
                         ) : (
@@ -151,51 +151,48 @@ const Logs = () => {
                       <>
                         <Link
                           to={`/${urlDirect}/${item.origin}`}
-                          className="log-parent-title"
+                          className='log-parent-title'
                         >
                           {item.fauxID} : {item.title}
                         </Link>
                       </>
                     )}
                   </td>
-                  <td width="60px">
+                  <td width='60px'>
                     <i>
-                      {" "}
-                      {item.hexHash != "1" ? item.modEdit : <i>migrated</i>}
+                      {' '}
+                      {item.hexHash != '1' ? item.modEdit : <i>migrated</i>}
                     </i>
                     {/* ? item.modEdit : <i>modified</i>} */}
                   </td>
-
-                  <td width="90px">
+                  <td width='90px'>
                     {/* Logic:
                   if not startstate, editor is Player
                   otherwhise get last edit by
                   Eventually you'll need to add in entity edits */}
-
-                    {item.hexHash != "1"
+                    {item.hexHash != '1'
                       ? displayUserLink()
                       : item.lastEditedBy !== null
-                        ? researcherIDs.find(
-                            (researcher) =>
-                              researcher.id === parseInt(item.lastEditedBy),
-                          )?.name
-                        : researcherIDs[0].name}
+                      ? researcherIDs.find(
+                          researcher =>
+                            researcher.id === parseInt(item.lastEditedBy)
+                        )?.name
+                      : researcherIDs[0].name}
                   </td>
-
-                  <td width="90px">
-                    {" "}
-                    {item.modEditDate ? item.modEditDate : <i>unknown</i>}{" "}
+                  <td width='90px'>
+                    {' '}
+                    {item.modEditDate ? item.modEditDate : <i>unknown</i>}{' '}
                   </td>
                   {/* <td width="55px">{item.available ? "NaN" : "active"}</td>
                   <td width="55px">{item.unread ? "unread" : "read"}</td> */}
                 </tr>
-              ))}{" "}
+              ))}{' '}
             </tbody>
           </table>
-        )}{" "}
+        )}{' '}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Logs;
+export default Logs

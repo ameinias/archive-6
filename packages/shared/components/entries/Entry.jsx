@@ -28,31 +28,33 @@ const Entry = () => {
     return entry;
   }, [id]);
 
-  useEffect(() => {
-    const markAsRead = async () => {
-      if (entryData && entryData.unread) {
-        try {
-          await db.friends.update(Number(id), { unread: false });
-          console.log(entryData.fauxID + " was unread, now marked as read");
-        } catch (error) {
-          console.error("Error marking as read:", error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const markAsRead = async () => {
+  //     if (entryData && entryData.unread) {
+  //       try {
+  //         await db.friends.update(Number(id), { unread: false });
+  //         console.log(entryData.fauxID + " was unread, now marked as read");
+  //       } catch (error) {
+  //         console.error("Error marking as read:", error);
+  //       }
+  //     }
+  //   };
 
-    markAsRead();
-  }, [entryData, id]);
+  //   markAsRead();
+  // }, [entryData, id]);
 
  const CheckConditionals = () => {
+  console.log("checking conditionals for entry ID:", id);
+
     if (!entryData) {
-      return <div>No valid ID provided.</div>;
+      return <div>No valid ID profvided.</div>;
     }
 
     if(entryData.hexHash === '50' || entryData.hexHash === 50) {
       <div>
          NO ENTRY
       </div>
-
+console.log(" hex 50", id);
     }
     else {
 

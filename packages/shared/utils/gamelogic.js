@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { eventManager } from "@utils/events";
+import React, {
+  useState,
+  useEffect
+} from "react";
+import {
+  eventManager
+} from "@utils/events";
 
 
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
@@ -24,7 +29,7 @@ let globalIsLoggedIn = (() => {
 })();
 
 let globalGameState = {
-  defaultStartHash: 10,    //   Game with start with this hash on new game or logout
+  defaultStartHash: 10, //   Game with start with this hash on new game or logout
   score: 0,
   isGameOver: false,
   level: 0,
@@ -32,7 +37,7 @@ let globalGameState = {
   editAccess: false,
   sortColumn: "title",
   sortDirection: "asc",
-  cheatCode: true,
+  cheatCode: true, // to eventually put an "unlock" button on locked entries
   playerAddEntry: false
 };
 let globalStatus = "";
@@ -41,14 +46,13 @@ let globalRemoveText = "remove";
 let globalUser = (() => {
   try {
     const savedUser = localStorage.getItem("globalUser");
-    return savedUser
-      ? JSON.parse(savedUser)
-      : {
-          username: "playerName",
-          password: "password",
-          firstname: "firstname",
-          lastname: "lastname",
-        };
+    return savedUser ?
+      JSON.parse(savedUser) : {
+        username: "playerName",
+        password: "password",
+        firstname: "firstname",
+        lastname: "lastname",
+      };
   } catch (error) {
     // Fallback for SSR or environments without localStorage
     console.warn("localStorage not available:", error);
@@ -82,7 +86,10 @@ export const updateGameState = (variableName, state) => {
     console.warn(`Game state does not have property: ${variableName}`);
     return;
   }
-  globalGameState = { ...globalGameState, [variableName]: state };
+  globalGameState = {
+    ...globalGameState,
+    [variableName]: state
+  };
   console.log(`Updated property: ${variableName}`);
   gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
 };
@@ -169,7 +176,10 @@ export function GameLogic() {
   };
 
   const endGame = () => {
-    globalGameState = { ...globalGameState, isGameOver: true };
+    globalGameState = {
+      ...globalGameState,
+      isGameOver: true
+    };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
@@ -204,17 +214,26 @@ export function GameLogic() {
   };
 
   const setColumn = (column) => {
-    globalGameState = { ...globalGameState, sortColumn: column };
+    globalGameState = {
+      ...globalGameState,
+      sortColumn: column
+    };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
   const setSort = (sort) => {
-    globalGameState = { ...globalGameState, sortDirection: sort };
+    globalGameState = {
+      ...globalGameState,
+      sortDirection: sort
+    };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
-    const setCheatCode = (sort) => {
-    globalGameState = { ...globalGameState, cheatCode: sort };
+  const setCheatCode = (sort) => {
+    globalGameState = {
+      ...globalGameState,
+      cheatCode: sort
+    };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
@@ -241,6 +260,35 @@ export function GameLogic() {
     adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
   };
 
+  // At module level (outside GameLogic component)
+  const triggerRegistry = {
+    'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
+    'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
+    'makeTrue-editAccess': () => updateGameState('editAccess', true),
+    'makeFalse-editAccess': () => updateGameState('editAccess', false),
+    // Add more triggers as needed
+  };
+
+  const processTrigger = (eventName) => {
+    const handler = triggerRegistry[eventName];
+    if (handler) {
+      console.log(`Executing trigger: ${eventName}`);
+      handler();
+    } else {
+      console.warn(`Unknown trigger: ${eventName}`);
+    }
+  };
+
+  const triggerEvent = (eventName = "") => {
+    if (!eventName) return;
+
+    const events = eventName.includes(',')
+      ? eventName.split(',').map(e => e.trim())
+      : [eventName];
+
+    events.forEach(processTrigger);
+  };
+
   return {
     gameState,
     isAdmin,
@@ -262,5 +310,6 @@ export function GameLogic() {
     setSort,
     setCheatCode,
     updateGameState,
+    triggerEvent
   };
 }

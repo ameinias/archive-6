@@ -95,8 +95,8 @@ const NavBar = () => {
           </>
         )}
 
-        <li role="menuitem" tabIndex="0" aria-haspopup="true">
-                <Link  onClick={FauxLogOut }>FauxLogOut</Link></li>
+        {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
+                <Link  onClick={FauxLogOut }>FauxLogOut</Link></li> */}
 
 
         </ul>
