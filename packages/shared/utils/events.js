@@ -1,12 +1,12 @@
 // utils/events.js
 
-// This intervenes in a lot of electron calls, and chooses what to do if it's not electron. Right now it's mostly just throwing null. 
+// This intervenes in a lot of electron calls, and chooses what to do if it's not electron. Right now it's mostly just throwing null.
 
 
 class EventManager {
   constructor() {
     this.isElectron = typeof window !== 'undefined' && window.electronAPI;
-    
+
   }
 
   on(eventName, callback) {
@@ -77,20 +77,20 @@ class EventManager {
   }
 
   async readBundledFile(fileName = 'dexie-import.json') {
-    console.log('📁 readBundledFile called with:', fileName);
-    
+    console.log('readBundledFile called with:', fileName);
+
     if (this.isElectron && window.electronAPI?.readBundledFile) {
       try {
         const result = await window.electronAPI.readBundledFile(fileName);
-        console.log('✅ readBundledFile result:', result);
-        
+        console.log('readBundledFile result:', result);
+
         if (result.success) {
           return result.data;
         } else {
           throw new Error(result.error || 'Failed to read bundle file');
         }
       } catch (error) {
-        console.error('❌ Error in readBundledFile:', error);
+        console.error('Error in readBundledFile:', error);
         throw error;
       }
     } else {
@@ -115,6 +115,14 @@ class EventManager {
   saveAssetFile(path, content) {
     if (this.isElectron) {
       return window.electronAPI.saveAssetFile(path, content);
+    } else {
+      return null;
+    }
+  }
+
+    saveTelemetricsFile(path, content) {
+    if (this.isElectron) {
+      return window.electronAPI.saveTelemetricsFile(path, content);
     } else {
       return null;
     }
@@ -155,20 +163,20 @@ export const eventManager = new EventManager();
   export const loadAsset = async (assetPath) => {
   // Ensure path doesn't start with slash
   const cleanPath = assetPath.startsWith('/') ? assetPath.slice(1) : assetPath;
-  
+
   // Ensure path starts with 'assets/'
   const fullPath = cleanPath.startsWith('assets/') ? cleanPath : `assets/${cleanPath}`;
 
   if (eventManager.isElectron) {
     try {
       const result = await window.electronAPI.getMediaData(fullPath);
-      
+
       if (result.error) {
         console.error(`Failed to load asset: ${fullPath}`, result.error);
         // Fallback to public path
         return `/${fullPath}`;
       }
-      
+
       // Return base64 data URL
       return `data:${result.mimeType};base64,${result.data}`;
     } catch (error) {

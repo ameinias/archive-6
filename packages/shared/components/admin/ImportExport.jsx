@@ -21,7 +21,7 @@ import { DataState } from "../parts/Badges";
 
 
 function ImportExport() {
-  const { isAdmin, toggleAdmin, setStatusMessage } = GameLogic();
+  const { isAdmin, toggleAdmin, setStatusMessage, updateGameState } = GameLogic();
   const [toggleHelp, setToggleHelp] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -123,7 +123,9 @@ function ImportExport() {
   };
 
   const testio = async () => {
-    UpdateDBCount();
+    // UpdateDBCount();
+    updateGameState("editAccess", true);
+    console.log("testio done");
   };
 
   const UpdateVersionTxt = async () => {
@@ -357,7 +359,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
 
       // peeak(importedDb);
 
-      await Dexie.importInto(db, file, 
+      await Dexie.importInto(db, file,
         {
  acceptChangedPrimaryKey: true,
 
@@ -424,6 +426,9 @@ console.log("Tables:", importMeta.data.tables.map(t =>
     }
   };
 
+  //#region handlers
+
+
   const handleDragOver = (event) => {
     event.stopPropagation();
     event.preventDefault();
@@ -451,6 +456,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
     await handleImport(file);
   };
 
+  //#endregion
 
   return (
     <>

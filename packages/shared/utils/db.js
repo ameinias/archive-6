@@ -3,11 +3,15 @@ import { categories, subCategories,researcherIDs,hexHashes } from "./constants.j
 import "dexie-export-import";
 import {setStartAvalability} from "../hooks/dbHooks.js"
 import {eventManager} from '@utils/events';
+import { globalUser, updateGameState } from './gamelogic.js';
+
 
 export const db = new Dexie('gb-current');
 
 
 
+
+//##region Database Schema Versions
 // Schema declaration:
 db.version(1).stores({
   friends: '++id, fauxID, title, description, media, category, date, entryDate, available, availableOnStart, template, unread', // Removed subItems
@@ -53,37 +57,39 @@ db.version(4.6).stores({
   friends: '++id, fauxID, title, description, media, category, date, displayDate, available, availableOnStart, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', // Removed subItems
   subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', // Fixed spelling and added parentId index
    media: '++id, name, type, size, path, uploadedAt'
-   
+
 });
 
 
 // get rid of available on start
 db.version(4.7).stores({
   gamedata: 'expVersion, uploadedAt',
-  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', 
-  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', 
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes',
+  subentries: '++id, fauxID, title, description, mediaSub, subCategory, date, displayDate, researcherID, parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes',
    media: '++id, name, type, size, path, uploadedAt'
-   
+
 });
 
 
-// remove researcher id and fix some ID stuff for subentries 
+// remove researcher id and fix some ID stuff for subentries
 db.version(4.8).stores({
   gamedata: 'expVersion, uploadedAt',
-  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes', 
-  subentries: '++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes', 
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes',
+  subentries: '++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes',
    media: '++id, name, type, size, path, uploadedAt'
-   
+
 });
 
 //add related and triggerEvent
 db.version(4.9).stores({
-  gamedata: 'expVersion, uploadedAt',
-  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent', 
-  subentries: '++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent', 
+  gamedata: 'expVersion, uploadedAt, sessionStart',
+  friends: '++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent',
+  subentries: '++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent',
    media: '++id, name, type, size, path, uploadedAt'
-   
+
 });
+
+//#endregion
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
 export const dbHelpers = {
@@ -99,7 +105,7 @@ export const dbHelpers = {
   },
 
   async getExpectedDBVersion(){
-    // check if the currently loaded database is 
+    // check if the currently loaded database is
 
   },
 
@@ -241,7 +247,7 @@ export const saveAsDefaultDatabase = async () => {
 
     const content = await blob.text();
 
-    // doesn't seem to be updating app data right now 
+    // doesn't seem to be updating app data right now
     await eventManager.saveAssetFile(
       'assets/databases/dexie-import.json',
       content
@@ -254,6 +260,41 @@ export const saveAsDefaultDatabase = async () => {
 
   } catch (error) {
     console.error('Error saving default database:', error);
+  }
+};
+
+export const exportTelemetrisToAppData = async (username) => {
+  try {
+
+    const blob = await db.export({ prettyJson: true });
+
+
+    const content = await blob.text();
+
+const now = new Date();
+
+// Get date string and replace slashes with hyphens
+const datePart = now.toLocaleDateString().replace(/\//g, '-');
+
+// Get time string
+const timePart = now.toLocaleTimeString().replace(/:/g, "-");
+
+const combined = `${datePart} ${timePart}`;
+
+console.log(combined);
+// Example output (en-US locale): "12-3-2025 7:51:00 PM"
+
+    const filename = 'telemetrics-' + username + "-" + combined + '.json';
+
+    // doesn't seem to be updating app data right now
+    await eventManager.saveTelemetricsFile(
+      filename,
+      content
+    );
+console.log('Telemetrics saved successfully to AppData as:', filename);
+
+  } catch (error) {
+    console.error('Error saving telemetrics:', error);
   }
 };
 
@@ -270,7 +311,7 @@ export const newGame = async (startHash) => {
       relativePath
     );
 
-   
+
         await db.close();
     await db.delete();
 
@@ -282,8 +323,17 @@ export const newGame = async (startHash) => {
 
     await db.open();
 
+    // TODO this doesn't seem to be working yet
+    await db.gamedata.put({
+        sessionStart: new Date(),
+      });
+
+
+    // reset states
     await setStartAvalability(startHash);
     await setDefaultParameters();
+  updateGameState("editAccess", false);
+
     // window.location.reload(); // this did wrk to force datastate refresh
 
     console.log('New game started successfully! ' + userDbPath);

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { GameLogic } from '@utils/gamelogic';
 import { useNavigate } from 'react-router-dom';
-import { dbHelpers, newGame, newGameWithWarning } from '@utils/db';
+import { dbHelpers, newGame, newGameWithWarning, exportTelemetrisToAppData } from '@utils/db';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { eventManager } from '@utils/events';
 
@@ -12,14 +12,19 @@ const UserInfoButtons = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
     const CallNewGame = newGameWithWarning;
-    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage } = GameLogic();
+    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage,updateGameState, gameState } = GameLogic();
 
       const isElectron = eventManager.isElectron;
 
 
       const  LogOut = async () => {
           if (await eventManager.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
-            await newGame();
+            await newGame(gameState.defaultStartHash);
+
+            updateGameState("editAccess", false);
+            console.log("restart with hash" + gameState.defaultStartHash);
+
+            exportTelemetrisToAppData(globalUser.username);
 
             navigate('/');
             setLoggedIn(false);

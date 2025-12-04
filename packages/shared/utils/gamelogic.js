@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { eventManager } from "@utils/events";
 
+
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
 let globalIsAdmin = (() => {
   try {
@@ -23,6 +24,7 @@ let globalIsLoggedIn = (() => {
 })();
 
 let globalGameState = {
+  defaultStartHash: 1,    //   Game with start with this hash on new game or logout
   score: 0,
   isGameOver: false,
   level: 0,
@@ -31,8 +33,10 @@ let globalGameState = {
   sortColumn: "title",
   sortDirection: "asc",
   cheatCode: true,
+  playerAddEntry: false
 };
 let globalStatus = "";
+
 let globalRemoveText = "remove";
 let globalUser = (() => {
   try {
@@ -71,6 +75,17 @@ const gameStatusUpdateCallbacks = [];
 const removeTextUpdateCallbacks = [];
 const userUpdateCallbacks = [];
 const adminUserUpdateCallbacks = [];
+
+// Expose a module-level API for non-React callers (e.g., db.js)
+export const updateGameState = (variableName, state) => {
+  if (!Object.prototype.hasOwnProperty.call(globalGameState, variableName)) {
+    console.warn(`Game state does not have property: ${variableName}`);
+    return;
+  }
+  globalGameState = { ...globalGameState, [variableName]: state };
+  console.log(`Updated property: ${variableName}`);
+  gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
+};
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);
@@ -142,11 +157,12 @@ export function GameLogic() {
       score: 0,
       isGameOver: false,
       level: 0,
-      lastRoute: "/",
+      // lastRoute: "/",
       editAccess: false,
-      sortColumn: "title",
-      sortDirection: "asc",
+      // sortColumn: "title",
+      // sortDirection: "asc",
       cheatCode: true,
+      playerAddEntry: false
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -202,6 +218,8 @@ export function GameLogic() {
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
 
+  // updateGameState is provided via module export for use outside React components
+
   const setPlayerUsername = (username) => {
     globalUser.username = username;
     localStorage.setItem("globalUser", JSON.stringify(globalUser));
@@ -243,5 +261,6 @@ export function GameLogic() {
     setColumn,
     setSort,
     setCheatCode,
+    updateGameState,
   };
 }

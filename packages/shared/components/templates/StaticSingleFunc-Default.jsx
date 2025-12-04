@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
-import { db, dbHelpers } from "@utils/db"; 
+import { db, dbHelpers } from "@utils/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +15,11 @@ import { MediaEntryDisplay } from "@components/parts/Media/MediaEntryDisplay";
 
 export function StaticSingleDefault({ itemID }) {
   const { id } = useParams(); // get the id from the route
-  const gameState = GameLogic();
+  const gameLogic = GameLogic();
 
   const item = useLiveQuery(() => {
     const numericID = Number(itemID);
-    console.log("edit access: " + gameState.gameState.editAccess);
+    console.log("edit access: " + gameLogic.gameState.editAccess);
     if (!itemID || isNaN(numericID) || numericID <= 0) {
       console.warn("Invalid itemID for database query:", itemID);
       return null;
@@ -76,7 +76,7 @@ export function StaticSingleDefault({ itemID }) {
   }
 
   return (
-    <div className={`List ${gameState.gameState.level > 0 ? "haunted" : ""}`}>
+    <div className={`List ${gameLogic.gameState.level > 0 ? "haunted" : ""}`}>
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
 
@@ -153,7 +153,7 @@ export function StaticSingleDefault({ itemID }) {
               ))}
           </div>
         )}
-        {gameState.gameState.editAccess && (<>add record</> )}
+        {gameLogic.gameState.editAccess && (<>add record</> )}
       </div>
     </div>
   );

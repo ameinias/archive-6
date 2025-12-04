@@ -66,7 +66,7 @@ export const UpdateFauxIDAndReorderSubs = async (entryId, newFauxID) => {
       fauxID: newFauxID,
     });
 
-    
+
 
     const subArray = await db.subentries
       .where("parentId")
@@ -160,6 +160,7 @@ export function useReturnEntryOrSubentry(itemId, type) {
   return (
     useLiveQuery(async () => {
       if (!itemId) return null;
+      if(!db.isOpen) return null;
 
       if (type === "entry") {
         if (db.friends.get(itemId)) return db.friends.get(itemId);
@@ -225,7 +226,7 @@ export function useReturnDatabase(itemId) {
 
 // this shold fix array issues
 export const setStartAvalability = async (startHash) => {
-  console.log("🎮 Setting start availability for hash:", startHash);
+  console.log(" Setting start availability for hash:", startHash);
 
   try {
     // Get all entries
@@ -286,17 +287,17 @@ export const setStartAvalability = async (startHash) => {
       .filter((s) => s.available === true)
       .count();
 
-    console.log(" Start availability set:", {
-      availableFriends,
-      availableSubs,
-    });
+    // console.log(" Start availability set:", {
+    //   availableFriends,
+    //   availableSubs,
+    // });
 
     return {
       friendsUpdated: friendUpdates.length,
       subentriesUpdated: subentryUpdates.length,
     };
   } catch (error) {
-    console.error("❌ Error setting start availability:", error);
+    console.error("Error setting start availability:", error);
     throw error;
   }
 };

@@ -1,10 +1,13 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
-import { contextBridge, ipcRenderer } from 'electron';
+import {
+  contextBridge,
+  ipcRenderer
+} from 'electron';
 // import fs from 'fs';
 // import path from 'path';
 
- console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
+console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> PRELOADED');
 
 const electronHandler = {
   ipcRenderer: {
@@ -36,7 +39,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // readAssetFile: (relativePath) =>
   //  ipcRenderer.invoke('read-asset-file', relativePath),
   resizeToDefault: () => ipcRenderer.send('resize-to-default'),
-  getResourcesPath: () => 
+  getResourcesPath: () =>
     ipcRenderer.invoke('get-resources-path'),
 
   getAssetPath: (relativePath) => ipcRenderer.invoke('get-asset-path', relativePath),
@@ -44,50 +47,53 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Reads from AppData
   readAssetFile: (relativePath) => ipcRenderer.invoke('read-asset-file', relativePath),
 
-  // reads from bundle 
-    readBundledFile: (fileName) => ipcRenderer.invoke('read-bundled-file', fileName),
+  // reads from bundle
+  readBundledFile: (fileName) => ipcRenderer.invoke('read-bundled-file', fileName),
 
-// checks saved versions to see if database needs new set up
-      updateVersionFile: () => ipcRenderer.invoke('update-version-file'),
-      checkVersionFile: (curVersion) => ipcRenderer.invoke('check-version-file', curVersion),
+  // checks saved versions to see if database needs new set up
+  updateVersionFile: () => ipcRenderer.invoke('update-version-file'),
+  checkVersionFile: (curVersion) => ipcRenderer.invoke('check-version-file', curVersion),
 
   // Copies from Resources to AppData
   setupUserDatabase: () => ipcRenderer.invoke('setup-user-database'),
+
   // saves default database to app data
-  saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content), 
-   
-    showAlert: (message) => ipcRenderer.invoke('show-alert', message),
-    showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
+  saveAssetFile: (relativePath, content) => ipcRenderer.invoke('save-asset-file', relativePath, content),
 
-    //all this mess to try media files
-     saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
-    getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
+    saveTelemetricsFile: (relativePath, content) => ipcRenderer.invoke('save-telemetrics-file', relativePath, content),
 
-      clearAllData: () => ipcRenderer.invoke('clear-all-data'),
+  showAlert: (message) => ipcRenderer.invoke('show-alert', message),
+  showConfirm: (message) => ipcRenderer.invoke('show-confirm', message),
 
-    saveMediaFile: (fileName, arrayBuffer) =>
+  //all this mess to try media files
+  saveArtifactFile: (relativePath, data) => ipcRenderer.invoke('save-artifact-file', relativePath, data),
+  getArtifactUrl: (relativePath) => ipcRenderer.invoke('get-artifact-url', relativePath),
+
+  clearAllData: () => ipcRenderer.invoke('clear-all-data'),
+
+  saveMediaFile: (fileName, arrayBuffer) =>
     ipcRenderer.invoke('save-media-file', fileName, arrayBuffer),
-    
-  getMediaData: (relativePath) => ipcRenderer.invoke('get-media-data', relativePath),
-getVideoFiles: () => ipcRenderer.invoke('get-video-files'),
 
-  getMediaPath: (relativePath) => 
+  getMediaData: (relativePath) => ipcRenderer.invoke('get-media-data', relativePath),
+  getVideoFiles: () => ipcRenderer.invoke('get-video-files'),
+
+  getMediaPath: (relativePath) =>
     ipcRenderer.invoke('get-media-path', relativePath),
-  
-  deleteMediaFile: (relativePath) => 
+
+  deleteMediaFile: (relativePath) =>
     ipcRenderer.invoke('delete-media-file', relativePath),
 
-    // Add IPC listener methods
-    on: (channel, func) => {
-      const subscription = (_event, ...args) => func(...args);
-      ipcRenderer.on(channel, subscription);
-      return () => {
-        ipcRenderer.removeListener(channel, subscription);
-      };
-    },
-    removeListener: (channel, func) => {
-      ipcRenderer.removeListener(channel, func);
-    }
+  // Add IPC listener methods
+  on: (channel, func) => {
+    const subscription = (_event, ...args) => func(...args);
+    ipcRenderer.on(channel, subscription);
+    return () => {
+      ipcRenderer.removeListener(channel, subscription);
+    };
+  },
+  removeListener: (channel, func) => {
+    ipcRenderer.removeListener(channel, func);
+  }
 
 });
 
@@ -111,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
       event.stopPropagation();
     }
   }, true);
-console.log('>>> preload.js is running - end');
+  console.log('>>> preload.js is running - end');
 
 });
 
@@ -119,4 +125,6 @@ console.log('>>> preload.js is running - end');
 
 
 
- export { electronHandler };
+export {
+  electronHandler
+};

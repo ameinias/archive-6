@@ -80,6 +80,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
     // });
   };
 
+  // this is also in AppNew.jsx - which is the correct place for it? 
   const checkNewGame = async () => {
     const isEmpty = await dbHelpers.isEmpty();
     if (isEmpty) {

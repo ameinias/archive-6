@@ -58,7 +58,7 @@ export function ListSubEntries({ itemID }) {
       {subEntryOfParentLQ.length != 0 && (
         <div title="list existing entries">
           {subEntryOfParentLQ.map((item) => (
-            <div title="existing entrie" className="row">
+            <div title="existing entrie" className="row" key={item.id}>
               <AddSubEntryForm
                 parentID={item.parentId}
                 itemID={item.id}

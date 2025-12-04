@@ -18,7 +18,7 @@ function Login() {
   const navigate = useNavigate();
     const { isLoggedIn, setLoggedIn } = GameLogic();
       const { setStatusMessage } = GameLogic();
-      const { globalUser, setPlayerUsername, setPlayerPassword } = GameLogic();
+      const { globalUser, setPlayerUsername, setPlayerPassword, gameState } = GameLogic();
 
   const handleClose = () => {
     navigate('/');
@@ -69,7 +69,7 @@ function Login() {
             setLoggedIn(true);
             setStatusMessage(`Logged in as ${username}`);
             // Don't navigate immediately, let the state update first
-            newGame();
+            newGame(gameState.defaultStartHash);
 
             // handleClose();
             // setFormValue(defaultFormValue);  // Reset to defaults
@@ -97,7 +97,7 @@ function Login() {
       </div>
       </div>
       </>
-        
+
       );
       }
   return (
@@ -105,7 +105,7 @@ function Login() {
       <div className="login">
         <div className=" row login-info-text">
           Please register your user name and password.
-          
+
         </div>
         <div className=" row">
 

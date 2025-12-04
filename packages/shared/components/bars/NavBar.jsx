@@ -12,14 +12,15 @@ const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
     const CallNewGame = newGameWithWarning;
-    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage } = GameLogic();
+    // const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage } = GameLogic();
+    const { gameState, globalUser, isLoggedIn, setLoggedIn, setStatusMessage, updateGameState } = GameLogic();
 
       const isElectron = eventManager.isElectron;
 
 
       const  LogOut = async () => {
           if (await eventManager.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
-            await newGame();
+            await newGame(gameState.defaultStartHash);
 
             navigate('/');
             setLoggedIn(false);
@@ -29,7 +30,12 @@ const NavBar = () => {
     };
 
 
+    const FauxLogOut= async () => {
 
+            await newGame(10);
+            updateGameState("editAccess", false);
+
+    }
 
     const SaveOut= async () => {
 
@@ -40,7 +46,7 @@ const NavBar = () => {
       if(isElectron)
         if(await eventManager.showConfirm("Overwrite?"))
         {saveAsDefaultDatabase();} else {console.log("canceled overwrite.");}
-          
+
       else
         handleJSONExport('dexie-export-web.json');
 
@@ -61,6 +67,13 @@ const NavBar = () => {
           Home</Link></li>{' '}
          <li role="menuitem" tabIndex="0" aria-haspopup="true"> <Link to="/search">
           Search</Link></li>{' '}
+
+{gameState.editAccess && (<li role="menuitem" tabIndex="0" aria-haspopup="true">
+                <Link  onClick={SaveOut }>Add Entry</Link></li>)}
+
+
+
+
         <li role="menuitem" tabIndex="0" aria-haspopup="true">
                 <Link to="/bookmarks">Bookmarks</Link></li>
         <li role="menuitem" tabIndex="0" aria-haspopup="true">
@@ -81,6 +94,11 @@ const NavBar = () => {
                 <Link onClick={SaveOut }>Web Backup</Link></li></div>)}
           </>
         )}
+
+        <li role="menuitem" tabIndex="0" aria-haspopup="true">
+                <Link  onClick={FauxLogOut }>FauxLogOut</Link></li>
+
+
         </ul>
     //     </div>
 

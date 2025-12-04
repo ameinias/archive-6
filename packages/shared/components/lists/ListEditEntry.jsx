@@ -66,8 +66,8 @@ export function EntryList() {
 
   //#endregion
 
-  // //#region  ---------------    ???  ------------------ */
- 
+  //#region  ---------------    ???  ------------------ */
+
 
   const startEditingHex = (item, type) => {
     // Convert current hexHash to string for editing

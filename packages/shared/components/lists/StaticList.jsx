@@ -6,9 +6,34 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export function StaticList() {
+
+
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
+
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const handleNewGameStart = () => setIsLoading(true);
+    const handleNewGameEnd = () => {
+      setIsLoading(false);
+      console.log("New game ended, reloading...");
+      // Force component refresh after new game
+      window.location.reload(); // Simple but effective
+    };
+
+    window.addEventListener("newGameStart", handleNewGameStart);
+    window.addEventListener("newGameEnd", handleNewGameEnd);
+
+    return () => {
+      window.removeEventListener("newGameStart", handleNewGameStart);
+      window.removeEventListener("newGameEnd", handleNewGameEnd);
+    };
+  }, []);
+
+
+
 
   // Sort friends by date
   const sortedFriends = friends
