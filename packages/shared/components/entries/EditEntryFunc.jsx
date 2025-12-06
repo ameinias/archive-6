@@ -26,16 +26,16 @@ const defaultFormValue = {
   title: "Entry",
   description: "",
   category: "Object",
-  date: new Date(),
+  date: new Date(), // real date i added things
   available: true,
   media: [],
   template: "default",
   bookmark: false,
   hexHash: [defaultHex],
   devNotes: "",
-  modEditDate: "2008-07-21",
+  modEditDate: "2008-07-21",   // date modified in database
   modEdit: "added",
-  displayDate: "1970-01-01", // YYYY-MM-DD
+  displayDate: "1970-01-01", // date added to archive
   lastEditedBy: researcherIDs[0] || 0,
   triggerEvent: "",
 };
@@ -431,6 +431,8 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     });
   };
 
+
+
   const handleArrayChange = (e) => {
     const { name, options } = e.target;
     const selectedValues = Array.from(options)
@@ -562,19 +564,20 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               </div>
             </div>
             <div className="row">
-              <div className="col">
+              <div className="col" title="date item was modified / migrated">
                 <FormAssets.FormDate
                   label="Last Modified"
                   name="modEditDate"
-                  formValue={formValues.modEditDate}
-                  onChange={handleChange}
+                  formValue={formValues.modEditDate.toString()}
+                   onChange={handleChange}
+                  
                 />
               </div>
-              <div className="col">
+              <div className="col" title=" Date written on log">
                 <FormAssets.FormDate
-                  label="Collection Date"
+                  label="Date written on log"
                   name="displayDate"
-                  formValue={formValues.displayDate}
+                  formValue={formValues.displayDate.toString()}
                   onChange={handleChange}
                 />
               </div>

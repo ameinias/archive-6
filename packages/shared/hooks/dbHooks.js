@@ -154,6 +154,13 @@ export function CheckAvailable(itemId) {
   }, [itemId]);
 }
 
+export function GetTitle(itemId, type) {
+  return useLiveQuery(async () => {
+    const item = await getEntryOrSubentry(itemId); //useReturnEntryOrSubentry(itemId, type)
+    return item?.title;
+  }, [itemId]);
+}
+
 // The logic in these might need to get fixed if theire are overlapped IDs in both databases.
 
 export function useReturnEntryOrSubentry(itemId, type) {

@@ -51,17 +51,17 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
     title: "",
     description: "",
     parentId: Number(parentID) || 0,
-    date: new Date(),
+    date: new Date(),               // real date i added things
     available: false, // Default to false
     mediaSub: [],
-    subCategory: subCategories[0], // Default to first subcategory
-    template: "default", // Optional field for template
+    subCategory: subCategories[0], 
+    template: "default", 
     bookmark: false,
     hexHash: [defaultHex],
     devNotes: "",
-    modEditDate: "2008-07-21",
+    modEditDate: "2008-07-21",   // date modified in database
     modEdit: "added",
-    displayDate: "1970-01-01", // YYYY-MM-DD
+    displayDate: "1970-01-01", // date added to archive
     lastEditedBy: researcherIDs[0] || 0,
     triggerEvent: "",
   };
@@ -181,7 +181,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
       fauxID: formValues.fauxID,
       hexHash: hexHashValue,
       description: formValues.description,
-      date: formValues.date,
+      date: formValues.date,                // real date i added things
       parentId: formValues.parentId,
       mediaSub: formValues.mediaSub,
       subCategory: formValues.subCategory,
@@ -189,9 +189,9 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
       template: formValues.template,
       bookmark: formValues.bookmark,
       devNotes: formValues.devNotes,
-      modEditDate: formValues.modEditDate,
+      modEditDate: formValues.modEditDate, // date modified in database
       modEdit: formValues.modEdit,
-      displayDate: formValues.displayDate,
+      displayDate: formValues.displayDate, // date added to archive
       lastEditedBy: parseInt(formValues.lastEditedBy, 10),
       triggerEvent: formValues.triggerEvent,
     };
@@ -238,7 +238,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
           description: entry.description || "",
           subCategory: entry.subCategory,
           parentId: entry.parentId,
-          date: entry.date || new Date(),
+          date: entry.date || new Date(), // actual date i wrote it
           available: entry.available || false,
           mediaSub: entry.mediaSub || [],
           template: entry.template || "default",
@@ -248,9 +248,9 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
             ? entry.hexHash // Keep the IDs as-is
             : [entry.hexHash] || [1],
           devNotes: entry.devNotes || "",
-          modEditDate: entry.modEditDate || "2008-07-21",
+          modEditDate: entry.modEditDate || "2008-07-21", // date modified in database
           modEdit: entry.modEdit,
-          displayDate: entry.displayDate || "1970-01-01",
+          displayDate: entry.displayDate || "1970-01-01", // date added to archive
           lastEditedBy: entry.lastEditedBy,
           triggerEvent: entry.triggerEvent || "",
         });

@@ -17,7 +17,7 @@ import {
 } from "@components/parts/Badges";
 import { eventManager } from "@utils/events";
 
-export function ListEditEntry() {
+export function ListEditSubEntries() {
   // TODO: Clean these up. I think a lot of these aren't needed anymore.
 
   //#region     ---------------    CONST  ------------------ */
@@ -59,14 +59,13 @@ export function ListEditEntry() {
     }
   };
 
-  // eventually want to filter by vignette 
-  // const filterEntry = useLiveQuery(() => {
-  //   const column = gameState?.sortColumn || "title";
-  //   const direction = gameState?.sortDirection || "asc";
+  const filterEntry = useLiveQuery(() => {
+    const column = gameState?.sortColumn || "title";
+    const direction = gameState?.sortDirection || "asc";
 
-  //   const query = db.friends.orderBy(column);
-  //   return direction === "desc" ? query.reverse().toArray() : query.toArray();
-  // }, [sortedFriends]);
+    const query = db.friends.orderBy(column);
+    return direction === "desc" ? query.reverse().toArray() : query.toArray();
+  }, [sortedFriends]);
 
 
 
@@ -211,12 +210,7 @@ export function ListEditEntry() {
       ) : (
         <>
           <div className="List">
-
-            <center>
-              <Link to="/entry/new">
-                <Button className="btn-add-item">New Entry</Button>
-              </Link>
-            </center>
+  
             <table className="searchResults">
               <thead>
                 <tr>
@@ -226,7 +220,11 @@ export function ListEditEntry() {
                       (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
 
-                  <th width="80px" onClick={() => handleSort("displayDate")}>
+                  <th
+                    width="80
+                  px"
+                    onClick={() => handleSort("displayDate")}
+                  >
                     Disp. Date{" "}
                     {gameState?.sortColumn === "displayDate" &&
                       (gameState?.sortDirection === "asc" ? "▲" : "▼")}
@@ -237,45 +235,49 @@ export function ListEditEntry() {
                     {gameState?.sortColumn === "date" &&
                       (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
-                  <th width="25px">Hex</th>
-                  <th width="25px" title="sub entries">
-                    Subs
-                  </th>
-                  <th width="25px" title="media attachments">
-                    🖼️
-                  </th>
-                  <th width="25px" title="active">
-                    🔛
-                  </th>
+                  <th width="110px">Researcher</th>
+                  <th width="25px"> Hex</th>
+                  <th width="25px">🖼️</th>
+                  <th width="25px">🔛</th>
                   <th width="30px">🗑️</th>
                 </tr>
               </thead>
+
               <tbody>
-                {sortedFriends.map((item) => (
+                {subentries?.map((item) => (
                   <tr key={item.id}>
-                    <td data-label="name">
-                      {item.id}{" "}
-                      <Link to={`/entry/${item.id}`}>
+                    <td width="70%" data-label="title">
+                      <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
                         {item.fauxID} : {item.title}
                       </Link>
                     </td>
-                    <td width="50px" data-label="displayDate">
+                    <td>
                       {/* {item.displayDate
-                        ? new Date(item.displayDate).toLocaleDateString(
-                            "en-US",
-                            { month: "numeric", year: "numeric" },
-                          )
-                        : "No Date"} */}
+                        ? typeof item.displayDate === "string"
+                          ? item.displayDate
+                          : new Date(item.displayDate).toLocaleDateString()
+                        : "No date"} */}
 
-                      <EditableFields.FormEditListDate item={item} />
+                      <EditableFields.FormEditListDate
+                        item={item}
+                        type="subentry"
+                      />
+                      {/*  Below isn't working yet. Taking a break. TODO */}
+                      {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
                     </td>
                     <td width="50px" data-label="date">
                       {item.date
                         ? new Date(item.date).toLocaleDateString("en-US")
                         : "No Date"}
                     </td>
-                    <td data-label="hex">
-                      {editingHex === item.id ? (
+                    <td>
+                      <EditableFields.EditResearcher
+                        itemID={item.id}
+                        type="subentry"
+                      />
+                    </td>
+                    <td data-label="hexChild">
+                      {editingSubHex === item.id ? (
                         <div
                           style={{
                             display: "flex",
@@ -286,16 +288,16 @@ export function ListEditEntry() {
                         >
                           <input
                             type="text"
-                            name="hexedit"
-                            title="hexedit"
-                            value={tempHexValue}
-                            onChange={(e) => setTempHexValue(e.target.value)}
+                            name="hexeditChild"
+                            title="hexeditChild"
+                            value={tempSubHexValue}
+                            onChange={(e) => setTempSubHexValue(e.target.value)}
                             onKeyDown={(e) => {
                               if (e.key === "Enter")
-                                saveHexHash(item.id, "entry");
+                                saveHexHash(item.id, "subentry");
                               if (e.key === "Escape") cancelEditingHex();
                             }}
-                            placeholder="hexes"
+                            placeholder="Enter hex values (comma separated)"
                             style={{
                               flex: 1,
                               padding: "2px 5px",
@@ -306,7 +308,7 @@ export function ListEditEntry() {
                         </div>
                       ) : (
                         <div
-                          onClick={() => startEditingHex(item, "entry")}
+                          onClick={() => startEditingHex(item, "subentry")}
                           style={{
                             cursor: "pointer",
                             padding: "5px",
@@ -319,26 +321,22 @@ export function ListEditEntry() {
                             ? Array.isArray(item.hexHash)
                               ? item.hexHash.join(", ")
                               : item.hexHash.toString()
-                            : "None (click to add)"}
+                            : "None"}
                         </div>
                       )}
                     </td>
-                    <td data-label="subentries">
-                      <SubentryCountCell parentId={item.id} />
-                    </td>
                     <td data-label="media">
-                      <MediaCountCell itemId={item.id} type="entry" />
+                      <MediaCountCell itemId={item.id} type="subentry" />
                     </td>
-                    <td data-label="currentlyavailable">
-                      <AvailableCell itemId={item.id} type="entry" />
+                    <td data-label="available">
+                      <AvailableCell itemId={item.id} type="subentry" />
                     </td>
 
                     <td data-label="remove">
                       {" "}
                       <button
                         className="remove-button-small"
-                        aria-label="Close"
-                        onClick={() => removeItem(item)}
+                        onClick={() => removeSubentry(item)}
                       >
                         x
                       </button>

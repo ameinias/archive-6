@@ -6,7 +6,7 @@ import {
   eventManager
 } from "@utils/events";
 
-
+//#region -------- gloabal 
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
 let globalIsAdmin = (() => {
   try {
@@ -38,7 +38,8 @@ let globalGameState = {
   sortColumn: "title",
   sortDirection: "asc",
   cheatCode: true, // to eventually put an "unlock" button on locked entries
-  playerAddEntry: false
+  //playerAddEntry: false,
+  subEntryFrontPage: false,
 };
 let globalStatus = "";
 
@@ -169,7 +170,7 @@ export function GameLogic() {
       // sortColumn: "title",
       // sortDirection: "asc",
       cheatCode: true,
-      playerAddEntry: false
+      //playerAddEntry: false
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -262,8 +263,8 @@ export function GameLogic() {
 
   // At module level (outside GameLogic component)
   const triggerRegistry = {
-    'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
-    'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
+   // 'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
+  // 'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
     'makeTrue-editAccess': () => updateGameState('editAccess', true),
     'makeFalse-editAccess': () => updateGameState('editAccess', false),
     // Add more triggers as needed

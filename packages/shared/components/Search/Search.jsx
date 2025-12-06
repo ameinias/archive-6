@@ -50,6 +50,7 @@ const Search = () => {
           title: item.title, // Ensure title is included
           date: item.date, // Include date if available
           type: 'main', // Mark as main entry
+          description: item.description,
         });
         nextID = nextID + 1;
       }
@@ -74,6 +75,7 @@ const Search = () => {
           title: subItem.title, // Ensure title is included
           date: subItem.date, // Include date if available
           type: 'sub', // Mark as sub entry
+          description: subItem.description,
         });
         nextID = nextID + 1;
       }

@@ -1,6 +1,10 @@
-import React from 'react';
-
+import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from "react";
+import { Form} from "react-bootstrap";
 // use import * as FormBits from '../main/components/Components/FormAssets';
+import { GameLogic } from "@utils/gamelogic";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { db } from "@utils/db"; // import the database
 
 export function FormTextBox({
     label = "Label:",
@@ -34,18 +38,43 @@ export function FormDate({
     placeholder = ""
 }) {
 
+        const handleDateChange = (date) => {
+        // Create a synthetic event object that matches what handleChange expects
+        const syntheticEvent = {
+            target: {
+                name: name,
+                value: date ? date.toISOString().split('T')[0] : '' // Format as YYYY-MM-DD
+            }
+        };
+        onChange(syntheticEvent);
+    };
+
     return (
         <div className='row'>
 
             <div className="formLabel">{label}</div>
-            <input
+            {/* <input
                 name={name}
                 className="form-control col"
                 type="date"
                 placeholder={placeholder}
                 value={formValue}
                 onChange={onChange}
-                readOnly={readOnly}/>
+                readOnly={readOnly}
+                /> */}
+
+                <DatePicker 
+
+                selected={formValue}
+                name={name}
+                className="form-control col"
+                placeholder={placeholder}
+                value={formValue}
+                onChange={handleDateChange}
+                readOnly={readOnly}
+                      
+/>
+
         </div>
     );
 }
@@ -108,3 +137,6 @@ export function FormHexes({
         </div>
     );
 }
+
+
+

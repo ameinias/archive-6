@@ -28,6 +28,17 @@ useState hooks
 
   //#endregion
 
+
+  const dexiePatterns = () => {
+
+      const friendsAges = await db.friends
+        .where('age')
+        .between(minAge, maxAge)
+        .toArray();
+
+        
+
+  };
   //#region ---------    PARENT CHILD useEFFECT  -------- */ 
 
 const Parent = () => {
