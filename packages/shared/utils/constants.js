@@ -79,6 +79,7 @@ export const entryTemplate = ["default", "messed up"];
 export const editType = ["added", "migrated", "modified"];
 
 // Keep name and note clear and detailed about what content unlocks. hexhash is what players must type in to unlock new entries.
+// MD5  https://www.itoolverse.com/calculator/hash-calculator
 export const hexHashes = [
   {
     id: 1,
@@ -137,13 +138,37 @@ export const hexHashes = [
   {
     id: 10,
     name: "V2_1 - vignette 2 start",
-    hexHashcode: "ffffffffff",
+    hexHashcode: "1145cafae869ca2fbe4bf8ac92ecb62b",
     note: "start of vignette 2",
   },
   {
     id: 11,
     name: "V2_2 - start revealing",
-    hexHashcode: "butts",
+    hexHashcode: "0e2805a97520b5e034c4114ae249574e",
+    note: "first unlocks of V2",
+  },
+    {
+    id: 12,
+    name: "V2_3 - anotherone",
+    hexHashcode: "d5f9b259a21092a89659aa16a9913737",
+    note: "first unlocks of V2",
+  },
+    {
+    id: 13,             // following hashes need new codes    
+    name: "V2_4 -  ",
+    hexHashcode: "ss1145cafae869ca2fbe4bf8ac92ecb62b",
+    note: "start of vignette 2",
+  },
+  {
+    id: 14,
+    name: "V2_5 -  ",
+    hexHashcode: "ss0e2805a97520b5e034c4114ae249574e",
+    note: "first unlocks of V2",
+  },
+    {
+    id: 15,           // final for now
+    name: "V2_6 - endgame",
+    hexHashcode: "ssd5f9b259a21092a89659aa16a9913737",
     note: "first unlocks of V2",
   },
 

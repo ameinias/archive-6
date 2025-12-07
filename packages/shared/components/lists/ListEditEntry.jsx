@@ -275,7 +275,9 @@ const filteredFriends = useLiveQuery(() => {
                     {gameState?.sortColumn === "date" &&
                       (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
-                  <th width="25px">Hex</th>
+                  <th width="30px" onClick={() => handleSort("hexhHash")}>Hex{" "}
+                    {gameState?.sortColumn === "date" &&
+                      (gameState?.sortDirection === "asc" ? "▲" : "▼")}</th>
                   <th width="25px" title="sub entries">
                     Subs
                   </th>
@@ -370,7 +372,7 @@ const filteredFriends = useLiveQuery(() => {
                       <MediaCountCell itemId={item.id} type="entry" />
                     </td>
 
-                    <td data-label="trigger">                        {(item.triggerEvent === "") && (
+                    <td data-label="trigger"> {(item.triggerEvent != "" && item.triggerEvent != null ) && (
                             <a title={item.triggerEvent}>⚡</a>
                              )}</td>
 
