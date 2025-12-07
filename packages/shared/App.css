@@ -318,6 +318,14 @@ select[multiple] option:checked {
     display: block;
     margin: auto;
 }
+
+.filter-buttons
+{margin-bottom:10px;}
+
+.filter-buttons .active
+{font-weight:600;}
+
+
 .description{
   margin: 3px; 
 
@@ -993,4 +1001,22 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
   to {
     opacity: 1.0;
   }
+}
+
+@keyframes blink-save {
+  0% { opacity: 0;  background:none;}
+  50% { opacity: 0.7; background: rgb(146, 153, 216);}
+  100% { opacity: 0; background:none;}
+}
+
+.blink-save{
+  animation: blink-save 0.4s ;
+   width: 100%;
+    height: 100%;
+    /* opacity: 0; */
+    
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
 }

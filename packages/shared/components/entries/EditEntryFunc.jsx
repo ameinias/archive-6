@@ -49,6 +49,14 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   const [isFormValid, setFormValid] = useState(true);
   const [isIDValid, setIDValid] = useState(true);
     const [dbKey, setDbKey] = useState(0);
+      const [animate, setAnimate] = useState(false);
+
+  const triggerAnimation = () => {
+    setAnimate(true);
+    setTimeout(() => {
+      setAnimate(false); // Reset after animation
+    }, 1000); // Match duration of the animation
+  };
 
   // Custom hooks
   const [toggleMetaData, setToggleMetaData] = useToggle(false);
@@ -246,6 +254,8 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
         else setStatusMessage("Nothing was updated - no key:" + idNumber);
       });
 
+      loadConfirmEffect();
+
       // setFormValue(defaultFormValue); navigate('/'); // <-- Go to Home
     } catch (error) {
       setStatusMessage(
@@ -269,12 +279,18 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       setStatusMessage(
         `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
       );
-
+      loadConfirmEffect();
       navigate(`/entry/${id}`); // <-- Reset Page to show subitems
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
       setStatusMessage(`Failed to add ${title}: ${error}`);
     }
+  }
+
+    async function loadConfirmEffect() {
+
+      // Do something that makes it clear the item is saved 
+      triggerAnimation();
   }
 
   // abandoned template feature
@@ -493,7 +509,10 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 
   //*    ----------------    RETURN  -------------- */
   return (
-      <div className="Single">
+
+
+        <div className="Single">
+          <div className={` ${animate ? 'blink-save' : ''}`}></div>
         {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
        
 

@@ -9,11 +9,13 @@ import { GameLogic } from "@utils/gamelogic";
 import * as FormAssets from "@components/parts/FormAssets";
 import { researcherIDs } from "@utils/constants";
 import * as EditableFields from "@components/parts/EditableFields";
+import { FilterList, applyHexFilter} from '@components/parts/ListingComponent'
 
 import {
   MediaCountCell,
   SubentryCountCell,
   AvailableCell,
+  ParentTitle,
 } from "@components/parts/Badges";
 import { eventManager } from "@utils/events";
 
@@ -26,26 +28,61 @@ export function ListEditSubEntries() {
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
 
-  const { setStatusMessage, gameState, setColumn, setSort } = GameLogic();
+  const { setStatusMessage, gameState, setColumn, setSort, updateGameState  } = GameLogic();
 
   const [isLoading, setIsLoading] = useState(false);
   const [editingHex, setEditingHex] = useState(null);
   const [editingSubHex, setEditingSubHex] = useState(null);
   const [tempHexValue, setTempHexValue] = useState("");
   const [tempSubHexValue, setTempSubHexValue] = useState("");
-    const [filterVig, setFilterVig] = useState("all");
+
 
   //#endregion
 
   //#region  ---------------    SORTING  ------------------ */
 
-  const sortedFriends = useLiveQuery(() => {
-    const column = gameState?.sortColumn || "title";
-    const direction = gameState?.sortDirection || "asc";
 
-    const query = db.friends.orderBy(column);
-    return direction === "desc" ? query.reverse().toArray() : query.toArray();
-  }, [gameState?.sortColumn, gameState?.sortDirection]);
+
+
+  const handleFilterChange = (filter) => {
+  updateGameState("activeFilter",filter);
+};
+
+const filteredFriends = useLiveQuery(() => {
+  const column = gameState?.sortColumn || "title";
+  const direction = gameState?.sortDirection || "asc";
+
+  return db.subentries.toArray().then(items => {
+    // Apply hex filter first
+    let filtered = applyHexFilter(items, gameState?.activeFilter);
+    
+    // Sort the filtered items
+    filtered.sort((a, b) => {
+      let aValue = a[column];
+      let bValue = b[column];
+      
+      // Handle date columns specially
+      if (column === "date" || column === "displayDate") {
+        aValue = aValue ? new Date(aValue).getTime() : 0;
+        bValue = bValue ? new Date(bValue).getTime() : 0;
+      } else if (typeof aValue === "string") {
+        // For string columns, use localeCompare
+        return direction === "asc" 
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      
+      // Numeric comparison for dates and numbers
+      if (direction === "asc") {
+        return aValue - bValue;
+      } else {
+        return bValue - aValue;
+      }
+    });
+    
+    return filtered;
+  });
+}, [gameState?.sortColumn, gameState?.sortDirection, gameState?.activeFilter]);
 
   const handleSort = (column) => {
     if (column === gameState?.sortColumn) {
@@ -59,13 +96,7 @@ export function ListEditSubEntries() {
     }
   };
 
-  const filterEntry = useLiveQuery(() => {
-    const column = gameState?.sortColumn || "title";
-    const direction = gameState?.sortDirection || "asc";
 
-    const query = db.friends.orderBy(column);
-    return direction === "desc" ? query.reverse().toArray() : query.toArray();
-  }, [sortedFriends]);
 
 
 
@@ -119,7 +150,7 @@ export function ListEditSubEntries() {
       }
 
       setStatusMessage(
-        itemId + " Hex hash " + tempSubHexValue + "updated successfully",
+        itemId + " Hex hash " + tempSubHexValue + " updated successfully",
       );
     } catch (error) {
       console.error("Error updating hex hash:", error);
@@ -177,7 +208,7 @@ export function ListEditSubEntries() {
   };
 
   //#endregion
-  if (isLoading || !friends || !subentries) {
+  if (isLoading || !filteredFriends || !filteredFriends) {
     return (
       <div className="List">
         <h3>Please wait while database populates...</h3>
@@ -187,8 +218,9 @@ export function ListEditSubEntries() {
 
   return (
     <>
-      {!sortedFriends || sortedFriends.length === 0 ? (
+      {!filteredFriends || filteredFriends.length === 0 ? (
         <div className="List">
+
           <table className="entryTable">
             <tbody>
               <tr>
@@ -210,10 +242,18 @@ export function ListEditSubEntries() {
       ) : (
         <>
           <div className="List">
-  
+                          <div className="center">
+                         <FilterList 
+              type="subentry" 
+              onFilterChange={handleFilterChange}
+              activeFilter={gameState?.activeFilter}
+            /> </div>
             <table className="searchResults">
               <thead>
                 <tr>
+                    <th width="25px" title="active">
+                    🟢
+                  </th>
                   <th onClick={() => handleSort("title")}>
                     Title{" "}
                     {gameState?.sortColumn === "title" &&
@@ -238,25 +278,28 @@ export function ListEditSubEntries() {
                   <th width="110px">Researcher</th>
                   <th width="25px"> Hex</th>
                   <th width="25px">🖼️</th>
-                  <th width="25px">🔛</th>
+                  
+                  <th width="25px" title="trigger">⚡</th>
                   <th width="30px">🗑️</th>
                 </tr>
               </thead>
 
               <tbody>
-                {subentries?.map((item) => (
+                {filteredFriends?.map((item) => (
                   <tr key={item.id}>
-                    <td width="70%" data-label="title">
-                      <Link to={`/edit-subitem/${item.parentId}/${item.id}`}>
-                        {item.fauxID} : {item.title}
-                      </Link>
+                                        <td data-label="currentlyavailable">
+                      <AvailableCell itemId={item.id} type="entry" />
+                    </td>
+                    <td width="70%" data-label="title" >
+                          <Link title={item.description} to={`/edit-subitem/${item.parentId}/${item.id}`}>
+                     {item.fauxID}  <ParentTitle parentID={item.parentId} />  {'   '} | {'   '}  
+
+
+                    
+                             {item.title === "" ? ( <>{item.subCategory}</> )  : ( <>{item.title}</> ) }
+                      </Link>  
                     </td>
                     <td>
-                      {/* {item.displayDate
-                        ? typeof item.displayDate === "string"
-                          ? item.displayDate
-                          : new Date(item.displayDate).toLocaleDateString()
-                        : "No date"} */}
 
                       <EditableFields.FormEditListDate
                         item={item}
@@ -265,7 +308,7 @@ export function ListEditSubEntries() {
                       {/*  Below isn't working yet. Taking a break. TODO */}
                       {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
                     </td>
-                    <td width="50px" data-label="date">
+                    <td width="50px" data-label="date" title={item.devNotes}>
                       {item.date
                         ? new Date(item.date).toLocaleDateString("en-US")
                         : "No Date"}
@@ -328,10 +371,10 @@ export function ListEditSubEntries() {
                     <td data-label="media">
                       <MediaCountCell itemId={item.id} type="subentry" />
                     </td>
-                    <td data-label="available">
-                      <AvailableCell itemId={item.id} type="subentry" />
-                    </td>
 
+<td data-label="trigger">                        {(item.triggerEvent === "") && (
+                            <a title={item.triggerEvent}>⚡</a>
+                             )}</td>
                     <td data-label="remove">
                       {" "}
                       <button

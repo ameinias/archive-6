@@ -31,7 +31,6 @@ const NavBar = () => {
 
 
     const FauxLogOut= async () => {
-
             await newGame(10);
             updateGameState("editAccess", false);
 

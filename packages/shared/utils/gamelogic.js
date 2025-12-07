@@ -40,6 +40,7 @@ let globalGameState = {
   cheatCode: true, // to eventually put an "unlock" button on locked entries
   //playerAddEntry: false,
   subEntryFrontPage: false,
+  activeFilter: "all",
 };
 let globalStatus = "";
 

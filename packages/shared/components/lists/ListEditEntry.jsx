@@ -9,6 +9,7 @@ import { GameLogic } from "@utils/gamelogic";
 import * as FormAssets from "@components/parts/FormAssets";
 import { researcherIDs } from "@utils/constants";
 import * as EditableFields from "@components/parts/EditableFields";
+import { FilterList, applyHexFilter} from '@components/parts/ListingComponent'
 
 import {
   MediaCountCell,
@@ -26,26 +27,59 @@ export function ListEditEntry() {
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
 
-  const { setStatusMessage, gameState, setColumn, setSort } = GameLogic();
+  const { setStatusMessage, gameState, setColumn, setSort, updateGameState  } = GameLogic();
 
   const [isLoading, setIsLoading] = useState(false);
   const [editingHex, setEditingHex] = useState(null);
   const [editingSubHex, setEditingSubHex] = useState(null);
   const [tempHexValue, setTempHexValue] = useState("");
   const [tempSubHexValue, setTempSubHexValue] = useState("");
-    const [filterVig, setFilterVig] = useState("all");
 
   //#endregion
 
   //#region  ---------------    SORTING  ------------------ */
 
-  const sortedFriends = useLiveQuery(() => {
-    const column = gameState?.sortColumn || "title";
-    const direction = gameState?.sortDirection || "asc";
+  const handleFilterChange = (filter) => {
+  updateGameState("activeFilter",filter);
+};
 
-    const query = db.friends.orderBy(column);
-    return direction === "desc" ? query.reverse().toArray() : query.toArray();
-  }, [gameState?.sortColumn, gameState?.sortDirection]);
+const filteredFriends = useLiveQuery(() => {
+  const column = gameState?.sortColumn || "title";
+  const direction = gameState?.sortDirection || "asc";
+
+  return db.friends.toArray().then(items => {
+    // Apply hex filter first
+    let filtered = applyHexFilter(items, gameState?.activeFilter);
+    
+    // Sort the filtered items
+    filtered.sort((a, b) => {
+      let aValue = a[column];
+      let bValue = b[column];
+      
+      // Handle date columns specially
+      if (column === "date" || column === "displayDate") {
+        aValue = aValue ? new Date(aValue).getTime() : 0;
+        bValue = bValue ? new Date(bValue).getTime() : 0;
+      } else if (typeof aValue === "string") {
+        // For string columns, use localeCompare
+        return direction === "asc" 
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      
+      // Numeric comparison for dates and numbers
+      if (direction === "asc") {
+        return aValue - bValue;
+      } else {
+        return bValue - aValue;
+      }
+    });
+    
+    return filtered;
+  });
+}, [gameState?.sortColumn, gameState?.sortDirection, gameState?.activeFilter]);
+
+
 
   const handleSort = (column) => {
     if (column === gameState?.sortColumn) {
@@ -59,14 +93,9 @@ export function ListEditEntry() {
     }
   };
 
-  // eventually want to filter by vignette 
-  // const filterEntry = useLiveQuery(() => {
-  //   const column = gameState?.sortColumn || "title";
-  //   const direction = gameState?.sortDirection || "asc";
 
-  //   const query = db.friends.orderBy(column);
-  //   return direction === "desc" ? query.reverse().toArray() : query.toArray();
-  // }, [sortedFriends]);
+
+
 
 
 
@@ -120,7 +149,7 @@ export function ListEditEntry() {
       }
 
       setStatusMessage(
-        itemId + " Hex hash " + tempSubHexValue + "updated successfully",
+        itemId + " Hex hash " + tempSubHexValue + " updated successfully",
       );
     } catch (error) {
       console.error("Error updating hex hash:", error);
@@ -178,7 +207,7 @@ export function ListEditEntry() {
   };
 
   //#endregion
-  if (isLoading || !friends || !subentries) {
+  if (isLoading || !filteredFriends || !filteredFriends.length === 0) {
     return (
       <div className="List">
         <h3>Please wait while database populates...</h3>
@@ -188,8 +217,9 @@ export function ListEditEntry() {
 
   return (
     <>
-      {!sortedFriends || sortedFriends.length === 0 ? (
+      {!filteredFriends || filteredFriends.length === 0 ? (
         <div className="List">
+          
           <table className="entryTable">
             <tbody>
               <tr>
@@ -211,15 +241,23 @@ export function ListEditEntry() {
       ) : (
         <>
           <div className="List">
+            <div className="center">
 
-            <center>
+             <FilterList 
+  type="entry" 
+  onFilterChange={handleFilterChange}
+  activeFilter={gameState?.activeFilter}
+/>  
               <Link to="/entry/new">
                 <Button className="btn-add-item">New Entry</Button>
               </Link>
-            </center>
+            </div>
             <table className="searchResults">
               <thead>
                 <tr>
+                  <th width="25px" title="active">
+                    🟢
+                  </th>
                   <th onClick={() => handleSort("title")}>
                     Title{" "}
                     {gameState?.sortColumn === "title" &&
@@ -244,16 +282,18 @@ export function ListEditEntry() {
                   <th width="25px" title="media attachments">
                     🖼️
                   </th>
-                  <th width="25px" title="active">
-                    🔛
-                  </th>
+                  
+                   <th width="25px" title="trigger">⚡</th>
                   <th width="30px">🗑️</th>
                 </tr>
               </thead>
               <tbody>
-                {sortedFriends.map((item) => (
+                {filteredFriends.map((item) => (
                   <tr key={item.id}>
-                    <td data-label="name">
+                                        <td data-label="currentlyavailable">
+                      <AvailableCell itemId={item.id} type="entry" />
+                    </td>
+                    <td data-label="name" title={item.description}>
                       {item.id}{" "}
                       <Link to={`/entry/${item.id}`}>
                         {item.fauxID} : {item.title}
@@ -269,7 +309,7 @@ export function ListEditEntry() {
 
                       <EditableFields.FormEditListDate item={item} />
                     </td>
-                    <td width="50px" data-label="date">
+                    <td width="50px" data-label="date" title={item.devNotes}>
                       {item.date
                         ? new Date(item.date).toLocaleDateString("en-US")
                         : "No Date"}
@@ -329,9 +369,10 @@ export function ListEditEntry() {
                     <td data-label="media">
                       <MediaCountCell itemId={item.id} type="entry" />
                     </td>
-                    <td data-label="currentlyavailable">
-                      <AvailableCell itemId={item.id} type="entry" />
-                    </td>
+
+                    <td data-label="trigger">                        {(item.triggerEvent === "") && (
+                            <a title={item.triggerEvent}>⚡</a>
+                             )}</td>
 
                     <td data-label="remove">
                       {" "}

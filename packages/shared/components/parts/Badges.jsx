@@ -16,6 +16,16 @@ export function MediaCountCell({ itemId, type }) {
   );
 }
 
+export function ParentTitle({ parentID }) {
+  const parentEntry = useLiveQuery(
+    () => db.friends.get(Number(parentID)),
+    [parentID]
+  );
+  
+  return <>{parentEntry?.title || "Loading..."}</>;
+}
+
+
 export function SubentryCountCell({ parentId }) {
   const count = dbHooks.GetSubentryCount(parentId);
     if (count === undefined) return;
@@ -34,7 +44,7 @@ export function AvailableCell({
     const available = dbHooks.CheckAvailable(itemId, type);
 
   return (
-      <div className="badger">{available ? 'y' : 'x'}</div>
+    <div> {available ? '🟢' : ''}</div>
   );
 }
 

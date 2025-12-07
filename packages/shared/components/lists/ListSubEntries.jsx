@@ -86,6 +86,7 @@ export function ListSubEntries({ itemID }) {
               parentID={itemID?.toString()}
               itemID="new"
               onCancel={() => setToggleShowNewSubEntry(false)}
+              onFinishEdit={() => setToggleShowNewSubEntry(false)} 
               isCollapsed={false}
             />
           )}

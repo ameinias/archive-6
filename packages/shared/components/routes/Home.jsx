@@ -59,7 +59,7 @@ const Home = () => {
               <div className="center" style={{ marginBottom: "10px" }}>
                 {" "}
                 <span style={{ fontWeight: 800, textDecoration: "underline" }}>
-                  Entries 
+                  Entries  
                 </span>{" "}
                 |{" "}
                 <span onClick={switchTab} style={{ color: "blue" }}>

@@ -17,9 +17,11 @@ import { useLiveQuery } from "dexie-react-hooks";
 import * as FormAssets from "@components/parts/FormAssets";
 import { MediaUploadSub } from "@components/parts/Media/MediaUploadSub";
 import { eventManager } from "@utils/events";
-import { useToggle } from '@hooks/hooks'
+import { useToggle } from '@hooks/hooks';
+import * as EditableFields from "@components/parts/EditableFields";
 
-export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
+// onFinishEdit calls back to ListSubEntries to close the toggle
+export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEdit }) {
 
   //#region    ---------------    CONST  ------------------ */
 
@@ -38,6 +40,18 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
     const { setStatusMessage } = GameLogic();
   const { isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
+
+    const [animate, setAnimate] = useState(false);
+
+  const triggerAnimation = () => {
+    setAnimate(true);
+    setTimeout(() => {
+      setAnimate(false); // Reset after animation
+    }, 1000); // Match duration of the animation
+  };
+
+
+
 
 
 
@@ -382,8 +396,12 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
         });
   }
   async function FinishEdit() {
+    triggerAnimation();
+     setCollapsed(true);
 
-    setCollapsed(true);
+       if (onFinishEdit) {
+    onFinishEdit();
+  }
 
   }
 
@@ -519,6 +537,9 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
                    ? formValues.displayDate
                      : new Date(formValues.displayDate).toLocaleDateString()
                    : "No date"}
+                   {/* <EditableFields.FormEditListDate item={formValues} /> */}
+
+
                {"   "} | {"   "}
                  {formValues.lastEditedBy !== null 
                    ? researcherIDs.find(
@@ -533,6 +554,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true }) {
   }
   return (
       <div className="SubEntry">
+        <div className={` ${animate ? 'blink-save' : ''}`}></div>
         {/* {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>} */}
         <div title="ID and title" className="row">
           <div title="Toggle Button" className="button-row col-1">

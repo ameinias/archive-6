@@ -65,13 +65,16 @@ export function FormDate({
 
                 <DatePicker 
 
-                selected={formValue}
+                selected={formValue ? new Date(formValue) : null}
                 name={name}
                 className="form-control col"
                 placeholder={placeholder}
-                value={formValue}
+                // value={formValue}
                 onChange={handleDateChange}
                 readOnly={readOnly}
+                   dateFormat="yyyy-MM-dd"  // Show format
+                showYearDropdown         // Allow year selection
+                showMonthDropdown
                       
 />
 
