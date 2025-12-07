@@ -4,14 +4,11 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
+  MenuItem
 } from 'electron';
 import { saveDefaultDatabase } from './main';
 
-
-
 export default class MenuBuilder {
-
-
   constructor(mainWindow) {
     this.mainWindow = mainWindow;
   }
@@ -26,23 +23,25 @@ export default class MenuBuilder {
       this.setupProductionEnvironment();
     }
 
-
     // Create a simple menu template
-    const fakeTemplate = [{
-      label: '&File',
-      submenu: [{
-          label: '&Open',
-          accelerator: 'Ctrl+O',
-        },
-        {
-          label: '&Close',
-          accelerator: 'Ctrl+W',
-          click: () => {
-            this.mainWindow.close();
+    const fakeTemplate = [
+      {
+        label: '&File',
+        submenu: [
+          {
+            label: '&Open',
+            accelerator: 'Ctrl+O',
           },
-        },
-      ],
-    }];
+          {
+            label: '&Close',
+            accelerator: 'Ctrl+W',
+            click: () => {
+              this.mainWindow.close();
+            },
+          },
+        ],
+      },
+    ];
 
     const fakeMenu = Menu.buildFromTemplate(fakeTemplate);
     Menu.setApplicationMenu(fakeMenu);
@@ -53,13 +52,37 @@ export default class MenuBuilder {
   // This is where to control the right click menu for development.
   setupDevelopmentEnvironment() {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
-      const {
-        x,
-        y
-      } = props;
+       const { x, y, misspelledWord, dictionarySuggestions } = props;
 
-      Menu.buildFromTemplate([
-{
+      
+
+    const menuTemplate = [];
+
+    // Add spelling suggestions if word is misspelled
+    if (misspelledWord) {
+      for (const suggestion of dictionarySuggestions.slice(0, 5)) {
+        menuTemplate.push({
+          label: suggestion,
+          click: () => this.mainWindow.webContents.replaceMisspelling(suggestion)
+        });
+      }
+
+      // Add separator
+      menuTemplate.push({ type: 'separator' });
+
+      // Add to dictionary option
+      menuTemplate.push({
+        label: 'Add to dictionary',
+        click: () => this.mainWindow.webContents.session.addWordToSpellCheckerDictionary(misspelledWord)
+      });
+
+      menuTemplate.push({ type: 'separator' });
+    }
+
+    // Add your existing menu items
+    menuTemplate.push(
+
+        {
           label: 'Inspect element',
           click: () => {
             this.mainWindow.webContents.inspectElement(x, y);
@@ -73,73 +96,72 @@ export default class MenuBuilder {
             this.mainWindow.setSize(755, 655);
             this.mainWindow.center();
           },
-
-
         },
-         {
-              type: 'separator'
-            },
-            {
-              label: 'Cut',
-              accelerator: 'Ctrl+X',
-              role: 'cut'
-            },
-            {
-              label: 'Copy',
-              accelerator: 'Ctrl+C',
-              role: 'copy'
-            },
-            {
-              label: 'Paste',
-              accelerator: 'Ctrl+V',
-              role: 'paste'
-            },
-            {
-              label: 'Select All',
-              accelerator: 'Ctrl+A',
-              role: 'selectAll'
-            },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Cut',
+          accelerator: 'Ctrl+X',
+          role: 'cut',
+        },
+        {
+          label: 'Copy',
+          accelerator: 'Ctrl+C',
+          role: 'copy',
+        },
+        {
+          label: 'Paste',
+          accelerator: 'Ctrl+V',
+          role: 'paste',
+        },
+        {
+          label: 'Select All',
+          accelerator: 'Ctrl+A',
+          role: 'selectAll',
+        },
         {
           label: 'Edit',
-          submenu: [{
-  label: 'Toggle Admin',
-  click: () => {
-    // Execute in renderer context
-    this.mainWindow.webContents.executeJavaScript(`
+          submenu: [
+            {
+              label: 'Toggle Admin',
+              click: () => {
+                // Execute in renderer context
+                this.mainWindow.webContents.executeJavaScript(`
       const currentAdmin = localStorage.getItem('isAdmin') === 'true';
       const newAdmin = !currentAdmin;
       localStorage.setItem('isAdmin', newAdmin.toString());
       window.location.reload(); // Force React to re-read the value
     `);
-  },
-},
-{
+              },
+            },
+            {
               label: 'Undo',
               accelerator: 'Command+Z',
-              selector: 'undo:'
+              selector: 'undo:',
             },
             {
               label: 'Redo',
               accelerator: 'Shift+Command+Z',
-              selector: 'redo:'
+              selector: 'redo:',
             },
             {
-              type: 'separator'
+              type: 'separator',
             },
             {
               label: 'Cut',
               accelerator: 'Command+X',
-              selector: 'cut:'
+              selector: 'cut:',
             },
             {
               label: 'Copy',
               accelerator: 'Command+C',
-              selector: 'copy:'
+              selector: 'copy:',
             },
             {
               label: 'Paste',
               accelerator: 'Command+V',
-              selector: 'paste:'
+              selector: 'paste:',
             },
             {
               label: 'Select All',
@@ -149,22 +171,20 @@ export default class MenuBuilder {
           ],
         },
 
-      ]).popup({
-        window: this.mainWindow
+
+    );
+
+        
+      Menu.buildFromTemplate(menuTemplate).popup({
+        window: this.mainWindow,
       });
     });
   }
 
-
-
-
   // This is where to control the right click menu for development.
   setupProductionEnvironment() {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
-      const {
-        x,
-        y
-      } = props;
+      const { x, y } = props;
 
       Menu.buildFromTemplate([
         {
@@ -175,7 +195,6 @@ export default class MenuBuilder {
         },
         {
           label: 'Excuse me, what are you doing?',
-
         },
 
         {
@@ -186,69 +205,71 @@ export default class MenuBuilder {
             this.mainWindow.center();
           },
         },
- {
-              type: 'separator'
-            },
-            {
-              label: 'Cut',
-              accelerator: 'Command+X',
-              selector: 'cut:'
-            },
-            {
-              label: 'Copy',
-              accelerator: 'Command+C',
-              selector: 'copy:'
-            },
-            {
-              label: 'Paste',
-              accelerator: 'Command+V',
-              selector: 'paste:'
-            },
-            {
-              label: 'Select All',
-              accelerator: 'Command+A',
-              selector: 'selectAll:',
-            },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Cut',
+          accelerator: 'Command+X',
+          selector: 'cut:',
+        },
+        {
+          label: 'Copy',
+          accelerator: 'Command+C',
+          selector: 'copy:',
+        },
+        {
+          label: 'Paste',
+          accelerator: 'Command+V',
+          selector: 'paste:',
+        },
+        {
+          label: 'Select All',
+          accelerator: 'Command+A',
+          selector: 'selectAll:',
+        },
         {
           label: 'Edit',
-          submenu: [         {
-  label: 'Toggle Admin',
-  click: () => {
-    // Execute in renderer context
-    this.mainWindow.webContents.executeJavaScript(`
+          submenu: [
+            {
+              label: 'Toggle Admin',
+              click: () => {
+                // Execute in renderer context
+                this.mainWindow.webContents.executeJavaScript(`
       const currentAdmin = localStorage.getItem('isAdmin') === 'true';
       const newAdmin = !currentAdmin;
       localStorage.setItem('isAdmin', newAdmin.toString());
       window.location.reload(); // Force React to re-read the value
     `);
-  },
-},{
+              },
+            },
+            {
               label: 'Undo',
               accelerator: 'Command+Z',
-              selector: 'undo:'
+              selector: 'undo:',
             },
             {
               label: 'Redo',
               accelerator: 'Shift+Command+Z',
-              selector: 'redo:'
+              selector: 'redo:',
             },
             {
-              type: 'separator'
+              type: 'separator',
             },
             {
               label: 'Cut',
               accelerator: 'Command+X',
-              selector: 'cut:'
+              selector: 'cut:',
             },
             {
               label: 'Copy',
               accelerator: 'Command+C',
-              selector: 'copy:'
+              selector: 'copy:',
             },
             {
               label: 'Paste',
               accelerator: 'Command+V',
-              selector: 'paste:'
+              selector: 'paste:',
             },
             {
               label: 'Select All',
@@ -256,9 +277,9 @@ export default class MenuBuilder {
               selector: 'selectAll:',
             },
           ],
-        }
+        },
       ]).popup({
-        window: this.mainWindow
+        window: this.mainWindow,
       });
     });
   }
@@ -266,19 +287,20 @@ export default class MenuBuilder {
   buildDarwinTemplate() {
     const subMenuAbout = {
       label: 'Electron',
-      submenu: [{
+      submenu: [
+        {
           label: 'About ElectronReact',
           selector: 'orderFrontStandardAboutPanel:',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Services',
-          submenu: []
+          submenu: [],
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Hide ElectronReact',
@@ -292,10 +314,10 @@ export default class MenuBuilder {
         },
         {
           label: 'Show All',
-          selector: 'unhideAllApplications:'
+          selector: 'unhideAllApplications:',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Quit',
@@ -308,33 +330,34 @@ export default class MenuBuilder {
     };
     const subMenuEdit = {
       label: 'Edit',
-      submenu: [{
+      submenu: [
+        {
           label: 'Undo',
           accelerator: 'Command+Z',
-          selector: 'undo:'
+          selector: 'undo:',
         },
         {
           label: 'Redo',
           accelerator: 'Shift+Command+Z',
-          selector: 'redo:'
+          selector: 'redo:',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Cut',
           accelerator: 'Command+X',
-          selector: 'cut:'
+          selector: 'cut:',
         },
         {
           label: 'Copy',
           accelerator: 'Command+C',
-          selector: 'copy:'
+          selector: 'copy:',
         },
         {
           label: 'Paste',
           accelerator: 'Command+V',
-          selector: 'paste:'
+          selector: 'paste:',
         },
         {
           label: 'Select All',
@@ -345,7 +368,8 @@ export default class MenuBuilder {
     };
     const subMenuViewDev = {
       label: 'View',
-      submenu: [{
+      submenu: [
+        {
           label: 'Reload',
           accelerator: 'Command+R',
           click: () => {
@@ -370,17 +394,20 @@ export default class MenuBuilder {
     };
     const subMenuViewProd = {
       label: 'View',
-      submenu: [{
-        label: 'Toggle Full Screen',
-        accelerator: 'Ctrl+Command+F',
-        click: () => {
-          this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+      submenu: [
+        {
+          label: 'Toggle Full Screen',
+          accelerator: 'Ctrl+Command+F',
+          click: () => {
+            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+          },
         },
-      }, ],
+      ],
     };
     const subMenuWindow = {
       label: 'Window',
-      submenu: [{
+      submenu: [
+        {
           label: 'Minimize',
           accelerator: 'Command+M',
           selector: 'performMiniaturize:',
@@ -388,20 +415,21 @@ export default class MenuBuilder {
         {
           label: 'Close',
           accelerator: 'Command+W',
-          selector: 'performClose:'
+          selector: 'performClose:',
         },
         {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Bring All to Front',
-          selector: 'arrangeInFront:'
+          selector: 'arrangeInFront:',
         },
       ],
     };
     const subMenuHelp = {
       label: 'Help',
-      submenu: [{
+      submenu: [
+        {
           label: 'Learn More',
           click() {
             shell.openExternal('https://electronjs.org');
@@ -432,9 +460,9 @@ export default class MenuBuilder {
 
     const subMenuView =
       process.env.NODE_ENV === 'development' ||
-      process.env.DEBUG_PROD === 'true' ?
-      subMenuViewDev :
-      subMenuViewProd;
+      process.env.DEBUG_PROD === 'true'
+        ? subMenuViewDev
+        : subMenuViewProd;
 
     return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
   }
@@ -525,10 +553,11 @@ export default class MenuBuilder {
     //   },
     // ];
 
-
-        const fakeTemplate = [{
+    const fakeTemplate = [
+      {
         label: '&File',
-        submenu: [{
+        submenu: [
+          {
             label: '&Open',
             accelerator: 'Ctrl+O',
           },
@@ -541,7 +570,6 @@ export default class MenuBuilder {
           },
         ],
       },
-
     ];
 
     return [templateDefault, fakeTemplate];

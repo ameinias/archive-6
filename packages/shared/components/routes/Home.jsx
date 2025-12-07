@@ -56,13 +56,13 @@ const Home = () => {
         <div>
           {gameState.subEntryFrontPage === "entries" ? (
             <div className="div">
-              <div className="center" style={{ marginBottom: "10px" }}>
+              <div className="center" style={{  marginBottom: "10px" }}>
                 {" "}
                 <span style={{ fontWeight: 800, textDecoration: "underline" }}>
                   Entries  
                 </span>{" "}
                 |{" "}
-                <span onClick={switchTab} style={{ color: "blue" }}>
+                <span onClick={switchTab} style={{ cursor: "pointer", color: "blue" }}>
                   Subentries
                 </span>{" "}
               </div>
@@ -73,7 +73,7 @@ const Home = () => {
             <div className="div">
               <div className="center" style={{ marginBottom: "10px" }}>
                 {" "}
-                <span onClick={switchTab} style={{ color: "blue" }}>
+                <span onClick={switchTab} style={{ cursor: "pointer", color: "blue" }}>
                   Entries
                 </span>{" "}
                 |{" "}
