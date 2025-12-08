@@ -4,10 +4,10 @@
 This is a game. I am doing my best to make it work. 
 
 ## how to update the db scheme
-* get it working in AddEntryBit
-* Might want it in ShowSingle (Might nuke this though? hmm)
-* define things in utils/db.ts
-* catagory drop down options in constants.ts
+* Form input or programmed content in AddEntryFunc, AddSubEntryFunc
+* Display for players in StaticSingle-Default, StaticSub, any of the lists
+* define things in utils/db.ts - update schema version
+* catagory drop down options in constants.ts if needed
 
 
 
