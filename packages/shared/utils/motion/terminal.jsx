@@ -6,11 +6,11 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react"
-import { motion, MotionProps, useInView } from "motion/react"
+} from "react";
+import { motion, MotionProps, useInView } from "motion/react";
 
 
-import { cn } from "@/lib/utils"
+import { cn } from "@utils/cn";
 
 // interface SequenceContextValue {
 //   completeItem: (index: number) => void
@@ -18,11 +18,11 @@ import { cn } from "@/lib/utils"
 //   sequenceStarted: boolean
 // }
 
-const SequenceContext = createContext<SequenceContextValue | null>(null)
+const SequenceContext = createContext(null)
 
 const useSequence = () => useContext(SequenceContext)
 
-const ItemIndexContext = createContext<number | null>(null)
+const ItemIndexContext = createContext(null)
 const useItemIndex = () => useContext(ItemIndexContext)
 
 // interface AnimatedSpanProps extends MotionProps {
@@ -39,7 +39,7 @@ export const AnimatedSpan = ({
   startOnView = false,
   ...props
 }) => {
-  const elementRef = useRef<HTMLDivElement | null>(null)
+  const elementRef = useRef(null)
   const isInView = useInView(elementRef, {
     amount: 0.3,
     once: true,
@@ -108,9 +108,9 @@ export const TypingAnimation = ({
     [Component]
   )
 
-  const [displayedText, setDisplayedText] = useState<string>("")
+  const [displayedText, setDisplayedText] = useState("")
   const [started, setStarted] = useState(false)
-  const elementRef = useRef<HTMLElement | null>(null)
+  const elementRef = useRef(null)
   const isInView = useInView(elementRef , {
     amount: 0.3,
     once: true,
@@ -188,7 +188,7 @@ export const Terminal = ({
   sequence = true,
   startOnView = true,
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null)
+  const containerRef = useRef(null)
   const isInView = useInView(containerRef, {
     amount: 0.3,
     once: true,
@@ -197,7 +197,7 @@ export const Terminal = ({
   const [activeIndex, setActiveIndex] = useState(0)
   const sequenceHasStarted = sequence ? !startOnView || isInView : false
 
-  const contextValue = useMemo<SequenceContextValue | null>(() => {
+  const contextValue = useMemo(() => {
     if (!sequence) return null
     return {
       completeItem: (index) => {

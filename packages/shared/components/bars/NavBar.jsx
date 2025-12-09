@@ -43,18 +43,15 @@ const NavBar = () => {
     }
   }
 
-
   const testio = async () => {
     // UpdateDBCount();
-    updateGameState("endgameSequence", !gameState.endgameSequence);
-    console.log("testio done");
-  };
+    updateGameState('editAccess', !gameState.endgameSequence)
+    console.log('testio done')
+  }
 
-    const debugWindow = async () => {
-
-    updateGameState("showDebug", !gameState.showDebug);
-
-  };
+  const debugWindow = async () => {
+    updateGameState('showDebug', !gameState.showDebug)
+  }
 
   const FauxLogOut = async () => {
     await newGame(10)
@@ -75,7 +72,6 @@ const NavBar = () => {
   }
 
   return (
-
     // <div className="NavBar">
     //     <nav className="navbar fixed-top navbar-light bg-light">
     // <div className="container-fluid">
@@ -92,32 +88,38 @@ const NavBar = () => {
           {'<<'}
         </Link>
       </li>{' '}
-      <li role='menuitem' tabIndex='0' aria-haspopup='true' >
+      <li role='menuitem' tabIndex='0' aria-haspopup='true'>
         {/* <Link to={gameState.endgameSequence ? '/' :  null}  title='home-button'> */}
-        <Link to= {!gameState.endgameSequence ? '/' :  null}  title='home-button'>
+        <Link to={!gameState.endgameSequence ? '/' : null} title='home-button'>
           Home
         </Link>
       </li>{' '}
-            <li role='menuitem' tabIndex='0' aria-haspopup='true' >
+      {/* <li role='menuitem' tabIndex='0' aria-haspopup='true' >
         <Link to={!gameState.endgameSequence ? '/' :  null}  title='home-button'>
 
           TestDisableButton {gameState.endgameSequence ? 'disable' :  'able'}
         </Link>
-      </li>{' '}
+      </li>{' '} */}
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
         {' '}
-        <Link to={!gameState.endgameSequence ? '/search' :  null}>Search</Link>
+        <Link to={!gameState.endgameSequence ? '/search' : null}>Search</Link>
       </li>{' '}
       {gameState.editAccess && (
-        <li role='menuitem' tabIndex='0' aria-haspopup='true'>
-          <Link  onClick={!gameState.endgameSequence ? {SaveOut} :  null}>Add Entry</Link>
+        <li role='menuitem' className='attention' tabIndex='0' aria-haspopup='true'>
+           <Link to={!gameState.endgameSequence ? '/player-add-entry' : null}>
+            Add Entry
+          </Link>
         </li>
       )}
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
-        <Link to={!gameState.endgameSequence ? '/bookmarks' :  null} >Bookmarks</Link>
+        <Link to={!gameState.endgameSequence ? '/bookmarks' : null}>
+          Bookmarks
+        </Link>
       </li>
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
-        <Link to={!gameState.endgameSequence ? '/hashImport' :  null}>Import</Link>
+        <Link to={!gameState.endgameSequence ? '/hashImport' : null}>
+          Import
+        </Link>
       </li>{' '}
       {(isAdmin || !isElectron) && (
         <>
@@ -148,16 +150,22 @@ const NavBar = () => {
               </li>
             </div>
           )}
-          <li>                <button className="" onClick={testio}>
-                  Test Something
-                </button></li>
-                              <li role='menuitem'>
+          <li>
+            {' '}
+            <button className='' onClick={testio}>
+              Test Something
+            </button>
+          </li>
+          {/* <li role='menuitem'>
                 <Link to='/convo'>Convo</Link>
-              </li>
+              </li> */}
 
-                       <li>   <button className="button-small" onClick={ debugWindow}>
-            DBI
-          </button></li>
+          <li>
+            {' '}
+            <button className='button-small' onClick={debugWindow}>
+              DBI
+            </button>
+          </li>
         </>
       )}
       {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">

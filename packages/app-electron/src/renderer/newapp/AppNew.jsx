@@ -121,7 +121,9 @@ export default function App () {
           '/register',
           '/media',
           '/hex',
-          '/logs'
+          '/logs',
+          '/convo',
+          'player-add-entry'
         ]
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||

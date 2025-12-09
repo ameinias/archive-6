@@ -5,26 +5,42 @@ import {
   AnimatedSpan,
   Terminal,
   TypingAnimation,
-} from "@utils/terminal"
+} from "@utils/motion/terminal"
+
+import { MorphingText } from "@utils/motion/Morphing"
 
 export default function Conversation() {
+  // Other components for animation
+  // const appVersion = process.env.APP_VERSION || 'newapp';
+  // https://magicui.design/docs/components/spinning-text
+  //https://magicui.design/docs/components/morphing-text
 
-{/*
-  Other components for animation
 
-*/}
-
-// const appVersion = process.env.APP_VERSION || 'newapp';
-
-return (
+  return (
   <div>
-   <Terminal>
-  <TypingAnimation>pnpm dlx shadcn@latest init</TypingAnimation>
-  <AnimatedSpan>✔ Preflight checks.</AnimatedSpan>
-  <AnimatedSpan>✔ Validating Tailwind CSS.</AnimatedSpan>
-  <TypingAnimation>Success! Project initialization completed.</TypingAnimation>
+
+    {/* <MorphingText texts={["you","us"]} /> */}
+
+
+   <Terminal sequence={true} startOnView={true}>
+
+  <TypingAnimation delay={100} duration={50}>thank you for playing along</TypingAnimation>
+  <AnimatedSpan delay={180} ></AnimatedSpan>
+  <AnimatedSpan delay={180} >We have you now.</AnimatedSpan>
+    <AnimatedSpan delay={180} ></AnimatedSpan>
+  <AnimatedSpan delay={100} >We are you now.</AnimatedSpan>
+  <TypingAnimation>We will do whatever we need with what you've given us.</TypingAnimation>
+
+   <AnimatedSpan>Your <span className="text-red">sacrifice</span> is appreciated.
+
+   </AnimatedSpan>
+
 </Terminal>
-{/* npx shadcn@latest add @magicui/terminal */}
+
+
+
+
+
 
   </div>
 );

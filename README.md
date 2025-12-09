@@ -25,6 +25,7 @@ Missed a few version numbers here?
 [x] Have a single trigger working. For now it just adds a button to the navbar.
 [x] Save button on entries now blinks the page so you can more easily tell that save works
 [x] option to save telemtrics on log-out - just saves a copy of the gamesave-state, but that includes times that entries were unlocked and their username
+[x] endscreen with an terminal animation like they're talking to you
 
 
 
@@ -32,6 +33,7 @@ Missed a few version numbers here?
 [-] Media item gets "stuck", brining attachment from last entry. 
 [ ] After next installation - make a page so you can load a telemetrics document and display the order items were unlocked. 
 [ ] MouseControl
+[ ] use https://magicui.design/docs/components/animated-list for entity conversation
 
 
 ### 7.0.1

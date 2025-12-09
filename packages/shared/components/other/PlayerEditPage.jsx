@@ -20,8 +20,8 @@ import { UpdateFauxIDAndReorderSubs } from '@hooks/dbHooks'
 import { useLiveQuery } from 'dexie-react-hooks';
 
 // default variables - update as needed
-const defaultFauxIDStart = "QA";
-const defaultHex = 10;
+const defaultFauxIDStart = "OS";
+const defaultHex = 20;
 
 const defaultFormValue = {
   fauxID: "MX0000",
@@ -142,15 +142,15 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
       fauxID: formValues.fauxID,
       hexHash: hexHashValue,
       description: formValues.description,
-      category: formValues.category,
-      date: formValues.date,
-      available: formValues.available,
+      category: "Object",
+      date: new Date(), // real date i added things
+      available: true,
       media: formValues.media,
       template: formValues.template,
-      bookmark: formValues.bookmark,
-      devNotes: formValues.devNotes,
+      bookmark: false,
+      devNotes: "player addition ",
       modEditDate: formValues.modEditDate,
-      modEdit: formValues.modEdit,
+      modEdit: gameState
       displayDate: formValues.displayDate,
       lastEditedBy: parseInt(formValues.lastEditedBy, 10),
       triggerEvent: formValues.triggerEvent,
@@ -521,6 +521,16 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
           {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
 
         <div title ="entry title" className="row">
+          <div className="col-2">
+            <FormAssets.FormTextBox
+            label=""
+                      type="text"
+                      name="fauxID"
+                      placeholder="ID"
+                      value={formValues.fauxID}
+                      onChange={handleChange}
+                    /></div>
+          <div className="col">
           <FormAssets.FormTextBox
             label=""
             name="title"
@@ -528,47 +538,16 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
             readOnly={false}
             onChange={handleChange}
           />
-        </div>
+        </div></div>
 
 <div title="metadata">
-        <div className="button-row div-dash">
-          <button onClick={setToggleMetaData} className="toggle-button ">
-            Metadata
-          </button>
-        </div>
 
-        {toggleMetaData && (
+
           <div title=" Metadata">
             <div className="row">
-              <div className="col">
-                <div className="row">
-                  <div className="formLabel">ID:</div>
-                  {isNewEntry || isAdmin ? (
-                    <input
-                      className={`form-control ${
-                        !isIDValid ? "is-invalid" : ""
-                      } col`}
-                      type="text"
-                      name="fauxID"
-                      placeholder="ID"
-                      value={formValues.fauxID}
-                      onChange={handleIDChange}
-                      // readOnly={!isNewEntry && !isAdmin}
-                    />
-                  ) : (
-                    <input
-                      className="form-control col"
-                      type="text"
-                      name="fauxID"
-                      placeholder="ID"
-                      value={formValues.fauxID}
-                      onChange={handleChange}
-                    />
-                  )}
-                </div>
-              </div>
 
-              <div className="col-6">
+
+              {/* <div className="col-6">
                 <FormAssets.FormDropDown
                   name="category"
                   label="Type:"
@@ -582,10 +561,10 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
                     </option>
                   ))}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="row">
-              <div className="col" title="date item was modified / migrated">
+              {/* <div className="col" title="date item was modified / migrated">
                 <FormAssets.FormDate
                   label="Last Modified"
                   name="modEditDate"
@@ -593,10 +572,10 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
                    onChange={handleChange}
 
                 />
-              </div>
+              </div> */}
               <div className="col" title=" Date written on log">
                 <FormAssets.FormDate
-                  label="Date written on log"
+                  label="Date:"
                   name="displayDate"
                   formValue={formValues.displayDate.toString()}
                   onChange={handleChange}
@@ -604,7 +583,7 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
               </div>
             </div>
             <div className="row">
-              <div className="col">
+              {/* <div className="col">
                 <FormAssets.FormDropDown
                   label="Edit Type"
                   name="modEdit"
@@ -629,10 +608,10 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
                     </option>
                   ))}
                 />
-              </div>
+              </div>*/}
             </div>
           </div>
-         )}
+
 </div>
 
         <div title="Description" className="row">
@@ -654,121 +633,15 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
           <MediaUpload mediaFiles={formValues.media} />
         </div>
 
-<div title="admin">
-         <div className="button-row div-dash">
-           <button onClick={setToggleAdminSection} className="toggle-button">
-            {" "}
-            Admin
-                   </button>
-         </div>
 
-        {toggleAdminSection && (
-          <div className="row adminOnly">
-            <div className="row">
-              {" "}
-              {/*// ------ available  ------*/}
-              <label className="formLabel">available</label>
-              <input
-                type="checkbox"
-                className="formLabel"
-                checked={formValues.available}
-                onChange={handleCheckboxChange}
-                name="available"
-              />
-            </div>
-            <div className="row">
-              {" "}
-              {/*// ------ bookmark  ------*/}
-              <label className="formLabel">bookmark</label>
-              <input
-                type="checkbox"
-                className="formLabel"
-                checked={formValues.bookmark}
-                onChange={handleCheckboxChange}
-                name="bookmark"
-              />
-            </div>
-            <div className="col">
-              {" "}
-              <FormAssets.FormHexes
-                name="hexHash"
-                multiple={true}
-                rows={3}
-                formValue={formValues.hexHash}
-                readOnly={false}
-                onChange={handleArrayChange}
-                options={hexHashes.map((sub, i) => (
-                  <option key={i} value={sub.id}>
-                    {sub.name}({sub.hexHashcode})
-                  </option>
-                ))}
-              />
-            </div>
-            {/* <div className="row">
-                <div className="col-1 formLabel">hexhash:</div>
-                <input
-                    className="form-control col"
-                    type="text"
-                    placeholder="aeoh-3q484-da232"
-                    value={formValues.hexHash}
-                    onChange={handleChange}
-                    name="hexHash"/>
-            </div> */}
-            <div className="row">
-              {" "}
-              {/*// ------ Description  ------*/}
-              <div className="formLabel">Dev Notes:</div>
-              <textarea
-                rows={3}
-                className="form-control"
-                name="devNotes"
-                value={formValues.devNotes}
-                onChange={handleChange}
-              />
-            </div>
+{/* <div title="subentries" key={dbKey}>
 
-            <div className="row">
-              <div className="formLabel">Triggers:</div>
-              <p>Comma seperated strings. function-parameter format.</p>
-              <textarea
-                rows={3}
-                className="form-control"
-                name="triggerEvent"
-                value={formValues.triggerEvent}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/*// ------ Template  ------*/}
-            <div className="row">
-              <div className="col-1 formLabel">Template:</div>
-              <select
-                className="form-control form-control-dropdown col"
-                multiple={false}
-                value={formValues.template}
-                onChange={handleChange}
-                name="template"
-              >
-                {entryTemplate.map((sub, i) => (
-                  <option key={i} value={sub}>
-                    {sub}
-                  </option>
-                ))}
-              </select>{" "}
-            </div>
-          </div>
-         )}
-</div>
-
-
-<div title="subentries" key={dbKey}>
-        {/* Only show Add Subentry button when not already a subentry. */}
         {!isSubEntry && itemID != "new" && (
           <div className="row">
             <ListSubEntries itemID={itemID} />
           </div>
         ) }
-</div>
+</div> */}
         <div className="save-buttons">
           {" "}
           {/*// ------ Save Buttons  ------*/}
