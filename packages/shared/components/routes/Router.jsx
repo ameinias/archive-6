@@ -147,7 +147,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
                <Route path="/bad-gateway" element={<BadGateway />} />
   {/* Endgame Pages   ------------------------------------------------------------ */}
               <Route path="/player-add-entry/" element={<PlayerAddEntryForm />} />
-              <Route path="/convoy/" element={<Conversation />} />
+              <Route path="/convo/" element={<Conversation />} />
             </Routes>
           </div>
         </div>

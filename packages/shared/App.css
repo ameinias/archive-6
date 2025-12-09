@@ -1046,7 +1046,7 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
     z-index: 1001;
 }
 
-.debugInfo .p{
+.debugInfo p{
 
 margin-bottom:0;
 font-size:9px;

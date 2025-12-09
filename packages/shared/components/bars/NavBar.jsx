@@ -151,9 +151,12 @@ const NavBar = () => {
           <li>                <button className="" onClick={testio}>
                   Test Something
                 </button></li>
+                              <li role='menuitem'>
+                <Link to='/convo'>Convo</Link>
+              </li>
 
-                       <li>   <button onClick={ debugWindow}>
-            Hide Debug Info
+                       <li>   <button className="button-small" onClick={ debugWindow}>
+            DBI
           </button></li>
         </>
       )}
