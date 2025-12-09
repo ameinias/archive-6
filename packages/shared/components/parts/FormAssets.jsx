@@ -24,6 +24,7 @@ export function FormTextBox({
                 placeholder={placeholder}
                 value={formValue}
                 onChange={onChange}
+                className="form-control"
                 readOnly={readOnly}/>
         </div>
     );

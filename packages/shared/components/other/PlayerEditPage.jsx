@@ -18,6 +18,7 @@ import { eventManager } from "@utils/events";
 import { useToggle } from '@hooks/hooks'
 import { UpdateFauxIDAndReorderSubs } from '@hooks/dbHooks'
 import { useLiveQuery } from 'dexie-react-hooks';
+import Webcam from "react-webcam";
 
 // default variables - update as needed
 const defaultFauxIDStart = "OS";
@@ -42,7 +43,7 @@ const defaultFormValue = {
   triggerEvent: "",
 };
 
-export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
+export function PlayerAddEntryForm({ }) {
     //#region ---------    HOOKS   -------- */
   const [formValues, setFormValue] = useState(defaultFormValue);
   const [title, setName] = useState("");
@@ -65,9 +66,24 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
   const [toggleAdminSection, setToggleAdminSection] = useToggle(false);
 
   // import functions
-  const { setStatusMessage, isAdmin, toggleAdmin } = GameLogic();
+  const { setStatusMessage, isAdmin, toggleAdmin, globalUser } = GameLogic();
   const navigate = useNavigate();
-  // const UpdateFauxIDAndReorderSubs = UpdateFauxIDAndReorderSubs(itemID, "MX000");
+ 
+  // const WebcamComponent = () => <Webcam />;
+
+   const webcamRef = React.useRef(null);
+  const capture = React.useCallback(
+    () => {
+      const imageSrc = webcamRef.current.getScreenshot();
+    },
+    [webcamRef]
+  );
+
+  const videoConstraints = {
+  width: 720,
+  height: 650,
+  // facingMode: "user"
+};
 
   // other const
   let savedID = 0;
@@ -76,7 +92,7 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
 
   useEffect(() => {
     async function fetchData() {
-      if (!itemID || itemID === "new") {
+      // if (!itemID || itemID === "new") {
         const newID = await generateNewID();
         setFormValue({
           ...defaultFormValue,
@@ -84,40 +100,40 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
         });
         setNewEntry(true);
         return;
-      }
+     // }
 
-      const entry = await db.friends.get(Number(itemID));
-      if (entry) {
-        setFormValue({
-          fauxID: entry.fauxID || "",
-          title: entry.title || "",
-          hexHash: Array.isArray(entry.hexHash)
-            ? entry.hexHash // Keep the IDs as-is
-            : [entry.hexHash] || [1],
-          description: entry.description || "",
-          category: entry.category || "Object",
-          date: entry.date || new Date().toLocaleDateString(),
-          available: entry.available || false,
-          media: entry.media || [],
-          template: entry.template || "default",
-          bookmark: entry.bookmark || false,
-          devNotes: entry.devNotes || "",
-          modEditDate: entry.modEditDate || "1996-07-21",
-          modEdit: entry.modEdit,
-          displayDate: entry.displayDate || "1970-01-01",
-          lastEditedBy: entry.lastEditedBy,
-          triggerEvent: entry.triggerEvent,
-        });
-        savedID = entry.id;
-        setNewEntry(false);
-      } else {
-        setFormValue(defaultFormValue);
-        setNewEntry(true);
-      }
+    //   const entry = await db.friends.get(Number(itemID));
+    //   if (entry) {
+    //     setFormValue({
+    //       fauxID: entry.fauxID || "",
+    //       title: entry.title || "",
+    //       hexHash: Array.isArray(entry.hexHash)
+    //         ? entry.hexHash // Keep the IDs as-is
+    //         : [entry.hexHash] || [1],
+    //       description: entry.description || "",
+    //       category: entry.category || "Object",
+    //       date: entry.date || new Date().toLocaleDateString(),
+    //       available: entry.available || false,
+    //       media: entry.media || [],
+    //       template: entry.template || "default",
+    //       bookmark: entry.bookmark || false,
+    //       devNotes: entry.devNotes || "",
+    //       modEditDate: entry.modEditDate || "1996-07-21",
+    //       modEdit: entry.modEdit,
+    //       displayDate: entry.displayDate || "1970-01-01",
+    //       lastEditedBy: entry.lastEditedBy,
+    //       triggerEvent: entry.triggerEvent,
+    //     });
+    //     savedID = entry.id;
+    //     setNewEntry(false);
+    //   } else {
+    //     setFormValue(defaultFormValue);
+    //     setNewEntry(true);
+    //   }
     }
 
     fetchData();
-  }, [itemID, dbKey]);
+  }, [dbKey]);
 
   //#region ---------------    CREATE ENTRY  ------------- */
   const FormToEntry = () => {
@@ -150,50 +166,13 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
       bookmark: false,
       devNotes: "player addition ",
       modEditDate: formValues.modEditDate,
-      modEdit: gameState
+      modEdit: globalUser.username,
       displayDate: formValues.displayDate,
-      lastEditedBy: parseInt(formValues.lastEditedBy, 10),
-      triggerEvent: formValues.triggerEvent,
+      // lastEditedBy: parseInt(formValues.lastEditedBy, 10),
+      // triggerEvent: formValues.triggerEvent,
     };
   };
 
-  const FormToTemplate = () => {
-    let hexHashValue = formValues.hexHash;
-
-    // convert array of strings to numbers
-    if (Array.isArray(hexHashValue)) {
-      hexHashValue = hexHashValue
-        .map((h) => parseInt(h, 10))
-        .filter((n) => !isNaN(n));
-
-      // save int as itself
-      if (hexHashValue.length === 1) {
-        hexHashValue = hexHashValue[0];
-      }
-    } else if (typeof hexHashValue === "string") {
-      hexHashValue = parseInt(hexHashValue, 10);
-    }
-
-    return {
-      id: 0,
-      title: "Template",
-      fauxID: "MX0000",
-      hexHash: hexHashValue,
-      description: "",
-      category: formValues.category,
-      date: formValues.date,
-      available: false,
-      media: [],
-      template: formValues.template,
-      bookmark: false,
-      devNotes: formValues.devNotes,
-      modEditDate: formValues.modEditDate,
-      modEdit: formValues.modEdit,
-      displayDate: formValues.displayDate,
-      lastEditedBy: formValues.lastEditedBy,
-      triggerEvent: formValues.triggerEvent,
-    };
-  };
 
   const generateNewID = async () => {
     try {
@@ -295,114 +274,8 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
       triggerAnimation();
   }
 
-  // abandoned template feature
-  /*
-  async function saveToTemplate() {
-    try {
-      const title = formValues.title || "Untitled";
-      if (!title) {
-        setStatusMessage("Title is required");
-        return;
-      }
-
-      //   db.friends.update(0,
-      //         FormToTemplate()
-      //         );
-
-      //   db.friends.add(0, FormToTemplate()).then(function (updated) {
-      //     if (updated)
-      //       setStatusMessage(
-      //         "Updated template"
-      //       );
-      //     else setStatusMessage("Could not update template");
-      //   });
-
-      db.friends.update(0, FormToTemplate());
-
-      //     .then(function (updated) {
-      //     if (updated)
-      //       setStatusMessage(
-      //         "Updated template"
-      //       );
-      //     else setStatusMessage("Could not update template");
-      //   });
-
-      //   setStatusMessage(
-      //     `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
-      //   );
-
-      //   navigate(`/entry/${id}`); // <-- Reset Page to show subitems
-      // window.location.reload();
-      // setFormValue(defaultFormValue);  // Reset to defaults
-      console.log("uopdate tempalte");
-    } catch (error) {
-      setStatusMessage(`Failed to add ${title}: ${error}`);
-    }
-  }
-
-  async function updateFromTemplate() {}
-
-  */
-
-//  function UpdateFauxIDAndReorderSubs(entryId, newFauxID) {
-//   return useLiveQuery(async () => {
-//     if (!entryId) return [];
-// try{
-
-//     const parentEntry =  await db.friends
-//     .where(id).equals(entryId);
-
-//     parentEntry.modify({fauxID: newFauxID});
-
-//     const subArray = await db.subentries
-//     .where('parentId').equals(entryId).toArray();
-
-//         if (subentries.length === 0) {
-//       console.log('No subentries found for parent:', entryId);
-//       return true;
-//     }
-
-//     const sortedSubs = subentries
-//     .sort((a, b) => {
-//           const dateA = a.displayDate ? new Date(a.date).getTime() : 0;
-//           const dateB = b.displayDate ? new Date(b.date).getTime() : 0;
-//            return dateB - dateA;
-//          });
 
 
-//           const updates = sortedSubs.map((sub, index) => ({
-//       key: sub.id,
-//       changes: {
-//         fauxID: `${newFauxID}-${index + 1}` // e.g., "ABC-1", "ABC-2", "ABC-3"
-//       }
-//     }));
-
-//     await db.subentries.bulkUpdate(updates);
-
-//     console.log(`Updated ${updates.length} subentries with new fauxIDs based on ${newFauxID}`);
-
-//     return true;
-
-//  }catch (error) {
-//     console.log('Error, database may be closed');
-//     return false;
-//   }
-//   }, []);
-// }
-
-
- const handleRenumberSubs  = async () => {
-
-
-      console.log('🔵 Calling UpdateFauxIDAndReorderSubs with:', {
-      itemID,
-      fauxID: formValues.fauxID
-    });
-
-       const success = await UpdateFauxIDAndReorderSubs(itemID, formValues.fauxID);
-       // update sub list
-       setDbKey((prev) => prev + 1);
-  }
 
 
 
@@ -522,14 +395,19 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
 
         <div title ="entry title" className="row">
           <div className="col-2">
-            <FormAssets.FormTextBox
-            label=""
+                                <input
+                      className={`form-control ${
+                        !isIDValid ? "is-invalid" : ""
+                      } col`}
                       type="text"
                       name="fauxID"
                       placeholder="ID"
                       value={formValues.fauxID}
-                      onChange={handleChange}
-                    /></div>
+                      onChange={handleIDChange}
+                      // readOnly={!isNewEntry && !isAdmin}
+                    />
+
+                    </div>
           <div className="col">
           <FormAssets.FormTextBox
             label=""
@@ -630,7 +508,18 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
         <div title="media" className="row">
           {" "}
           {/*// ------ Media   ------*/}
-          <MediaUpload mediaFiles={formValues.media} />
+          {/* <MediaUpload mediaFiles={formValues.media} /> */}
+              <>  
+      <Webcam
+        audio={false}
+        height={720}
+        ref={webcamRef}
+        screenshotFormat="image/jpeg"
+        width={1280}
+        videoConstraints={videoConstraints}
+      />
+      <button onClick={capture}>Capture photo</button>
+    </>
         </div>
 
 
@@ -665,7 +554,7 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
                 >
                   Save
                 </button>{" "}
-                <button
+                {/* <button
                   className="btn-save-add-item btn-taller"
                   onClick={handleRenumberSubs}
                   disabled={!isFormValid}
@@ -674,7 +563,7 @@ export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
                 </button>{" "}
                 <button className="remove-button  btn-taller" onClick={removeCurrentEntry}>
                   Remove{" "}
-                </button>
+                </button> */}
               </div>
             </>
           )}

@@ -1085,3 +1085,15 @@ font-size:9px;
 
 
 }
+
+input[type=email], input[type=number], input[type=password], input[type=text], input[type=url], textarea {
+    background-color: #fff;
+    border-color: #abadb3 #dbdfe6 #e3e9ef #e2e3ea;
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    font: var(--w7-font);
+    padding: 3px 4px 5px;
+    transition: border-color .5s;
+}
