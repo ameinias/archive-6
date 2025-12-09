@@ -18,6 +18,7 @@ import { subCategories } from "@utils/constants";
 import { eventManager } from "@utils/events";
 // import { setStartAvalability } from "@hooks/dbHooks.js";
 import { DataState } from "../parts/Badges";
+import {applyHexFilter} from "@components/parts/ListingComponent"
 
 
 function ImportExport() {
@@ -231,10 +232,18 @@ function ImportExport() {
     }
   };
 
-  const handleCSVExport = async () => {
+
+
+
+   const handleHashlookup = async () => {
     try {
-      const friends = await db.friends.toArray();
-      const subentries = await db.subentries.toArray();
+      const rawfriends = await db.friends.toArray();
+      const rawsubentries = await db.subentries.toArray();
+
+      // only current vignette
+     const friends =  applyHexFilter(rawfriends, "vignette2");
+     const subentries =  applyHexFilter(rawsubentries, "vignette2");
+
 
       // Process data and convert hexHash IDs to names
       const processedFriends = friends.map((item) => ({
@@ -265,6 +274,97 @@ function ImportExport() {
       // Map field names to display names for CSV headers
       const fieldDisplayNames = {
         fauxID: "ID",
+        category: "RecordType",
+        subCategory: "aRecordType",
+        hexHashCodes: "hexHashCodes",
+      };
+
+      // Create CSV content with custom headers
+      let csvContent =
+        selectedFields.map((field) => fieldDisplayNames[field]).join(",") +
+        "\n";
+
+      combinedData.forEach((row) => {
+        const values = selectedFields.map((field) => {
+          let value = row[field];
+
+          // Handle arrays/objects by converting to string
+          if (Array.isArray(value)) {
+            value = value.join("; "); // Join array elements with semicolon
+          } else if (typeof value === "object" && value !== null) {
+            value = JSON.stringify(value);
+          }
+
+          // Escape commas and quotes for CSV
+          if (
+            typeof value === "string" &&
+            (value.includes(",") || value.includes('"'))
+          ) {
+            value = `"${value.replace(/"/g, '""')}"`;
+          }
+
+          return value || "";
+        });
+        csvContent += values.join(",") + "\n";
+      });
+
+      // Create and download CSV file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "database-export-backup-1996FINAL.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      setStatusMessage("CSV export with hex hash names complete");
+    } catch (error) {
+      console.error("CSV Export error:", error);
+      setStatusMessage("CSV export failed: " + error.message);
+    }
+  };
+
+
+  const handleCSVExport = async () => {
+    try {
+      const friends = await db.friends.toArray();
+      const subentries = await db.subentries.toArray();
+
+      // Process data and convert hexHash IDs to names
+      const processedFriends = friends.map((item) => ({
+        ...item,
+        hexHashCodes: item.hexHash
+          ? dbHelpers.getHexHashCodesFromIds(item.hexHash).join(", ")
+          : "",
+        type: "main_entry",
+      }));
+
+      const processedSubentries = subentries.map((item) => ({
+        ...item,
+        hexHashCodes: item.hexHash
+          ? dbHelpers.getHexHashCodesFromIds(item.hexHash).join(", ")
+          : "",
+        type: "sub_entry",
+      }));
+
+      const combinedData = [...processedFriends, ...processedSubentries];
+
+      const selectedFields = [
+        "id",
+        "fauxID",
+        "title",
+        "category",
+        "hexHashCodes",
+        "subCategory",
+      ];
+
+      // Map field names to display names for CSV headers
+      const fieldDisplayNames = {
+        fauxID: "index",
+        fauxID: "ID",
+        fauxID: "title",
         category: "RecordType",
         subCategory: "aRecordType",
         hexHashCodes: "hexHashCodes",
@@ -479,9 +579,9 @@ console.log("Tables:", importMeta.data.tables.map(t =>
               <button role="tab" aria-controls="tab-A" aria-selected="true">
                 Database Info
               </button>
-              <button role="tab" aria-controls="tab-D">
+              {/* <button role="tab" aria-controls="tab-D">
                 Troubleshooting
-              </button>
+              </button> */}
             </menu>
             <article role="tabpanel" id="tab-A">
               <div className="row align-items-start databasetable">
@@ -497,7 +597,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
             </article>
             <article role="tabpanel" id="tab-D" hidden>
               <div>
-                <p>If the database is still empty,ssssssssssss</p>
+                <p>If the database is still empty,</p>
                 <code>
                   C:\path\to\app\archive-6\resources\assets\databases\dexie-import.json"
                 </code>
@@ -524,6 +624,10 @@ console.log("Tables:", importMeta.data.tables.map(t =>
 
                 <button className="db-btn" onClick={handleCSVExport}>
                   Export Database - CSV
+                </button>
+
+                <button className="db-btn" onClick={handleHashlookup}>
+                  Export Database - HashLookup
                 </button>
 
                 <button className="db-btn" onClick={ImportDI}>

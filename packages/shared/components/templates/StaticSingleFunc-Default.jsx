@@ -52,9 +52,9 @@ export function StaticSingleDefault ({ itemID }) {
 
 if (!item) return;
 
-    if (item.triggerEvent.length > 0 && item.triggerEvent) {
-          gameLogic.triggerEvent(item.triggerEvent)
-    }
+    // if (item.triggerEvent.length > 0 && item.triggerEvent) {
+    //       gameLogic.triggerEvent(item.triggerEvent)
+    // }
   }, [item, id])
 
   const getEntryTitle = entryId => {

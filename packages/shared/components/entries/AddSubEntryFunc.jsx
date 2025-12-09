@@ -41,12 +41,15 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
   const { isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
 
-    const [animate, setAnimate] = useState(false);
+    const [animateSub, setAnimateSub] = useState(false);
 
+    // I don't know why this isn't working for subentries. Doesn't matter for now.
   const triggerAnimation = () => {
-    setAnimate(true);
+    console.log("animation before:   " + animateSub);
+    setAnimateSub(true);
+    console.log("animation:   " + animateSub);
     setTimeout(() => {
-      setAnimate(false); // Reset after animation
+      setAnimateSub(false); // Reset after animation
     }, 1000); // Match duration of the animation
   };
 
@@ -68,8 +71,8 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
     date: new Date(),               // real date i added things
     available: false, // Default to false
     mediaSub: [],
-    subCategory: subCategories[0], 
-    template: "default", 
+    subCategory: subCategories[0],
+    template: "default",
     bookmark: false,
     hexHash: [defaultHex],
     devNotes: "",
@@ -528,7 +531,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
         >
           {collapsed ? "▷" : "▽"}
 
-          
+
         </button> {formValues.fauxID} : {formValues.title}
 
                <span className="subentry-meta right">
@@ -541,7 +544,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
 
 
                {"   "} | {"   "}
-                 {formValues.lastEditedBy !== null 
+                 {formValues.lastEditedBy !== null
                    ? researcherIDs.find(
                        (researcher) =>
                          researcher.id === parseInt(formValues.lastEditedBy),
@@ -549,12 +552,12 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
                    : "Unknown User"}
                </span>
 
-      </div> 
+      </div>
     );
   }
   return (
       <div className="SubEntry">
-        <div className={` ${animate ? 'blink-save' : ''}`}></div>
+        <div id="blink" className={` ${animateSub ? 'blink-save' : ''}`}></div>
         {/* {isNewEntry ? <h2>Add New Sub Entry</h2> : <h2>Edit Sub Entry</h2>} */}
         <div title="ID and title" className="row">
           <div title="Toggle Button" className="button-row col-1">
@@ -565,9 +568,9 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
         >
           {collapsed ? "▷" : "▽"}
 
-          
-        </button> 
-      </div> 
+
+        </button>
+      </div>
           <div className="col-3">
             {" "}
             {/*// ------ ID  ------*/}
@@ -703,7 +706,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
           </div>
         </div>
           </div>
-         )} 
+         )}
          </div>
         <div title="descrioptn" className="row">
           {" "}
@@ -733,7 +736,7 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
                    </button>
          </div>
 
-        {toggleAdminSection && ( 
+        {toggleAdminSection && (
           <div className="row adminOnly">
             <div className="row">
               {" "}
@@ -861,8 +864,8 @@ export function AddSubEntryForm({ itemID, parentID, isCollapsed=true, onFinishEd
               >
                 Revert
               </button>
-              <button 
-              // className="remove-button" 
+              <button
+              // className="remove-button"
               onClick={removeCurrentEntry}>
                 Remove
               </button>

@@ -6,7 +6,7 @@ import {
   eventManager
 } from "@utils/events";
 
-//#region -------- gloabal 
+//#region -------- gloabal
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
 let globalIsAdmin = (() => {
   try {
@@ -41,6 +41,8 @@ let globalGameState = {
   //playerAddEntry: false,
   subEntryFrontPage: false,
   activeFilter: "all",
+  endgameSequence: false,
+  showDebug: false
 };
 let globalStatus = "";
 
@@ -166,12 +168,10 @@ export function GameLogic() {
       score: 0,
       isGameOver: false,
       level: 0,
-      // lastRoute: "/",
+       lastRoute: "/",
       editAccess: false,
-      // sortColumn: "title",
-      // sortDirection: "asc",
       cheatCode: true,
-      //playerAddEntry: false
+      endgameSequence: false
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -262,12 +262,16 @@ export function GameLogic() {
     adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
   };
 
-  // At module level (outside GameLogic component)
+  // At module level (outside GameLogic component) get by
   const triggerRegistry = {
    // 'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
   // 'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
-    'makeTrue-editAccess': () => updateGameState('editAccess', true),
-    'makeFalse-editAccess': () => updateGameState('editAccess', false),
+    'enable-editAccess': () => updateGameState('editAccess', true),
+    'disable-editAccess': () => updateGameState('editAccess', false),
+    'enable-endgameSequence': () => updateGameState('endgameSequence', true),
+    'disable-endgameSequence': () => updateGameState('endgameSequence', false),
+    'showDebug': () => updateGameState('showDebug', true),
+    'hideDebug': () => updateGameState('showDebug', false),
     // Add more triggers as needed
   };
 

@@ -42,7 +42,7 @@ const defaultFormValue = {
   triggerEvent: "",
 };
 
-export function AddEntryForm({ itemID, parentID, isSubEntry }) {
+export function PlayerAddEntryForm({ itemID, parentID, isSubEntry }) {
     //#region ---------    HOOKS   -------- */
   const [formValues, setFormValue] = useState(defaultFormValue);
   const [title, setName] = useState("");

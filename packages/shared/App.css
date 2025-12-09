@@ -327,7 +327,7 @@ select[multiple] option:checked {
 
 
 .description{
-  margin: 3px; 
+  margin: 3px;
 
 }
 .single-subentry-listing
@@ -608,7 +608,7 @@ margin: 10px;
   /* border-radius: 5px; */
   background-color: #fff;
   text-align: center;
-  
+
 }
 
 .btn-save-add-item:hover {
@@ -902,6 +902,7 @@ a:focus, a:hover {
 ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>button:focus-visible, ul[role=menubar]>[role=menuitem]>button:hover, ul[role=menubar]>[role=menuitem]>label:focus-visible, ul[role=menubar]>[role=menuitem]>label:hover, ul[role=menubar]>[role=menuitem][aria-haspopup=true]:focus-visible, ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
     background: var(lightblue);
     border-color: var(rgb(90, 165, 190));
+    color:white;
 }
 
 
@@ -975,9 +976,9 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 
 
 .pdf{
-  border:#f509ce 1px solid; 
+  border:#f509ce 1px solid;
   width: 100%;
-   height: 100%; 
+   height: 100%;
   /* border: "1px solid #dee2e6"; */
   border-Radius: "4px";
 }
@@ -1014,9 +1015,43 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
    width: 100%;
     height: 100%;
     /* opacity: 0; */
-    
+
     position: absolute;
     left: 0;
     top: 0;
     z-index: 1;
+}
+
+.lockScreen{
+  position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    top: 0;
+    left: 0;
+    /* z-index: 1000; */
+}
+
+.debugInfo{
+  position: fixed;
+    bottom: 30px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 0.6rem;
+    max-width: 300px;
+    max-height: 200px;
+    overflow: auto;
+    z-index: 1001;
+}
+
+.debugInfo .p{
+
+margin-bottom:0;
+font-size:9px;
+}
+
+.bugHi{
+  background-color: yellowgreen;
 }

@@ -34,33 +34,33 @@ export function applyHexFilter(items, activeFilter) {
 export function FilterList ({ onFilterChange, activeFilter = "all" }) {
   return (
     <div className="filter-buttons">
-      <span 
+      <span
         className={activeFilter === "all" ? "active" : ""}
         onClick={() => onFilterChange("all")}
         style={{ cursor: "pointer", margin: "0 10px" }}
       >
         All
       </span>
-            <span 
+            <span
         className={activeFilter === "junk" ? "active" : ""}
         onClick={() => onFilterChange("junk")}
         style={{ cursor: "pointer", margin: "0 10px" }}
       >
         Junk
       </span>
-      <span 
+      <span
         className={activeFilter === "vignette1" ? "active" : ""}
         onClick={() => onFilterChange("vignette1")}
         style={{ cursor: "pointer", margin: "0 10px" }}
       >
-        Vignette #1 (Hex 0-5)
+        Vignette #1 (Hex 0-10)
       </span>
-      <span 
+      <span
         className={activeFilter === "vignette2" ? "active" : ""}
         onClick={() => onFilterChange("vignette2")}
         style={{ cursor: "pointer", margin: "0 10px" }}
       >
-        Vignette #2 (Hex 6-10)
+        Vignette #2 (Hex 11+)
       </span>
     </div>
   );

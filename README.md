@@ -9,13 +9,31 @@ This is a game. I am doing my best to make it work.
 * define things in utils/db.ts - update schema version
 * catagory drop down options in constants.ts if needed
 
-
+## surpress annoying logs
+-[HMR] -[webpack-dev-server]  in electron console
 
 ## put assets
 projects>assets
 
 
 ## todo
+### 7.0.4 - 8/12/2025
+Missed a few version numbers here?
+[x] Big clean up to make writing subentries way faster - again. Obsessed with my own writing workflow
+[x] Edit list on homepage can now filter by vignette - ssd5f9b259a21092a89659aa16a9913737 to unlock
+[x] filter list now mentions triggers
+[x] Have a single trigger working. For now it just adds a button to the navbar.
+[x] Save button on entries now blinks the page so you can more easily tell that save works
+[x] option to save telemtrics on log-out - just saves a copy of the gamesave-state, but that includes times that entries were unlocked and their username
+
+
+
+#### Abandoned/Future features
+[-] Media item gets "stuck", brining attachment from last entry. 
+[ ] After next installation - make a page so you can load a telemetrics document and display the order items were unlocked. 
+[ ] MouseControl
+
+
 ### 7.0.1
 [x] Big clean up to make writing subentries way faster
 [x] Use [link parser](https://github.com/amir2mi/react-link-parser) with DescriptionEntry to parse links in subentry descriptions to other entries using ##entryID 

@@ -40,6 +40,10 @@ import { eventManager } from '@utils/events';
 
 import StatusBar from '@components/bars/StatusBar';
 
+// Endgame pages
+import { PlayerAddEntryForm } from '@components/other/PlayerEditPage';
+import Conversation from '@components/other/Conversation';
+
 
 
 // Component to track and restore route on hot reload
@@ -80,7 +84,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
     // });
   };
 
-  // this is also in AppNew.jsx - which is the correct place for it? 
+  // this is also in AppNew.jsx - which is the correct place for it?
   const checkNewGame = async () => {
     const isEmpty = await dbHelpers.isEmpty();
     if (isEmpty) {
@@ -141,6 +145,9 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/user-profile" element={<UserProfile />} />
                <Route path="/hashimport" element={<HashImport />} />
                <Route path="/bad-gateway" element={<BadGateway />} />
+  {/* Endgame Pages   ------------------------------------------------------------ */}
+              <Route path="/player-add-entry/" element={<PlayerAddEntryForm />} />
+              <Route path="/convoy/" element={<Conversation />} />
             </Routes>
           </div>
         </div>

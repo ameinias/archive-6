@@ -84,7 +84,7 @@ export const hexHashes = [
   {
     id: 1,
     name: "startHash",
-    hexHashcode: "null",
+    hexHashcode: "e5db0557296c615fa4ab2d2b0f0292da",
     note: "Articles that are already there. ",
   },
   {
@@ -154,7 +154,7 @@ export const hexHashes = [
     note: "first unlocks of V2",
   },
     {
-    id: 13,             // following hashes need new codes    
+    id: 13,             // following hashes need new codes
     name: "V2_4 -  ",
     hexHashcode: "ss1145cafae869ca2fbe4bf8ac92ecb62b",
     note: "start of vignette 2",
@@ -188,6 +188,15 @@ export const badHashes = [
   "b3c6a89d8e241138ed661e4497519fea",
   "c888008f79798950760159f80f485fbf",
   "67d6a591bce402d7f3af94e97824239d",
-  "fdd40fb8b099a215b1f085b06a287c45",
+  "fdd40fb8b099a215b1f085b06a287c45", // v1
+  "ee92875a012afe4539c1e3d64665bf78",
+  "b25f46c2979e7a27de4bbaf952f39e5f",
+  "cefb5cdb392e7f6521d82da09d939102",
+  "4d295cbc94335cf3cc1b31c37bd3e1c2",
+  "a4f3c0b8f5f5e8e2f4d6b3c9e8f7a1b0",
+  "9f1e2d3c4b5a69788796a5b4c3d2e1f0",
+  "9f296b3481b3c8704f947a4110125a26",
+  "36680042515dbee28e18cd17529c003d"
+
 ];
 
