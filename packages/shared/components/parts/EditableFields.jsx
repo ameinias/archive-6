@@ -234,3 +234,126 @@ export function FormEditListDate({
     </div>
   );
 }
+
+
+export function FormEditListText({
+  editing = false,
+  type = "entry",
+  item,
+  onChange,
+  options,
+}) {
+  const [editingValue, setEditingValue] = useState(null);
+  const [tempValue, setTempValue] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const { setStatusMessage } = GameLogic();
+
+  const startEditingDate = (item, type) => {
+    // Convert current hexHash to string for editing
+    const currentValue = item.displayDate || "1970-01-01";
+
+    // don't know if I need to check entry/subentry yet these yet
+    // if (type === "entry") {
+    setTempValue(currentValue);
+    setEditingValue(item.id);
+    setIsEditing(true);
+
+    console.log(editing, " start editing ", currentValue);
+
+  };
+
+  // try this https://js.devexpress.com/React/Demos/WidgetsGallery/Demo/DateBox/Overview/FluentBlueLight/
+  const saveValue = async (itemId, type) => {
+    try {
+      if (type === "subentry") {
+        await db.subentries.update(itemId, {
+          displayDate: tempValue || null,
+        });
+      } else {
+        await db.friends.update(itemId, {
+          displayDate: tempValue || null,
+        });
+      }
+
+      setEditingValue(null);
+      setTempValue("");
+      setIsEditing(false);
+      //   }
+
+      setStatusMessage(itemId + " date " + tempValue + "updated successfully");
+    } catch (error) {
+      console.error("Error updating date:", error);
+      setStatusMessage("Error updating date");
+    }
+  };
+
+  const cancelEditingValue = () => {
+    setEditingValue(null);
+    setTempValue("");
+    setIsEditing(false);
+  };
+
+  // td on the outside
+  return (
+    <div>
+      {isEditing ? (
+        <div
+          style={{
+            display: "flex",
+            gap: "5px",
+            alignItems: "center",
+            width: "40px",
+          }}
+        >
+          {/* <DatePicker
+            selected={tempValue}
+            onChange={(tempValue) => setTempValue(tempValue)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") saveValue(item.id, "entry");
+              if (e.key === "Escape") cancelEditingValue();
+            }}
+          /> */}
+
+           <input
+                            type='text'
+                            name='displayDate'
+                            title='date'
+                            value={tempValue}
+                             onChange={(tempValue) => setTempValue(tempValue)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") saveValue(item.id, "entry");
+              if (e.key === "Escape") cancelEditingValue();
+            }}
+
+                            placeholder='1970-01-01'
+                            style={{
+                              flex: 1,
+                              padding: '2px 5px',
+                              width: '140px'
+                            }}
+                            autoFocus
+                          />
+        </div>
+      ) : (
+        <div
+          onClick={() => startEditingDate(item, type)}
+          style={{
+            cursor: "pointer",
+            // backgroundColor: "#ae19c2ff",
+            padding: "5px",
+            borderRadius: "3px",
+            ":hover": { backgroundColor: "#f0f0f0" },
+          }}
+          title="Click to edit"
+        >
+                        {item.displayDate
+                        ? (typeof item.displayDate === 'string'
+                            ? item.displayDate
+                            : new Date(item.displayDate).toLocaleDateString())
+                        : "unknown"}
+
+        </div>
+      )}
+    </div>
+  );
+}

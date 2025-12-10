@@ -595,7 +595,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                 />
               </div>
               <div className="col" title=" Date written on log">
-                <FormAssets.FormDate
+                <FormAssets.FormTextBox
                   label="Date written on log"
                   name="displayDate"
                   formValue={formValues.displayDate.toString()}

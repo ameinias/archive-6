@@ -37,7 +37,7 @@ export function StaticSingleDefault ({ itemID }) {
   // trying makeTrue-playerAddEntry for now
   useEffect(() => {
     const markAsRead = async () => {
-      if (item && item.unread) {
+      if (item && item.unread  && item.available) {
         try {
           await db.friends.update(Number(id), { unread: false })
           console.log(item.fauxID + ' was unread, now marked as read')
@@ -123,7 +123,7 @@ export function StaticSingleDefault ({ itemID }) {
 
   return (
     <div className={`List ${gameLogic.gameState.level > 0 ? 'haunted' : ''}`}>
-      <h1>Time Remaining: {seconds}s</h1>
+      {/* <h1>Time Remaining: {seconds}s</h1> */}
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
         <div className='entry-header'>
@@ -142,13 +142,12 @@ export function StaticSingleDefault ({ itemID }) {
             <b>Category:</b> {item.category}{' '}
           </div>
           <div>
-            <b>Collected:</b>{' '}
-            {item.displayDate
-              ? new Date(item.displayDate).toLocaleDateString('en-US', {
-                  month: 'numeric',
-                  year: 'numeric'
-                })
-              : 'No Date'}
+            <b>Circa:</b>{' '}
+                 {item.displayDate
+                        ? (typeof item.displayDate === 'string'
+                            ? item.displayDate
+                            : new Date(item.displayDate).toLocaleDateString())
+                        : "unknown"}
           </div>
 
           {subEntryOfParent
@@ -177,7 +176,7 @@ export function StaticSingleDefault ({ itemID }) {
           item => item.subCategory.toLowerCase() !== 'metadata'
         ).length != 0 && (
           <div title='Subentries'>
-            <h2>Logs</h2>
+            <h2>Logs </h2>
             {subEntryOfParent
               .filter(item => item.subCategory.toLowerCase() !== 'metadata')
               .map(item => (

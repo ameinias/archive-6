@@ -66,25 +66,24 @@ export default function App () {
   }
 
   // this kind of works but I don't think this is the best way to do it
-//#region -------------  hide cursor in endgame sequence --------------
-    useEffect(() => {
-
+  //#region -------------  hide cursor in endgame sequence --------------
+  useEffect(() => {
     if (isCursorHidden) {
-      document.body.style.cursor = 'none';
+      document.body.style.cursor = 'none'
     } else {
       // Revert to default cursor
-      document.body.style.cursor = 'auto';
+      document.body.style.cursor = 'auto'
     }
 
     // Cleanup function to ensure the cursor is restored when the component unmounts
     // return () => {
     //   document.body.style.cursor = 'auto';
     // };
-  }, [isCursorHidden]);
+  }, [isCursorHidden])
 
   const toggleCursor = () => {
-    setIsCursorHidden(!isCursorHidden);
-  };
+    setIsCursorHidden(!isCursorHidden)
+  }
 
   //#endregion -------------
 
@@ -155,29 +154,37 @@ export default function App () {
   // from https://css-tricks.com/simulating-mouse-movement/
   // https://medium.com/@jaredloson/custom-javascript-cursor-in-react-d7ffefb2db38
 
-
   return (
     <>
-        <div className={gameState.endgameSequence ? 'lockScreen':""}></div>
+      <div className={gameState.endgameSequence ? 'lockScreen' : ''}></div>
 
-
-          {gameState.showDebug ? '' : (
- <div className="debugInfo">
-              <p>editAccess: {gameState.editAccess ? (<span className="bugHi">true</span>): 'false'}</p>
-  <p>activeFilter: {gameState.activeFilter} </p>
-  <p>endgameSequence: {gameState.endgameSequence ? (<span className="bugHi">true</span>): 'false'}</p>
-  <p>showDebug: {gameState.showDebug ? ('true'): 'false'}</p>
-
+      {gameState.showDebug && (
+        <div className='debugInfo'>
+          <p>
+            editAccess:{' '}
+            {gameState.editAccess ? (
+              <span className='bugHi'>true</span>
+            ) : (
+              'false'
+            )}
+          </p>
+          <p>activeFilter: {gameState.activeFilter} </p>
+          <p>
+            endgameSequence:{' '}
+            {gameState.endgameSequence ? (
+              <span className='bugHi'>true</span>
+            ) : (
+              'false'
+            )}
+          </p>
+          <p>showDebug: {gameState.showDebug ? (<span className='bugHi'>true</span>) : 'false'}</p>
         </div>
-          )}
-
-
-
+      )}
 
       <Router initialEntries={[initialRoute]}>
         <div className='wrapper' key={dbKey}>
           <RouteTracker />
-                {/* <button onClick={toggleCursor}>
+          {/* <button onClick={toggleCursor}>
         {isCursorHidden ? 'Show Cursor' : 'Hide Cursor'}
       </button> */}
           {!isLoggedIn ? <Login /> : <RouterPath />}

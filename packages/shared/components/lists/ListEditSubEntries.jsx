@@ -59,10 +59,12 @@ export function ListEditSubEntries () {
         let bValue = b[column]
 
         // Handle date columns specially
-        if (column === 'date' || column === 'displayDate') {
-          aValue = aValue ? new Date(aValue).getTime() : 0
-          bValue = bValue ? new Date(bValue).getTime() : 0
-        } else if (column === 'hexHash') {
+        // if (column === 'date' || column === 'displayDate') {
+        //   aValue = aValue ? new Date(aValue).getTime() : 0
+        //   bValue = bValue ? new Date(bValue).getTime() : 0
+        // } else
+
+          if (column === 'hexHash') {
           // Get lowest hex from item 'a'
           const hexesA = Array.isArray(a.hexHash) ? a.hexHash : [a.hexHash]
           const lowestA =
@@ -228,6 +230,14 @@ export function ListEditSubEntries () {
 
   return (
     <>
+            <div className='center'>
+              <FilterList
+                type='subentry'
+                onFilterChange={handleFilterChange}
+                activeFilter={gameState?.activeFilter}
+              />{' '}
+              </div>
+
       {!filteredFriends || filteredFriends.length === 0 ? (
         <div className='List'>
           <table className='entryTable'>
@@ -251,13 +261,7 @@ export function ListEditSubEntries () {
       ) : (
         <>
           <div className='List'>
-            <div className='center'>
-              <FilterList
-                type='subentry'
-                onFilterChange={handleFilterChange}
-                activeFilter={gameState?.activeFilter}
-              />{' '}
-            </div>
+
             <table className='searchResults'>
               <thead>
                 <tr>
@@ -324,7 +328,7 @@ export function ListEditSubEntries () {
                       </Link>
                     </td>
                     <td>
-                      <EditableFields.FormEditListDate
+                      <EditableFields.FormEditListText
                         item={item}
                         type='subentry'
                       />

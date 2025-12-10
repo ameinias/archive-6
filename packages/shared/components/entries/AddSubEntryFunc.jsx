@@ -529,11 +529,11 @@ export function AddSubEntryForm ({
         </button>{' '}
         {formValues.fauxID} : {formValues.title}
         <span className='subentry-meta right'>
-          {formValues.displayDate
-            ? typeof formValues.displayDate === 'string'
+          {formValues.displayDate}
+            {/* ? typeof formValues.displayDate === 'string'
               ? formValues.displayDate
               : new Date(formValues.displayDate).toLocaleDateString()
-            : 'No date'}
+            : 'No date'} */}
           {/* <EditableFields.FormEditListDate item={formValues} /> */}
           {'   '} | {'   '}
           {formValues.lastEditedBy !== null
@@ -658,7 +658,7 @@ export function AddSubEntryForm ({
                 />
               </div>
               <div className='col'>
-                <FormAssets.FormDate
+                <FormAssets.FormTextBox
                   label='Creation Date'
                   name='displayDate'
                   formValue={formValues.displayDate}

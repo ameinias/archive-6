@@ -24,7 +24,23 @@ export function applyHexFilter(items, activeFilter) {
         const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
         return hexes.some(hex => hex >= 50 && hex <= 50);
       });
+    } else if (activeFilter === "standalone") {
+      filtered = items.filter(item => {
+        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+        return hexes.some(hex => hex >= 100 && hex <= 200);
+      });
+    } else if (activeFilter === "future") {
+      filtered = items.filter(item => {
+        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+        return hexes.some(hex => hex >= 52 && hex <= 52);
+      });
+    } else if (activeFilter === "player") {
+      filtered = items.filter(item => {
+        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+        return hexes.some(hex => hex >= 51 && hex <= 51);
+      });
     }
+
 
 
   return filtered; // "all" filter
@@ -34,34 +50,61 @@ export function applyHexFilter(items, activeFilter) {
 export function FilterList ({ onFilterChange, activeFilter = "all" }) {
   return (
     <div className="filter-buttons">
-      <span
-        className={activeFilter === "all" ? "active" : ""}
-        onClick={() => onFilterChange("all")}
-        style={{ cursor: "pointer", margin: "0 10px" }}
-      >
-        All
-      </span>
-            <span
-        className={activeFilter === "junk" ? "active" : ""}
-        onClick={() => onFilterChange("junk")}
-        style={{ cursor: "pointer", margin: "0 10px" }}
-      >
-        Junk
-      </span>
-      <span
-        className={activeFilter === "vignette1" ? "active" : ""}
-        onClick={() => onFilterChange("vignette1")}
-        style={{ cursor: "pointer", margin: "0 10px" }}
-      >
-        Vignette #1 (Hex 0-10)
-      </span>
-      <span
-        className={activeFilter === "vignette2" ? "active" : ""}
-        onClick={() => onFilterChange("vignette2")}
-        style={{ cursor: "pointer", margin: "0 10px" }}
-      >
-        Vignette #2 (Hex 11+)
-      </span>
+      <div className="strip">
+        <span
+          className={activeFilter === "all" ? "active" : ""}
+          onClick={() => onFilterChange("all")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          All
+        </span>
+              <span
+          className={activeFilter === "junk" ? "active" : ""}
+          onClick={() => onFilterChange("junk")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Junk
+        </span>
+        <span
+          className={activeFilter === "vignette1" ? "active" : ""}
+          onClick={() => onFilterChange("vignette1")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Vignette #1 (Hex 0-10)
+        </span>
+        <span
+          className={activeFilter === "vignette2" ? "active" : ""}
+          onClick={() => onFilterChange("vignette2")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Vignette #2 (Hex 11+)
+        </span>
+      </div>
+
+<div className="strip">
+
+        <span
+    className={activeFilter === "future" ? "active" : ""}
+    onClick={() => onFilterChange("future")}
+    style={{ cursor: "pointer", margin: "0 10px" }}
+  >
+    Future (Hex 52)
+  </span>
+              <span
+    className={activeFilter === "player" ? "active" : ""}
+    onClick={() => onFilterChange("player")}
+    style={{ cursor: "pointer", margin: "0 10px" }}
+  >
+    Player (Hex 51)
+  </span>
+                    <span
+    className={activeFilter === "standalone" ? "active" : ""}
+    onClick={() => onFilterChange("standalone")}
+    style={{ cursor: "pointer", margin: "0 10px" }}
+  >
+    standalone (Hex 100+)
+  </span>
+</div>
     </div>
   );
 }

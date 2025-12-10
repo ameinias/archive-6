@@ -171,11 +171,35 @@ export const hexHashes = [
     hexHashcode: "ssd5f9b259a21092a89659aa16a9913737",
     note: "first unlocks of V2",
   },
+      {
+    id: 100,           // standalone
+    name: "just teeth",
+    hexHashcode: "621f1cea8a2e201cbebdbf0358d5f577",
+    note: "first unlocks of V2",
+  },
+  {
+    id: 101,           // standalone
+    name: "just claws",
+    hexHashcode: "fa0c24c601d8397f22edb7a13145cdee",
+    note: "first unlocks of V2",
+  },
+      {
+    id: 52,           // move to a future update
+    name: "future entries",
+    hexHashcode: "c888008f79798950760159f80f485fbf",
+    note: "first unlocks of V2",
+  },
+      {
+    id: 51,           // things players have made
+    name: "player made",
+    hexHashcode: "",
+    note: "first unlocks of V2",
+  },
 
   {
     id: 50,
     name: "junk",
-    hexHashcode: "ooo5-6jdsA-GH7aa",
+    hexHashcode: "cefb5cdb392e7f6521d82da09d939102",
     note: "Random fluff entries from testing I don't want to toISOString.",
   },
 ];
@@ -196,7 +220,8 @@ export const badHashes = [
   "a4f3c0b8f5f5e8e2f4d6b3c9e8f7a1b0",
   "9f1e2d3c4b5a69788796a5b4c3d2e1f0",
   "9f296b3481b3c8704f947a4110125a26",
-  "36680042515dbee28e18cd17529c003d"
+  "36680042515dbee28e18cd17529c003d",
+  "e5db0557296c615fa4ab2d2b0f0292da"
 
 ];
 

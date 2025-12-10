@@ -189,11 +189,11 @@ export const dbHelpers = {
       const hash = hexHashes.find(
         (h) => h.id == id || h.id === String(id) || h.id === Number(id),
       );
-      console.log(
-        "getHexHashCodesFromIds",
-        id,
-        hash ? hash.hexHashcode : "not found",
-      );
+      // console.log(
+      //   "getHexHashCodesFromIds",
+      //   id,
+      //   hash ? hash.hexHashcode : "not found",
+      // );
       return hash ? hash.hexHashcode : `Unknown (${id})`;
     });
   },

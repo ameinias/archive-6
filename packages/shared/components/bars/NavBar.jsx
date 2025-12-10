@@ -49,6 +49,14 @@ const NavBar = () => {
     console.log('testio done')
   }
 
+    const restartGame = async () => {
+                await newGame(gameState.defaultStartHash);
+
+            updateGameState("editAccess", false);
+            updateGameState("endgameSequence", false);
+    console.log('restartGame');
+  }
+
   const debugWindow = async () => {
     updateGameState('showDebug', !gameState.showDebug)
   }
@@ -59,7 +67,7 @@ const NavBar = () => {
   }
 
   const SaveOut = async () => {
-    // setStatusMessage("sdfsfsdf");
+
     console.log('should be?')
 
     if (isElectron)
@@ -72,11 +80,7 @@ const NavBar = () => {
   }
 
   return (
-    // <div className="NavBar">
-    //     <nav className="navbar fixed-top navbar-light bg-light">
-    // <div className="container-fluid">
-    // <nav className="navbar navbar-blend navbar-fixed-top">
-    //   <div className="mainNavButtons">
+
     <ul role='menubar' className='can-hover'>
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
         <Link
@@ -89,23 +93,18 @@ const NavBar = () => {
         </Link>
       </li>{' '}
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
-        {/* <Link to={gameState.endgameSequence ? '/' :  null}  title='home-button'> */}
+
         <Link to={!gameState.endgameSequence ? '/' : null} title='home-button'>
           Home
         </Link>
       </li>{' '}
-      {/* <li role='menuitem' tabIndex='0' aria-haspopup='true' >
-        <Link to={!gameState.endgameSequence ? '/' :  null}  title='home-button'>
 
-          TestDisableButton {gameState.endgameSequence ? 'disable' :  'able'}
-        </Link>
-      </li>{' '} */}
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
         {' '}
         <Link to={!gameState.endgameSequence ? '/search' : null}>Search</Link>
       </li>{' '}
-      {/* {gameState.editAccess && ( */}
-        <li role='menuitem' className='attention' tabIndex='0' aria-haspopup='true'>
+
+        <li role='menuitem' className={gameState.editAccess ? 'attention' : ''} tabIndex='0' aria-haspopup='true'>
            <Link to={!gameState.endgameSequence ? '/player-add-entry' : null}>
             Add Entry
           </Link>
@@ -155,21 +154,22 @@ const NavBar = () => {
                 <Link to='/convo'>Convo</Link>
               </li> */}
 
-          <li>
-            {' '}
-            <button className='button-small' onClick={debugWindow}>
-              DBI
-            </button>
-          </li>
         </>
       )}
       {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
                 <Link  onClick={FauxLogOut }>FauxLogOut</Link></li> */}
 
+          <li>
+            {' '}
+            <button className='button-small' onClick={restartGame}>
+              restartGame
+            </button>
+          </li>
+
                           <li>
             {' '}
-            <button className='' onClick={testio}>
-              Test Something
+            <button className='button-small'  onClick={testio}>
+              test
             </button>
           </li>
     </ul>

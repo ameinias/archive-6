@@ -44,6 +44,24 @@ const Logs = () => {
 
     const foundSubItems = subentries?.filter(item => item.available === true)
 
+      // useEffect(() => {
+      //   const handleNewGameStart = () => setIsLoading(true);
+      //   const handleNewGameEnd = () => {
+      //     setIsLoading(false);
+      //     console.log("New game ended, reloading...");
+      //     // Force component refresh after new game
+      //     window.location.reload(); // Simple but effective
+      //   };
+
+      //   window.addEventListener("newGameStart", handleNewGameStart);
+      //   window.addEventListener("newGameEnd", handleNewGameEnd);
+
+      //   return () => {
+      //     window.removeEventListener("newGameStart", handleNewGameStart);
+      //     window.removeEventListener("newGameEnd", handleNewGameEnd);
+      //   };
+      // }, []);
+
     // Add main entries
     if (foundItems) {
       for (const item of foundItems) {

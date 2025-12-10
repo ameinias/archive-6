@@ -13,6 +13,7 @@ export function StaticList() {
 
   const navigate = useNavigate();
 
+// console.log('Sample item:', sortedFriends[0]);
 
   useEffect(() => {
     const handleNewGameStart = () => setIsLoading(true);
@@ -35,16 +36,25 @@ export function StaticList() {
 
 
 
-  // Sort friends by date
+  // Sort friends by fauxID
   const sortedFriends = friends
     ? [...friends]
         .filter((item) => item.available)
-        .sort((a, b) => {
-          const dateA = a.displayDate ? new Date(a.date).getTime() : 0;
-          const dateB = b.displayDate ? new Date(b.date).getTime() : 0;
-          return dateB - dateA;
-        })
+        .sort((a, b) => b.fauxID.localeCompare(a.fauxID))
     : [];
+
+
+    //   const sortedFriendsDate = friends
+    // ? [...friends]
+    //     .filter((item) => item.available)
+    //     .sort((a, b) => {
+    //       const dateA = a.displayDate ? new Date(a.date).getTime() : 0;
+    //       const dateB = b.displayDate ? new Date(b.date).getTime() : 0;
+    //       return dateB - dateA;
+    //     })
+    // : [];
+
+
 
   return (
     <div className="List">
@@ -84,11 +94,10 @@ export function StaticList() {
                     </td>
                     <td width="75px">
                       {item.displayDate
-                        ? new Date(item.displayDate).toLocaleDateString(
-                            "en-US",
-                            { month: "numeric", year: "numeric" },
-                          )
-                        : "No Date"}
+                        ? (typeof item.displayDate === 'string'
+                            ? item.displayDate
+                            : new Date(item.displayDate).toLocaleDateString())
+                        : "unknown"}
                     </td>
                   </>
                 {/* )} */}

@@ -60,10 +60,11 @@ export function ListEditEntry () {
         let bValue = b[column]
 
         // Handle date columns specially
-        if (column === 'date' || column === 'displayDate') {
-          aValue = aValue ? new Date(aValue).getTime() : 0
-          bValue = bValue ? new Date(bValue).getTime() : 0
-        } else if (column === 'hexHash') {
+        // if (column === 'date' || column === 'displayDate') {
+        //   aValue = aValue ? new Date(aValue).getTime() : 0
+        //   bValue = bValue ? new Date(bValue).getTime() : 0
+        // } else
+          if (column === 'hexHash') {
 
           // Get lowest hex from item 'a'
           const hexesA = Array.isArray(a.hexHash) ? a.hexHash : [a.hexHash]
@@ -231,6 +232,13 @@ export function ListEditEntry () {
 
   return (
     <>
+                <div className='center'>
+              <FilterList
+                type='entry'
+                onFilterChange={handleFilterChange}
+                activeFilter={gameState?.activeFilter}
+              />
+              </div>
       {!filteredFriends || filteredFriends.length === 0 ? (
         <div className='List'>
           <table className='entryTable'>
@@ -255,11 +263,6 @@ export function ListEditEntry () {
         <>
           <div className='List'>
             <div className='center'>
-              <FilterList
-                type='entry'
-                onFilterChange={handleFilterChange}
-                activeFilter={gameState?.activeFilter}
-              />
               <Link to='/entry/new'>
                 <Button className='btn-add-item'>New Entry</Button>
               </Link>
@@ -325,12 +328,12 @@ export function ListEditEntry () {
                           )
                         : "No Date"} */}
 
-                      <EditableFields.FormEditListDate item={item} />
+                      <EditableFields.FormEditListText item={item} />
                     </td>
                     <td width='50px' data-label='date' title={item.devNotes}>
                       {item.date
                         ? new Date(item.date).toLocaleDateString('en-US')
-                        : 'No Date'}
+                        : 'unknown'}
                     </td>
                     <td data-label='hex'>
                       {editingHex === item.id ? (

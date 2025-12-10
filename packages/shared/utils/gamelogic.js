@@ -205,7 +205,7 @@ export function GameLogic() {
 
   const setStatusMessage = (thestatus) => {
     // This function can be used to set a status message in the footer.
-    globalStatus = "status: " + thestatus;
+    globalStatus = thestatus;
     console.log(`${globalStatus}`);
     setStatus(globalStatus);
     gameStatusUpdateCallbacks.forEach((callback) => callback(globalStatus));

@@ -22,6 +22,7 @@ const UserInfoButtons = () => {
             await newGame(gameState.defaultStartHash);
 
             updateGameState("editAccess", false);
+            updateGameState("endgameSequence", false);
             console.log("restart with hash" + gameState.defaultStartHash);
           if (await eventManager.showConfirm('Export telemetry data to app data folder?')) {
             exportTelemetrisToAppData(globalUser.username);}
@@ -48,6 +49,7 @@ const UserInfoButtons = () => {
 
         {isAdmin ? 'Admin' : `${globalUser.username}`}</Link></span>{' '}
           <button
+            className="btn-logout"
 
             onClick={LogOut}
             title="This will delete your progress!"

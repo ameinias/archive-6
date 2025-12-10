@@ -1,23 +1,50 @@
-import React from 'react';
-import { GameLogic } from '@utils/gamelogic';
-import { eventManager } from '@utils/events';
-import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import UserInfoButtons from '@components/parts/UserInfoButtons';
+import React from 'react'
+import { GameLogic } from '@utils/gamelogic'
+import { eventManager } from '@utils/events'
+import { Link } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
+import UserInfoButtons from '@components/parts/UserInfoButtons'
 
 const StatusBar = () => {
-  const { isAdmin, toggleAdmin, globalStatus, setStatusMessage, isLoggedIn } = GameLogic();
-      const isElectron = eventManager.isElectron
+  const {
+    isAdmin,
+    toggleAdmin,
+    globalStatus,
+    setStatusMessage,
+    isLoggedIn,
+    gameState,
+    updateGameState
+  } = GameLogic()
+  const isElectron = eventManager.isElectron
+
+  const debugWindow = async () => {
+    updateGameState('showDebug', !gameState.showDebug)
+  }
 
   return (
-        // <nav className="navbar navbar-blend navbar-fixed-bottom">
-            <nav>
-        <div className="status-bar">
-    <div className="status-bar-field col-8">|| { globalStatus }  </div> <div className="status-bar-field"><UserInfoButtons />
-</div>
-    </div>
+    // <nav className="navbar navbar-blendfsf sdf asd navbar-fixed-bottom">
+    <nav>
+      <div className='status-bar'>
+        <div className='status-bar-field col-1'>
+          {' '}
+          {isAdmin && (
+            <button  onClick={debugWindow}>
+              DBI
+            </button>
+          )}
+        </div>
+        <div className='status-bar-field col-8'>
+          {/* {(globalStatus != "") && (status ||  ${globalStatus} )} */}
+          <div className='status-bar-field col-8'>
+            {(globalStatus !== '' && 'status || ', globalStatus)}
+          </div>
+        </div>{' '}
+        <div className='status-bar-field'>
+          <UserInfoButtons />
+        </div>
+      </div>
     </nav>
-  );
-};
+  )
+}
 
-export default StatusBar;
+export default StatusBar

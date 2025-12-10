@@ -17,7 +17,7 @@ function Login() {
   const [formValues, setFormValue] = useState(defaultFormValue);
   const navigate = useNavigate();
     const { isLoggedIn, setLoggedIn } = GameLogic();
-      const { setStatusMessage } = GameLogic();
+      const { globalStatus, setStatusMessage } = GameLogic();
       const { globalUser, setPlayerUsername, setPlayerPassword, gameState } = GameLogic();
 
   const handleClose = () => {
@@ -61,6 +61,7 @@ function Login() {
 
                         if (!/^[a-zA-Z0-9_-]+$/.test(password)) {
               setStatusMessage('Passwords can only contain letters, numbers, underscore, and hyphen (no spaces or special characters)');
+
               return;
             }
 
@@ -142,14 +143,13 @@ function Login() {
           {/* <Button className="btn-save-add-item" onClick={updateEntry}>
             Register
           </Button> */}
+
           <Button className="btn-save-add-itemn" onClick={handleSubmit}>
             Login
           </Button>
         </div>
                   <div className="row text-center">
-          {/* <Link to="/register" className="altSignIn" tooltip="If you already have an account, click here to login" >
-            Register for a new account
-          </Link> */}
+             <p className="errorStatus">{globalStatus}</p>
           </div>
       </div>
   );

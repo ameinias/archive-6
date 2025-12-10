@@ -20,7 +20,7 @@ function HashImport () {
   const importHash = async () => {
     const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue)
 
-    if (badHashes.includes(hexHashID)) {
+    if (badHashes.includes(hashValue)) {
       navigate('/bad-gateway')
       return
     }
@@ -125,9 +125,9 @@ function HashImport () {
       <Logs />
       <div className='invisibleInk'>
         ff887d1e66aac9cec2dbce8790a07576 <br />
-        aeoh-3q484-da232 <br />
-        ooo5-6jdsA-GH7aa <br />
-        iaeF-33pqJ-ef09H <br />
+        ssd5f9b259a21092a89659aa16a9913737 <br />
+        c888008f79798950760159f80f485fbf <br />
+        ss1145cafae869ca2fbe4bf8ac92ecb62b <br />
       </div>
     </div>
   )
