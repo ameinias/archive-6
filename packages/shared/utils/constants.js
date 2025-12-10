@@ -143,13 +143,13 @@ export const hexHashes = [
   },
   {
     id: 11,
-    name: "V2_2 - start revealing",
+    name: "V2_2 - sqvs minutes",
     hexHashcode: "0e2805a97520b5e034c4114ae249574e",
     note: "first unlocks of V2",
   },
     {
     id: 12,
-    name: "V2_3 - anotherone",
+    name: "V2_3 - illustration",
     hexHashcode: "d5f9b259a21092a89659aa16a9913737",
     note: "first unlocks of V2",
   },
@@ -161,16 +161,45 @@ export const hexHashes = [
   },
   {
     id: 14,
-    name: "V2_5 -  ",
+    name: "V2_5 - doc likes to other entries ",
     hexHashcode: "ss0e2805a97520b5e034c4114ae249574e",
     note: "first unlocks of V2",
   },
     {
     id: 15,           // final for now
-    name: "V2_6 - endgame",
+    name: "V2_6 - ",
     hexHashcode: "ssd5f9b259a21092a89659aa16a9913737",
     note: "first unlocks of V2",
   },
+    {
+    id: 16,
+    name: "V2_7 - mammel spine ",
+    hexHashcode: "d66fdeb0b0f75cb7612686b9edbd07fa",
+    note: "first unlocks of V2",
+  },
+    {
+    id: 17,           // final for now
+    name: "V2_8 - ",
+    hexHashcode: "sfsfsdfs",
+    note: "first unlocks of V2",
+  },
+    {
+    id: 18,
+    name: "V2_9 -  ",
+    hexHashcode: "fff",
+    note: "first unlocks of V2",
+  },
+    {
+    id: 19,           // final for now
+    name: "V2_10 - endgame",
+    hexHashcode: "sss",
+    note: "first unlocks of V2",
+  },
+
+
+
+
+
       {
     id: 100,           // standalone
     name: "just teeth",
