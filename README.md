@@ -34,6 +34,10 @@ Missed a few version numbers here?
 [ ] After next installation - make a page so you can load a telemetrics document and display the order items were unlocked. 
 [ ] MouseControl
 [ ] use https://magicui.design/docs/components/animated-list for entity conversation
+[ ] Use that motion plug-in to make the entity entries appear one-by-one
+- [ ] Make the timestamps be the real-time they showed up. 
+- [ ] Make the "final entry" be a re-direct to a static page so I can do more stuff with in. 
+[ ] Button on edit subentries that sets their hash and date to match their parent.
 
 
 ### 7.0.1

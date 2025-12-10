@@ -102,8 +102,13 @@ function HashImport () {
     <div className='hashImport-div'>
       <div className='row'>
         {' '}
-        <h3>Migrate</h3>
+        <h2>Import</h2>
+        <div className="instructions ">
+        <p>Migrate corrupted entries to the new database by entering hexhashes here.</p>
+        <p>Your coordinator or administrator will have provided these hexes either as a print out or a spreadsheet.  </p>
+        </div>
         {/*// ------ Title  ------*/}
+        <div className="row">
         <div className='formLabel col-2'>hexHash:</div>
         <input
           className='form-control col'
@@ -119,7 +124,7 @@ function HashImport () {
           Import Hash
         </Button>
       </div>
-
+</div>
       <br />
 
       <Logs />

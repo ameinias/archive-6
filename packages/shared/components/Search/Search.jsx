@@ -97,7 +97,7 @@ const Search = () => {
 
   return (
     <>
-    <h3>Search</h3>
+    <h2>Search</h2>
       {/* <InputGroup className="searchboxr"> */}
       <div className="searchbox">
         <input

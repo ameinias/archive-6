@@ -36,6 +36,20 @@ html {
 }
 
 /* fonts */
+
+h2{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.1rem;
+    margin: auto;
+    text-align: center;
+    /* font-weight: 600; */
+    /* text-decoration: underline; */
+    margin-bottom: 8px;
+    font-variant: small-caps;
+    letter-spacing: 2px;
+
+}
+
 h3{
     font-size: 1.1rem;
     margin: auto;
@@ -264,7 +278,7 @@ select[multiple] option:checked {
   margin-bottom: 5px;
   margin-right:5px;
   display: inline-block;
-  display: block;
+  /* display: block; */
   width:auto;
 }
 .form-control {
@@ -492,13 +506,29 @@ table.entryTable td {
   color: #555;
   margin-left: 10px;
       overflow-wrap: break-word;
+      display:flex;
 }
 
 .subinfo{
   text-align:right;
-  margin: 0 0 0 65%;
-  padding-bottom: 15px;
+  padding-bottom: 5px;
   clear: both;
+  display:flex;
+}
+
+.subinfo span{
+  /* margin-left: auto;
+  margin-right:5px; */
+  margin:15px 5px 5px auto;
+  display:flex;
+}
+
+.image-subinfo span{
+  margin-left: auto;
+}
+
+.top{
+  z-index:1000;
 }
 
 .subentries
@@ -1117,17 +1147,75 @@ font-size:9px;
 .attention:hover{
   border-right: 0.2px white solid;
   border-left: 0.2px white solid;
+  background-color:red!important;
+  animation: shake 0.3s linear infinite;
    /* background-color: rgb(200, 229, 238); */
 }
 
-
 @keyframes fade-attention {
     0% {   background:none;}
-  50% {  background:  rgb(161, 222, 240);}
+  50% {  background:  rgb(246, 199, 199);}
   100% {  background:none;}
 
 
 
+}
+
+/* ------------------SUBENTRY CHARACTER TEMPLATES ----*/
+.trapped
+{
+  /* border: 2px solid red; */
+  color:red;
+  font-family: Consolas, "Lucida Console", Monaco, monospace;
+  font-size: 1.05rem;
+}
+
+
+
+.shake-container {
+  /* Basic styling */
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+/* The animation runs when the element is hovered */
+.trapped:hover {
+  animation: shake 0.3s linear infinite;
+}
+
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+    filter: blur(1px);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 1px, 0);
+    filter: blur(0px);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-1px, -1px, 0);
+     filter: blur(0px);
+
+  }
+
+  40%, 60% {
+    transform: translate3d(1px, -1, 0);
+    filter: blur(1px);
+  }
+}
+
+
+.right-text {
+
+  margin-right: 10px; /* Optional spacing */
+  clear:both;
 }
 
 input[type=email], input[type=number], input[type=password], input[type=text], input[type=url], textarea {
@@ -1159,4 +1247,31 @@ input[type=email], input[type=number], input[type=password], input[type=text], i
     font-size: 12px;
 
 
+}
+
+.instructions{
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #555;
+  margin:auto;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding:10px;
+  width: 60%;
+  /* display:block;
+  clear:both; */
+
+}
+
+.instructions p {
+      margin-bottom: 5px;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.instruct-span {
+    font-style: italic;
+      margin-bottom: 5px;
+    font-size: 0.7rem;
+    text-align: center;
 }

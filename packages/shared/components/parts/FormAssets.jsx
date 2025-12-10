@@ -103,14 +103,15 @@ export function FormDropDown({
     formValue,
     readOnly = false,
     onChange,
-    options
+    options,
+    className="form-control form-control-dropdown col"
 }) {
     return (
         <div className='row'>
             {label && (<div className="formLabel">{label}</div>)}
             <select
                 name={name}
-                className="form-control form-control-dropdown col"
+                className={className}
                 multiple={multiple}
                 value={formValue}
                 onChange={onChange}

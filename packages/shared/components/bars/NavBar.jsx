@@ -158,10 +158,11 @@ const NavBar = () => {
       )}
       {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
                 <Link  onClick={FauxLogOut }>FauxLogOut</Link></li> */}
-
+{(gameState.showDebug || isAdmin) && (
+  <>
           <li>
             {' '}
-            <button className='button-small' onClick={restartGame}>
+            <button className='button-small top' onClick={restartGame}>
               restartGame
             </button>
           </li>
@@ -172,6 +173,9 @@ const NavBar = () => {
               test
             </button>
           </li>
+          </>
+)}
+
     </ul>
     //     </div>
 

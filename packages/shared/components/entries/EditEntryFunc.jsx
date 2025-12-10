@@ -40,6 +40,7 @@ const defaultFormValue = {
   displayDate: "1970-01-01", // date added to archive
   lastEditedBy: researcherIDs[0] || 0,
   triggerEvent: "",
+  unread: true
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -107,6 +108,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           displayDate: entry.displayDate || "1970-01-01",
           lastEditedBy: entry.lastEditedBy,
           triggerEvent: entry.triggerEvent,
+          unread: entry.unread || true,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -154,6 +156,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       displayDate: formValues.displayDate,
       lastEditedBy: parseInt(formValues.lastEditedBy, 10),
       triggerEvent: formValues.triggerEvent,
+      unread: formValues.unread
     };
   };
 
@@ -192,6 +195,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       displayDate: formValues.displayDate,
       lastEditedBy: formValues.lastEditedBy,
       triggerEvent: formValues.triggerEvent,
+      unread: formValues.unread
     };
   };
 
@@ -664,17 +668,32 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 
         {toggleAdminSection && (
           <div className="row adminOnly">
-            <div className="row">
-              {" "}
+                <div className='row'>
+            <div className='col'>
+              {' '}
               {/*// ------ available  ------*/}
-              <label className="formLabel">available</label>
+              <label className='formLabel'>available</label>
               <input
-                type="checkbox"
-                className="formLabel"
+                type='checkbox'
+                className='formLabel'
                 checked={formValues.available}
                 onChange={handleCheckboxChange}
-                name="available"
+                name='available'
               />
+            </div>
+
+                        <div className='col'>
+              {' '}
+              {/*// ------ available  ------*/}
+              <label className='formLabel'>unread</label>
+              <input
+                type='checkbox'
+                className='formLabel'
+                checked={formValues.unread}
+                onChange={handleCheckboxChange}
+                name='unread'
+              />
+            </div>
             </div>
             <div className="row">
               {" "}
@@ -729,7 +748,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 
             <div className="row">
               <div className="formLabel">Triggers:</div>
-              <p>Comma seperated strings. function-parameter format.</p>
+                         <span className="instruct-span">Comma seperated strings. function-parameter format.</span>
               <textarea
                 rows={3}
                 className="form-control"

@@ -19,6 +19,7 @@ import { MediaUploadSub } from '@components/parts/Media/MediaUploadSub'
 import { eventManager } from '@utils/events'
 import { useToggle } from '@hooks/hooks'
 import * as EditableFields from '@components/parts/EditableFields'
+import { safeRender, safeDate } from '@utils/helper';
 
 // onFinishEdit calls back to ListSubEntries to close the toggle
 export function AddSubEntryForm ({
@@ -79,7 +80,8 @@ export function AddSubEntryForm ({
     modEdit: 'added',
     displayDate: '1970-01-01', // date added to archive
     lastEditedBy: researcherIDs[0] || 0,
-    triggerEvent: ''
+    triggerEvent: '',
+    unread:true
   }
 
   const [formValues, setFormValue] = useState(defaultFormValue)
@@ -208,7 +210,8 @@ export function AddSubEntryForm ({
       modEdit: formValues.modEdit,
       displayDate: formValues.displayDate, // date added to archive
       lastEditedBy: parseInt(formValues.lastEditedBy, 10),
-      triggerEvent: formValues.triggerEvent
+      triggerEvent: formValues.triggerEvent,
+      unread: formValues.unread
     }
   }
 
@@ -267,7 +270,8 @@ export function AddSubEntryForm ({
           modEdit: entry.modEdit,
           displayDate: entry.displayDate || '1970-01-01', // date added to archive
           lastEditedBy: entry.lastEditedBy,
-          triggerEvent: entry.triggerEvent || ''
+          triggerEvent: entry.triggerEvent || '',
+          unread:entry.unread
         })
         savedID = entry.id
         setNewEntry(false)
@@ -393,7 +397,8 @@ export function AddSubEntryForm ({
       modEdit: entry.modEdit,
       displayDate: entry.displayDate || '1970-01-01',
       lastEditedBy: entry.lastEditedBy,
-      triggerEvent: entry.triggerEvent || ''
+      triggerEvent: entry.triggerEvent || '',
+      unread:entry.unread
     })
   }
   async function FinishEdit () {
@@ -529,7 +534,7 @@ export function AddSubEntryForm ({
         </button>{' '}
         {formValues.fauxID} : {formValues.title}
         <span className='subentry-meta right'>
-          {formValues.displayDate}
+          {safeDate(formValues.displayDate)}
             {/* ? typeof formValues.displayDate === 'string'
               ? formValues.displayDate
               : new Date(formValues.displayDate).toLocaleDateString()
@@ -727,7 +732,8 @@ export function AddSubEntryForm ({
 
         {toggleAdminSection && (
           <div className='row adminOnly'>
-            <div className='row'>
+                   <div className='row'>
+            <div className='col'>
               {' '}
               {/*// ------ available  ------*/}
               <label className='formLabel'>available</label>
@@ -738,6 +744,20 @@ export function AddSubEntryForm ({
                 onChange={handleCheckboxChange}
                 name='available'
               />
+            </div>
+
+                        <div className='col'>
+              {' '}
+              {/*// ------ available  ------*/}
+              <label className='formLabel'>unread</label>
+              <input
+                type='checkbox'
+                className='formLabel'
+                checked={formValues.unread}
+                onChange={handleCheckboxChange}
+                name='unread'
+              />
+            </div>
             </div>
 
             <div className='row'>
@@ -763,9 +783,9 @@ export function AddSubEntryForm ({
             </div>
 
             <div className='row'>
-              <FormAssets.FormDropDown
+              <FormAssets.FormHexes
                 name='hexHash'
-                label='HexHash:'
+                label=''
                 multiple={true}
                 formValue={formValues.hexHash}
                 readOnly={false}
@@ -808,7 +828,7 @@ export function AddSubEntryForm ({
 
             <div className='row'>
               <div className='formLabel'>Triggers:</div>
-              <p>Comma seperated strings. function-parameter format.</p>
+              <span className="instruct-span">Comma seperated strings. function-parameter format.</span>
               <textarea
                 rows={3}
                 className='form-control'

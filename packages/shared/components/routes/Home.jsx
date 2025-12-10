@@ -25,10 +25,10 @@ const Home = () => {
         // Force component refresh after new game
         window.location.reload(); // Simple but effective
       };
-  
+
       window.addEventListener("newGameStart", handleNewGameStart);
       window.addEventListener("newGameEnd", handleNewGameEnd);
-  
+
       return () => {
         window.removeEventListener("newGameStart", handleNewGameStart);
         window.removeEventListener("newGameEnd", handleNewGameEnd);
@@ -58,8 +58,8 @@ const Home = () => {
             <div className="div">
               <div className="center" style={{  marginBottom: "10px" }}>
                 {" "}
-                <span style={{ fontWeight: 800, textDecoration: "underline" }}>
-                  Entries  
+                <span style={{ fontWeight: 700, textDecoration: "underline" }}>
+                  Entries
                 </span>{" "}
                 |{" "}
                 <span onClick={switchTab} style={{ cursor: "pointer", color: "blue" }}>
@@ -77,7 +77,7 @@ const Home = () => {
                   Entries
                 </span>{" "}
                 |{" "}
-                <span style={{ fontWeight: 800, textDecoration: "underline" }}>
+                <span style={{ fontWeight: 700, textDecoration: "underline" }}>
                   Subentries
                 </span>{" "}
               </div>

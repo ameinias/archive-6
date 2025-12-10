@@ -8,6 +8,8 @@ import * as FormAssets from "@components/parts/FormAssets";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import { safeRender, safeDate } from '@utils/helper';
+
 export function EditResearcher({ itemID, type }) {
   const gameLog = GameLogic();
   const [editingProp, setEditingProp] = useState(null);
@@ -346,11 +348,7 @@ export function FormEditListText({
           }}
           title="Click to edit"
         >
-                        {item.displayDate
-                        ? (typeof item.displayDate === 'string'
-                            ? item.displayDate
-                            : new Date(item.displayDate).toLocaleDateString())
-                        : "unknown"}
+                        {safeDate(item.displayDate)}
 
         </div>
       )}

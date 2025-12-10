@@ -10,6 +10,7 @@ import * as FormAssets from '@components/parts/FormAssets'
 import { researcherIDs } from '@utils/constants'
 import * as EditableFields from '@components/parts/EditableFields'
 import { FilterList, applyHexFilter } from '@components/parts/ListingComponent'
+import { safeRender, safeDate } from '@utils/helper';
 
 import {
   MediaCountCell,
@@ -320,20 +321,19 @@ export function ListEditEntry () {
                         {item.fauxID} : {item.title}
                       </Link>
                     </td>
-                    <td width='50px' data-label='displayDate'>
+                    <td width='50px' data-label='displayDate' title="will fix editing later TODO">
                       {/* {item.displayDate
                         ? new Date(item.displayDate).toLocaleDateString(
                             "en-US",
                             { month: "numeric", year: "numeric" },
                           )
                         : "No Date"} */}
+                         {safeDate(item.displayDate)}
 
-                      <EditableFields.FormEditListText item={item} />
+                      {/* <EditableFields.FormEditListText item={item} /> */}
                     </td>
                     <td width='50px' data-label='date' title={item.devNotes}>
-                      {item.date
-                        ? new Date(item.date).toLocaleDateString('en-US')
-                        : 'unknown'}
+                      {safeDate(item.date)}
                     </td>
                     <td data-label='hex'>
                       {editingHex === item.id ? (

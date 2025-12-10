@@ -29,11 +29,7 @@ export default class MenuBuilder {
         label: '&File',
         submenu: [
           {
-            label: '&Open',
-            accelerator: 'Ctrl+O',
-          },
-          {
-            label: '&Close',
+          label: '&Close',
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();
@@ -41,10 +37,11 @@ export default class MenuBuilder {
           },
         ],
       },
+
     ];
 
     const fakeMenu = Menu.buildFromTemplate(fakeTemplate);
-    Menu.setApplicationMenu(fakeMenu);
+     Menu.setApplicationMenu(fakeMenu);   // APP MENUU TODO
 
     return fakeMenu;
   }
@@ -54,7 +51,7 @@ export default class MenuBuilder {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
        const { x, y, misspelledWord, dictionarySuggestions } = props;
 
-      
+
 
     const menuTemplate = [];
 
@@ -174,7 +171,7 @@ export default class MenuBuilder {
 
     );
 
-        
+
       Menu.buildFromTemplate(menuTemplate).popup({
         window: this.mainWindow,
       });

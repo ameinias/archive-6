@@ -21,7 +21,7 @@ export function StaticSingleDefault ({ itemID }) {
 
   const item = useLiveQuery(() => {
     const numericID = Number(itemID)
-    console.log('edit access: ' + gameLogic.gameState.editAccess)
+    // console.log('edit access: ' + gameLogic.gameState.editAccess)
     if (!itemID || isNaN(numericID) || numericID <= 0) {
       console.warn('Invalid itemID for database query:', itemID)
       return null
@@ -42,7 +42,7 @@ export function StaticSingleDefault ({ itemID }) {
           await db.friends.update(Number(id), { unread: false })
           console.log(item.fauxID + ' was unread, now marked as read')
         } catch (error) {
-          console.error('Error marking as read:', error)
+          console.error('Error marking as  read:', error)
         }
       }
     }
@@ -53,7 +53,7 @@ export function StaticSingleDefault ({ itemID }) {
   useEffect(() => {
     if (!item) return
 
-    if (item.triggerEvent.length > 0 && item.triggerEvent) {
+    if (  item.triggerEvent) { //item.triggerEvent.length > 0
           gameLogic.triggerEvent(item.triggerEvent)
     }
   }, [item, id])

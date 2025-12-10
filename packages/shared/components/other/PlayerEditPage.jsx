@@ -493,7 +493,7 @@ export function PlayerAddEntryForm ({}) {
         </div>
       ) : (
         <div title='No Edit Access' className='row'>
-          <p className='center'>No edit access.</p>
+          <h2>No edit access.</h2>
           <div className='col-2'>
             <input
               className={`form-control match col`}
@@ -599,8 +599,8 @@ export function PlayerAddEntryForm ({}) {
       {gameState.editAccess && (
         <>
           <div className='row'>
-            <FormAssets.FormDate
-              label='Date:'
+            <FormAssets.FormTextBox
+              label='Display Date:'
               name='displayDate'
               className='form-control match'
               formValue={formValues.displayDate.toString()}

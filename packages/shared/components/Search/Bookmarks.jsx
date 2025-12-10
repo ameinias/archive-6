@@ -70,7 +70,7 @@ const Bookmarks = () => {
 
   return (
     <>
-      <h3>Bookmarks</h3>
+      <h2>Bookmarks</h2>
 
       <SearchResults results={results} />
     </>

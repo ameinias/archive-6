@@ -2,21 +2,21 @@ import React, { useRef, useState } from 'react';
 import LinkParser from "react-link-parser";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
-import { db, dbHelpers } from "@utils/db"; 
+import { db, dbHelpers } from "@utils/db";
 
-export const DescriptionEntry = ({string}) => {
+export const DescriptionEntry = ({string, className="default"}) => {
 
- 
+
       const allFriends = useLiveQuery(() => db.friends.toArray(), []);
-  
+
     const getEntryTitle = (entryId) => {
       if (!allFriends) return entryId;
       const entry = allFriends.find(f => f.id === Number(entryId));
       return entry?.fauxID || entryId;
     };
-  
 
-      //https://github.com/amir2mi/react-link-parser 
+      // Allows parsing of links and mentions
+      //https://github.com/amir2mi/react-link-parser
       const watchers = [
         // {
         //   type: "startsWith",
@@ -60,7 +60,8 @@ export const DescriptionEntry = ({string}) => {
 
 
   return (
-    <div className="description">
+    <div className={`description ${className}`}>
+
     <LinkParser watchers={watchers}>
             {string}
            </LinkParser>

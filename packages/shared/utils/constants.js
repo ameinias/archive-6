@@ -74,7 +74,7 @@ export const researcherIDs = [
     note: "socieity2-archivist-24-52.",
   },
 ];
-export const entryTemplate = ["default", "messed up"];
+
 
 export const editType = ["added", "migrated", "modified"];
 
@@ -135,6 +135,9 @@ export const hexHashes = [
     hexHashcode: "c7ce0a5377c89ab055a95ffb5caac583",
     note: "this hash wasnt used but I wanted an even number for vignette 2",
   },
+
+// V2
+
   {
     id: 10,
     name: "V2_1 - vignette 2 start",
@@ -145,13 +148,13 @@ export const hexHashes = [
     id: 11,
     name: "V2_2 - sqvs minutes",
     hexHashcode: "0e2805a97520b5e034c4114ae249574e",
-    note: "first unlocks of V2",
+
   },
     {
     id: 12,
     name: "V2_3 - illustration",
     hexHashcode: "d5f9b259a21092a89659aa16a9913737",
-    note: "first unlocks of V2",
+
   },
     {
     id: 13,             // following hashes need new codes
@@ -163,37 +166,37 @@ export const hexHashes = [
     id: 14,
     name: "V2_5 - doc likes to other entries ",
     hexHashcode: "ss0e2805a97520b5e034c4114ae249574e",
-    note: "first unlocks of V2",
+
   },
     {
     id: 15,           // final for now
-    name: "V2_6 - ",
+    name: "V2_6 - Nest and final entry",
     hexHashcode: "ssd5f9b259a21092a89659aa16a9913737",
-    note: "first unlocks of V2",
+
   },
     {
     id: 16,
     name: "V2_7 - mammel spine ",
     hexHashcode: "d66fdeb0b0f75cb7612686b9edbd07fa",
-    note: "first unlocks of V2",
+
   },
     {
     id: 17,           // final for now
     name: "V2_8 - ",
     hexHashcode: "sfsfsdfs",
-    note: "first unlocks of V2",
+
   },
     {
     id: 18,
     name: "V2_9 -  ",
     hexHashcode: "fff",
-    note: "first unlocks of V2",
+
   },
     {
     id: 19,           // final for now
     name: "V2_10 - endgame",
     hexHashcode: "sss",
-    note: "first unlocks of V2",
+
   },
 
 
@@ -204,25 +207,25 @@ export const hexHashes = [
     id: 100,           // standalone
     name: "just teeth",
     hexHashcode: "621f1cea8a2e201cbebdbf0358d5f577",
-    note: "first unlocks of V2",
+
   },
   {
     id: 101,           // standalone
     name: "just claws",
     hexHashcode: "fa0c24c601d8397f22edb7a13145cdee",
-    note: "first unlocks of V2",
+
   },
       {
     id: 52,           // move to a future update
     name: "future entries",
     hexHashcode: "c888008f79798950760159f80f485fbf",
-    note: "first unlocks of V2",
+
   },
       {
     id: 51,           // things players have made
     name: "player made",
     hexHashcode: "",
-    note: "first unlocks of V2",
+
   },
 
   {
@@ -251,6 +254,14 @@ export const badHashes = [
   "9f296b3481b3c8704f947a4110125a26",
   "36680042515dbee28e18cd17529c003d",
   "e5db0557296c615fa4ab2d2b0f0292da"
+
+];
+
+export const entryTemplate = [
+  "default",
+  "messed up",
+  "mean",
+  "trapped"
 
 ];
 

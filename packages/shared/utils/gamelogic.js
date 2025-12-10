@@ -284,7 +284,7 @@ export function GameLogic() {
   const processTrigger = (eventName) => {
     const handler = triggerRegistry[eventName];
     if (handler) {
-      console.log(`Executing trigger: ${eventName}`);
+      // console.log(`Executing trigger: ${eventName}`);
       handler();
     } else {
       console.warn(`Unknown trigger: ${eventName}`);

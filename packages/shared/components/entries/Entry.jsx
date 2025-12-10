@@ -44,7 +44,7 @@ const Entry = () => {
   // }, [entryData, id]);
 
  const CheckConditionals = () => {
-  console.log("checking conditionals for entry ID:", id);
+  // console.log("checking conditionals for entry ID:", id);
 
     if (!entryData) {
       return <div>No valid ID profvided.</div>;

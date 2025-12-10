@@ -17,6 +17,8 @@ import { researcherIDs } from '@utils/constants'
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
 import { BookMarkCheck } from '@components/parts/Badges'
 import DescriptionEntry from './DescriptionEntry'
+import { safeRender, safeDate } from '@utils/helper';
+
 
 export function StaticSubListItem ({ itemID, parentID, meta = false }) {
   const { id } = useParams() // get the id from the route
@@ -25,6 +27,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
   const [statusMessage, setStatusMessage] = useState('')
   const [freshUnread, setFreshUnread] = useState(true)
   const itemRef = useRef(null)
+  const [template, useTemplate] = useState('default');
 
   const item = useLiveQuery(async () => {
     if (!itemID) return null
@@ -38,6 +41,8 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
 
       console.log(item.fauxID + ' marking as read on unmount')
       db.subentries.update(Number(itemID), { unread: false })
+
+      CheckConditions(item);
     }
   }, [item, itemID]) // Runs cleanup when component unmounts
 
@@ -52,6 +57,21 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
 
   if (!item) {
     return <div>Loading...</div>
+  }
+
+  // eventually these might switch to entirely different returns, but for now
+  // they'll just change css attributes
+ const CheckConditions = (item) => {
+  if(item.template && item.template.length > 0){
+    useTemplate(item.template);
+
+    if(item.template === 'trapped' && item.unread && item.available){
+
+      db.subentries.update(Number(itemID), { displayDate: new Date().toLocaleString() });
+      console.log('trapped subentry accessed,   date set to now');
+
+    }
+  }
   }
 
   if (item.available === false) {
@@ -113,25 +133,25 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
             </div>
           </div>
         </div>
-        <div className='subentry-desc' style={{ whiteSpace: 'pre-wrap' }}>
-          <DescriptionEntry string={item.description} />
+        <div className='subentry-desc'  style={{ whiteSpace: 'pre-wrap' }}>
+          <DescriptionEntry string={item.description} className={item.template} />
           {item.mediaSub?.map((file, index) => (
             <div key={index}>
               <MediaThumbnail key={index} fileRef={file} maxWidth={'700px'} />
             </div>
+
           ))}
-          <span className='image-subinfo subinfo'>
-            {item.displayDate
-              ? typeof item.displayDate === 'string'
-                ? item.displayDate
-                : new Date(item.displayDate).toLocaleDateString()
-              : 'No date'}
-            -{' '}
+
+          <span className='image-subinfo subinfo '>
+            <span className="right-text">
+            <div>{safeDate(item.displayDate)}</div>
+           {' '} |{' '}
             {item.researcherID !== null && item.researcherID !== undefined
               ? researcherIDs.find(
                   researcher => researcher.id === parseInt(item.researcherID)
                 )?.name || 'Unknown'
               : 'Unknown User'}
+              </span>
           </span>
         </div>
       </div>
