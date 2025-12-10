@@ -17,11 +17,14 @@ export function MediaCountCell({ itemId, type }) {
 }
 
 export function ParentTitle({ parentID }) {
+
+
   const parentEntry = useLiveQuery(
-    () => db.friends.get(Number(parentID)),
+
+    () => db.isOpen() ? db.friends.get(Number(parentID)) : undefined,
     [parentID]
   );
-  
+
   return <>{parentEntry?.title || "Loading..."}</>;
 }
 
@@ -110,11 +113,11 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID, type);
 //     const loadIcon = async () => {
 //       try {
 //         setLoading(true);
-        
+
 //         // Check if we're in Electron
 //         if (window.electronAPI) {
 //           const result = await window.electronAPI.getMediaData(path);
-          
+
 //           if (!result.error) {
 //             const dataUrl = `data:${result.mimeType};base64,${result.data}`;
 //             setIconUrl(dataUrl);
@@ -126,7 +129,7 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID, type);
 //           // Web environment - use public path
 //           setIconUrl(`/assets/${path}`);
 //         }
-        
+
 //         setLoading(false);
 //       } catch (error) {
 //         console.error('Error loading icon:', error);
@@ -168,18 +171,18 @@ export function Spinner() {
 
 
 export const DataState = ({ refreshTrigger }) => {
-  const entryCount = useLiveQuery(() => 
+  const entryCount = useLiveQuery(() =>
     db.isOpen() ? db.friends.count() : 0
   );
 
-  const subentryCount = useLiveQuery(() => 
+  const subentryCount = useLiveQuery(() =>
     db.isOpen() ? db.subentries.count() : 0
   );
-  
+
   const availableCount = useLiveQuery(() =>
     db.isOpen() ? db.friends.filter((item) => item.available === true).count() : 0
   );
-  
+
   const availableSubCount = useLiveQuery(() =>
     db.isOpen() ? db.subentries.filter((item) => item.available === true).count() : 0
   );

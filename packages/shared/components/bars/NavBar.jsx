@@ -24,7 +24,8 @@ const NavBar = () => {
     isLoggedIn,
     setLoggedIn,
     setStatusMessage,
-    updateGameState
+    updateGameState,
+    setAdmin
   } = GameLogic()
 
   const isElectron = eventManager.isElectron
@@ -51,6 +52,7 @@ const NavBar = () => {
 
     const restartGame = async () => {
                 await newGame(gameState.defaultStartHash);
+                setAdmin(false);
 
             updateGameState("editAccess", false);
             updateGameState("endgameSequence", false);

@@ -136,6 +136,8 @@ export function GetAvailableSubCount(parentID) {
 // This can be called from multiple hooks
 const getEntryOrSubentry = async (itemId) => {
   if (!itemId) return null;
+     if (!db.isOpen()) return null;
+
   return (await db.friends.get(itemId)) || (await db.subentries.get(itemId));
 };
 
@@ -234,6 +236,7 @@ export function useReturnDatabase(itemId) {
 // this shold fix array issues
 export const setStartAvalability = async (startHash) => {
   console.log(" Setting start availability for hash:", startHash);
+     if (!db.isOpen()) return 0;
 
   try {
     // Get all entries
@@ -311,10 +314,11 @@ export const setStartAvalability = async (startHash) => {
 
 // picks between entries and wubentries and poulls out their respective media query.
 export function GetMediaCount(itemId, type) {
+
   return (
     useLiveQuery(async () => {
       if (!itemId) return 0;
-
+   if (!db.isOpen()) return 0;
       try {
         if (type === "entry") {
           const entry = await db.friends.get(itemId);
@@ -347,6 +351,7 @@ export function GetMediaCount(itemId, type) {
 export function useEntry(itemId) {
   return useLiveQuery(async () => {
     if (!itemId) return null;
+       if (!db.isOpen()) return null;
     return await db.friends.get(itemId);
   }, [itemId]);
 }
@@ -355,6 +360,7 @@ export function useEntry(itemId) {
 export function useSubentry(itemId) {
   return useLiveQuery(async () => {
     if (!itemId) return null;
+       if (!db.isOpen()) return null;
     return await db.subentries.get(itemId);
   }, [itemId]);
 }
@@ -372,6 +378,7 @@ export function getFileType(filename) {
 // In dbHooks.js - add this regular function (not a hook)
 export const updateEntryProperty = async (itemId, type, updates) => {
   if (!itemId) return false;
+     if (!db.isOpen()) return false;
 
   try {
     // Try to find which table the item is in

@@ -16,8 +16,11 @@ export function EditResearcher({ itemID, type }) {
   const [tempPropValue, setTempPropValue] = useState("");
   const { setStatusMessage } = GameLogic();
 
+
+
   const item = useLiveQuery(async () => {
     if (!itemID) return null;
+    if (!db.isOpen()) return null;
 
     let result;
     if (type === "subentry") {

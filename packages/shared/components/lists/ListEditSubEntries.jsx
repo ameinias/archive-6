@@ -45,9 +45,15 @@ export function ListEditSubEntries () {
     updateGameState('activeFilter', filter)
   }
 
+  // TODO - if subentries aren't lsiting corrently, i fucked up something here with the db.isOpen! error catching.
   const filteredFriends = useLiveQuery(() => {
+     if (!db.isOpen()) return [];
+
+
     const column = gameState?.sortColumn || 'title'
     const direction = gameState?.sortDirection || 'asc'
+
+      //  if (!db.isOpen()) return 0;
 
     return db.subentries.toArray().then(items => {
       // Apply hex filter first
@@ -97,7 +103,13 @@ export function ListEditSubEntries () {
       })
 
       return filtered
-    })
+  }).catch(error => {
+    console.log('Error fetching subentries:', error);
+    return []; // Return empty array on error
+  })
+
+
+
   }, [gameState?.sortColumn, gameState?.sortDirection, gameState?.activeFilter])
 
   const handleSort = column => {
