@@ -16,6 +16,8 @@ import { MediaEntryDisplay } from '@components/parts/Media/MediaEntryDisplay'
 export function StaticSingleDefault ({ itemID }) {
   const { id } = useParams() // get the id from the route
   const gameLogic = GameLogic()
+  const initialSeconds = 5; // Set the initial countdown time in seconds
+  const [seconds, setSeconds] = useState(initialSeconds);
 
   const item = useLiveQuery(() => {
     const numericID = Number(itemID)
@@ -49,13 +51,33 @@ export function StaticSingleDefault ({ itemID }) {
   }, [item, id])
 
   useEffect(() => {
-
-if (!item) return;
+    if (!item) return
 
     // if (item.triggerEvent.length > 0 && item.triggerEvent) {
     //       gameLogic.triggerEvent(item.triggerEvent)
     // }
   }, [item, id])
+
+    useEffect(() => {
+
+      if(gameLogic.gameState.endgameSequence){
+    // Exit condition for the timer
+    if (seconds <= 0) {
+      navigate(`/convo`);
+      return;
+    }
+
+    // Set up the interval
+    const intervalId = setInterval(() => {
+      setSeconds(prevSeconds => prevSeconds - 1);
+    }, 1000); // 1000 milliseconds = 1 second
+
+    // Cleanup function to clear the interval when the component unmounts
+    // or when the effect needs to re-run (e.g., if initialSeconds changed)
+    return () => clearInterval(intervalId);}
+  }, [seconds, initialSeconds]); // Re-run effect if seconds or initialSeconds changes
+
+
 
   const getEntryTitle = entryId => {
     if (!allFriends) return entryId
@@ -101,6 +123,7 @@ if (!item) return;
 
   return (
     <div className={`List ${gameLogic.gameState.level > 0 ? 'haunted' : ''}`}>
+      <h1>Time Remaining: {seconds}s</h1>
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
         <div className='entry-header'>
@@ -167,7 +190,7 @@ if (!item) return;
               ))}
           </div>
         )}
-        {gameLogic.gameState.editAccess && <>add record</>}
+        {/* {gameLogic.gameState.editAccess && <>add record</>} */}
       </div>
     </div>
   )

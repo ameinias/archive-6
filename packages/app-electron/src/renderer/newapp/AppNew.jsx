@@ -123,7 +123,7 @@ export default function App () {
           '/hex',
           '/logs',
           '/convo',
-          'player-add-entry'
+          '/player-add-entry'
         ]
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -158,7 +158,7 @@ export default function App () {
 
   return (
     <>
-        <div className={gameState.endgameSequence && 'lockScreen'}></div>
+        <div className={gameState.endgameSequence ? 'lockScreen':""}></div>
 
 
           {gameState.showDebug ? '' : (

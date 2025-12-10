@@ -19,18 +19,19 @@ import { useToggle } from '@hooks/hooks'
 import { UpdateFauxIDAndReorderSubs } from '@hooks/dbHooks'
 import { useLiveQuery } from 'dexie-react-hooks';
 import Webcam from "react-webcam";
+import { MediaThumbnail } from "@components/parts/Media/MediaThumbnail.jsx";
 
 // default variables - update as needed
 const defaultFauxIDStart = "OS";
-const defaultHex = 20;
+const defaultHex = 51;
 
 const defaultFormValue = {
   fauxID: "MX0000",
-  title: "Entry",
+  title: "New Entry",
   description: "",
   category: "Object",
   date: new Date(), // real date i added things
-  available: true,
+  available: false,
   media: [],
   template: "default",
   bookmark: false,
@@ -66,24 +67,138 @@ export function PlayerAddEntryForm({ }) {
   const [toggleAdminSection, setToggleAdminSection] = useToggle(false);
 
   // import functions
-  const { setStatusMessage, isAdmin, toggleAdmin, globalUser } = GameLogic();
+  const { setStatusMessage, isAdmin, toggleAdmin, globalUser, gameState, updateGameState } = GameLogic();
   const navigate = useNavigate();
- 
+  const [imgSrc, setImageSrc] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [mediaFiles, setMediaFiles] = useState([]);
+
   // const WebcamComponent = () => <Webcam />;
 
    const webcamRef = React.useRef(null);
-  const capture = React.useCallback(
-    () => {
-      const imageSrc = webcamRef.current.getScreenshot();
-    },
-    [webcamRef]
-  );
+
+   const capture = React.useCallback(
+  async () => {
+    const screenshot = webcamRef.current.getScreenshot();
+
+    if (!screenshot) {
+      console.error("No screenshot  captured");
+      return;
+    }
+
+    // Convert base64 data URL to File object
+    const response = await fetch(screenshot);
+    const blob = await response.blob();
+    const file = new File([blob], `webcam-${globalUser.username}-${Date.now()}.png`, {
+      type: 'image/png'
+    });
+
+    // Now pass the File object to handleImport (this will update formValues.media with the ID)
+    await handleImport(file);
+  },
+  [webcamRef]
+);
 
   const videoConstraints = {
   width: 720,
   height: 650,
   // facingMode: "user"
 };
+
+  const handleImport = async (file) => {
+    try {
+      if (!file) throw new Error(`Only files can be dropped here`);
+
+      //console.log('handleimport hit'); // needed this to hit process media path?! never mind, stopped working.
+
+      const maxSizeInMB = 500;
+      const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+      if (file.size > maxSizeInBytes) {
+        throw new Error(`File size must be less than ${maxSizeInMB}MB`);
+      }
+
+      //  Save file and get media ID
+      const mediaId = await processMediaToPath(file);
+
+      console.log("passed process media to path", mediaId);
+
+      // Update both files state (for display) and formValues.media (for database)
+      setFiles(prev => [...prev, mediaId]);
+      setFormValue((prevValues) => ({
+        ...prevValues,
+        media: [...prevValues.media, mediaId],
+      }));
+
+      // setImageSrc(newFiles);
+
+      console.log("File imported: ", file.name);
+      setStatusMessage(`File imported: ${file.name}`);
+    } catch (error) {
+      console.error("Import error:", error);
+      setStatusMessage(`Error importing file: ${error.message}`);
+    }
+  };
+
+
+  const processMediaToPath = async (file) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+
+      if (eventManager.isElectron) {
+        // Save file to disk
+
+        const result = await window.electronAPI.saveMediaFile(
+          file.name,
+          arrayBuffer,
+        );
+
+        if (!result.success) {
+          throw new Error(result.error);
+        } else {
+          console.log("File saved to disk at:", result.path);
+        }
+
+        //  Store path in database
+        const mediaId = await db.media.add({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          path: result.path, //  Store relative path
+          uploadedAt: new Date(),
+        });
+
+        console.log("File saved with ID:", mediaId, "at path:", result.path);
+        return mediaId; // Return the database ID
+      } else {
+        //  Web: Save to public/media folder or use a server endpoint
+        // For now, store as blob (or implement server upload)
+        const blob = new Blob([arrayBuffer], { type: file.type });
+
+        const mediaId = await db.media.add({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          blob: blob, // Web still uses blobs
+          uploadedAt: new Date(),
+        });
+
+        return mediaId;
+      }
+    } catch (error) {
+      console.error("Error saving media:", error);
+      throw error;
+    }
+  };
+
+    const removeFile = (index) => {
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
+    // Update the parent's mediaFiles array
+    if (mediaFiles) {
+      mediaFiles.length = 0; // Clear existing
+      mediaFiles.push(...newFiles); // Add remaining files
+    }
+  };
 
   // other const
   let savedID = 0;
@@ -137,26 +252,12 @@ export function PlayerAddEntryForm({ }) {
 
   //#region ---------------    CREATE ENTRY  ------------- */
   const FormToEntry = () => {
-    let hexHashValue = formValues.hexHash;
 
-    // convert array of strings to numbers
-    if (Array.isArray(hexHashValue)) {
-      hexHashValue = hexHashValue
-        .map((h) => parseInt(h, 10))
-        .filter((n) => !isNaN(n));
-
-      // save int as itself
-      if (hexHashValue.length === 1) {
-        hexHashValue = hexHashValue[0];
-      }
-    } else if (typeof hexHashValue === "string") {
-      hexHashValue = parseInt(hexHashValue, 10);
-    }
     //toLocaleDateString()
     return {
       title: formValues.title,
       fauxID: formValues.fauxID,
-      hexHash: hexHashValue,
+      hexHash: defaultHex,
       description: formValues.description,
       category: "Object",
       date: new Date(), // real date i added things
@@ -169,7 +270,7 @@ export function PlayerAddEntryForm({ }) {
       modEdit: globalUser.username,
       displayDate: formValues.displayDate,
       // lastEditedBy: parseInt(formValues.lastEditedBy, 10),
-      // triggerEvent: formValues.triggerEvent,
+      //  triggerEvent: endGameTimer,
     };
   };
 
@@ -211,6 +312,11 @@ export function PlayerAddEntryForm({ }) {
         setStatusMessage("Title is required");
         return;
       }
+                  if (formValues.media.length === 0) {
+              eventManager.showAlert('Artifact requires media documentation.');
+              return;
+            }
+
 
       // if fauxID has changed
       // find subentries with parent ID
@@ -255,13 +361,22 @@ export function PlayerAddEntryForm({ }) {
         return;
       }
 
+                        if (formValues.media.length === 0) {
+              eventManager.showAlert('Artifact requires media documentation.');
+              return;
+            }
+
       const id = await db.friends.add(FormToEntry());
 
       setStatusMessage(
         `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
       );
       loadConfirmEffect();
-      navigate(`/entry/${id}`); // <-- Reset Page to show subitems
+      // TODO - go to static entry first
+// navigate(`/convo`);
+updateGameState('endgameSequence', true);
+      navigate(`/entry/${id}`);
+
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
       setStatusMessage(`Failed to add ${title}: ${error}`);
@@ -388,17 +503,17 @@ export function PlayerAddEntryForm({ }) {
 
         <div className="Single">
           <div id="blink" className={` ${animate ? 'blink-save' : ''}`}></div>
-        {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
+        {/* {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>} */}
 
 
           {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
 
+       {gameState.editAccess ? (
+
         <div title ="entry title" className="row">
           <div className="col-2">
                                 <input
-                      className={`form-control ${
-                        !isIDValid ? "is-invalid" : ""
-                      } col`}
+                      className={`form-control match col`}
                       type="text"
                       name="fauxID"
                       placeholder="ID"
@@ -411,6 +526,7 @@ export function PlayerAddEntryForm({ }) {
           <div className="col">
           <FormAssets.FormTextBox
             label=""
+            className={`form-control match col`}
             name="title"
             formValue={formValues.title}
             readOnly={false}
@@ -418,168 +534,144 @@ export function PlayerAddEntryForm({ }) {
           />
         </div></div>
 
-<div title="metadata">
 
 
-          <div title=" Metadata">
-            <div className="row">
+) : (               <div title ="No Edit Access" className="row">
+          <div className="col-2">
+                                <input
+                      className={`form-control match col`}
+                      type="text"
+                      name="fauxID"
+                      placeholder="ID"
+                      value={formValues.fauxID}
+                      onChange={handleIDChange}
+                      disabled={true}
+                    />
 
-
-              {/* <div className="col-6">
-                <FormAssets.FormDropDown
-                  name="category"
-                  label="Type:"
-                  multiple={false}
-                  formValue={formValues.category}
-                  readOnly={false}
-                  onChange={handleChange}
-                  options={categories.map((sub, i) => (
-                    <option key={i} value={sub}>
-                      {sub}
-                    </option>
-                  ))}
-                />
-              </div> */}
-            </div>
-            <div className="row">
-              {/* <div className="col" title="date item was modified / migrated">
-                <FormAssets.FormDate
-                  label="Last Modified"
-                  name="modEditDate"
-                  formValue={formValues.modEditDate.toString()}
-                   onChange={handleChange}
-
-                />
-              </div> */}
-              <div className="col" title=" Date written on log">
-                <FormAssets.FormDate
-                  label="Date:"
-                  name="displayDate"
-                  formValue={formValues.displayDate.toString()}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="row">
-              {/* <div className="col">
-                <FormAssets.FormDropDown
-                  label="Edit Type"
-                  name="modEdit"
-                  formValue={formValues.modEdit}
-                  onChange={handleChange}
-                  options={editType.map((sub, i) => (
-                    <option key={i} value={sub}>
-                      {sub}
-                    </option>
-                  ))}
-                />
-              </div>
-              <div className="col">
-                <FormAssets.FormDropDown
-                  label="Last Edit By"
-                  name="lastEditedBy"
-                  formValue={formValues.lastEditedBy}
-                  onChange={handleChange}
-                  options={researcherIDs.map((sub, i) => (
-                    <option key={i} value={sub.id}>
-                      {sub.name}
-                    </option>
-                  ))}
-                />
-              </div>*/}
-            </div>
-          </div>
-
-</div>
-
-        <div title="Description" className="row">
-          {" "}
-          {/*// ------ Description  ------*/}
-          <textarea
-            rows={4}
-            className="form-control"
-            name="description"
-            placeholder="Description"
-            value={formValues.description}
+                    </div>
+          <div className="col">
+          <FormAssets.FormTextBox
+            label=""
+            name="title"
+            formValue={formValues.title}
+className={`form-control match col`}
             onChange={handleChange}
+            disabled={true}
           />
-        </div>
+        </div></div>)}
 
-        <div title="media" className="row">
+
+
+
+
+        <div  className="row">
           {" "}
           {/*// ------ Media   ------*/}
-          {/* <MediaUpload mediaFiles={formValues.media} /> */}
-              <>  
+
+{/* 640 x 480 */}
+
+
+
+
+    <div className="row filter-buttons">
       <Webcam
         audio={false}
-        height={720}
+        height={360}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        width={1280}
+        width={640}
         videoConstraints={videoConstraints}
       />
-      <button onClick={capture}>Capture photo</button>
-    </>
+      </div>
+       {gameState.editAccess ? (
+        <div className="row center" title="No Edit Access">
+         <button onClick={capture} disabled={false} className="capture-button btn-save-add-item button " title="No Edit Access">capture artifact</button>
+</div>
+) : (        <div className="row center" >
+         <button onClick={capture} disabled={true} className="capture-button btn-save-add-item button ">Capture Artifact</button>
+</div>)}
+
+        </div>
+                {files.length === 0 ? (
+        <></>
+      ) : (
+        <div className="subentry-add-list">
+          {files.map((file, index) => (
+            <div className="media-thumbnail" key={index}>
+              <MediaThumbnail
+                key={index}
+                fileRef={file}
+                maxWidth={"700px"}
+                onRemove={removeFile}
+                isThumb={true}
+
+              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "5px",
+                }}
+              >
+                <Button
+                  className="image-edit-button"
+                  onClick={() => removeFile(index)}
+                >
+                  x
+                </Button>
+                {/*
+              Adding a rename button is not a good use of my time right now.
+              <Button
+                className="image-edit-button"
+                onClick={() => renameFile(index)}
+
+              >
+                rename
+              </Button> */}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+{gameState.editAccess && (
+
+            <>
+              <div className="row">
+                  <FormAssets.FormDate
+                    label="Date:"
+                    name="displayDate"
+                    className="form-control match"
+                    formValue={formValues.displayDate.toString()}
+                    onChange={handleChange}
+                  />
+              </div>
+
+                      <div title="Description" className="row">
+                        {" "}
+                        {/*// ------ Description  ------*/}
+                        <textarea
+              rows={4}
+              className="form-control "
+              name="description"
+              placeholder="Description"
+              value={formValues.description}
+              onChange={handleChange}
+
+                        />
+                      </div>
+           <div className="save-buttons">
+              <button
+                className="btn-save-add-item"
+                onClick={addEntry}
+                disabled={!isFormValid}
+              >
+                Add
+              </button>
+            </div>
+      </>
+          ) }
         </div>
 
-
-{/* <div title="subentries" key={dbKey}>
-
-        {!isSubEntry && itemID != "new" && (
-          <div className="row">
-            <ListSubEntries itemID={itemID} />
-          </div>
-        ) }
-</div> */}
-        <div className="save-buttons">
-          {" "}
-          {/*// ------ Save Buttons  ------*/}
-          {isNewEntry ? (
-            <button
-              className="btn-save-add-item"
-              onClick={addEntry}
-              disabled={!isFormValid}
-            >
-              Add
-            </button>
-          ) : (
-            <>
-              {" "}
-              <div className="button-row">
-                {" "}
-                <button
-                  className="btn-save-add-item btn-taller"
-                  onClick={updateEntry}
-                  disabled={!isFormValid}
-                >
-                  Save
-                </button>{" "}
-                {/* <button
-                  className="btn-save-add-item btn-taller"
-                  onClick={handleRenumberSubs}
-                  disabled={!isFormValid}
-                >
-                  Update IDs
-                </button>{" "}
-                <button className="remove-button  btn-taller" onClick={removeCurrentEntry}>
-                  Remove{" "}
-                </button> */}
-              </div>
-            </>
-          )}
-
-        {/* gave up on this feature for now */}
-        {/* <div className="save-buttons">
-              <Button className="" onClick={saveToTemplate}>
-                Save to Template{" "}
-              </Button>
-
-               <Button className="" onClick={updateFromTemplate}>
-                Update From Template{" "}
-              </Button>
-
-              </div> */}
-      </div>
-  </div>
   );
 }

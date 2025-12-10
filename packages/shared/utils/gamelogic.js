@@ -42,7 +42,8 @@ let globalGameState = {
   subEntryFrontPage: false,
   activeFilter: "all",
   endgameSequence: false,
-  showDebug: false
+  showDebug: false,
+  endGameTimer: false
 };
 let globalStatus = "";
 
@@ -97,6 +98,8 @@ export const updateGameState = (variableName, state) => {
   console.log(`Updated property: ${variableName}`);
   gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
 };
+
+
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);
@@ -272,6 +275,9 @@ export function GameLogic() {
     'disable-endgameSequence': () => updateGameState('endgameSequence', false),
     'showDebug': () => updateGameState('showDebug', true),
     'hideDebug': () => updateGameState('showDebug', false),
+    'endGameTimer': () => updateGameState('endGameTimer', true),
+    'endGameTimerReset': () => updateGameState('endGameTimer', false),
+
     // Add more triggers as needed
   };
 

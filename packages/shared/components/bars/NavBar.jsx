@@ -45,7 +45,7 @@ const NavBar = () => {
 
   const testio = async () => {
     // UpdateDBCount();
-    updateGameState('editAccess', !gameState.endgameSequence)
+    updateGameState('editAccess', !gameState.editAccess)
     console.log('testio done')
   }
 
@@ -104,13 +104,13 @@ const NavBar = () => {
         {' '}
         <Link to={!gameState.endgameSequence ? '/search' : null}>Search</Link>
       </li>{' '}
-      {gameState.editAccess && (
+      {/* {gameState.editAccess && ( */}
         <li role='menuitem' className='attention' tabIndex='0' aria-haspopup='true'>
            <Link to={!gameState.endgameSequence ? '/player-add-entry' : null}>
             Add Entry
           </Link>
         </li>
-      )}
+       {/* )} */}
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
         <Link to={!gameState.endgameSequence ? '/bookmarks' : null}>
           Bookmarks
@@ -150,12 +150,7 @@ const NavBar = () => {
               </li>
             </div>
           )}
-          <li>
-            {' '}
-            <button className='' onClick={testio}>
-              Test Something
-            </button>
-          </li>
+
           {/* <li role='menuitem'>
                 <Link to='/convo'>Convo</Link>
               </li> */}
@@ -170,6 +165,13 @@ const NavBar = () => {
       )}
       {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
                 <Link  onClick={FauxLogOut }>FauxLogOut</Link></li> */}
+
+                          <li>
+            {' '}
+            <button className='' onClick={testio}>
+              Test Something
+            </button>
+          </li>
     </ul>
     //     </div>
 

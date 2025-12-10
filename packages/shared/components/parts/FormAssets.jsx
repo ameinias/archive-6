@@ -11,8 +11,10 @@ export function FormTextBox({
     name = "textInput",
     formValue = "",
     readOnly = false,
+    disabled = false,
     onChange = () => {},
-    placeholder = ""
+    placeholder = "",
+    className="form-control"
 }) {
 
     return (
@@ -24,8 +26,10 @@ export function FormTextBox({
                 placeholder={placeholder}
                 value={formValue}
                 onChange={onChange}
-                className="form-control"
-                readOnly={readOnly}/>
+                className={className}
+                readOnly={readOnly}
+                disabled={disabled}
+                />
         </div>
     );
 }
@@ -36,7 +40,8 @@ export function FormDate({
     formValue = "",
     readOnly = false,
     onChange = () => {},
-    placeholder = ""
+    placeholder = "",
+    className="form-control"
 }) {
 
         const handleDateChange = (date) => {
@@ -64,11 +69,11 @@ export function FormDate({
                 readOnly={readOnly}
                 /> */}
 
-                <DatePicker 
+                <DatePicker
 
                 selected={formValue ? new Date(formValue) : null}
                 name={name}
-                className="form-control col"
+                className={className}
                 placeholder={placeholder}
                 // value={formValue}
                 onChange={handleDateChange}
@@ -76,7 +81,7 @@ export function FormDate({
                    dateFormat="yyyy-MM-dd"  // Show format
                 showYearDropdown         // Allow year selection
                 showMonthDropdown
-                      
+
 />
 
         </div>

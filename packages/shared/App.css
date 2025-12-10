@@ -629,6 +629,27 @@ button:not(:disabled):not(:hover) {
     transition: border-color 0.2s linear;
 }
 
+.capture-button{
+font-size:15px;
+width:170px;
+height:50px;
+margin:auto;
+display:block;
+
+font-variant: small-caps;
+}
+
+/* .capture-button:not(:hover):before{
+content:"Capture Artifact";
+}
+
+.capture-button:hover:before {
+  content:"No Edit Access";
+}
+
+.capture-button:after       { content:'Hello'!important; }
+.capture-button:hover:after { content:'World'; } */
+
 .bookmark-btn
 {
 background-color: transparent;
@@ -1096,4 +1117,23 @@ input[type=email], input[type=number], input[type=password], input[type=text], i
     font: var(--w7-font);
     padding: 3px 4px 5px;
     transition: border-color .5s;
+}
+
+.match{
+      background: var(--w7-surface);
+    border-color: #afafaf;
+    box-shadow: inset 0 0 0 1px #fff;
+    height: 35px!important;
+    background-color: #fff;
+    border-color: #abadb3 #dbdfe6 #e3e9ef #e2e3ea;
+    border-radius: 2px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    font: var(--w7-font);
+    padding: 3px 4px 5px;
+    transition: border-color .5s;
+    font-size: 12px;
+
+
 }
