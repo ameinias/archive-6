@@ -545,7 +545,7 @@ export function AddSubEntryForm ({
             ? researcherIDs.find(
                 researcher =>
                   researcher.id === parseInt(formValues.lastEditedBy)
-              )?.name || 'Unknown'
+              )?.devName || 'Unknown'
             : 'Unknown User'}
         </span>
       </div>
@@ -693,7 +693,7 @@ export function AddSubEntryForm ({
                   onChange={handleChange}
                   options={researcherIDs.map((sub, i) => (
                     <option key={i} value={sub.id}>
-                      {sub.name}
+                      {sub.devName}
                     </option>
                   ))}
                 />

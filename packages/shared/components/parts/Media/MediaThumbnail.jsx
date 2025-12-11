@@ -3,7 +3,8 @@ import Button from "react-bootstrap/Button";
 import { db } from "@utils/db";
 import { eventManager } from "@utils/events";
 import { Link } from "react-router-dom";
-import { Icon } from "../Badges";
+// import { Icon } from "../Badges";
+// TODO these need to be fixed for web version
 import audioIcon from "@assets/icons/audio.png";
 import videoIcon from "@assets/icons/film.png";
 import pdfIcon from "@assets/icons/docs.png";

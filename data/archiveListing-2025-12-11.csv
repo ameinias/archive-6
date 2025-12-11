@@ -1,0 +1,75 @@
+index,ID,title,RecordType,hexHashCodes,aRecordType
+,MX0000,Template,Object,cefb5cdb392e7f6521d82da09d939102,
+40,MX6725,1927 Remington Standard Typewriter,Object,ff887d1e66aac9cec2dbce8790a07576,
+41,MX6726,green ceramic bowl ,Object,cefb5cdb392e7f6521d82da09d939102,
+42,MX6727,oracle machine,Document,2800044c8003e9eec1be25d88682231c,
+43,MX6728,oracle machine 2,Document,ff887d1e66aac9cec2dbce8790a07576,
+44,MX6729,mining cores - large,Object,e5db0557296c615fa4ab2d2b0f0292da,
+45,MX6730,Mold,Object,2ee3a8bd9d4bb57643c38635f3fbdb50,
+46,MX6731,QVS core sample fragments,Object,2ee3a8bd9d4bb57643c38635f3fbdb50,
+47,MX6732,Coral,Object,e5db0557296c615fa4ab2d2b0f0292da,
+48,MX6733,three stones - grey and green,Object,e5db0557296c615fa4ab2d2b0f0292da,
+49,MX6734,stone carved statue,Object,2ee3a8bd9d4bb57643c38635f3fbdb50,
+50,MX7359,Obituary of Emily Mildred Hankal,Document,63a5b8ab25ece1f3657cf4af94a2019d,
+58,MX7365,navigation and edit test,Object,cefb5cdb392e7f6521d82da09d939102,
+59,MX736988,Entry - i am updated,Object,cefb5cdb392e7f6521d82da09d939102,
+60,MX1366,77 a new entry thing from JSON,Object,cefb5cdb392e7f6521d82da09d939102,
+61,MX1564,88 a new entry thing from JSON,Object,cefb5cdb392e7f6521d82da09d939102,
+62,QA0698,Plant #1 (has link),Object,1145cafae869ca2fbe4bf8ac92ecb62b,
+63,QA0543,Plant #2,Object,1145cafae869ca2fbe4bf8ac92ecb62b,
+64,QA0132,Plant #3,Object,d5f9b259a21092a89659aa16a9913737,
+65,QA0343,final leaf,Object,ssd5f9b259a21092a89659aa16a9913737,
+66,MX7369,oracle machine #3,Object,c888008f79798950760159f80f485fbf,
+67,QA3694,black trumpet mushroom,Object,0e2805a97520b5e034c4114ae249574e,
+69,QA0960,stick #1,Object,1145cafae869ca2fbe4bf8ac92ecb62b,
+70,QA0232,stick #2,Object,0e2805a97520b5e034c4114ae249574e,
+71,QA3994,Language rising from the earth woodcut illustration 1700s,Object,c888008f79798950760159f80f485fbf,
+72,QA0924,QVS Minutes 1927,Document,0e2805a97520b5e034c4114ae249574e,
+73,QA1100,fibula ,Object,ss0e2805a97520b5e034c4114ae249574e,
+83,QA1043,Claws,Object,d5f9b259a21092a89659aa16a9913737,
+84,QA1102,teeth,Object,d5f9b259a21092a89659aa16a9913737,
+85,QA2396,"spinal column, red fox",Object,d66fdeb0b0f75cb7612686b9edbd07fa,
+86,QA3952,Jar,Object,1145cafae869ca2fbe4bf8ac92ecb62b,
+87,OS1000,Evidence of something,Object,,
+88,QA3995,pelvis ,Object,e87931718ef0f14e1312b8c8f3bc1df9,
+44,MX6727-1,original artifact lost,,1a950780e461e4d3d694b9f11858dbf6,TextLog
+45,MX6725-1,location,,e5db0557296c615fa4ab2d2b0f0292da,MetaData
+46,MX6725-2,source,,e5db0557296c615fa4ab2d2b0f0292da,MetaData
+47,MX6725-3,date-submitted,,e5db0557296c615fa4ab2d2b0f0292da,MetaData
+48,MX6725-4,,,2ee3a8bd9d4bb57643c38635f3fbdb50,TextLog
+49,MX6725-5,,,e5db0557296c615fa4ab2d2b0f0292da,TextLog
+50,MX6729-1,location,,e5db0557296c615fa4ab2d2b0f0292da,MetaData
+51,MX6729-2,accrual-method,,e5db0557296c615fa4ab2d2b0f0292da,TextLog
+52,MX6729-3,,,ff887d1e66aac9cec2dbce8790a07576,TextLog
+53,MX6729-4,,,ff887d1e66aac9cec2dbce8790a07576,TextLog
+54,MX6729-5,lost records,,e5db0557296c615fa4ab2d2b0f0292da,TextLog
+55,MX6731-1,Chemical analysis lab report ,,1a950780e461e4d3d694b9f11858dbf6,MediaItem
+56,MX6731-2,dead end,,2ee3a8bd9d4bb57643c38635f3fbdb50,TextLog
+57,MX6731-3,illiterate historian?,,2ee3a8bd9d4bb57643c38635f3fbdb50,TextLog
+58,MX6730-1,,,d8a346fd2f0d08779bff76102f7b32fd,TextLog
+59,MX6733-1,stone with copper content,,e5db0557296c615fa4ab2d2b0f0292da,MediaItem
+60,MX6733-2,stones with less copper content,,e5db0557296c615fa4ab2d2b0f0292da,MediaItem
+61,MX6731-4,,,d8a346fd2f0d08779bff76102f7b32fd,TextLog
+62,MX6734-1,,,1a950780e461e4d3d694b9f11858dbf6,TextLog
+63,MX6734-2,,,1a950780e461e4d3d694b9f11858dbf6,TextLog
+64,MX6734-3,,,1a950780e461e4d3d694b9f11858dbf6,TextLog
+65,MX6734-4,,,1a950780e461e4d3d694b9f11858dbf6,TextLog
+66,MX6727-2,[lost artifacts],,2800044c8003e9eec1be25d88682231c,TextLog
+67,MX6727-3,,,d8a346fd2f0d08779bff76102f7b32fd,TextLog
+68,MX6727-4,,,63a5b8ab25ece1f3657cf4af94a2019d,TextLog
+69,MX7359-1,Media lost,,63a5b8ab25ece1f3657cf4af94a2019d,TextLog
+70,MX7359-2,,,63a5b8ab25ece1f3657cf4af94a2019d,TextLog
+71,MX7359-3,finished,,c7ce0a5377c89ab055a95ffb5caac583,TextLog
+85,MX7365-1,navigation and function test,,cefb5cdb392e7f6521d82da09d939102,TextLog
+86,QA0698-1,,,0e2805a97520b5e034c4114ae249574e,TextLog
+87,QA0698-2,related item,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+95,QA0132-1,,,ss1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+97,QA0924-1,,,ss0e2805a97520b5e034c4114ae249574e,TextLog
+98,QA3694-1,,,ss0e2805a97520b5e034c4114ae249574e,TextLog
+99,QA0343-1,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+100,QA0343-2,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+101,QA0343-3,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+102,QA0343-4,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+103,QA0343-5,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+104,QA3694-2,,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+105,QA0924-2,,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog

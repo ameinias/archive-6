@@ -362,9 +362,9 @@ function ImportExport() {
 
       // Map field names to display names for CSV headers
       const fieldDisplayNames = {
-        fauxID: "index",
+        id: "index",
         fauxID: "ID",
-        fauxID: "title",
+        title: "title",
         category: "RecordType",
         subCategory: "aRecordType",
         hexHashCodes: "hexHashCodes",

@@ -8,7 +8,7 @@ import {
 import "dexie-export-import";
 import { setStartAvalability } from "../hooks/dbHooks.js";
 import { eventManager } from "@utils/events";
-import { globalUser, updateGameState } from "./gamelogic.js";
+import {  updateGameState } from "./gamelogic.js";
 
 export const db = new Dexie("gb-current");
 

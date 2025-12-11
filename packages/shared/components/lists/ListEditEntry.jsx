@@ -19,7 +19,7 @@ import {
 } from '@components/parts/Badges'
 import { eventManager } from '@utils/events'
 
-export function ListEditEntry () {
+export function EntryList () {
   // TODO: Clean these up. I think a lot of these aren't needed anymore.
 
   //#region     ---------------    CONST  ------------------ */

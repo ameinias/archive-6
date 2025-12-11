@@ -251,6 +251,7 @@ const createWindow = async () => {
     height: windowState.height || 555,
     x: windowState.x,
     y: windowState.y,
+      autoHideMenuBar: true,
     icon: getAssetPath('icons/folder.png'),
     webPreferences: {
       contextIsolation: true,

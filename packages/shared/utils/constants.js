@@ -54,24 +54,37 @@ export const researcherIDs = [
   {
     id: 1,
     name: "RM",
+    devName: "RM",
     note: "For scenes that are available at the beginning of the game.",
   },
-  { id: 2, name: "EQ", note: "For the first unlockable scenes." },
+  { id: 2, name: "EQ",
+devName: "EQ"
+    , note: "For the first unlockable scenes." },
   {
     id: 3,
-    name: "programmer96-2001",
+    name: "xxx_freddie",
+    devName:"programmer96-2001",
     note: "ony works atuniversity 96 97 then from home ",
   },
-  { id: 4, name: "historian73-82s", note: "historian73-82s" },
+  { id: 4, name:"rm.Snarley",
+    devName: "historian73-82s", note: "historian73-82s" },
   {
     id: 5,
-    name: "society1-archivist-10-23",
+    name: "Thomas Vinfield",
+    devName: "society1-archivist-10-23",
     note: "society1-archivist-10-23.",
   },
   {
     id: 6,
-    name: "socieity2-archivist-24-52",
+    name: "E. R. Thompson",
+    devName: "socieity2-archivist-24-52",
     note: "socieity2-archivist-24-52.",
+  },
+  {
+    id: 7,
+    name: "archive-volunteer1",
+    devName: "archive-volunteer1",
+    note: "sopmeone who works at the society",
   },
 ];
 
@@ -157,7 +170,7 @@ export const hexHashes = [
 
   },
     {
-    id: 13,             // following hashes need new codes
+    id: 13,
     name: "V2_4 -  ",
     hexHashcode: "ss1145cafae869ca2fbe4bf8ac92ecb62b",
     note: "start of vignette 2",
@@ -182,12 +195,12 @@ export const hexHashes = [
   },
     {
     id: 17,           // final for now
-    name: "V2_8 - ",
-    hexHashcode: "sfsfsdfs",
+    name: "V2_8 - just the pelvis",
+    hexHashcode: "e87931718ef0f14e1312b8c8f3bc1df9",
 
   },
     {
-    id: 18,
+    id: 18,    // following hashes need new codes
     name: "V2_9 -  ",
     hexHashcode: "fff",
 
