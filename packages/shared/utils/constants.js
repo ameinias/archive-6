@@ -70,14 +70,14 @@ devName: "EQ"
     devName: "historian73-82s", note: "historian73-82s" },
   {
     id: 5,
-    name: "Thomas Vinfield",
-    devName: "society1-archivist-10-23",
+    name: "Patternson Vinfield",
+    devName: "patterson-archivist-10-23",
     note: "society1-archivist-10-23.",
   },
   {
     id: 6,
-    name: "E. R. Thompson",
-    devName: "socieity2-archivist-24-52",
+    name: "Linus Thompson",
+    devName: "linus-archivist-24-52",
     note: "socieity2-archivist-24-52.",
   },
   {
@@ -85,6 +85,18 @@ devName: "EQ"
     name: "archive-volunteer1",
     devName: "archive-volunteer1",
     note: "sopmeone who works at the society",
+  },
+    {
+    id: 8,
+    name: "Violet Thompson",
+    devName: "violet-archivist-24-52",
+    note: "socieity2-archivist-24-52.",
+  },
+      {
+    id: 9,
+    name: "R Signifeild",
+    devName: "rebecca-archivist-24-52",
+    note: "socieity2-archivist-24-52.",
   },
 ];
 
@@ -202,13 +214,13 @@ export const hexHashes = [
     {
     id: 18,    // following hashes need new codes
     name: "V2_9 -  ",
-    hexHashcode: "fff",
+    hexHashcode: "377c89ab055a9377c89a77c89ab055a9",
 
   },
     {
     id: 19,           // final for now
     name: "V2_10 - endgame",
-    hexHashcode: "sss",
+    hexHashcode: "6fdeb0b92a89659aaca2fbe41",
 
   },
 
