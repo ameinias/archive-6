@@ -732,19 +732,21 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
     // app data path
     const APP_DATA_PATH = path.join(app.getPath('userData'), 'telemetrics');
     const fullPath = path.join(
-      APP_DATA_PATH
+      APP_DATA_PATH, relativePath
 
     );
 
+    //     const fullPath = path.join(appDataPath, relativePath);
+
         // Create appdata  directories if they don't exist
     const dir = path.dirname(fullPath);
-    console.log('telemetrics dir:', dir);
+
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
     fs.writeFileSync(fullPath, content, 'utf8');
-
+    console.log('telemetrics dir now:', fullPath);
     return fullPath;
   } catch (error) {
     console.error('Error saving asset file:', error);

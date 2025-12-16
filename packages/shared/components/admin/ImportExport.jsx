@@ -8,6 +8,7 @@ import {
   dbHelpers,
   newGameWithWarning,
   saveAsDefaultDatabase,
+  exportTelemetrisToAppData
 } from "@utils/db"; // import the database
 import "dexie-export-import"; // Import the export/import addon
 import { GameLogic } from "@utils/gamelogic";
@@ -233,6 +234,9 @@ function ImportExport() {
   };
 
 
+  const saveTelemetrics = () => {
+    exportTelemetrisToAppData();
+  }
 
 
    const handleHashlookup = async () => {
@@ -618,6 +622,9 @@ console.log("Tables:", importMeta.data.tables.map(t =>
               <div className="col">
                 <button className="db-btn" onClick={saveAsDefaultDatabase}>
                   Save as Default Database
+                </button>
+                                <button className="db-btn" onClick={saveTelemetrics}>
+                  Save Telemetrics
                 </button>
 
                 <button className="db-btn" onClick={handleExport}>
