@@ -142,13 +142,15 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
 
           ))}
 
+ 
+
           <span className='image-subinfo subinfo '>
             <span className="right-text">
             <div>{safeDate(item.displayDate)}</div>
-           {' '} |{' '}
-            {item.researcherID !== null && item.researcherID !== undefined
+           {' '} |{' '} 
+            {item.lastEditedBy !== null && item.lastEditedBy !== undefined
               ? researcherIDs.find(
-                  researcher => researcher.id === parseInt(item.researcherID)
+                  researcher => researcher.id === parseInt(item.lastEditedBy)
                 )?.name || 'Unknown'
               : 'Unknown User'}
               </span>
