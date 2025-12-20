@@ -95,8 +95,8 @@ Missed a few version numbers here?
 
 <a href="https://www.flaticon.com/free-icons/code" title="code icons">Code icons created by HideMaru - Flaticon</a>
 <br>
-
-
+<a href="https://www.flaticon.com/free-icons/close" title="close icons">Close icons created by Bankume - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/hide" title="hide icons">Hide icons created by gravisio - Flaticon</a>
 
 ## Starting Development
 

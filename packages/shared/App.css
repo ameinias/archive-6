@@ -1275,3 +1275,19 @@ input[type=email], input[type=number], input[type=password], input[type=text], i
     font-size: 0.7rem;
     text-align: center;
 }
+
+.auth-icon-password-eye{
+  width: 25px;
+  height: 10px;
+  padding:0;
+  min-width:10px;
+
+}
+
+.auth-icon-password-eye img{
+  width: 10px;
+  height: 10px;
+  padding:0;
+  min-width:10px;
+
+}
