@@ -30,6 +30,7 @@ import Bookmarks from '@components/search/Bookmarks';
 import Media from '@components/search/Media';
 import  HexList  from '@components/search/HexList';
 import  Logs  from '@components/search/Logs';
+import { TimeLine } from '@components/lists/TimeLine';
 
 //Tools
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -43,6 +44,7 @@ import StatusBar from '@components/bars/StatusBar';
 // Endgame pages
 import { PlayerAddEntryForm } from '@components/other/PlayerEditPage';
 import Conversation from '@components/other/Conversation';
+import TestComp from '../testcomp';
 
 
 
@@ -137,7 +139,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/hex" element={<HexList />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
-              {/* <Route path="/test" element={<DescriptionEntry />} /> */}
+              <Route path="/test" element={<TestComp />} />
 
 {/* PlayerAdmin   ------------------------------------------------------------ */}
               <Route path="/register" element={<Register />} />
@@ -145,6 +147,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/user-profile" element={<UserProfile />} />
                <Route path="/hashimport" element={<HashImport />} />
                <Route path="/bad-gateway" element={<BadGateway />} />
+               <Route path="/timeline" element={<TimeLine />} />
   {/* Endgame Pages   ------------------------------------------------------------ */}
               <Route path="/player-add-entry/" element={<PlayerAddEntryForm />} />
               <Route path="/convo/" element={<Conversation />} />

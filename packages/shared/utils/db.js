@@ -103,6 +103,16 @@ db.version(4.9).stores({
   media: "++id, name, type, size, path, uploadedAt",
 });
 
+//add entryRef
+db.version(5.0).stores({
+  gamedata: "expVersion, uploadedAt, sessionStart",
+  friends:
+    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef",
+  subentries:
+    "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef",
+  media: "++id, name, type, size, path, uploadedAt",
+});
+
 //#endregion
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js

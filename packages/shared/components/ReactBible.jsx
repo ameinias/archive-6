@@ -102,6 +102,8 @@ const ComponentName = () => {
       <Button className="image-edit-button" onClick={() => removeFile(index)}>
         x
       </Button>
+
+      <div className="tab"></div>
     </div>
   );
 };

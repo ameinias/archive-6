@@ -10,16 +10,16 @@ import * as FormAssets from '@components/parts/FormAssets'
 import { researcherIDs } from '@utils/constants'
 import * as EditableFields from '@components/parts/EditableFields'
 import { FilterList, applyHexFilter } from '@components/parts/ListingComponent'
-import { safeRender, safeDate } from '@utils/helper';
 
 import {
   MediaCountCell,
   SubentryCountCell,
-  AvailableCell
+  AvailableCell,
+  ParentTitle
 } from '@components/parts/Badges'
 import { eventManager } from '@utils/events'
 
-export function EntryList () {
+export function TimeLine () {
   // TODO: Clean these up. I think a lot of these aren't needed anymore.
 
   //#region     ---------------    CONST  ------------------ */
@@ -45,28 +45,76 @@ export function EntryList () {
     updateGameState('activeFilter', filter)
   }
 
+  // TODO - if subentries aren't lsiting corrently, i fucked up something here with the db.isOpen! error catching.
   const filteredFriends = useLiveQuery(() => {
+     if (!db.isOpen()) return [];
+
+         let tempItems = [];
+    let nextID = 0;
+
+
     const column = gameState?.sortColumn || 'title'
     const direction = gameState?.sortDirection || 'asc'
 
-    return db.friends.toArray().then(items => {
-      // Apply hex filter first - only the items that match the filter are shown
-      let filtered = applyHexFilter(items, gameState?.activeFilter)
 
-      console.log('type: entry, column:', column, 'direction:', direction)
+          const foundSubItems = subentries; 
+
+    
+      if (foundSubItems) {
+      for (const item of foundSubItems) {
+        tempItems.push({
+          id: nextID,
+          origin: item.id,
+          fauxID: item.fauxID,
+          parentId: item.parentId,       
+          title: item.title,
+          date: item.date,
+          displayDate: item.displayDate,   
+          type: 'subentry',             
+          description: item.description,
+          devNotes: item.devNotes,
+          hexHash: item.hexHash,           
+          lastEditedBy: item.lastEditedBy, 
+          triggerEvent: item.triggerEvent, 
+          available: item.available       
+        });
+        nextID = nextID + 1;
+      }
+    }
+
+    // Add main entries too
+    if (friends) {
+      for (const item of friends) {
+        tempItems.push({
+          id: nextID,
+          origin: item.id,
+          fauxID: item.fauxID,
+          parentId: null,                  
+          title: item.title,
+          date: item.date,
+          displayDate: item.displayDate,
+          type: 'entry',
+          description: item.description,
+          devNotes: item.devNotes,
+          hexHash: item.hexHash,
+          lastEditedBy: item.lastEditedBy,
+          triggerEvent: item.triggerEvent,
+          available: item.available
+        });
+        nextID = nextID + 1;
+      }
+    }
+
+    const list =  applyHexFilter(tempItems, gameState?.activeFilter)
 
       // Sort the filtered items
-      filtered.sort((a, b) => {
+      list.sort((a, b) => {
         let aValue = a[column]
         let bValue = b[column]
 
-        // Handle date columns specially
-        // if (column === 'date' || column === 'displayDate') {
-        //   aValue = aValue ? new Date(aValue).getTime() : 0
-        //   bValue = bValue ? new Date(bValue).getTime() : 0
-        // } else
-          if (column === 'hexHash') {
 
+
+          if (column === 'hexHash') {
           // Get lowest hex from item 'a'
           const hexesA = Array.isArray(a.hexHash) ? a.hexHash : [a.hexHash]
           const lowestA =
@@ -81,10 +129,9 @@ export function EntryList () {
               ? Math.min(...hexesB.filter(h => h != null))
               : Infinity
 
-
           // Return comparison result
           return direction === 'asc' ? lowestA - lowestB : lowestB - lowestA
-        } else if (typeof aValue === 'string' && typeof bValue === 'string') {
+        } else if (typeof aValue === 'string') {
           // For string columns, use localeCompare
           return direction === 'asc'
             ? aValue.localeCompare(bValue)
@@ -99,9 +146,10 @@ export function EntryList () {
         }
       })
 
-      return filtered
-    })
-  }, [gameState?.sortColumn, gameState?.sortDirection, gameState?.activeFilter])
+      return list
+
+
+  }, [gameState?.sortColumn, gameState?.sortDirection, gameState?.activeFilter, friends, subentries])
 
   const handleSort = column => {
     if (column === gameState?.sortColumn) {
@@ -188,6 +236,8 @@ export function EntryList () {
       window.location.reload() // Simple but effective
     }
 
+
+
     window.addEventListener('newGameStart', handleNewGameStart)
     window.addEventListener('newGameEnd', handleNewGameEnd)
 
@@ -223,23 +273,25 @@ export function EntryList () {
   }
 
   //#endregion
-  if (isLoading || !filteredFriends || !filteredFriends.length === 0) {
+  if (isLoading || !filteredFriends || !filteredFriends) {
     return (
       <div className='List'>
         <h3>Please wait while database populates...</h3>
       </div>
     )
   }
-
+//#region RETURN
   return (
     <>
-                <div className='center'>
+            <div className='center'>
+                <h1>timeline</h1>
               <FilterList
-                type='entry'
+                type='subentry'
                 onFilterChange={handleFilterChange}
                 activeFilter={gameState?.activeFilter}
-              />
+              />{' '}
               </div>
+
       {!filteredFriends || filteredFriends.length === 0 ? (
         <div className='List'>
           <table className='entryTable'>
@@ -263,11 +315,7 @@ export function EntryList () {
       ) : (
         <>
           <div className='List'>
-            <div className='center'>
-              <Link to='/entry/new'>
-                <Button className='btn-add-item'>New Entry</Button>
-              </Link>
-            </div>
+
             <table className='searchResults'>
               <thead>
                 <tr>
@@ -280,7 +328,11 @@ export function EntryList () {
                       (gameState?.sortDirection === 'asc' ? '▲' : '▼')}
                   </th>
 
-                  <th width='80px' onClick={() => handleSort('displayDate')}>
+                  <th
+                    width='80
+                  px'
+                    onClick={() => handleSort('displayDate')}
+                  >
                     Disp. Date{' '}
                     {gameState?.sortColumn === 'displayDate' &&
                       (gameState?.sortDirection === 'asc' ? '▲' : '▼')}
@@ -291,52 +343,66 @@ export function EntryList () {
                     {gameState?.sortColumn === 'date' &&
                       (gameState?.sortDirection === 'asc' ? '▲' : '▼')}
                   </th>
-                  <th width='30px' onClick={() => handleSort('hexHash')}>
-                    Hex{' '}
-                    {gameState?.sortColumn === 'date' &&
+                  <th width='70px' onClick={() => handleSort('researcherID')}>Researcher
+                                     {gameState?.sortColumn === 'researcherID' &&
                       (gameState?.sortDirection === 'asc' ? '▲' : '▼')}
                   </th>
-                  <th width='25px' title='sub entries'>
-                    Subs
+                  <th width='30px' onClick={() => handleSort('hexHash')}>
+                    Hex{' '}
+                    {gameState?.sortColumn === 'hexHash' &&
+                      (gameState?.sortDirection === 'asc' ? '▲' : '▼')}
                   </th>
-                  <th width='25px' title='media attachments'>
-                    🖼️
-                  </th>
+                  {/* <th width='25px'>🖼️</th>
 
                   <th width='25px' title='trigger'>
                     ⚡
                   </th>
-                  <th width='30px'>🗑️</th>
+                  <th width='30px'>🗑️</th> */}
                 </tr>
               </thead>
+
               <tbody>
-                {filteredFriends.map(item => (
+                {filteredFriends?.map(item => (
                   <tr key={item.id}>
                     <td data-label='currentlyavailable'>
                       <AvailableCell itemId={item.id} type='entry' />
                     </td>
-                    <td data-label='name' title={item.description}>
-                      {item.id}{' '}
-                      <Link to={`/entry/${item.id}`}>
-                        {item.fauxID} : {item.title}
+                    <td width='70%' data-label='title'>
+                        {item.type==='subentry' ? <div className="tab"></div> : ' '}
+                       <Link
+                        title={item.description}
+                        to={`/edit-subitem/${item.parentId}/${item.id}`}
+                      >
+                        {item.fauxID} <ParentTitle parentID={item.parentId} />{' '}
+                        {'   '} | {'   '}
+                        {item.title === '' ? (
+                          <>{item.subCategory}</>
+                        ) : (
+                          <>{item.title}</>
+                        )}
                       </Link>
                     </td>
-                    <td width='50px' data-label='displayDate' title="will fix editing later TODO">
-                      {/* {item.displayDate
-                        ? new Date(item.displayDate).toLocaleDateString(
-                            "en-US",
-                            { month: "numeric", year: "numeric" },
-                          )
-                        : "No Date"} */}
-                         {safeDate(item.displayDate)}
-
-                      {/* <EditableFields.FormEditListText item={item} /> */}
+                    <td>
+                      <EditableFields.FormEditListText
+                        item={item}
+                        type='subentry'
+                      />
+                      {/*  Below isn't working yet. Taking a break. TODO */}
+                      {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
                     </td>
                     <td width='50px' data-label='date' title={item.devNotes}>
-                      {safeDate(item.date)}
+                      {item.date
+                        ? new Date(item.date).toLocaleDateString('en-US')
+                        : 'No Date'}
                     </td>
-                    <td data-label='hex'>
-                      {editingHex === item.id ? (
+                    <td data-label='researcherID'>
+                      <EditableFields.EditResearcher
+                        itemID={item.id}
+                        type={item.type==='subentry' ? 'subentry' : 'entry'}
+                      />
+                    </td>
+                    <td data-label='hexHash'>
+                      {editingSubHex === item.id ? (
                         <div
                           style={{
                             display: 'flex',
@@ -347,16 +413,16 @@ export function EntryList () {
                         >
                           <input
                             type='text'
-                            name='hexedit'
-                            title='hexedit'
-                            value={tempHexValue}
-                            onChange={e => setTempHexValue(e.target.value)}
+                            name='hexeditChild'
+                            title='hexeditChild'
+                            value={tempSubHexValue}
+                            onChange={e => setTempSubHexValue(e.target.value)}
                             onKeyDown={e => {
                               if (e.key === 'Enter')
-                                saveHexHash(item.id, 'entry')
+                                saveHexHash(item.id, 'subentry')
                               if (e.key === 'Escape') cancelEditingHex()
                             }}
-                            placeholder='hexes'
+                            placeholder='Enter hex values (comma separated)'
                             style={{
                               flex: 1,
                               padding: '2px 5px',
@@ -367,7 +433,7 @@ export function EntryList () {
                         </div>
                       ) : (
                         <div
-                          onClick={() => startEditingHex(item, 'entry')}
+                          onClick={() => startEditingHex(item, 'subentry')}
                           style={{
                             cursor: 'pointer',
                             padding: '5px',
@@ -380,15 +446,12 @@ export function EntryList () {
                             ? Array.isArray(item.hexHash)
                               ? item.hexHash.join(', ')
                               : item.hexHash.toString()
-                            : 'None (click to add)'}
+                            : 'None'}
                         </div>
                       )}
                     </td>
-                    <td data-label='subentries'>
-                      <SubentryCountCell parentId={item.id} />
-                    </td>
-                    <td data-label='media'>
-                      <MediaCountCell itemId={item.id} type='entry' />
+                    {/* <td data-label='media'>
+                      <MediaCountCell itemId={item.id} type='subentry' />
                     </td>
 
                     <td data-label='trigger'>
@@ -397,17 +460,15 @@ export function EntryList () {
                         <a title={item.triggerEvent}>⚡</a>
                       )}
                     </td>
-
                     <td data-label='remove'>
                       {' '}
                       <button
                         className='remove-button-small'
-                        aria-label='Close'
-                        onClick={() => removeItem(item)}
+                        onClick={() => removeSubentry(item)}
                       >
                         x
                       </button>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

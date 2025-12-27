@@ -39,7 +39,7 @@ let globalGameState = {
   sortDirection: "asc",
   cheatCode: true, // to eventually put an "unlock" button on locked entries
   //playerAddEntry: false,
-  subEntryFrontPage: false,
+  subEntryFrontPage: "entries",
   activeFilter: "all",
   endgameSequence: false,
   showDebug: false,

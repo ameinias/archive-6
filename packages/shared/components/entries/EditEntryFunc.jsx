@@ -11,7 +11,7 @@ import {
 } from "@utils/constants";
 import { Form, useNavigate } from "react-router-dom";
 import { GameLogic } from "@utils/gamelogic";
-import { ListSubEntries } from "@components/lists/ListSubEntries";
+import { ListSubEntriesOnEntries } from "@components/lists/ListSubEntriesOnEntries";
 import { MediaUpload } from "@components/parts/Media/MediaUpload";
 import * as FormAssets from "@components/parts/FormAssets";
 import { eventManager } from "@utils/events";
@@ -40,7 +40,8 @@ const defaultFormValue = {
   displayDate: "1970-01-01", // date added to archive
   lastEditedBy: researcherIDs[0] || 0,
   triggerEvent: "",
-  unread: true
+  unread: true,
+  entryRef: []
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -109,6 +110,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           lastEditedBy: entry.lastEditedBy,
           triggerEvent: entry.triggerEvent,
           unread: entry.unread || true,
+          entryRef: entry: entryRef || [],
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -156,8 +158,18 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       displayDate: formValues.displayDate,
       lastEditedBy: parseInt(formValues.lastEditedBy, 10),
       triggerEvent: formValues.triggerEvent,
-      unread: formValues.unread
+      unread: formValues.unread,
+      entryRef: formValues.entryRef,
     };
+  };
+
+  const calculateMatches = () => {
+return hexHashes.map((sub, i) => (
+                  <option key={i} value={sub.id}>
+                    {sub.name}({sub.hexHashcode})
+                  </option>
+                ))
+
   };
 
   const FormToTemplate = () => {
@@ -195,7 +207,8 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       displayDate: formValues.displayDate,
       lastEditedBy: formValues.lastEditedBy,
       triggerEvent: formValues.triggerEvent,
-      unread: formValues.unread
+      unread: formValues.unread,
+      entryRef: formValues.entryRef,
     };
   };
 
@@ -658,6 +671,24 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           <MediaUpload mediaFiles={formValues.media} />
         </div>
 
+entry func 
+        <div id="entryRef">
+              <FormAssets.FormHexes
+                name="entryRef"
+                multiple={true}
+                rows={1}
+                formValue={formValues.entryRef}
+                readOnly={false}
+                onChange={handleArrayChange}
+                options={{calculateMatches.map((sub, i) => (
+                  <option key={i} value={sub.id}>
+                    {sub.title} ({sub.ID})
+                  </option>
+                ))}}
+              />
+
+        </div>
+
 <div title="admin">
          <div className="button-row div-dash">
            <button onClick={setToggleAdminSection} className="toggle-button">
@@ -784,7 +815,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
         {/* Only show Add Subentry button when not already a subentry. */}
         {!isSubEntry && itemID != "new" && (
           <div className="row">
-            <ListSubEntries itemID={itemID} />
+            <ListSubEntriesOnEntries itemID={itemID} />
           </div>
         ) }
 </div>

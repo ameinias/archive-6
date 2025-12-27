@@ -7,6 +7,7 @@ import { newGame } from "@utils/db"; // import the database
 import visible from "@assets/icons/eye.png";
 import invisible from "@assets/icons/visible.png";
 
+
 const defaultFormValue = {
   username: "",
   password: "",

@@ -11,7 +11,7 @@ import {
 } from '@utils/constants'
 import { Form, useNavigate } from 'react-router-dom'
 import { GameLogic } from '@utils/gamelogic'
-import { ListSubEntries } from '@components/lists/ListSubEntries'
+import { ListSubEntriesOnEntries } from '@components/lists/ListSubEntriesOnEntries'
 import { MediaUpload } from '@components/parts/Media/MediaUpload'
 import * as FormAssets from '@components/parts/FormAssets'
 import { eventManager } from '@utils/events'

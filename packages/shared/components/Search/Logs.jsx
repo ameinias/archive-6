@@ -148,9 +148,7 @@ const Logs = () => {
                   <td>
                     {item.type === 'sub' ? (
                       <>
-                        {' '}
-                        &nbsp; &nbsp;
-                        {!gameLog.isAdmin ? (
+                        <div className="tab"></div>                        {!gameLog.isAdmin ? (
                           <Link to={`/entry/${item.parentId}/`}>
                             {item.fauxID}:{' '}
                             {item.subCategory != 'MetaData' && item.subCategory}{' '}

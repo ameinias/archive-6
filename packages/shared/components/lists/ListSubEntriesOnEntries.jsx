@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { AddSubEntryForm } from "@components/entries/AddSubEntryFunc";
 import { researcherIDs } from "@utils/constants.js";
 
-export function ListSubEntries({ itemID }) {
+export function ListSubEntriesOnEntries({ itemID }) {
   // HOOKS
   const [toggleShowCurrentSubEntry, setToggleShowCurrentSubEntry] =
     useState(false);

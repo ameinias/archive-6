@@ -10,6 +10,7 @@ import {
   saveAsDefaultDatabase,
   handleJSONExport
 } from '@utils/db'
+import { TimeLine } from '../lists/TimeLine'
 import Dropdown from 'react-bootstrap/Dropdown'
 import { eventManager } from '@utils/events'
 
@@ -130,12 +131,20 @@ const NavBar = () => {
               <li role='menuitem'>
                 <Link to='/media'>Media List</Link>
               </li>
+              <li role='menuitem'>
+                <Link to='/timeline'>Timeline</Link>
+              </li>
               {/* <li role='menuitem'>
                 <Link to='/hex'>Hex List</Link>
               </li> */}
               <li role='menuitem'>
                 <Link className='dropdown-item' to='/import-export'>
                   Database Actions
+                </Link>
+              </li>
+                            <li role='menuitem'>
+                <Link className='dropdown-item' to='/test'>
+                  Test
                 </Link>
               </li>
             </ul>
