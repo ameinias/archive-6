@@ -110,7 +110,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           lastEditedBy: entry.lastEditedBy,
           triggerEvent: entry.triggerEvent,
           unread: entry.unread || true,
-          entryRef: entry: entryRef || [],
+          entryRef: entry.entryRef || [],
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -680,11 +680,11 @@ entry func
                 formValue={formValues.entryRef}
                 readOnly={false}
                 onChange={handleArrayChange}
-                options={{calculateMatches.map((sub, i) => (
+                options={calculateMatches.map((sub, i) => (
                   <option key={i} value={sub.id}>
                     {sub.title} ({sub.ID})
                   </option>
-                ))}}
+                ))}
               />
 
         </div>

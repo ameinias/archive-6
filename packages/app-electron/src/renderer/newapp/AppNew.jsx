@@ -123,7 +123,8 @@ export default function App () {
           '/logs',
           '/convo',
           '/player-add-entry',
-          '/timeline'
+          '/timeline',
+          '/test'
         ]
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -137,6 +138,7 @@ export default function App () {
         lastRoute.startsWith('/media/')
         lastRoute.startsWith('/logs/')
         lastRoute.startsWith('/timeline/')
+        lastRoute.startsWith('/test/')
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
           //  console.log('Using last route:', lastRoute);

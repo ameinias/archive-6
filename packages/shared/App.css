@@ -970,6 +970,8 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 }
 
 
+
+
 .subID {
   display:block;
   text-transform: capitalize;
@@ -1317,3 +1319,35 @@ input[type=email], input[type=number], input[type=password], input[type=text], i
   width: 15px;
     display: inline-block;
 }
+
+.select{
+
+}
+
+.select__menu{
+  /* background-color: rgb(19, 226, 105);
+  border: 10px solid red; */
+
+}
+.select__menu-list{
+
+  /* background-color: rgb(178, 43, 231); */
+}
+
+
+.select__option{
+background-color: rgb(240, 240, 240)!important;
+color: rgb(45, 46, 41)!important;
+box-sizing:border-box;
+padding:1px;
+border: 1px solid rgb(240, 240, 240);
+
+}
+
+/* https://react-select.com/styles#inner-components */
+.select__option:hover {
+background-color: rgb(191, 199, 247)!important;
+color: rgb(45, 46, 41)!important;
+border: 1px solid rgb(118, 139, 255);
+}
+
