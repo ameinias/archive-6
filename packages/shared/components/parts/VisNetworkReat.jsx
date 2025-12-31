@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Network } from "vis-network";
+import { DataSet } from "vis-data";
 import Graph from "react-graph-vis";
 import { db } from "@utils/db"; // import the database
 import { useLiveQuery } from "dexie-react-hooks";
@@ -7,7 +8,10 @@ import { useNavigate } from "react-router-dom";
 import { GameLogic } from "@utils/gamelogic";
 import { applyHexFilter } from "@components/parts/ListingComponent";
 
-const VisNetworkReat = ({ filterAvailable = true }) => {
+const VisNetworkReat = ({
+  filterAvailable = true,
+  includeSubentries = true,
+}) => {
   const { setStatusMessage, gameState, setColumn, setSort, updateGameState } =
     GameLogic();
 
@@ -15,7 +19,6 @@ const VisNetworkReat = ({ filterAvailable = true }) => {
   const subentries = useLiveQuery(() => db.subentries.toArray());
   const navigate = useNavigate();
 
-  
   // useEffect(() => {
   //   // so far nothing that needs rerendering - not sure how to pass this into the options list.
   // }, [friends, subentries, filterAvailable]);
@@ -34,29 +37,18 @@ const VisNetworkReat = ({ filterAvailable = true }) => {
       foundFriends = friends.filter((item) => item.available === true);
     }
 
-    if (foundSubItems) {
-      for (const item of foundSubItems) {
-        tempItems.push({
-          id: nextID,
-          label: item.fauxID + " - " + item.title,
-          group: "sub",
-          //   value: nextID, // ['subentry',item.id],
-          //   label: item.fauxID,
-          //   origin: item.id,
-          //   fauxID: item.fauxID,
-          //   parentId: item.parentId,
-          //   title: item.title,
-          //   date: item.date,
-          //   displayDate: item.displayDate,
-          //   type: "subentry",
-          //   description: item.description,
-          //   devNotes: item.devNotes,
-          //   hexHash: item.hexHash,
-          //   lastEditedBy: item.lastEditedBy,
-          //   triggerEvent: item.triggerEvent,
-          //   available: item.available,
-        });
-        nextID = nextID + 1;
+    if (includeSubentries) {
+      if (foundSubItems) {
+        for (const item of foundSubItems) {
+          tempItems.push({
+            id: nextID,
+            label: item.fauxID + " - " + item.title,
+            originId: item.id,
+            parentId: item.parentId,
+            group: "sub",
+          });
+          nextID = nextID + 1;
+        }
       }
     }
 
@@ -67,20 +59,8 @@ const VisNetworkReat = ({ filterAvailable = true }) => {
           id: nextID,
           label: item.fauxID + " - " + item.title,
           group: "entry",
-
-          //   origin: item.id,
-          //   fauxID: item.fauxID,
-          //   color:red,
-          //   parentId: null,
-          //   title: item.title,
-          //   date: item.date,
-          //   displayDate: item.displayDate,
-          //   description: item.description,
-          //   devNotes: item.devNotes,
-          //   hexHash: item.hexHash,
-          //   lastEditedBy: item.lastEditedBy,
-          //   triggerEvent: item.triggerEvent,
-          //   available: item.available,
+          originId: item.id,
+          parentId: null,
         });
         nextID = nextID + 1;
       }
@@ -89,31 +69,57 @@ const VisNetworkReat = ({ filterAvailable = true }) => {
     return tempItems;
   }, [filterAvailable, friends, subentries]);
 
-  const theNodes = [
-    { id: 1, label: "ggggg", title: "node 1 tootip text", group: "entry" },
-    { id: 2, label: "sssss", title: "node 2 tootip text", group: "sub" },
-    { id: 3, label: "jjjjj", title: "node 3 tootip text" },
-    { id: 4, label: "Node 4", title: "node 4 tootip text" },
-    { id: 5, label: "Node 5", title: "node 5 tootip text" },
-    { id: 6, label: "Node 455", title: "node 5 tootip text" },
-  ];
 
-  //    { id: 14, shape: "circularImage", image: DIR + "14.png" },
 
-  const graph = {
-    nodes: filteredFriends, // theNodes,
-    edges: [
-      { from: 1, to: 2 },
-      { from: 1, to: 3 },
-      { from: 2, to: 1 },
-      { from: 2, to: 4 },
-      { from: 2, to: 5 },
-    ],
-  };
+  // // Then create a map to convert original IDs to new IDs
+  // const idMap = new Map();
+  // filteredFriends.forEach(item => {
+  //   if (item.originId) {
+  //     idMap.set(item.originId, item.id);
+  //   }
+  // });
+
+  // // Create edges using the mapped IDs
+  // const edges = new DataSet(
+  //   filteredFriends
+  //     .filter(item => item.parentId && idMap.has(item.parentId))
+  //     .map(item => ({
+  //       from: idMap.get(item.parentId),
+  //       to: item.id
+  //     }))
+  // );
+
+  const nodes = React.useMemo(() => {
+    if (!filteredFriends) return new DataSet([]);
+
+    return new DataSet(
+      filteredFriends.map((item) => ({
+        id: item.id,
+        label: item.label,
+        title: item.label,
+        group: item.group,
+      })),
+    );
+  }, [filteredFriends]);
+
+  const ledges = React.useMemo(() => {
+    return new DataSet([
+      { from: 0, to: 2 },
+      { from: 0, to: 1 },
+    ]);
+  }, []);
+
+  const graph = React.useMemo(
+    () => ({
+      nodes: nodes,
+      edges: ledges,
+    }),
+    [nodes, ledges],
+  );
 
   const options = {
     groups: {
-      entry: { color: { background: "red" }, borderWidth: 3 },
+      entry: { color: { background: "green" }, borderWidth: 3 },
       sub: { color: { background: "blue" }, borderWidth: 1 },
     },
     nodes: {
@@ -131,9 +137,10 @@ const VisNetworkReat = ({ filterAvailable = true }) => {
     },
     edges: {
       color: "#000000",
-      arrows: "none",
+      arrows: "middle",
     },
     height: "500px",
+    
   };
 
   const events = {
@@ -141,15 +148,25 @@ const VisNetworkReat = ({ filterAvailable = true }) => {
       var { nodes, edges } = event;
     },
   };
+
+  // Or if you want formatted output:
+console.log("nodes:", nodes?.get().map(item => ({ id: item.id, label: item.label })));
+console.log("ledges:", ledges?.get().map(item => ({ from: item.from, to: item.to })));
+
+    if (!filteredFriends) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Graph
+      key={filteredFriends?.length}
       graph={graph}
       options={options}
       events={events}
       getNetwork={(network) => {
         //  if you want access to vis.js network api you can set the state in a parent component using this property
       }}
-    /> 
+    />
   );
 };
 

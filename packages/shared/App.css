@@ -1297,17 +1297,6 @@ input[type=email], input[type=number], input[type=password], input[type=text], i
 .basic-multi-select{
   background: var(--w7-el-grad); 
     border: 1px solid var(--w7-el-bd);
-    /* border-radius: var(--w7-el-bdr); */
-    /* box-shadow: var(--w7-el-sd); */
-    /* box-sizing: border-box; */
-    /* color: #222; */
-    /* font: var(--w7-font); */
-    /* min-height: 23px; */
-    /* min-width: 75px; */
-    /* padding: 0 12px; */
-    /* position: relative; */
-    /* text-align: center; */
-    /* z-index: 0; */
 }
 
 .select__multi-value__remove css-v7duua{

@@ -8,7 +8,8 @@ import {
 import "dexie-export-import";
 import { setStartAvalability } from "../hooks/dbHooks.js";
 import { eventManager } from "@utils/events";
-import {  updateGameState } from "./gamelogic.js";
+import { updateGameState } from "./gamelogic.js";
+import { Link } from "react-router-dom";
 
 export const db = new Dexie("gb-current");
 
@@ -113,6 +114,19 @@ db.version(5.0).stores({
   media: "++id, name, type, size, path, uploadedAt",
 });
 
+//add new database for events
+db.version(5.1).stores({
+  gamedata: "expVersion, uploadedAt, sessionStart",
+  friends:
+    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef",
+  subentries:
+    "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef",
+  media: "++id, name, type, size, path, uploadedAt",
+  events: "++id, name, type, timestamp",
+});
+
+
+
 //#endregion
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
@@ -125,6 +139,18 @@ export const dbHelpers = {
   // Add a new subentry linked to a main entry
   async addSubentry(subentry) {
     return await db.subentries.add(subentry);
+  },
+
+  async addEvent(eventName) {
+    return await db.events.add(
+     { name: eventName,
+      type: "default", 
+      timestamp: new Date()}
+    );
+  },
+
+    async clearEvents() {
+    return await db.events.clear();
   },
 
   async getExpectedDBVersion() {
@@ -233,8 +259,73 @@ export const dbHelpers = {
     return [value];
   },
 
-  /////////////////////////////////////////////////
-};
+  generateTitle(item) {
+    if (item === null) return;
+
+    let bar;
+    
+            if(item.title != "") bar =  " | ";
+           else bar =  "";
+
+    let theTitle;
+
+    if (item.type === "entry") {
+      // main entry
+      theTitle = item.fauxID + bar + item.title;
+    } else {
+      if (item.subCategory != "MetaData" && item.subCategory) {
+
+
+
+
+        theTitle = item.fauxID + " | " + item.subCategory + bar + item.title ;
+      } else {
+        theTitle = item.fauxID + bar +  item.title;
+      }
+    }
+
+    return theTitle;
+  },
+
+//   urlDirect(item) {
+//     let url;
+
+//     if (item.type === "entry") {
+//       url = !gameLog.isAdmin ? "entry" : "edit-item";
+//     } else {
+//       url = "edit-subitem";
+//     }
+
+//     return url;
+//   },
+
+//   generateEntryLink(item) {
+
+//     const URL = urlDirect(item);
+
+//     if (item.type === "sub") {
+//       return (
+//         <>
+//           <div className="tab"></div>
+//           <Link to={`/${URL}/${item.parentId}/`}>
+//             {dbHelpers.generateTitle(item)}
+//           </Link>
+//         </>
+//       );
+//     } else {
+//       return (
+//         <>
+//           <Link
+//             to={`/${URL}/${item.origin}`}
+//             className="log-parent-title"
+//           >
+//             {dbHelpers.generateTitle(item)} sdfsdf fsd sfsd
+//           </Link>
+//         </>
+//       );
+//     }
+//   },
+ };
 
 export const handleJSONExport = async (fileName = "dexie-export-web.json") => {
   try {

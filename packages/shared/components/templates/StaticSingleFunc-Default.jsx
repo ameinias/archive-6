@@ -171,6 +171,15 @@ export function StaticSingleDefault ({ itemID }) {
           <MediaEntryDisplay itemID={item.id} type='entry' />
         </div>
 
+        <div>
+        {item.entryRef.map((item, index) => (
+          <div key={index}>
+            <span>{item.fauxID}</span>
+          </div>
+        ))}
+
+        </div>
+
         {/* Show subentries if they exist */}
         {subEntryOfParent.filter(
           item => item.subCategory.toLowerCase() !== 'metadata'

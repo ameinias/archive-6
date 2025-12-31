@@ -271,7 +271,7 @@ const Media = () => {
                 
                 {mediaFile.type !== 'orphan' ? (
                   <>
-                    {mediaFile.type === 'main' ? 'Entry' : 'Sub Entry'}: <Link to={`/${mediaFile.type === 'main' ? 'entry' : 'subentry'}/${mediaFile.entryId}`}>
+                    {mediaFile.type === 'main' ? 'Entry' : 'Sub Entry'}: <Link to={`/${mediaFile.type === 'main' ? 'entry' : 'sub'}/${mediaFile.entryId}`}>
                       {mediaFile.fauxID} - {mediaFile.entryTitle}
                     </Link>
                   </>

@@ -149,6 +149,8 @@ export function CheckUnread(itemId) {
   }, [itemId]);
 }
 
+ 
+
 export function CheckAvailable(itemId) {
   return useLiveQuery(async () => {
     const item = await getEntryOrSubentry(itemId);
@@ -194,7 +196,7 @@ export function useReturnDatabase(itemId) {
   return null;
 }
 
-// export const markRead = async (itemId: number, type: 'entry' | 'subentry' = 'entry') => {
+// export const markRead = async (itemId: number, type: 'entry' | 'sub' = 'entry') => {
 //   if (!itemId) return false;
 
 //   try {
@@ -326,7 +328,7 @@ export function GetMediaCount(itemId, type) {
           return entry?.media?.length || 0;
         }
 
-        if (type === "subentry") {
+        if (type === "sub") {
           const subentry = await db.subentries.get(itemId);
           return subentry?.mediaSub?.length || 0;
         }

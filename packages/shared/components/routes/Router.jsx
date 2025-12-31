@@ -30,6 +30,7 @@ import Bookmarks from '@components/search/Bookmarks';
 import Media from '@components/search/Media';
 import  HexList  from '@components/search/HexList';
 import  Logs  from '@components/search/Logs';
+import  Connections  from '@components/search/Connections';
 import { TimeLine } from '@components/lists/TimeLine';
 
 //Tools
@@ -140,6 +141,9 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/logs" element={<Logs />} />
               <Route path="/file-fullscreen/:id" element={<FileFullscreen />} />
               <Route path="/test" element={<TestComp />} />
+              <Route path="/connections" element={<Connections />} />
+
+              
 
 {/* PlayerAdmin   ------------------------------------------------------------ */}
               <Route path="/register" element={<Register />} />

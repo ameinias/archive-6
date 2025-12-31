@@ -23,7 +23,7 @@ export function EditResearcher({ itemID, type }) {
     if (!db.isOpen()) return null;
 
     let result;
-    if (type === "subentry") {
+    if (type === "sub") {
       result = await db.subentries.get(itemID);
     } else {
       result = await db.friends.get(itemID);
@@ -54,7 +54,7 @@ export function EditResearcher({ itemID, type }) {
 
   const saveEdit = async (itemId, value, type) => {
     try {
-      if (type === "subentry") {
+      if (type === "sub") {
         await db.subentries.update(itemId, {
           researcherID: value,
         });
@@ -166,7 +166,7 @@ export function FormEditListDate({
   // try this https://js.devexpress.com/React/Demos/WidgetsGallery/Demo/DateBox/Overview/FluentBlueLight/
   const saveValue = async (itemId, type) => {
     try {
-      if (type === "subentry") {
+      if (type === "sub") {
         await db.subentries.update(itemId, {
           displayDate: tempValue || null,
         });
@@ -270,7 +270,7 @@ export function FormEditListText({
   // try this https://js.devexpress.com/React/Demos/WidgetsGallery/Demo/DateBox/Overview/FluentBlueLight/
   const saveValue = async (itemId, type) => {
     try {
-      if (type === "subentry") {
+      if (type === "sub") {
         await db.subentries.update(itemId, {
           displayDate: tempValue || null,
         });

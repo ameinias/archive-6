@@ -30,7 +30,11 @@ function RouteTracker () {
 
   useEffect(() => {
     // Save current route to localStorage whenever it changes
+    localStorage.setItem('secondLastRoute', localStorage.getItem('lastRoute'))
     localStorage.setItem('lastRoute', location.pathname)
+    console.log("current: " + localStorage.getItem('lastRoute') + " last: " + localStorage.getItem('secondLastRoute'));
+
+
   }, [location.pathname])
 
   return null
@@ -124,7 +128,8 @@ export default function App () {
           '/convo',
           '/player-add-entry',
           '/timeline',
-          '/test'
+          '/test',
+          '/connections'
         ]
         const isDynamicRoute =
           lastRoute.startsWith('/edit-item/') ||
@@ -139,6 +144,7 @@ export default function App () {
         lastRoute.startsWith('/logs/')
         lastRoute.startsWith('/timeline/')
         lastRoute.startsWith('/test/')
+        lastRoute.startsWith('/connections/')
 
         if (validRoutes.includes(lastRoute) || isDynamicRoute) {
           //  console.log('Using last route:', lastRoute);

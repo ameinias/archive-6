@@ -140,7 +140,7 @@ export function EntryList () {
     try {
       // Convert comma-separated string back to array
 
-      if (type === 'subentry') {
+      if (type === 'sub') {
         const hexArray = tempSubHexValue
           .split(',')
           .map(hex => parseInt(hex.trim(), 10))

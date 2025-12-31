@@ -125,7 +125,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
         <div width='80%' key={item.id}>
           <div className='entry-header'>
             <div style={{}}>
-              <BookMarkCheck itemID={item.id} type='subentry' />
+              <BookMarkCheck itemID={item.id} type='sub' />
             </div>
             <div className='entry-title'>
               <span className='subID'>{item.fauxID}</span>

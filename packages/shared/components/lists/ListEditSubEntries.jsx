@@ -149,7 +149,7 @@ export function ListEditSubEntries () {
     try {
       // Convert comma-separated string back to array
 
-      if (type === 'subentry') {
+      if (type === 'sub') {
         const hexArray = tempSubHexValue
           .split(',')
           .map(hex => parseInt(hex.trim(), 10))
@@ -244,7 +244,7 @@ export function ListEditSubEntries () {
     <>
             <div className='center'>
               <FilterList
-                type='subentry'
+                type='sub'
                 onFilterChange={handleFilterChange}
                 activeFilter={gameState?.activeFilter}
               />{' '}
@@ -342,7 +342,7 @@ export function ListEditSubEntries () {
                     <td>
                       <EditableFields.FormEditListText
                         item={item}
-                        type='subentry'
+                        type='sub'
                       />
                       {/*  Below isn't working yet. Taking a break. TODO */}
                       {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
@@ -355,7 +355,7 @@ export function ListEditSubEntries () {
                     <td data-label='researcherID'>
                       <EditableFields.EditResearcher
                         itemID={item.id}
-                        type='subentry'
+                        type='sub'
                       />
                     </td>
                     <td data-label='hexHash'>
@@ -376,7 +376,7 @@ export function ListEditSubEntries () {
                             onChange={e => setTempSubHexValue(e.target.value)}
                             onKeyDown={e => {
                               if (e.key === 'Enter')
-                                saveHexHash(item.id, 'subentry')
+                                saveHexHash(item.id, 'sub')
                               if (e.key === 'Escape') cancelEditingHex()
                             }}
                             placeholder='Enter hex values (comma separated)'
@@ -390,7 +390,7 @@ export function ListEditSubEntries () {
                         </div>
                       ) : (
                         <div
-                          onClick={() => startEditingHex(item, 'subentry')}
+                          onClick={() => startEditingHex(item, 'sub')}
                           style={{
                             cursor: 'pointer',
                             padding: '5px',
@@ -408,7 +408,7 @@ export function ListEditSubEntries () {
                       )}
                     </td>
                     <td data-label='media'>
-                      <MediaCountCell itemId={item.id} type='subentry' />
+                      <MediaCountCell itemId={item.id} type='sub' />
                     </td>
 
                     <td data-label='trigger'>

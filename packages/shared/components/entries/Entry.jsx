@@ -43,47 +43,34 @@ const Entry = () => {
   //   markAsRead();
   // }, [entryData, id]);
 
- const CheckConditionals = () => {
-  // console.log("checking conditionals for entry ID:", id);
+  const CheckConditionals = () => {
+    // console.log("checking conditionals for entry ID:", id);
 
     if (!entryData) {
-      return <div>No valid ID profvided.</div>;
+      return <div>No valid ID provided.</div>;
     }
 
-    if(entryData.hexHash === '50' || entryData.hexHash === 50) {
-      <div>
-         NO ENTRY
-      </div>
-console.log(" hex 50", id);
+    else if (isAdmin) {
+      return (<>admin  <AddEntryForm itemID={id} />
+      </>);
     }
-    else {
 
-    //       if (entryData.triggerEvent.length > 0) {
-    //   gameLog.triggerEvent(event);
-    //   console.log("Triggered events for entry ID:", id);
+  else if (entryData.hexHash === "50" || entryData.hexHash === 50) {
+      
+      console.log(" hex 50: ", id);
+      return(<div>NO ENTRY</div>);
+    } else {
+      return (<>no admin <StaticSingleDefault itemID={id} /></> );
+    }
+  }
 
-    // }
-       return <StaticSingleDefault itemID={id} />;
-     }
-
-
-  };
 
   return (
     <>
       {id ? (
-        <>
-          {isAdmin ? (
             <>
-              <AddEntryForm itemID={id} />
+              {CheckConditionals()}
             </>
-          ) : (
-            <>
-            {CheckConditionals()}
-              {/* <StaticSingleDefault itemID={id} /> */}
-            </>
-          )}
-        </>
       ) : (
         <div>No ID provided.</div>
       )}

@@ -20,6 +20,7 @@ import { eventManager } from '@utils/events'
 import { useToggle } from '@hooks/hooks'
 import * as EditableFields from '@components/parts/EditableFields'
 import { safeRender, safeDate } from '@utils/helper';
+import {SelectEntry} from "@components/parts/FormAssets";
 
 // onFinishEdit calls back to ListSubEntries to close the toggle
 export function AddSubEntryForm ({
@@ -456,6 +457,28 @@ export function AddSubEntryForm ({
     })
   }
 
+      const handleRef = (newValue, actionMeta) => {
+    switch (actionMeta.action) {
+      case "remove-value":
+      case "pop-value":
+        if (actionMeta.removedValue.isFixed) {
+          return;
+        }
+        break;
+      case "clear":
+        newValue = filteredFriends.filter((v) => v.isFixed);
+        break;
+    }
+
+    // setSelected(newValue);
+
+        setFormValue({
+      ...formValues,
+      entryRef: newValue,
+    });
+
+  };
+
   const handleCatChange = e => {
     const { name, value } = e.target
     setFormValue({
@@ -722,6 +745,17 @@ export function AddSubEntryForm ({
         <MediaUploadSub mediaSubFiles={formValues.mediaSub} />
       </div>
 
+      <div className='row'>
+        <SelectEntry 
+        value={formValues.entryRef}
+        onChange={handleRef} 
+        filterAvailable = {false}
+        name="ref"
+        includeSubentries = {false}
+        label = "related entries"
+        />
+      </div>
+
       <div title='admin'>
         <div className='button-row div-dash'>
           <button onClick={setToggleAdminSection} className='toggle-button'>
@@ -748,7 +782,7 @@ export function AddSubEntryForm ({
 
                         <div className='col'>
               {' '}
-              {/*// ------ available  ------*/}
+              {/*// ------ unread  ------*/}
               <label className='formLabel'>unread</label>
               <input
                 type='checkbox'

@@ -5,17 +5,14 @@ import { db } from "@utils/db"; // import the database
 import { useLiveQuery } from "dexie-react-hooks";
 import Select from "react-select"; // https://react-select.com/home#getting-started
 import VisNetworkReat from "@components/parts/VisNetworkReat"; //https://www.npmjs.com/package/react-graph-vis
+import { SelectEntry } from "@components/parts/FormAssets";
 
 export default function TestComp() {
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
   // const navigate = useNavigate()
-  const [val, setSelected] = React.useState([])
-    const [filterAvailable, setFilterAvailable] = React.useState(false);
-
-  
-
-
+  const [val, setSelected] = React.useState([]);
+  const [filterAvailable, setFilterAvailable] = React.useState(false);
 
   useEffect(() => {
     // so far nothing that needs rerendering - not sure how to pass this into the options list.
@@ -29,20 +26,19 @@ export default function TestComp() {
     let tempItems = [];
     let nextID = 0;
 
-    let foundSubItems = subentries; 
-    let foundFriends = friends; 
+    let foundSubItems = subentries;
+    let foundFriends = friends;
 
-
-    if(filterAvailable) {
-     foundSubItems = subentries.filter((item) => item.available === true);
-     foundFriends = friends.filter((item) => item.available === true);
+    if (filterAvailable) {
+      foundSubItems = subentries.filter((item) => item.available === true);
+      foundFriends = friends.filter((item) => item.available === true);
     }
 
     if (foundSubItems) {
       for (const item of foundSubItems) {
         tempItems.push({
           id: nextID,
-          value: nextID, // ['subentry',item.id],
+          value: nextID,
           label: item.fauxID,
           origin: item.id,
           fauxID: item.fauxID,
@@ -50,7 +46,7 @@ export default function TestComp() {
           title: item.title,
           date: item.date,
           displayDate: item.displayDate,
-          type: "subentry",
+          type: "sub",
           description: item.description,
           devNotes: item.devNotes,
           hexHash: item.hexHash,
@@ -67,7 +63,7 @@ export default function TestComp() {
       for (const item of foundFriends) {
         tempItems.push({
           id: nextID,
-          value: nextID, // ['subentry',item.id],
+          value: nextID, 
           label: item.fauxID,
           origin: item.id,
           fauxID: item.fauxID,
@@ -90,25 +86,19 @@ export default function TestComp() {
     return tempItems;
   }, [filterAvailable, friends, subentries]);
 
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
+  // const handleChange = (e) => {
+  //   setSelected(e.target.value);
+  // };
 
-  const handleChange = (e) => {
-    setSelected(e.target.value);
-  };
+  // const handleArrayChange = (e) => {
+  //   const { name, options } = e.target;
+  //   if (!options) return;
+  //   const selectedValues = Array.from(options)
+  //     .filter((option) => option.selected)
+  //     .map((option) => option.value);
 
-  const handleArrayChange = (e) => {
-    const { name, options } = e.target;
-    if (!options) return;
-    const selectedValues = Array.from(options)
-      .filter((option) => option.selected)
-      .map((option) => option.value);
-
-    setSelected(selectedValues);
-  };
+  //   setSelected(selectedValues);
+  // };
 
   const onChange = (newValue, actionMeta) => {
     switch (actionMeta.action) {
@@ -122,57 +112,47 @@ export default function TestComp() {
         newValue = filteredFriends.filter((v) => v.isFixed);
         break;
     }
-
+    console.log("change the value!!!");
     setSelected(newValue);
   };
 
-     
-        
-        
-     const changeBool = (e) => {
-      const { name, checked } = e.target;
+  const changeBool = (e) => {
+    const { name, checked } = e.target;
     setFilterAvailable(checked);
     console.log("filter: " + filterAvailable);
-      };
+  };
 
   return (
     <div>
-     <div> <input type="checkbox"
-      value={filterAvailable}
-      onChange={changeBool}
-      /> Available Only
+      <div>
+        {" "}
+        <input
+          type="checkbox"
+          value={filterAvailable}
+          onChange={changeBool}
+        />{" "}
+        Available Only
       </div>
-      {filterAvailable ? 'true' : 'false'}
+      {filterAvailable ? "true" : "false"}
 
-      <Select
-        options={filteredFriends}
-        className="basic-multi-select"
-        classNamePrefix="select"
-          styles={{
-    control: (baseStyles, state) => ({
-      ...baseStyles,
-      borderColor: state.isSelected ? 'grey' : 'red',
-    }),
-  }}
+      <SelectEntry
         value={val}
         onChange={onChange}
-        isMulti
-        name="colors"
-        isClearable={true}
+        filterAvailable={filterAvailable}
+        name="ref"
+        includeSubentries={false}
       />
 
       <div>
-        Current:
+        Current:  
         {val.map((item, index) => (
           <div key={index}>
             <span>{item.label}</span>
           </div>
         ))}
       </div>
-
-      <VisNetworkReat filterAvailable={filterAvailable} />
-
-      kjjhghjg gfgh  jh 
+      {/* 
+      <VisNetworkReat filterAvailable={filterAvailable} /> */}
     </div>
   );
 }

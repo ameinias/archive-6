@@ -89,10 +89,13 @@ const NavBar = () => {
         <Link
           variant='outline-primary'
           style={{ width: '25px', padding: '2px' }}
-          to=''
-          onClick={() => navigate(-1)}
+          // to=''
+          // onClick={() => navigate(-1)}
+          // onClick={() => navigate(localStorage.getItem('secondLastRoute'))}
+          to={localStorage.getItem('secondLastRoute')}
+          
         >
-          {'<<'}
+          {'<< ---'}
         </Link>
       </li>{' '}
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
@@ -121,6 +124,11 @@ const NavBar = () => {
       <li role='menuitem' tabIndex='0' aria-haspopup='true'>
         <Link to={!gameState.endgameSequence ? '/hashImport' : null}>
           Import
+        </Link>
+      </li>{' '}
+            <li role='menuitem' tabIndex='0' aria-haspopup='true'>
+        <Link to={!gameState.endgameSequence ? '/connections' : null}>
+          Connections
         </Link>
       </li>{' '}
       {(isAdmin || !isElectron) && (

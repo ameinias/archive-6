@@ -37,3 +37,5 @@ export const safeDate = (value) => {
   if (value instanceof Date) return value.toLocaleString();
   return new Date(value).toLocaleString();
 };
+
+

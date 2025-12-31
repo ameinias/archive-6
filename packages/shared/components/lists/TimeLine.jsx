@@ -70,7 +70,7 @@ export function TimeLine () {
           title: item.title,
           date: item.date,
           displayDate: item.displayDate,   
-          type: 'subentry',             
+          type: 'sub',             
           description: item.description,
           devNotes: item.devNotes,
           hexHash: item.hexHash,           
@@ -188,7 +188,7 @@ export function TimeLine () {
     try {
       // Convert comma-separated string back to array
 
-      if (type === 'subentry') {
+      if (type === 'sub') {
         const hexArray = tempSubHexValue
           .split(',')
           .map(hex => parseInt(hex.trim(), 10))
@@ -286,7 +286,7 @@ export function TimeLine () {
             <div className='center'>
                 <h1>timeline</h1>
               <FilterList
-                type='subentry'
+                type='sub'
                 onFilterChange={handleFilterChange}
                 activeFilter={gameState?.activeFilter}
               />{' '}
@@ -368,7 +368,7 @@ export function TimeLine () {
                       <AvailableCell itemId={item.id} type='entry' />
                     </td>
                     <td width='70%' data-label='title'>
-                        {item.type==='subentry' ? <div className="tab"></div> : ' '}
+                        {item.type==='sub' ? <div className="tab"></div> : ' '}
                        <Link
                         title={item.description}
                         to={`/edit-subitem/${item.parentId}/${item.id}`}
@@ -385,7 +385,7 @@ export function TimeLine () {
                     <td>
                       <EditableFields.FormEditListText
                         item={item}
-                        type='subentry'
+                        type='sub'
                       />
                       {/*  Below isn't working yet. Taking a break. TODO */}
                       {/* <EditableFields.EditDate itemID={item.id} type="subentry" /> */}
@@ -398,7 +398,7 @@ export function TimeLine () {
                     <td data-label='researcherID'>
                       <EditableFields.EditResearcher
                         itemID={item.id}
-                        type={item.type==='subentry' ? 'subentry' : 'entry'}
+                        type={item.type==='sub' ? 'subentry' : 'entry'}
                       />
                     </td>
                     <td data-label='hexHash'>
@@ -419,7 +419,7 @@ export function TimeLine () {
                             onChange={e => setTempSubHexValue(e.target.value)}
                             onKeyDown={e => {
                               if (e.key === 'Enter')
-                                saveHexHash(item.id, 'subentry')
+                                saveHexHash(item.id, 'sub')
                               if (e.key === 'Escape') cancelEditingHex()
                             }}
                             placeholder='Enter hex values (comma separated)'
@@ -433,7 +433,7 @@ export function TimeLine () {
                         </div>
                       ) : (
                         <div
-                          onClick={() => startEditingHex(item, 'subentry')}
+                          onClick={() => startEditingHex(item, 'sub')}
                           style={{
                             cursor: 'pointer',
                             padding: '5px',
