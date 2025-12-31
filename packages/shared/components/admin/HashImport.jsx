@@ -14,7 +14,8 @@ function HashImport () {
   const friends = useLiveQuery(() => db.friends.toArray())
   const subentries = useLiveQuery(() => db.subentries.toArray())
   const navigate = useNavigate()
-
+  const { globalUser } =
+    GameLogic();
 
 
   const importHash = async () => {
@@ -60,7 +61,8 @@ function HashImport () {
           .toISOString()
           .replace('T', ' ')
           .substring(0, 19),
-        modEdit: 'migrated'
+        modEdit: 'migrated',
+        lastEditedBy: globalUser.username
       })
     })
 
@@ -71,7 +73,8 @@ function HashImport () {
           .toISOString()
           .replace('T', ' ')
           .substring(0, 19),
-        modEdit: 'migrated'
+        modEdit: 'migrated',
+        lastEditedBy: globalUser.username
       })
     })
 

@@ -80,9 +80,13 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
         ref={itemRef}
         className='subentry-staticentry subEntry-not-available'
       >
-        <span className='subIDSpan'>
-          <h3>{item.fauxID} </h3>{' '}
-        </span>
+       <div className='entry-header'>
+                    <div style={{}}>
+            <BookMarkCheck itemID={item.id} type='entry' />
+          </div>  <div className='entry-title'>
+          <span className='subIDSpan'> <h3>{item.fauxID} </h3>{' '} </span>
+          </div>
+       </div>
         <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}
         {/* Abandoned feature for now */}
         {/* {!gameState.cheatCode ?    (

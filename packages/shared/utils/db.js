@@ -12,6 +12,7 @@ import { updateGameState } from "./gamelogic.js";
 import { Link } from "react-router-dom";
 
 export const db = new Dexie("gb-current");
+  // const gameLogic = GameLogic();
 
 //##region Database Schema Versions
 // Schema declaration:
@@ -125,8 +126,6 @@ db.version(5.1).stores({
   events: "++id, name, type, timestamp",
 });
 
-
-
 //#endregion
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
@@ -141,15 +140,15 @@ export const dbHelpers = {
     return await db.subentries.add(subentry);
   },
 
-  async addEvent(eventName) {
-    return await db.events.add(
-     { name: eventName,
-      type: "default", 
-      timestamp: new Date()}
-    );
+  async addEvent(eventName, type = "default") {
+    return await db.events.add({
+      name: eventName,
+      type: type,
+      timestamp: new Date().toLocaleString(),
+    });
   },
 
-    async clearEvents() {
+  async clearEvents() {
     return await db.events.clear();
   },
 
@@ -263,69 +262,68 @@ export const dbHelpers = {
     if (item === null) return;
 
     let bar;
-    
-            if(item.title != "") bar =  " | ";
-           else bar =  "";
+
+    if (item.title != "") bar = " | ";
+    else bar = "";
 
     let theTitle;
+
+  //       url = !gameLog.isAdmin ? "entry" : "edit-item";
+    if (!item.available) theTitle = item.fauxID + " - ITEM UNAVAI LABLE";
 
     if (item.type === "entry") {
       // main entry
       theTitle = item.fauxID + bar + item.title;
     } else {
       if (item.subCategory != "MetaData" && item.subCategory) {
-
-
-
-
-        theTitle = item.fauxID + " | " + item.subCategory + bar + item.title ;
+        theTitle = item.fauxID + " | " + item.subCategory + bar + item.title;
       } else {
-        theTitle = item.fauxID + bar +  item.title;
+        theTitle = item.fauxID + bar + item.title;
       }
     }
 
     return theTitle;
   },
 
-//   urlDirect(item) {
-//     let url;
+  //   urlDirect(item) {
+  //     let url;
 
-//     if (item.type === "entry") {
-//       url = !gameLog.isAdmin ? "entry" : "edit-item";
-//     } else {
-//       url = "edit-subitem";
-//     }
+  //     if (item.type === "entry") {
+  //       url = !gameLog.isAdmin ? "entry" : "edit-item";
+  //     } else {
+  //       url = "edit-subitem";
+  //     }
 
-//     return url;
-//   },
+  //     return url;
+  //   },
 
-//   generateEntryLink(item) {
+  //   generateEntryLink(item) {
 
-//     const URL = urlDirect(item);
+  //     const URL = urlDirect(item);
 
-//     if (item.type === "sub") {
-//       return (
-//         <>
-//           <div className="tab"></div>
-//           <Link to={`/${URL}/${item.parentId}/`}>
-//             {dbHelpers.generateTitle(item)}
-//           </Link>
-//         </>
-//       );
-//     } else {
-//       return (
-//         <>
-//           <Link
-//             to={`/${URL}/${item.origin}`}
-//             className="log-parent-title"
-//           >
-//             {dbHelpers.generateTitle(item)} sdfsdf fsd sfsd
-//           </Link>
-//         </>
-//       );
-//     }
-//   },
- };
+  //     if (item.type === "sub") {
+  //       return (
+  //         <>
+  //           <div className="tab"></div>
+  //           <Link to={`/${URL}/${item.parentId}/`}>
+  //             {dbHelpers.generateTitle(item)}
+  //           </Link>
+  //         </>
+  //       );
+  //     } else {
+  //       return (
+  //         <>
+  //           <Link
+  //             to={`/${URL}/${item.origin}`}
+  //             className="log-parent-title"
+  //           >
+  //             {dbHelpers.generateTitle(item)} sdfsdf fsd sfsd
+  //           </Link>
+  //         </>
+  //       );
+  //     }
+  //   },
+};
 
 export const handleJSONExport = async (fileName = "dexie-export-web.json") => {
   try {
@@ -437,6 +435,7 @@ export const newGame = async (startHash) => {
     //   });
 
     // reset states
+    dbHelpers.clearEvents();
     await setStartAvalability(startHash);
     await setDefaultParameters();
     updateGameState("editAccess", false);

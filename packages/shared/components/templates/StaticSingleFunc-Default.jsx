@@ -112,11 +112,15 @@ export function StaticSingleDefault ({ itemID }) {
 
   if (item.available === false) {
     return (
-      <div className='subentry-staticentry subEntry-not-available'>
-        <span className='subIDSpan'>
-          <h3>{item.fauxID} </h3>{' '}
-        </span>
-        <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}
+      <div className='subentry-staticentry subEntry-not-available '>
+       <div className='entry-header'>
+                    <div style={{}}>
+            <BookMarkCheck itemID={item.id} type='entry' />
+          </div>  <div className='entry-title'>
+          <span className='subIDSpan'> <h3>{item.fauxID} </h3>{' '} </span>
+          </div>
+       </div>
+        <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}  
       </div>
     )
   }
@@ -172,11 +176,11 @@ export function StaticSingleDefault ({ itemID }) {
         </div>
 
         <div>
-        {item.entryRef.map((item, index) => (
+        {/* {item.entryRef.map((item, index) => (
           <div key={index}>
             <span>{item.fauxID}</span>
           </div>
-        ))}
+        ))} */}
 
         </div>
 

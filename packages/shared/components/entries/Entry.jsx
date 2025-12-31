@@ -51,7 +51,7 @@ const Entry = () => {
     }
 
     else if (isAdmin) {
-      return (<>admin  <AddEntryForm itemID={id} />
+      return (<>  <AddEntryForm itemID={id} />
       </>);
     }
 
@@ -60,7 +60,7 @@ const Entry = () => {
       console.log(" hex 50: ", id);
       return(<div>NO ENTRY</div>);
     } else {
-      return (<>no admin <StaticSingleDefault itemID={id} /></> );
+      return (<><StaticSingleDefault itemID={id} /></> );
     }
   }
 

@@ -32,7 +32,10 @@ function RouteTracker () {
     // Save current route to localStorage whenever it changes
     localStorage.setItem('secondLastRoute', localStorage.getItem('lastRoute'))
     localStorage.setItem('lastRoute', location.pathname)
-    console.log("current: " + localStorage.getItem('lastRoute') + " last: " + localStorage.getItem('secondLastRoute'));
+
+    // console.log("current: " + localStorage.getItem('lastRoute') + " last: " + localStorage.getItem('secondLastRoute'));
+
+    dbHelpers.addEvent("visited: " + location.pathname, "navigation");
 
 
   }, [location.pathname])

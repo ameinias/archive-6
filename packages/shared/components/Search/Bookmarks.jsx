@@ -39,7 +39,8 @@ const Bookmarks = () => {
            origin: item.id,
           title: item.title,
           date: item.date,
-          type: 'main',
+          available: item.available, 
+          type: 'entry',
         });
         nextID = nextID + 1;
       }
@@ -55,6 +56,7 @@ const Bookmarks = () => {
           fauxID: subItem.fauxID, // Ensure fauxID is included
           title: subItem.title, // Ensure title is included
           date: subItem.date, // Include date if available
+          available: subItem.available, 
           type: 'sub', // Mark as sub entry
         });
         nextID = nextID + 1;
