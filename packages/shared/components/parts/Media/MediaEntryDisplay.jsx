@@ -23,7 +23,7 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
   }
 
   if (!item.media || item.media.length === 0) {
-    return <>No Attachments.</>;
+    return; // <>No Attachments.</>;
   }
     var itemRef = item.media[0];
 
@@ -36,7 +36,7 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
 
   if (item.media.length === 1) {
     return (
-      <>
+              <div className='subentry-add-list flex'>
         {item.media.map((file, index) => {
           return (
             <div
@@ -54,12 +54,12 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
             </div>
           );
         })}
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className='subentry-add-list flex'>
            <MediaThumbnail
         fileRef={item.media[selectedIndex]}
         maxHeight={"500px"}
@@ -89,6 +89,6 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
         </div>
         );
      })} 
-    </>
+    </div>
   );
 }

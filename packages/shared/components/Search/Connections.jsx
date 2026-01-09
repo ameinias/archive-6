@@ -19,6 +19,12 @@ export default function TestComp() {
   const { isAdmin } = GameLogic();
 
 
+  useEffect(() => {
+  if (!isAdmin) {
+    setFilterAvailable(true);
+  }
+}, [isAdmin]);
+  
   const changeBool = (e) => {
     const { name, checked } = e.target;
     setFilterAvailable(checked);

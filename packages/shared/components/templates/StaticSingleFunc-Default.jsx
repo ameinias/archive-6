@@ -112,7 +112,9 @@ export function StaticSingleDefault ({ itemID }) {
 
   if (item.available === false) {
     return (
+      
       <div className='subentry-staticentry subEntry-not-available '>
+        {item.id}
        <div className='entry-header'>
                     <div style={{}}>
             <BookMarkCheck itemID={item.id} type='entry' />
@@ -130,6 +132,7 @@ export function StaticSingleDefault ({ itemID }) {
       {/* <h1>Time Remaining: {seconds}s</h1> */}
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
+              {item.id}
         <div className='entry-header'>
           {' '}
           <div style={{}}>
@@ -141,7 +144,7 @@ export function StaticSingleDefault ({ itemID }) {
           </div>
         </div>
 
-        <div title='Metadata'>
+        <div id='Metadata'>
           <div>
             <b>Category:</b> {item.category}{' '}
           </div>
@@ -171,24 +174,36 @@ export function StaticSingleDefault ({ itemID }) {
           </div>
         </div>
 
-        <div className='subentry-add-list flex'>
+
           <MediaEntryDisplay itemID={item.id} type='entry' />
-        </div>
 
-        <div>
-        {/* {item.entryRef.map((item, index) => (
-          <div key={index}>
-            <span>{item.fauxID}</span>
-          </div>
-        ))} */}
 
+{item.entryRef.length != 0 && (
+        <div className='subentry-add-list flex'>
+          <h2>Related </h2>
+        {item.entryRef.map((ref, index) => (
+          <span key={index}>
+           
+                        <Link
+              to={`/entry/${ref.originId}`}
+              title={ref.available ? (`View entry ${ref.title}` ) : ('NOT AVAILABLE')}
+              className="mention-link" 
+            >
+             {ref.fauxID}{' '}
+            </Link>
+               {index < item.entryRef.length - 1 && ', '}
+          </span>
+        ))}
         </div>
+        )
+}
+
 
         {/* Show subentries if they exist */}
         {subEntryOfParent.filter(
           item => item.subCategory.toLowerCase() !== 'metadata'
         ).length != 0 && (
-          <div title='Subentries'>
+          <div id='subentries' className='subentry-add-list flex'>
             <h2>Logs </h2>
             {subEntryOfParent
               .filter(item => item.subCategory.toLowerCase() !== 'metadata')
@@ -202,7 +217,7 @@ export function StaticSingleDefault ({ itemID }) {
               ))}
           </div>
         )}
-        {/* {gameLogic.gameState.editAccess && <>add record</>} */}
+   
       </div>
     </div>
   )

@@ -1021,6 +1021,7 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
   padding: 5px;
   margin: 5px;
   border: var(--div-border);
+  max-width: 550px;
 }
 .media-thumbnail-list>.pdf{
   width: "200px";
@@ -1340,3 +1341,74 @@ color: rgb(45, 46, 41)!important;
 border: 1px solid rgb(118, 139, 255);
 }
 
+
+/* try this: https://blog.theodo.com/2020/11/react-resizeable-split-panels/ */
+.console {
+  border: none;
+  padding: 20px; 
+  width: 100%;
+  resize: vertical;
+  overflow-y: scroll;
+    grid-row: 4;
+    background-color:rgb(20, 20, 20);
+    color:#4CAF50;
+    font-family: Consolas, "Lucida Console", Monaco, monospace;
+    max-height: 200px;
+
+}
+
+.hide{
+  display:none;
+}
+
+
+.clear-button-style{
+    border: none;
+  box-shadow: none;
+  border-color: transparent;
+    transition: none;
+    background: transparent;
+}
+
+
+.clear-button-style:hover{
+  border: none;
+  box-shadow: none;
+  border-color: transparent;
+    transition: none;
+    background: transparent;
+}
+
+.clear-button-style:active{
+  border: none;
+  box-shadow: none;
+  border-color: transparent;
+    transition: none;
+    background: transparent;
+}
+
+.clear-button-style:not(:disabled):not(:hover) {
+    border-color: transparent;
+    transition: none;
+}
+
+.clear-button-style:before {
+    background: transparent;
+    border:none;
+}
+
+.clear-button-style:after {
+    background: transparent;
+    border:none;
+}
+
+.console-button{
+  width:20px!important;
+  min-width:20px!important;
+  margin:auto;
+  float:unset;
+}
+
+.console-button:before {
+    background: red!important;
+}

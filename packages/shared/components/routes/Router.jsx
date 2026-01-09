@@ -31,6 +31,8 @@ import Media from '@components/search/Media';
 import  HexList  from '@components/search/HexList';
 import  Logs  from '@components/search/Logs';
 import  Connections  from '@components/search/Connections';
+
+
 import { TimeLine } from '@components/lists/TimeLine';
 
 //Tools
@@ -44,6 +46,7 @@ import StatusBar from '@components/bars/StatusBar';
 
 // Endgame pages
 import { PlayerAddEntryForm } from '@components/other/PlayerEditPage';
+import  Console from '@components/other/Console';
 import Conversation from '@components/other/Conversation';
 import TestComp from '../testcomp';
 
@@ -70,22 +73,10 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
 
   useEffect(() => {
     checkNewGame();
-    checkDBVersion();
+    // checkDBVersion();
   }, []);
 
-  const checkDBVersion = async () => {
-    //   dbHelpers.getDBVersion().then(async (version) => {
-    //   console.log('Current DB Version:', version);
-    //   const expectedVersion = dbHelpers.getExpectedDBVersion();
-    //   if (version < expectedVersion) {
-    //     console.log(`Database version ${version} is outdated. Expected version is ${expectedVersion}.`);
-    //     // Here you can implement migration logic if needed
-    //     await eventManager.showAlert(`Your database is outdated (version ${version}). Please start a new game to update to version ${expectedVersion}.`);
-    //   } else {
-    //     console.log('Database is up to date.');
-    //   }
-    // });
-  };
+
 
   // this is also in AppNew.jsx - which is the correct place for it?
   const checkNewGame = async () => {
@@ -158,6 +149,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
             </Routes>
           </div>
         </div>
+          <Console />
          <StatusBar />
         </>
 

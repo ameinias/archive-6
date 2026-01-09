@@ -19,7 +19,7 @@ import { MediaUploadSub } from '@components/parts/Media/MediaUploadSub'
 import { eventManager } from '@utils/events'
 import { useToggle } from '@hooks/hooks'
 import * as EditableFields from '@components/parts/EditableFields'
-import { safeRender, safeDate } from '@utils/helper';
+import { safeRender, safeDate, ensureArray } from '@utils/helper';
 import {SelectEntry} from "@components/parts/FormAssets";
 
 // onFinishEdit calls back to ListSubEntries to close the toggle
@@ -147,6 +147,8 @@ export function AddSubEntryForm ({
     }
   }
 
+
+
   async function returnParentFauxID () {
     const parent = await db.friends.get(Number(parentID))
     const parentFauxID = parent?.fauxID || ''
@@ -154,6 +156,23 @@ export function AddSubEntryForm ({
 
     return parentFauxID
   }
+
+  async function returnParentDate () {
+    const parent = await db.friends.get(Number(parentID))
+    const parentDate = parent?.displayDate || ''
+
+
+    return parentDate
+  }
+
+    async function returnParentHexHash () {
+    const parent = await db.friends.get(Number(parentID))
+    const parentHash = ensureArray(parent?.hexHash || defaultHex)
+    
+
+    return parentHash
+  }
+
 
   async function generateNewIDwhat () {}
 
@@ -224,9 +243,15 @@ export function AddSubEntryForm ({
     async function setupNewEntry () {
       if (isNewEntry && parentID) {
         const newFauxID = await generateNewID()
+        const parentDate = await returnParentDate()
+        const parentHexHash = await returnParentHexHash()
+        console.log("trying to borrow parent hash " + parentHexHash)
+
         setFormValue(prev => ({
           ...prev,
-          fauxID: newFauxID
+          fauxID: newFauxID,
+          displayDate: parentDate,
+          hexHash: parentHexHash
         }))
         returnParentFauxID()
       }
@@ -826,7 +851,7 @@ export function AddSubEntryForm ({
                 onChange={handleArrayChange}
                 options={hexHashes.map((sub, i) => (
                   <option key={i} value={sub.id}>
-                    {sub.name} ({sub.hexHashcode})
+                    {sub.id} {sub.name} ({sub.hexHashcode})
                   </option>
                 ))}
               />

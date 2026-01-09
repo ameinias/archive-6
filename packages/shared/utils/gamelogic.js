@@ -43,7 +43,9 @@ let globalGameState = {
   activeFilter: "all",
   endgameSequence: false,
   showDebug: false,
-  endGameTimer: false
+  endGameTimer: false,
+  consoleAvailable: true,
+  showConsole: false
 };
 let globalStatus = "";
 
@@ -174,7 +176,8 @@ export function GameLogic() {
        lastRoute: "/",
       editAccess: false,
       cheatCode: true,
-      endgameSequence: false
+      endgameSequence: false,
+      showConsole: false
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -323,5 +326,6 @@ export function GameLogic() {
     setCheatCode,
     updateGameState,
     triggerEvent
+
   };
 }
