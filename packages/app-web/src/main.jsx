@@ -2,7 +2,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import './App.css';
 import React from 'react';
-import TestComp from '@shared/components/testcomp';
+// import TestComp from '@shared/components/testcomp';
+import BlankTest from './BlankTest';
 import ReactDOM from 'react-dom/client'
 // import App from './App';
 import FakeApp from './FakeApp';

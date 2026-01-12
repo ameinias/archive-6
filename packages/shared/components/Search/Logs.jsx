@@ -200,10 +200,8 @@ const Logs = () => {
                     {" "}
                     {item.modEditDate ? item.modEditDate : <i>unknown</i>}{" "}
                   </td>
-                  {/* <td width="55px">{item.available ? "NaN" : "active"}</td>
-                  <td width="55px">{item.unread ? "unread" : "read"}</td> */}
                 </tr>
-              ))}{" "}
+              ))}
             </tbody>
           </table>
         )}{" "}

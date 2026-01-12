@@ -101,7 +101,7 @@ function RouteTracker() {
       <div className="wrapper"  key={dbKey}>
       <RouteTracker />
           <RouterPath />
-          <StatusBar />
+          {/* <StatusBar /> */}
       </div>
 </Router>
 </>

@@ -4,12 +4,16 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    global: 'globalThis',
+  },
   resolve: {
     alias: {
       '@shared': path.resolve(__dirname, '../shared'),
       '@components': path.resolve(__dirname, '../shared/components'),
       '@utils': path.resolve(__dirname, '../shared/utils'),
       '@hooks': path.resolve(__dirname, '../shared/hooks'),
+      '@assets': path.resolve(__dirname, '../../assets'),
     }
   },
   base: "https://blekkenhorst.ca/bleed/app/",

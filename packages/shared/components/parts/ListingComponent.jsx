@@ -1,53 +1,48 @@
-import React from 'react';
-import {GameLogic} from '@utils/gamelogic';
-import {Link} from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
-import { useLiveQuery } from 'dexie-react-hooks';
-
-
+import React from "react";
+import { GameLogic } from "@utils/gamelogic";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export function applyHexFilter(items, activeFilter) {
- let filtered = items;
+  let filtered = items;
 
-    if (activeFilter === "vignette1") {
-      filtered = items.filter(item => {
-        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
-        return hexes.some(hex => hex >= 0 && hex <= 9);
-      });
-    } else if (activeFilter === "vignette2") {
-      filtered = items.filter(item => {
-        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
-        return hexes.some(hex => hex >=10 && hex <= 20);
-      });
-    } else if (activeFilter === "junk") {
-      filtered = items.filter(item => {
-        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
-        return hexes.some(hex => hex >= 50 && hex <= 50);
-      });
-    } else if (activeFilter === "standalone") {
-      filtered = items.filter(item => {
-        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
-        return hexes.some(hex => hex >= 100 && hex <= 200);
-      });
-    } else if (activeFilter === "future") {
-      filtered = items.filter(item => {
-        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
-        return hexes.some(hex => hex >= 52 && hex <= 52);
-      });
-    } else if (activeFilter === "player") {
-      filtered = items.filter(item => {
-        const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
-        return hexes.some(hex => hex >= 51 && hex <= 51);
-      });
-    }
-
-
+  if (activeFilter === "vignette1") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 0 && hex <= 9);
+    });
+  } else if (activeFilter === "vignette2") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 10 && hex <= 20);
+    });
+  } else if (activeFilter === "junk") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 50 && hex <= 50);
+    });
+  } else if (activeFilter === "standalone") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 100 && hex <= 200);
+    });
+  } else if (activeFilter === "future") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 52 && hex <= 52);
+    });
+  } else if (activeFilter === "player") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 51 && hex <= 51);
+    });
+  }
 
   return filtered; // "all" filter
 }
 
-
-export function FilterList ({ onFilterChange, activeFilter = "all" }) {
+export function FilterList({ onFilterChange, activeFilter = "all" }) {
   return (
     <div className="filter-buttons">
       <div className="strip">
@@ -58,7 +53,7 @@ export function FilterList ({ onFilterChange, activeFilter = "all" }) {
         >
           All
         </span>
-              <span
+        <span
           className={activeFilter === "junk" ? "active" : ""}
           onClick={() => onFilterChange("junk")}
           style={{ cursor: "pointer", margin: "0 10px" }}
@@ -81,124 +76,118 @@ export function FilterList ({ onFilterChange, activeFilter = "all" }) {
         </span>
       </div>
 
-<div className="strip">
-
+      <div className="strip">
         <span
-    className={activeFilter === "future" ? "active" : ""}
-    onClick={() => onFilterChange("future")}
-    style={{ cursor: "pointer", margin: "0 10px" }}
-  >
-    Future (Hex 52)
-  </span>
-              <span
-    className={activeFilter === "player" ? "active" : ""}
-    onClick={() => onFilterChange("player")}
-    style={{ cursor: "pointer", margin: "0 10px" }}
-  >
-    Player (Hex 51)
-  </span>
-                    <span
-    className={activeFilter === "standalone" ? "active" : ""}
-    onClick={() => onFilterChange("standalone")}
-    style={{ cursor: "pointer", margin: "0 10px" }}
-  >
-    standalone (Hex 100+)
-  </span>
-</div>
+          className={activeFilter === "future" ? "active" : ""}
+          onClick={() => onFilterChange("future")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Future (Hex 52)
+        </span>
+        <span
+          className={activeFilter === "player" ? "active" : ""}
+          onClick={() => onFilterChange("player")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Player (Hex 51)
+        </span>
+        <span
+          className={activeFilter === "standalone" ? "active" : ""}
+          onClick={() => onFilterChange("standalone")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          standalone (Hex 100+)
+        </span>
+      </div>
     </div>
   );
 }
 
+// export function OldSearchPageItem({itemID}) {
+//     const gameLog = GameLogic();
+//     //const [item, setItem] = React.useState(null);
 
+//     const item = useLiveQuery(async () => {
+//       if (!itemID) return null;
+//       return
+//         await db.subentries.get(Number(itemID)); }, [itemID]); if (!item) {
+//       return
+//     <div>Loading...</div>; }
 
-export function OldSearchPageItem({itemID}) {
-    const gameLog = GameLogic();
-    //const [item, setItem] = React.useState(null);
+//     return (
 
-    const item = useLiveQuery(async () => {
-      if (!itemID) return null;
-      return
-        await db.subentries.get(Number(itemID)); }, [itemID]); if (!item) {
-      return
-    <div>Loading...</div>; }
+//     <>  {item.id}
+//     {
+//         item.type === 'sub'
+//             ? ( <> {
+//                 (!gameLog.isAdmin
+//                     ? (
+//                         <Link to={`/entry / $ {item.parentId} / `}>
+//                             {item.fauxID}
+//                             : {item.title}
+//                         </Link>
+//                     )
+//                     : (
 
-    return (
+//                         <Link to={` / $ {urlSubDirect} / $ {item.parentId} / $ {item.origin}`}>
+//                             {item.fauxID}
+//                             : {item.title}
+//                         </Link>
+//                     ))
+//             } < />
+//                  ) : (
 
-    <>  {item.id}
-    {
-        item.type === 'sub'
-            ? ( <> {
-                (!gameLog.isAdmin
-                    ? (
-                        <Link to={`/entry / $ {item.parentId} / `}>
-                            {item.fauxID}
-                            : {item.title}
-                        </Link>
-                    )
-                    : (
+//               <>
+//               <Link to={` /$ {urlDirect} / $ {item.origin}`}>
+//                          {item.fauxID} : {item.title}
+//               </Link>
 
-                        <Link to={` / $ {urlSubDirect} / $ {item.parentId} / $ {item.origin}`}>
-                            {item.fauxID}
-                            : {item.title}
-                        </Link>
-                    ))
-            } < />
-                 ) : (
+//               </>
+//                  )}
+//     </>
+//     );
+// }
 
-              <>
-              <Link to={` /$ {urlDirect} / $ {item.origin}`}>
-                         {item.fauxID} : {item.title}
-              </Link>
+export function SearchPageItem({ itemID, type }) {
+  const gameLog = GameLogic();
+  //const [item, setItem] = React.useState(null);
 
-              </>
-                 )}
+  const item = useLiveQuery(async () => {
+    if (!itemID) return null;
+    return;
+    await db.subentries.get(Number(itemID));
+  }, [itemID]);
+  if (!item) {
+    return;
+    <div>Loading...</div>;
+  }
+
+  return (
+    <>
+      {" "}
+      {itemID} {type}
+      {item.type === "sub" ? (
+        <>
+          {" "}
+          {!gameLog.isAdmin ? (
+            <Link to={`/entry / $ {item.parentId} / `}>
+              {item.fauxID}: {item.title}
+            </Link>
+          ) : (
+            <Link
+              to={` / $ {urlSubDirect} / $ {item.parentId} / $ {item.origin}`}
+            >
+              {item.fauxID}: {item.title}
+            </Link>
+          )}{" "}
+        </>
+      ) : (
+        <>
+          <Link to={` /$ {urlDirect} / $ {item.origin}`}>
+            {item.fauxID} : {item.title}
+          </Link>
+        </>
+      )}
     </>
-    );
-}
-
-
-
-export function SearchPageItem({itemID, type}) {
-    const gameLog = GameLogic();
-    //const [item, setItem] = React.useState(null);
-
-    const item = useLiveQuery(async () => {
-      if (!itemID) return null;
-      return
-        await db.subentries.get(Number(itemID)); }, [itemID]); if (!item) {
-      return
-    <div>Loading...</div>; }
-
-    return (
-
-    <> sdffs {itemID}   {type}
-    {
-        item.type === 'sub'
-            ? ( <> {
-                (!gameLog.isAdmin
-                    ? (
-                        <Link to={`/entry / $ {item.parentId} / `}>
-                            {item.fauxID}
-                            : {item.title}
-                        </Link>
-                    )
-                    : (
-
-                        <Link to={` / $ {urlSubDirect} / $ {item.parentId} / $ {item.origin}`}>
-                            {item.fauxID}
-                            : {item.title}
-                        </Link>
-                    ))
-            } < />
-                 ) : (
-
-              <>
-              <Link to={` /$ {urlDirect} / $ {item.origin}`}>
-                         {item.fauxID} : {item.title}
-              </Link>
-
-              </>
-                 )}
-    </>
-    );
+  );
 }

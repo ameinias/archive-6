@@ -149,7 +149,7 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
       },
       nodes: {
         shape: "dot",
-        padding: "4px",
+    
         borderWidth: 4,
         widthConstraint: {
           maximum: 250,
@@ -158,7 +158,7 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
           border: "#222222",
           background: "#666666",
         },
-        font: { color: "#000000ff", size: 25, multi: "html", maxWid: 20 },
+        font: { color: "#000000ff", size: 25, multi: "html"},
       },
       layout: {
         hierarchical: false,

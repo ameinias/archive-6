@@ -180,7 +180,7 @@ export function useReturnEntryOrSubentry(itemId, type) {
       }
     }, [itemId]) || null
   );
-  return null;
+  // return null;
 }
 
 export function useReturnDatabase(itemId) {

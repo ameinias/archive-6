@@ -116,12 +116,13 @@ db.version(5.0).stores({
 });
 
 //add new database for events
+// newWebEntry - if not selected, exports entry without ID number so it becomes a 
 db.version(5.1).stores({
   gamedata: "expVersion, uploadedAt, sessionStart",
   friends:
-    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef",
+    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef, newWebEntry",
   subentries:
-    "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef",
+    "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef, newWebEntry",
   media: "++id, name, type, size, path, uploadedAt",
   events: "++id, name, type, timestamp",
 });
@@ -507,7 +508,7 @@ export const importHash = async (hashValue) => {
     return item.hexHash === hexHashID;
   });
   console.log(hashValue + " fff " + foundSubItems.length);
-  return;
+  // return;
 
   foundItems.map((item) => {
     db.friends.update(item.id, {
