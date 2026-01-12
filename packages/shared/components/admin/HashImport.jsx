@@ -40,6 +40,9 @@ function HashImport () {
         return item.hexHash.includes(hexHashID)
       }
 
+
+
+
       if (item.hexHash === hexHashID) {
         console.log('found subitem with hex: ', item.title)
       } else {
@@ -53,6 +56,28 @@ function HashImport () {
 
       return item.hexHash === hexHashID
     })
+
+
+          const foundParentsOfSubItems = foundSubItems?.filter(item => {
+      return parseInt(item.parentID) === hexHashID
+    })
+
+    for (const subItem of foundSubItems) {
+      const parentID = subItem.parentID
+      const parentItem = await db.friends.get(Number(parentID))
+      if (parentItem && parentItem.available) {
+        await db.friends.update(Number(parentID), {
+          unread: true
+        })
+      }
+    }
+
+
+    // in foundsubitems, collect parentIDs, then set unread for those parents too
+
+
+
+
 
     foundItems.map(item => {
       db.friends.update(item.id, {
@@ -77,6 +102,13 @@ function HashImport () {
         lastEditedBy: globalUser.username
       })
     })
+
+
+    //     foundParentsOfSubItems.map(item => {
+    //   db.subentries.update(item.id, {
+    //     available: true,
+    //   })
+    // })
 
     const message = `Hash: ${hashValue} | ${dbHelpers.getIdsFromHexHashes(
       hashValue

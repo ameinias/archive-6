@@ -49,6 +49,7 @@ import { PlayerAddEntryForm } from '@components/other/PlayerEditPage';
 import  Console from '@components/other/Console';
 import Conversation from '@components/other/Conversation';
 import TestComp from '../testcomp';
+import {DebugPanel} from '@components/parts/DebugPanel'
 
 
 
@@ -134,7 +135,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
               <Route path="/test" element={<TestComp />} />
               <Route path="/connections" element={<Connections />} />
 
-              
+
 
 {/* PlayerAdmin   ------------------------------------------------------------ */}
               <Route path="/register" element={<Register />} />
@@ -149,6 +150,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
             </Routes>
           </div>
         </div>
+        <DebugPanel />
           <Console />
          <StatusBar />
         </>

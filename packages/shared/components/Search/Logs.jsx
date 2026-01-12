@@ -128,7 +128,7 @@ const Logs = () => {
                   className={item.unread ? "unread-display" : "dickie"}
                 >
                   <td>
-             
+
                     {/* {item.type === "sub" ? (
                       <>
                         <div className="tab"></div>
@@ -173,11 +173,11 @@ const Logs = () => {
                           {item.fauxID} : {item.title}
                         </Link>
                       </>
-                    )} 
+                    )}
                   </td>
                   <td width="60px">
                     <i>
-                      {" "}
+
                       {item.hexHash != "1" ? item.modEdit : <i>migrated</i>}
                     </i>
                     {/* ? item.modEdit : <i>modified</i>} */}

@@ -21,6 +21,7 @@ import Login from '@components/login/Login'
 import StatusBar from '@components/bars/StatusBar'
 import { eventManager } from '@utils/events'
 
+
 // import { ImportExport } from 'ImportExport';
 
 // Component to track and restore route on hot reload
@@ -171,28 +172,6 @@ export default function App () {
     <>
       <div className={gameState.endgameSequence ? 'lockScreen' : ''}></div>
 
-      {gameState.showDebug && (
-        <div className='debugInfo'>
-          <p>
-            editAccess:{' '}
-            {gameState.editAccess ? (
-              <span className='bugHi'>true</span>
-            ) : (
-              'false'
-            )}
-          </p>
-          <p>activeFilter: {gameState.activeFilter} </p>
-          <p>
-            endgameSequence:{' '}
-            {gameState.endgameSequence ? (
-              <span className='bugHi'>true</span>
-            ) : (
-              'false'
-            )}
-          </p>
-          <p>showDebug: {gameState.showDebug ? (<span className='bugHi'>true</span>) : 'false'}</p>
-        </div>
-      )}
 
       <Router initialEntries={[initialRoute]}>
         <div className='wrapper' key={dbKey}>
