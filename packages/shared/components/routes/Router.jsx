@@ -111,7 +111,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
 <>
 {(eventManager.isElectron) ? (
         <NavBar />):( <NavBarWeb />)}
-     
+
         <div className="content window-body has-space">
           <div className="container">
             <Routes>

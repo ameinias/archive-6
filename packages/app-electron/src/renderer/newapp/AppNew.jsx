@@ -20,7 +20,6 @@ import Login from '@components/login/Login'
 // import Register from '../../main/components/Login/Register';
 import StatusBar from '@components/bars/StatusBar'
 import { eventManager } from '@utils/events'
-import DebugOverlay from '@components/parts/DebugOverlay'
 
 // import { ImportExport } from 'ImportExport';
 
@@ -172,7 +171,7 @@ export default function App () {
     <>
       <div className={gameState.endgameSequence ? 'lockScreen' : ''}></div>
 
-<DebugOverlay />
+
 
       <Router initialEntries={[initialRoute]}>
         <div className='wrapper' key={dbKey}>
