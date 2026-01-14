@@ -53,14 +53,14 @@ export function StaticSingleDefault ({ itemID }) {
   useEffect(() => {
     if (!item) return
 
-    if (  item.triggerEvent) { //item.triggerEvent.length > 0
+     if (  item.triggerEvent && !item.unread) { //item.triggerEvent.length > 0
           gameLogic.triggerEvent(item.triggerEvent)
     }
   }, [item, id])
 
     useEffect(() => {
 
-      if(gameLogic.gameState.endgameSequence){
+      if(gameLogic.gameState.endgameSequence && !item.unread){
     // Exit condition for the timer
     if (seconds <= 0) {
       navigate(`/convo`);
@@ -112,7 +112,7 @@ export function StaticSingleDefault ({ itemID }) {
 
   if (item.available === false) {
     return (
-      
+
       <div className='subentry-staticentry subEntry-not-available '>
         {item.id}
        <div className='entry-header'>
@@ -122,7 +122,7 @@ export function StaticSingleDefault ({ itemID }) {
           <span className='subIDSpan'> <h3>{item.fauxID} </h3>{' '} </span>
           </div>
        </div>
-        <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}  
+        <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}
       </div>
     )
   }
@@ -183,11 +183,11 @@ export function StaticSingleDefault ({ itemID }) {
           <h2>Related </h2>
         {item.entryRef.map((ref, index) => (
           <span key={index}>
-           
+
                         <Link
               to={`/entry/${ref.originId}`}
               title={ref.available ? (`View entry ${ref.title}` ) : ('NOT AVAILABLE')}
-              className="mention-link" 
+              className="mention-link"
             >
              {ref.fauxID}{' '}
             </Link>
@@ -217,7 +217,7 @@ export function StaticSingleDefault ({ itemID }) {
               ))}
           </div>
         )}
-   
+
       </div>
     </div>
   )

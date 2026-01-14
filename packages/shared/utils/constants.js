@@ -230,13 +230,13 @@ export const hexHashes = [
 
       {
     id: 100,           // standalone
-    name: "just teeth",
+    name: "v2_just teeth",
     hexHashcode: "621f1cea8a2e201cbebdbf0358d5f577",
 
   },
   {
     id: 101,           // standalone
-    name: "just claws",
+    name: "v2_just claws",
     hexHashcode: "fa0c24c601d8397f22edb7a13145cdee",
 
   },

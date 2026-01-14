@@ -10,7 +10,9 @@ This is a game. I am doing my best to make it work.
 * catagory drop down options in constants.ts if needed
 
 ## surpress annoying logs
+-[vite] in web version
 -[HMR] -[webpack-dev-server]  in electron console
+
 
 ## put assets
 projects>assets

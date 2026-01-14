@@ -1107,7 +1107,7 @@ ul[role=menubar]>[role=menuitem]>a:hover, ul[role=menubar]>[role=menuitem]>butto
 
 .debugInfo{
   position: fixed;
-    bottom: 35px;
+    bottom: 45px;
     left: 10px;
     background-color: rgba(255, 255, 255, 0.9);
     border: 1px solid #ccc;
@@ -1296,7 +1296,7 @@ input[type=email], input[type=number], input[type=password], input[type=text], i
 }
 
 .basic-multi-select{
-  background: var(--w7-el-grad); 
+  background: var(--w7-el-grad);
     border: 1px solid var(--w7-el-bd);
 }
 
@@ -1345,7 +1345,7 @@ border: 1px solid rgb(118, 139, 255);
 /* try this: https://blog.theodo.com/2020/11/react-resizeable-split-panels/ */
 .console {
   border: none;
-  padding: 20px; 
+  padding: 20px;
   width: 100%;
   resize: vertical;
   overflow-y: scroll;
