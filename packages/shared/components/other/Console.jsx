@@ -13,8 +13,10 @@ const Console = () => {
 
   useEffect(() => {
 // window.scrollTo(0, 0);
-scrollToBottom
-console.log("use effect");
+if(gameState.showConsole)
+{scrollToBottom
+console.log("Console visible, scroll to Bottom");
+}
   }, [friends, subentries, gameState.showConsole]);
 
 

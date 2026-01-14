@@ -120,6 +120,7 @@ export function GameLogic() {
     // Update all components that use this state
     localStorage.setItem("isAdmin", JSON.stringify(globalIsAdmin));
     adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
+    console.log("should toggle admin " + globalIsAdmin)
   };
 
   // Register  update functions - so they can work globally in other scripts.

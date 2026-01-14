@@ -43,6 +43,7 @@ const defaultFormValue = {
   triggerEvent: "",
   unread: true,
   entryRef: [],
+  newWebEntry:  false,
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -112,6 +113,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           triggerEvent: entry.triggerEvent,
           unread: entry.unread || true,
           entryRef: entry.entryRef || [],
+          newWebEntry: entry.newWebEntry || false,
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -161,6 +163,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       triggerEvent: formValues.triggerEvent,
       unread: formValues.unread,
       entryRef: formValues.entryRef,
+      newWebEntry: formValues.newWebEntry,
     };
   };
 
@@ -209,6 +212,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       triggerEvent: formValues.triggerEvent,
       unread: formValues.unread,
       entryRef: formValues.entryRef,
+      newWebEntry: formValues.newWebEntry,
     };
   };
 
@@ -731,7 +735,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               </div>
             </div>
             <div className="row">
-              {" "}
+                <div className="col">
               {/*// ------ bookmark  ------*/}
               <label className="formLabel">bookmark</label>
               <input
@@ -741,6 +745,18 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                 onChange={handleCheckboxChange}
                 name="bookmark"
               />
+              </div>
+                <div className="col">
+<label className="formLabel">newWebEntry</label>
+              <input
+                type="checkbox"
+                className="formLabel"
+                checked={formValues.newWebEntry}
+                onChange={handleCheckboxChange}
+                name="newWebEntry"
+              />
+
+                </div>
             </div>
             <div className="col">
               {" "}

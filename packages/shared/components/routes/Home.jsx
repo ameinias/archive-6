@@ -46,8 +46,8 @@ const Home = () => {
   }
 
   const switchTab = () => {
-    if (gameState.subEntryFrontPage === "entries") updateGameState("subEntryFrontPage", "subEntries");
-    else updateGameState("subEntryFrontPage", "entries");
+    if (gameState.subEntryFrontPage === "entries") updateGameState("subEntryFrontPage", "entries");
+    else updateGameState("subEntryFrontPage", "subEntries");
   };
 
   return (

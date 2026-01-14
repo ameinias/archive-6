@@ -13,6 +13,7 @@ import Register from '@components/login/Register';
 import Login from '@components/login/Login';
 import NavBar from '@components/bars/NavBar';
 import NavBarWin from '@components/bars/NavBarWin';
+import NavBarWeb from '@components/bars/NavBarWeb';
 
 import ImportExport from '@components/admin/ImportExport';
 import HashImport from '@components/admin/HashImport';
@@ -51,11 +52,12 @@ import Conversation from '@components/other/Conversation';
 import TestComp from '../testcomp';
 
 
-
 // Component to track and restore route on hot reload
 function RouteTracker() {
   const location = useLocation();
   const friends = useLiveQuery(() => db.friends.toArray());
+
+   const isElectron = eventManager.isElectron;
 
   useEffect(() => {
     // Save current route to localStorage whenever it changes
@@ -78,7 +80,7 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
 
 
 
-  // this is also in AppNew.jsx - which is the correct place for it?
+  // this is also in AppNew.jsx - which is the correct place for it? I think AppNew is only electron so I guess this would hit for mobile also?
   const checkNewGame = async () => {
     const isEmpty = await dbHelpers.isEmpty();
     if (isEmpty) {
@@ -106,9 +108,9 @@ const { isLoggedIn, setLoggedIn } = GameLogic();
 
   return (
 <>
-
-        <NavBar />
-         {/* <NavBarWin /> */}
+{(eventManager.isElectron) ? (
+        <NavBar />):( <NavBarWeb />)}
+     
         <div className="content window-body has-space">
           <div className="container">
             <Routes>
