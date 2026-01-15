@@ -80,6 +80,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 
   useEffect(() => {
     async function fetchData() {
+      console.log("Entry Func: " + itemID);
       if (!itemID || itemID === "new") {
         const newID = await generateNewID();
         setFormValue({

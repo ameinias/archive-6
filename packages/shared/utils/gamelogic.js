@@ -281,6 +281,9 @@ export function GameLogic() {
     'hideDebug': () => updateGameState('showDebug', false),
     'endGameTimer': () => updateGameState('endGameTimer', true),
     'endGameTimerReset': () => updateGameState('endGameTimer', false),
+    'endGameTimerReset': () => updateGameState('endGameTimer', false),
+    'enable-consoleAvailable' : () => updateGameState('consoleAvailable', true),
+    'disable-consoleAvailable' : () => updateGameState('consoleAvailable', false),
 
     // Add more triggers as needed
   };

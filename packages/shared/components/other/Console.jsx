@@ -39,7 +39,7 @@ const Console = () => {
 
         <div>
           " at JSXParserMixin.jsxParseAttributeValue
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4637:21)
+          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4637:21)   
           at JSXParserMixin.jsxParseAttribute
           (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4686:38)
           at JSXParserMixin.jsxParseOpeningElementAfterName
