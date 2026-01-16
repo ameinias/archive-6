@@ -33,8 +33,6 @@ function RouteTracker () {
     localStorage.setItem('secondLastRoute', localStorage.getItem('lastRoute'))
     localStorage.setItem('lastRoute', location.pathname)
 
-    // console.log("current: " + localStorage.getItem('lastRoute') + " last: " + localStorage.getItem('secondLastRoute'));
-
     dbHelpers.addEvent("visited: " + location.pathname, "navigation");
 
 
@@ -176,9 +174,6 @@ export default function App () {
       <Router initialEntries={[initialRoute]}>
         <div className='wrapper' key={dbKey}>
           <RouteTracker />
-          {/* <button onClick={toggleCursor}>
-        {isCursorHidden ? 'Show Cursor' : 'Hide Cursor'}
-      </button> */}
           {!isLoggedIn ? <Login /> : <RouterPath />}
         </div>
       </Router>

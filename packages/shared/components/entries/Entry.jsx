@@ -46,14 +46,19 @@ const Entry = () => {
   const CheckConditionals = () => {
     // console.log("checking conditionals for entry ID:", id);
 
-    if (!entryData) {
-      return <div>No valid ID provided.</div>;
-    }
-
-    else if (isAdmin) {
+    if (isAdmin) {
       return (<>  <AddEntryForm itemID={id} />
       </>);
     }
+
+    else if (!entryData) {
+      return <div>No valid ID provided.</div>;
+    }
+
+    // else if (isAdmin) {
+    //   return (<>  <AddEntryForm itemID={id} />
+    //   </>);
+    // }
 
   else if (entryData.hexHash === "50" || entryData.hexHash === 50) {
       

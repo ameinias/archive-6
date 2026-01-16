@@ -1,10 +1,5 @@
-import React, {
-  useState,
-  useEffect
-} from "react";
-import {
-  eventManager
-} from "@utils/events";
+import React, { useState, useEffect } from "react";
+import { eventManager } from "@utils/events";
 
 //#region -------- gloabal
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
@@ -29,7 +24,7 @@ let globalIsLoggedIn = (() => {
 })();
 
 let globalGameState = {
-  defaultStartHash: 10, //   Game with start with this hash on new game or logout
+  defaultStartHash: 30, //   Game with start with this hash on new game or logout
   score: 0,
   isGameOver: false,
   level: 0,
@@ -44,8 +39,10 @@ let globalGameState = {
   endgameSequence: false,
   showDebug: false,
   endGameTimer: false,
-  consoleAvailable: true,
-  showConsole: false
+  consoleAvailable: false,
+  showConsole: false,
+  connectionPanel: false,
+  connectionEdit: false,
 };
 let globalStatus = "";
 
@@ -53,13 +50,14 @@ let globalRemoveText = "remove";
 let globalUser = (() => {
   try {
     const savedUser = localStorage.getItem("globalUser");
-    return savedUser ?
-      JSON.parse(savedUser) : {
-        username: "playerName",
-        password: "password",
-        firstname: "firstname",
-        lastname: "lastname",
-      };
+    return savedUser
+      ? JSON.parse(savedUser)
+      : {
+          username: "playerName",
+          password: "password",
+          firstname: "firstname",
+          lastname: "lastname",
+        };
   } catch (error) {
     // Fallback for SSR or environments without localStorage
     console.warn("localStorage not available:", error);
@@ -95,13 +93,11 @@ export const updateGameState = (variableName, state) => {
   }
   globalGameState = {
     ...globalGameState,
-    [variableName]: state
+    [variableName]: state,
   };
-  console.log(`Updated property: ${variableName}`);
+  // console.log(`Updated property: ${variableName}`);
   gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
 };
-
-
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);
@@ -120,7 +116,7 @@ export function GameLogic() {
     // Update all components that use this state
     localStorage.setItem("isAdmin", JSON.stringify(globalIsAdmin));
     adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
-    console.log("should toggle admin " + globalIsAdmin)
+    console.log("should toggle admin " + globalIsAdmin);
   };
 
   // Register  update functions - so they can work globally in other scripts.
@@ -174,11 +170,15 @@ export function GameLogic() {
       score: 0,
       isGameOver: false,
       level: 0,
-       lastRoute: "/",
+      lastRoute: "/",
       editAccess: false,
       cheatCode: true,
       endgameSequence: false,
-      showConsole: false
+      showConsole: false,
+        consoleAvailable: false,
+  showConsole: false,
+  connectionPanel: false,
+  connectionEdit: false,
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -187,7 +187,7 @@ export function GameLogic() {
   const endGame = () => {
     globalGameState = {
       ...globalGameState,
-      isGameOver: true
+      isGameOver: true,
     };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
@@ -225,7 +225,7 @@ export function GameLogic() {
   const setColumn = (column) => {
     globalGameState = {
       ...globalGameState,
-      sortColumn: column
+      sortColumn: column,
     };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
@@ -233,7 +233,7 @@ export function GameLogic() {
   const setSort = (sort) => {
     globalGameState = {
       ...globalGameState,
-      sortDirection: sort
+      sortDirection: sort,
     };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
@@ -241,7 +241,7 @@ export function GameLogic() {
   const setCheatCode = (sort) => {
     globalGameState = {
       ...globalGameState,
-      cheatCode: sort
+      cheatCode: sort,
     };
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
   };
@@ -271,19 +271,24 @@ export function GameLogic() {
 
   // At module level (outside GameLogic component) get by
   const triggerRegistry = {
-   // 'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
-  // 'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
-    'enable-editAccess': () => updateGameState('editAccess', true),
-    'disable-editAccess': () => updateGameState('editAccess', false),
-    'enable-endgameSequence': () => updateGameState('endgameSequence', true),
-    'disable-endgameSequence': () => updateGameState('endgameSequence', false),
-    'showDebug': () => updateGameState('showDebug', true),
-    'hideDebug': () => updateGameState('showDebug', false),
-    'endGameTimer': () => updateGameState('endGameTimer', true),
-    'endGameTimerReset': () => updateGameState('endGameTimer', false),
-    'endGameTimerReset': () => updateGameState('endGameTimer', false),
-    'enable-consoleAvailable' : () => updateGameState('consoleAvailable', true),
-    'disable-consoleAvailable' : () => updateGameState('consoleAvailable', false),
+    // 'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
+    // 'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
+    "enable-editAccess": () => updateGameState("editAccess", true),
+    "disable-editAccess": () => updateGameState("editAccess", false),
+    "enable-endgameSequence": () => updateGameState("endgameSequence", true),
+    "disable-endgameSequence": () => updateGameState("endgameSequence", false),
+    showDebug: () => updateGameState("showDebug", true),
+    hideDebug: () => updateGameState("showDebug", false),
+    endGameTimer: () => updateGameState("endGameTimer", true),
+    endGameTimerReset: () => updateGameState("endGameTimer", false),
+    endGameTimerReset: () => updateGameState("endGameTimer", false),
+    "enable-consoleAvailable": () => updateGameState("consoleAvailable", true),
+    "disable-consoleAvailable": () => updateGameState("consoleAvailable", false),
+    "enable-connectionPanel": () => updateGameState("connentionPanel", true),
+    "disable-connectionPanel": () =>  updateGameState("connentionPanel", false),
+        "enable-connectionEdit": () => updateGameState("connentionEdit", true),
+    "disable-connectionEdit": () =>  updateGameState("connentionEdit", false),
+
 
     // Add more triggers as needed
   };
@@ -301,8 +306,8 @@ export function GameLogic() {
   const triggerEvent = (eventName = "") => {
     if (!eventName) return;
 
-    const events = eventName.includes(',')
-      ? eventName.split(',').map(e => e.trim())
+    const events = eventName.includes(",")
+      ? eventName.split(",").map((e) => e.trim())
       : [eventName];
 
     events.forEach(processTrigger);
@@ -329,7 +334,6 @@ export function GameLogic() {
     setSort,
     setCheatCode,
     updateGameState,
-    triggerEvent
-
+    triggerEvent,
   };
 }

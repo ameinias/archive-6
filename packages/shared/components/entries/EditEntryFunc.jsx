@@ -18,11 +18,12 @@ import { eventManager } from "@utils/events";
 import { useToggle } from "@hooks/hooks";
 import { UpdateFauxIDAndReorderSubs } from "@hooks/dbHooks";
 import { useLiveQuery } from "dexie-react-hooks";
-import {SelectEntry} from "@components/parts/FormAssets"
+import { SelectEntry } from "@components/parts/FormAssets";
+import { FilterList } from "@components/parts/ListingComponent";
 
 // default variables - update as needed
 const defaultFauxIDStart = "QA";
-const defaultHex = 10;
+const defaultHex = 30;
 
 const defaultFormValue = {
   fauxID: "MX0000",
@@ -43,7 +44,7 @@ const defaultFormValue = {
   triggerEvent: "",
   unread: true,
   entryRef: [],
-  newWebEntry:  false,
+  newWebEntry: false,
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -67,9 +68,12 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   // Custom hooks
   const [toggleMetaData, setToggleMetaData] = useToggle(false);
   const [toggleAdminSection, setToggleAdminSection] = useToggle(false);
+  const [toggleEntryRef, setToggleEntryRef] = useToggle(false);
+    const [toggleMedia, setToggleMedia] = useToggle(false);
 
   // import functions
-  const { setStatusMessage, isAdmin, toggleAdmin } = GameLogic();
+  const { setStatusMessage, isAdmin, toggleAdmin, gameState, updateGameState } =
+    GameLogic();
   const navigate = useNavigate();
   // const UpdateFauxIDAndReorderSubs = UpdateFauxIDAndReorderSubs(itemID, "MX000");
 
@@ -315,99 +319,10 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     triggerAnimation();
   }
 
-  // abandoned template feature
-  /*
-  async function saveToTemplate() {
-    try {
-      const title = formValues.title || "Untitled";
-      if (!title) {
-        setStatusMessage("Title is required");
-        return;
-      }
-
-      //   db.friends.update(0,
-      //         FormToTemplate()
-      //         );
-
-      //   db.friends.add(0, FormToTemplate()).then(function (updated) {
-      //     if (updated)
-      //       setStatusMessage(
-      //         "Updated template"
-      //       );
-      //     else setStatusMessage("Could not update template");
-      //   });
-
-      db.friends.update(0, FormToTemplate());
-
-      //     .then(function (updated) {
-      //     if (updated)
-      //       setStatusMessage(
-      //         "Updated template"
-      //       );
-      //     else setStatusMessage("Could not update template");
-      //   });
-
-      //   setStatusMessage(
-      //     `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`,
-      //   );
-
-      //   navigate(`/entry/${id}`); // <-- Reset Page to show subitems
-      // window.location.reload();
-      // setFormValue(defaultFormValue);  // Reset to defaults
-      console.log("uopdate tempalte");
-    } catch (error) {
-      setStatusMessage(`Failed to add ${title}: ${error}`);
-    }
-  }
-
-  async function updateFromTemplate() {}
-
-  */
-
-  //  function UpdateFauxIDAndReorderSubs(entryId, newFauxID) {
-  //   return useLiveQuery(async () => {
-  //     if (!entryId) return [];
-  // try{
-
-  //     const parentEntry =  await db.friends
-  //     .where(id).equals(entryId);
-
-  //     parentEntry.modify({fauxID: newFauxID});
-
-  //     const subArray = await db.subentries
-  //     .where('parentId').equals(entryId).toArray();
-
-  //         if (subentries.length === 0) {
-  //       console.log('No subentries found for parent:', entryId);
-  //       return true;
-  //     }
-
-  //     const sortedSubs = subentries
-  //     .sort((a, b) => {
-  //           const dateA = a.displayDate ? new Date(a.date).getTime() : 0;
-  //           const dateB = b.displayDate ? new Date(b.date).getTime() : 0;
-  //            return dateB - dateA;
-  //          });
-
-  //           const updates = sortedSubs.map((sub, index) => ({
-  //       key: sub.id,
-  //       changes: {
-  //         fauxID: `${newFauxID}-${index + 1}` // e.g., "ABC-1", "ABC-2", "ABC-3"
-  //       }
-  //     }));
-
-  //     await db.subentries.bulkUpdate(updates);
-
-  //     console.log(`Updated ${updates.length} subentries with new fauxIDs based on ${newFauxID}`);
-
-  //     return true;
-
-  //  }catch (error) {
-  //     console.log('Error, database may be closed');
-  //     return false;
-  //   }
-  //   }, []);
-  // }
+  const handleFilterChange = (filter) => {
+    updateGameState("activeFilter", filter);
+    console.log("Update filter: " + filter);
+  };
 
   const handleRenumberSubs = async () => {
     console.log("🔵 Calling UpdateFauxIDAndReorderSubs with:", {
@@ -474,7 +389,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     });
   };
 
-    const handleRef = (newValue, actionMeta) => {
+  const handleRef = (newValue, actionMeta) => {
     switch (actionMeta.action) {
       case "remove-value":
       case "pop-value":
@@ -489,11 +404,10 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
 
     // setSelected(newValue);
 
-        setFormValue({
+    setFormValue({
       ...formValues,
       entryRef: newValue,
     });
-
   };
 
   // Manage state and input field
@@ -661,43 +575,72 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       <div title="Description" className="row">
         {" "}
         {/*// ------ Description  ------*/}
-        <textarea
+        {/* <textarea
           rows={4}
           className="form-control"
           name="description"
           placeholder="Description"
           value={formValues.description}
           onChange={handleChange}
-        />
+        /> */}
+
+        <FormAssets.DescriptionBox 
+         value={formValues.description}
+          onChange={handleChange}
+          />
+              {/* <Editor
+        ref={quillRef}
+        readOnly={readOnly}
+        defaultValue={new Delta()
+          .insert('Hello')
+          .insert('\n', { header: 1 })}
+        onSelectionChange={setRange}
+        onTextChange={setLastChange}
+      /> */}
       </div>
+
+            <div className="button-row div-dash">
+        <button onClick={setToggleMedia} className="toggle-button">
+          {" "}
+          Media
+        </button>
+      </div>
+
+      {toggleMedia && (
       <div title="media" className="row">
         {" "}
         {/*// ------ Media   ------*/}
         <MediaUpload mediaFiles={formValues.media} />
       </div>
-      
-      <div id="entryRef" className="row">
-        <SelectEntry 
-        value={formValues.entryRef}
-        onChange={handleRef} 
-        filterAvailable = {false}
-        name="ref"
-        includeSubentries = {true}
-        label = "related entries"
-        displayTrueID = "true"
-        />
-{/* 
-              <div>
-        Current:
-        {formValues.entryRef.map((item, index) => (
-          <div key={index}>
-            <span>{item.label}</span>
-          </div>
-        ))}
-      </div> */}
+        )}
 
-
+      <div className="button-row div-dash">
+        <button onClick={setToggleEntryRef} className="toggle-button">
+          {" "}
+          Related Entry
+        </button>
       </div>
+
+      {toggleEntryRef && (
+        <div id="entryRef" className="row">
+          <FilterList
+            type="entry"
+            onFilterChange={handleFilterChange}
+            activeFilter={gameState?.activeFilter}
+          />
+
+          <SelectEntry
+            value={formValues.entryRef}
+            onChange={handleRef}
+            filterAvailable={false}
+            name="ref"
+            includeSubentries={true}
+            label="related entries"
+            displayTrueID="true"
+          />
+        </div>
+      )}
+
       <div title="admin">
         <div className="button-row div-dash">
           <button onClick={setToggleAdminSection} className="toggle-button">
@@ -736,28 +679,27 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               </div>
             </div>
             <div className="row">
-                <div className="col">
-              {/*// ------ bookmark  ------*/}
-              <label className="formLabel">bookmark</label>
-              <input
-                type="checkbox"
-                className="formLabel"
-                checked={formValues.bookmark}
-                onChange={handleCheckboxChange}
-                name="bookmark"
-              />
+              <div className="col">
+                {/*// ------ bookmark  ------*/}
+                <label className="formLabel">bookmark</label>
+                <input
+                  type="checkbox"
+                  className="formLabel"
+                  checked={formValues.bookmark}
+                  onChange={handleCheckboxChange}
+                  name="bookmark"
+                />
               </div>
-                <div className="col">
-<label className="formLabel">newWebEntry</label>
-              <input
-                type="checkbox"
-                className="formLabel"
-                checked={formValues.newWebEntry}
-                onChange={handleCheckboxChange}
-                name="newWebEntry"
-              />
-
-                </div>
+              <div className="col">
+                <label className="formLabel">newWebEntry</label>
+                <input
+                  type="checkbox"
+                  className="formLabel"
+                  checked={formValues.newWebEntry}
+                  onChange={handleCheckboxChange}
+                  name="newWebEntry"
+                />
+              </div>
             </div>
             <div className="col">
               {" "}

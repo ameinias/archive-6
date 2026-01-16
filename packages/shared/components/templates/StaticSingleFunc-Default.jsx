@@ -112,7 +112,6 @@ export function StaticSingleDefault({ itemID }) {
   if (item.available === false) {
     return (
       <div className="subentry-staticentry subEntry-not-available ">
-        {item.id}
         <div className="entry-header">
           <div style={{}}>
             <BookMarkCheck itemID={item.id} type="entry" />
@@ -134,7 +133,6 @@ export function StaticSingleDefault({ itemID }) {
       {/* <h1>Time Remaining: {seconds}s</h1> */}
       {/* {friend.map((item) => ( */}
       <div key={item.id}>
-        {item.id}
         <div className="entry-header">
           {" "}
           <div style={{}}>
@@ -171,7 +169,7 @@ export function StaticSingleDefault({ itemID }) {
               </div>
             ))}
 
-          <div>
+          <div className="subentry-add-list flex">
             <DescriptionEntry string={item.description} />
           </div>
         </div>

@@ -57,17 +57,24 @@ export const researcherIDs = [
     devName: "RM",
     note: "For scenes that are available at the beginning of the game.",
   },
-  { id: 2, name: "EQ",
-devName: "EQ"
-    , note: "For the first unlockable scenes." },
+  {
+    id: 2,
+    name: "EQ",
+    devName: "EQ",
+    note: "For the first unlockable scenes.",
+  },
   {
     id: 3,
     name: "xxx_freddie",
-    devName:"programmer96-2001",
+    devName: "programmer96-2001",
     note: "ony works atuniversity 96 97 then from home ",
   },
-  { id: 4, name:"rm.Snarley",
-    devName: "historian73-82s", note: "historian73-82s" },
+  {
+    id: 4,
+    name: "rm.Snarley",
+    devName: "historian73-82s",
+    note: "historian73-82s",
+  },
   {
     id: 5,
     name: "Patternson Vinfield",
@@ -86,20 +93,19 @@ devName: "EQ"
     devName: "archive-volunteer1",
     note: "sopmeone who works at the society",
   },
-    {
+  {
     id: 8,
     name: "Violet Thompson",
     devName: "violet-archivist-24-52",
     note: "socieity2-archivist-24-52.",
   },
-      {
+  {
     id: 9,
     name: "R Signifeild",
     devName: "rebecca-archivist-24-52",
     note: "socieity2-archivist-24-52.",
   },
 ];
-
 
 export const editType = ["added", "migrated", "modified"];
 
@@ -161,7 +167,7 @@ export const hexHashes = [
     note: "this hash wasnt used but I wanted an even number for vignette 2",
   },
 
-// V2
+  // V2
 
   {
     id: 10,
@@ -173,15 +179,13 @@ export const hexHashes = [
     id: 11,
     name: "V2_2 - sqvs minutes",
     hexHashcode: "0e2805a97520b5e034c4114ae249574e",
-
   },
-    {
+  {
     id: 12,
     name: "V2_3 - illustration",
     hexHashcode: "d5f9b259a21092a89659aa16a9913737",
-
   },
-    {
+  {
     id: 13,
     name: "V2_4 -  ",
     hexHashcode: "ss1145cafae869ca2fbe4bf8ac92ecb62b",
@@ -191,66 +195,95 @@ export const hexHashes = [
     id: 14,
     name: "V2_5 - doc likes to other entries ",
     hexHashcode: "ss0e2805a97520b5e034c4114ae249574e",
-
   },
-    {
-    id: 15,           // final for now
+  {
+    id: 15, // final for now
     name: "V2_6 - Nest and final entry",
     hexHashcode: "ssd5f9b259a21092a89659aa16a9913737",
-
   },
-    {
+  {
     id: 16,
     name: "V2_7 - mammel spine ",
     hexHashcode: "d66fdeb0b0f75cb7612686b9edbd07fa",
-
-  },
-    {
-    id: 17,           // final for now
-    name: "V2_8 - just the pelvis",
-    hexHashcode: "e87931718ef0f14e1312b8c8f3bc1df9",
-
-  },
-    {
-    id: 18,    // following hashes need new codes
-    name: "V2_9 -  ",
-    hexHashcode: "377c89ab055a9377c89a77c89ab055a9",
-
-  },
-    {
-    id: 19,           // final for now
-    name: "V2_10 - endgame",
-    hexHashcode: "6fdeb0b92a89659aaca2fbe41",
-
-  },
-
-
-
-
-
-      {
-    id: 100,           // standalone
-    name: "v2_just teeth",
-    hexHashcode: "621f1cea8a2e201cbebdbf0358d5f577",
-
   },
   {
-    id: 101,           // standalone
+    id: 17, // final for now
+    name: "V2_8 - just the pelvis",
+    hexHashcode: "e87931718ef0f14e1312b8c8f3bc1df9",
+  },
+  {
+    id: 18, // following hashes need new codes
+    name: "V2_9 -  ",
+    hexHashcode: "377c89ab055a9377c89a77c89ab055a9",
+  },
+  {
+    id: 19, // final for now
+    name: "V2_10 - endgame",
+    hexHashcode: "6fdeb0b92a89659aaca2fbe41",
+  },
+
+    // V2
+
+  {
+    id: 30, // final for now
+    name: "V3.1.01 - intro",
+    hexHashcode: "ddddddddddddddddddddddddddddddd",
+  },
+
+  {
+    id: 31, // final for now
+    name: "V3.1.02 - links for console and connection panel",
+    hexHashcode: "234ada22c94668dd7ee1c26b42c630ab",
+    note: " ",
+  },
+
+  {
+    id: 32, // final for now
+    name: "V3.1.03 - unlock console",
+    hexHashcode: "bad48f5d47b68ca3059ac646d0320808",
+    note: " enable-consoleAvailable ",
+  },
+
+    {
+    id: 33, // final for now
+    name: "V3.1.04 -  connection panel",
+    hexHashcode: "48471313e7c8b73e1d0cc7b6a9ef945e",
+    note: " enable-connectionPanel",
+  },
+
+  {
+    id: 34, // final for now
+    name: "V3.01.04 - unlock connection edit",
+    hexHashcode: "4acf43285e01067ea35af33f416fcc69",
+    note: " enable-connectionEdit",
+  },
+
+    {
+    id: 35, // final for now
+    name: "V3.01.04 - new end animation",
+    hexHashcode: "7a1b4cfa72de364f2c6259b853288f73",
+    note: " ",
+  },
+
+  {
+    id: 100, // standalone
+    name: "v2_just teeth",
+    hexHashcode: "621f1cea8a2e201cbebdbf0358d5f577",
+  },
+  {
+    id: 101, // standalone
     name: "v2_just claws",
     hexHashcode: "fa0c24c601d8397f22edb7a13145cdee",
-
   },
-      {
-    id: 52,           // move to a future update
+  {
+    id: 52, // move to a future update
     name: "future entries",
     hexHashcode: "c888008f79798950760159f80f485fbf",
-
   },
-      {
-    id: 51,           // things players have made
+  {
+    id: 51, // things players have made
     name: "player made",
     hexHashcode: "",
-
   },
 
   {
@@ -280,14 +313,6 @@ export const badHashes = [
   "36680042515dbee28e18cd17529c003d",
   "e5db0557296c615fa4ab2d2b0f0292da",
   "c888008f79798950760159f80f485fbf", // futre entries
-
 ];
 
-export const entryTemplate = [
-  "default",
-  "messed up",
-  "mean",
-  "trapped"
-
-];
-
+export const entryTemplate = ["default", "messed up", "mean", "trapped"];

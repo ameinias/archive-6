@@ -37,7 +37,13 @@ export function applyHexFilter(items, activeFilter) {
       const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
       return hexes.some((hex) => hex >= 51 && hex <= 51);
     });
+  } else if (activeFilter === "vignette3") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 30 && hex <= 40);
+    });
   }
+
 
   return filtered; // "all" filter
 }
@@ -53,13 +59,7 @@ export function FilterList({ onFilterChange, activeFilter = "all" }) {
         >
           All
         </span>
-        <span
-          className={activeFilter === "junk" ? "active" : ""}
-          onClick={() => onFilterChange("junk")}
-          style={{ cursor: "pointer", margin: "0 10px" }}
-        >
-          Junk
-        </span>
+
         <span
           className={activeFilter === "vignette1" ? "active" : ""}
           onClick={() => onFilterChange("vignette1")}
@@ -72,7 +72,14 @@ export function FilterList({ onFilterChange, activeFilter = "all" }) {
           onClick={() => onFilterChange("vignette2")}
           style={{ cursor: "pointer", margin: "0 10px" }}
         >
-          Vignette #2 (Hex 11+)
+          Vignette #2 (Hex 11-19)
+        </span>
+                <span
+          className={activeFilter === "vignette3" ? "active" : ""}
+          onClick={() => onFilterChange("vignette3")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Vignette #3 (Hex 30-40)
         </span>
       </div>
 
@@ -97,6 +104,13 @@ export function FilterList({ onFilterChange, activeFilter = "all" }) {
           style={{ cursor: "pointer", margin: "0 10px" }}
         >
           standalone (Hex 100+)
+        </span>
+                <span
+          className={activeFilter === "junk" ? "active" : ""}
+          onClick={() => onFilterChange("junk")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Junk
         </span>
       </div>
     </div>

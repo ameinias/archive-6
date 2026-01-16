@@ -342,8 +342,12 @@ select[multiple] option:checked {
 
 .description{
   margin: 3px;
-
+white-space: pre-wrap;
 }
+.subentry-desc{
+  white-space: pre-wrap;
+}
+
 .single-subentry-listing
 {
 

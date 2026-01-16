@@ -7,6 +7,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import { db, dbHelpers } from "@utils/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import Select from "react-select"; // https://react-select.com/home#getting-started
+import { applyHexFilter } from "@components/parts/ListingComponent";
+
+import Quill from 'quill';
+// Or if you only need the core build
+// import Quill from 'quill/core';
+
+import { Delta } from 'quill';
+// Or if you only need the core build
+// import { Delta } from 'quill/core';
+// Or const Delta = Quill.import('delta');
+
+import Link from 'quill/formats/link';
+// Or const Link = Quill.import('formats/link');
+
+
 
 export function FormTextBox({
   label = "Label:",
@@ -150,6 +165,7 @@ export function SelectEntry({
   options,
   onChange,
   filterAvailable = true,
+  filterGameState = false,
   includeSubentries = true,
   displayTrueID = true,
 }) {
@@ -157,6 +173,8 @@ export function SelectEntry({
   const subentries = useLiveQuery(() => db.subentries.toArray());
   // const navigate = useNavigate()
   const [val, setSelected] = React.useState([]);
+    const {  gameState } =
+    GameLogic();
 
   const filteredFriends = useLiveQuery(() => {
     if (!db.isOpen()) return [];
@@ -173,6 +191,7 @@ export function SelectEntry({
       foundSubItems = subentries.filter((item) => item.available === true);
       foundFriends = friends.filter((item) => item.available === true);
     }
+
 
     if (includeSubentries) {
       if (foundSubItems) {
@@ -239,8 +258,11 @@ export function SelectEntry({
       }
     }
 
-    return tempItems;
-  }, [filterAvailable, friends, subentries]);
+    let tempItemsFilter = applyHexFilter(tempItems, gameState?.activeFilter);
+
+
+    return tempItemsFilter;
+  }, [filterAvailable, friends, subentries,gameState?.activeFilter]);
 
   const onRelatedChange = (newValue, actionMeta) => {
     switch (actionMeta.action) {
@@ -279,5 +301,25 @@ export function SelectEntry({
         placeholder={label}
       />
     </div>
+  );
+}
+
+
+export function DescriptionBox({
+            value = "",
+          onChange = () => {},
+
+}){
+
+  return(
+            <textarea
+          rows={4}
+          className="form-control"
+          name="description"
+          placeholder="Description"
+          value={value}
+          onChange={onChange}
+        />
+
   );
 }
