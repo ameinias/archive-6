@@ -743,7 +743,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             <div className="row">
               <div className="formLabel">Triggers:</div>
               <span className="instruct-span">
-                Comma seperated strings. function-parameter format.
+                Comma seperated strings. value-function format. consolelog: to print to in-game console.
               </span>
               <textarea
                 rows={3}

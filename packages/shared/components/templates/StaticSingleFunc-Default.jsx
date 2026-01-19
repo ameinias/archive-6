@@ -93,6 +93,34 @@ export function StaticSingleDefault({ itemID }) {
       return db.subentries.where("parentId").equals(numericID).toArray();
     }, [itemID]) || [];
 
+    
+  const handleRef = (newValue, actionMeta) => {
+    switch (actionMeta.action) {
+      case "remove-value":
+      case "pop-value":
+        if (actionMeta.removedValue.isFixed) {
+          return;
+        }
+        break;
+      case "clear":
+        newValue = filteredFriends.filter((v) => v.isFixed);
+        break;
+    }
+
+    // setSelected(newValue);
+
+    // setFormValue({
+    //   ...formValues,
+    //   entryRef: newValue,
+    // });
+
+     db.friends.update(Number(entryId), {
+          entryRef: newValue
+        })
+
+  };
+
+
   if (item === undefined) {
     return <div>Loading...</div>;
   }
@@ -214,6 +242,18 @@ export function StaticSingleDefault({ itemID }) {
               ))}
           </div>
         )}
+               {gameLogic.gameState.connectionEdit && (
+              <div>
+                          <SelectEntry
+            value={formValues.entryRef}
+            onChange={handleRef}
+            filterAvailable={false}
+            name="ref"
+            includeSubentries={true}
+            label="related entries"
+            displayTrueID="true"
+          />
+              </div>)}{" "}
       </div>
     </div>
   );

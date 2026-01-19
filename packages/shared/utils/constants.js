@@ -222,44 +222,44 @@ export const hexHashes = [
     hexHashcode: "6fdeb0b92a89659aaca2fbe41",
   },
 
-    // V2
+    // V3
 
   {
-    id: 30, // final for now
+    id: 30, 
     name: "V3.1.01 - intro",
     hexHashcode: "ddddddddddddddddddddddddddddddd",
   },
 
   {
-    id: 31, // final for now
+    id: 31, 
     name: "V3.1.02 - links for console and connection panel",
     hexHashcode: "234ada22c94668dd7ee1c26b42c630ab",
     note: " ",
   },
 
   {
-    id: 32, // final for now
+    id: 32,
     name: "V3.1.03 - unlock console",
     hexHashcode: "bad48f5d47b68ca3059ac646d0320808",
     note: " enable-consoleAvailable ",
   },
 
     {
-    id: 33, // final for now
+    id: 33, 
     name: "V3.1.04 -  connection panel",
     hexHashcode: "48471313e7c8b73e1d0cc7b6a9ef945e",
     note: " enable-connectionPanel",
   },
 
   {
-    id: 34, // final for now
+    id: 34, 
     name: "V3.01.04 - unlock connection edit",
     hexHashcode: "4acf43285e01067ea35af33f416fcc69",
     note: " enable-connectionEdit",
   },
 
     {
-    id: 35, // final for now
+    id: 35, 
     name: "V3.01.04 - new end animation",
     hexHashcode: "7a1b4cfa72de364f2c6259b853288f73",
     note: " ",

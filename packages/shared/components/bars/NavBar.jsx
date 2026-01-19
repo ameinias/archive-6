@@ -25,7 +25,7 @@ const NavBar = () => {
     setLoggedIn,
     setStatusMessage,
     updateGameState,
-    setAdmin,
+    setAdmin, 
   } = GameLogic();
 
   const isElectron = eventManager.isElectron;
@@ -124,11 +124,12 @@ const NavBar = () => {
           Import
         </Link>
       </li>{" "}
+       {gameState.connectionPanel && (
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link to={!gameState.endgameSequence ? "/connections" : null}>
           Connections
         </Link>
-      </li>{" "}
+      </li>)}{" "}
       {(isAdmin || !isElectron) && (
         <>
           <li role="menuitem" tabIndex="0" aria-haspopup="true">

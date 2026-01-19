@@ -19,6 +19,10 @@ function HashImport () {
 
 
   const importHash = async () => {
+    console.log("Before trim: '" + hashValue + "'");
+    setHashVal(hashValue.trim());
+    console.log("After Trim: '" + hashValue + "'");
+
     const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue)
 
     if (badHashes.includes(hashValue)) {
@@ -40,19 +44,6 @@ function HashImport () {
         return item.hexHash.includes(hexHashID)
       }
 
-
-
-
-      if (item.hexHash === hexHashID) {
-        console.log('found subitem with hex: ', item.title)
-      } else {
-        console.log(
-          'not found subitem with hex: ',
-          item.title,
-          item.hexHash,
-          hexHashID
-        )
-      }
 
       return item.hexHash === hexHashID
     })

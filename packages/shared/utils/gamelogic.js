@@ -269,7 +269,7 @@ export function GameLogic() {
     adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
   };
 
-  // At module level (outside GameLogic component) get by
+
   const triggerRegistry = {
     // 'makeTrue-playerAddEntry': () => updateGameState('playerAddEntry', true),
     // 'makeFalse-playerAddEntry': () => updateGameState('playerAddEntry', false),
@@ -284,14 +284,16 @@ export function GameLogic() {
     endGameTimerReset: () => updateGameState("endGameTimer", false),
     "enable-consoleAvailable": () => updateGameState("consoleAvailable", true),
     "disable-consoleAvailable": () => updateGameState("consoleAvailable", false),
-    "enable-connectionPanel": () => updateGameState("connentionPanel", true),
-    "disable-connectionPanel": () =>  updateGameState("connentionPanel", false),
-        "enable-connectionEdit": () => updateGameState("connentionEdit", true),
-    "disable-connectionEdit": () =>  updateGameState("connentionEdit", false),
+    "enable-connectionPanel": () => updateGameState("connectionPanel", true),
+    "disable-connectionPanel": () =>  updateGameState("connectionPanel", false),
+        "enable-connectionEdit": () => updateGameState("connectionEdit", true),
+    "disable-connectionEdit": () =>  updateGameState("connectionEdit", false),
 
 
     // Add more triggers as needed
   };
+
+
 
   const processTrigger = (eventName) => {
     const handler = triggerRegistry[eventName];
@@ -305,6 +307,11 @@ export function GameLogic() {
 
   const triggerEvent = (eventName = "") => {
     if (!eventName) return;
+
+    if(eventName.includes("consolelog:")){
+      const consoleString = eventName.split(":")[1];
+      console.log("console: " + consoleString);
+    }
 
     const events = eventName.includes(",")
       ? eventName.split(",").map((e) => e.trim())
