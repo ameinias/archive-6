@@ -21,8 +21,12 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { SelectEntry } from "@components/parts/FormAssets";
 import { FilterList } from "@components/parts/ListingComponent";
 
+
+const isElectron = eventManager.isElectron;
+
 // default variables - update as needed
-const defaultFauxIDStart = "QA";
+let defaultFauxIDStart = "QA";
+if(!isElectron){ defaultFauxIDStart = "LL"; }
 const defaultHex = 30;
 
 const defaultFormValue = {
@@ -44,7 +48,7 @@ const defaultFormValue = {
   triggerEvent: "",
   unread: true,
   entryRef: [],
-  newWebEntry: false,
+  newWebEntry: !isElectron,
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -584,7 +588,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           onChange={handleChange}
         /> */}
 
-        <FormAssets.DescriptionBox 
+        <FormAssets.DescriptionBox
          value={formValues.description}
           onChange={handleChange}
           />

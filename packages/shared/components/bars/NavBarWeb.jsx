@@ -100,7 +100,7 @@ const NavBarWeb = () => {
           // onClick={() => navigate(localStorage.getItem('secondLastRoute'))}
           to={localStorage.getItem("secondLastRoute")}
         >
-          {"<<"} 
+          {"<<"}
         </Link>
       </li>{" "}
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
@@ -112,32 +112,13 @@ const NavBarWeb = () => {
         {" "}
         <Link to={!gameState.endgameSequence ? "/search" : null}>Search</Link>
       </li>{" "}
-      {/* <li
-        role="menuitem"
-        className={gameState.editAccess ? "attention" : ""}
-        tabIndex="0"
-        aria-haspopup="true"
-      >
-        <Link to={!gameState.endgameSequence ? "/player-add-entry" : null}>
-          Add Entry
-        </Link>
-      </li> */}
-      {/* )} */}
-      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
-        <Link to={!gameState.endgameSequence ? "/bookmarks" : null}>
-          Bookmarks
-        </Link>
-      </li> */}
+
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link to={!gameState.endgameSequence ? "/hashImport" : null}>
           Import
         </Link>
       </li>{" "}
-      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
-        <Link to={!gameState.endgameSequence ? "/connections" : null}>
-          Connections
-        </Link>
-      </li>{" "} */}
+
       {(isAdmin || !isElectron) && (
         <>
           <li role="menuitem" tabIndex="0" aria-haspopup="true">
@@ -170,7 +151,7 @@ const NavBarWeb = () => {
                 <Link onClick={SaveOut}>Web Backup</Link>
               </li>
 
-   
+
 
           {/* <li role='menuitem'>
                 <Link to='/convo'>Convo</Link>
@@ -179,7 +160,7 @@ const NavBarWeb = () => {
       )}
       {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
                 <Link  onClick={FauxLogOut }>FauxLogOut</Link></li> */}
-      
+
 
           <li>
             {" "}
