@@ -52,13 +52,22 @@ function HashImport () {
     })
 
     for (const subItem of foundSubItems) {
-      const parentID = subItem.parentID
-      const parentItem = await db.friends.get(Number(parentID))
-      if (parentItem && parentItem.available) {
-        await db.friends.update(Number(parentID), {
-          unread: true
-        })
-      }
+      const parentID = subItem.parentId
+
+        // Check if parentID is valid before querying
+  if (!parentID || isNaN(Number(parentID))) {
+    console.warn(`Invalid parentID for subitem ${subItem.id}:`, subItem.parentId);
+    continue; // Skip this item
+  }
+  
+  const parentItem = await db.friends.get(Number(parentID))
+  if (parentItem && parentItem.available) {
+    await db.friends.update(Number(parentID), {
+      unread: true
+    })
+  }
+
+
     }
 
 

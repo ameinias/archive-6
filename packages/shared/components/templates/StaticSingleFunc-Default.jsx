@@ -12,10 +12,13 @@ import { MediaDisplay } from "@components/parts/Media/MediaDisplay";
 import { MediaThumbnail } from "@components/parts/Media/MediaThumbnail.jsx";
 import DescriptionEntry from "@components/parts/DescriptionEntry";
 import { MediaEntryDisplay } from "@components/parts/Media/MediaEntryDisplay";
+import { SelectEntry } from "@components/parts/FormAssets";
 
 export function StaticSingleDefault({ itemID }) {
   const { id } = useParams(); // get the id from the route
   const gameLogic = GameLogic();
+
+  // For the final animation
   const initialSeconds = 5; // Set the initial countdown time in seconds
   const [seconds, setSeconds] = useState(initialSeconds);
 
@@ -77,6 +80,11 @@ export function StaticSingleDefault({ itemID }) {
       return () => clearInterval(intervalId);
     }
   }, [seconds, initialSeconds]); // Re-run effect if seconds or initialSeconds changes
+
+
+
+
+  
 
   const getEntryTitle = (entryId) => {
     if (!allFriends) return entryId;
@@ -245,11 +253,11 @@ export function StaticSingleDefault({ itemID }) {
                {gameLogic.gameState.connectionEdit && (
               <div>
                           <SelectEntry
-            value={formValues.entryRef}
+            value={item.entryRef}
             onChange={handleRef}
-            filterAvailable={false}
+            filterAvailable={true}
             name="ref"
-            includeSubentries={true}
+            includeSubentries={false}
             label="related entries"
             displayTrueID="true"
           />
