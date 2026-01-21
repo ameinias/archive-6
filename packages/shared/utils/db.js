@@ -127,6 +127,19 @@ db.version(5.1).stores({
   events: "++id, name, type, timestamp",
 });
 
+
+//add new database for events
+// realEditDate - just saving edits. 
+db.version(5.1).stores({
+  gamedata: "expVersion, uploadedAt, sessionStart",
+  friends:
+    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef, newWebEntry, realEditDate",
+  subentries:
+    "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef, newWebEntry, realEditDate",
+  media: "++id, name, type, size, path, uploadedAt, realEditDate",
+  events: "++id, name, type, timestamp",
+});
+
 //#endregion
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js
@@ -351,6 +364,90 @@ export const handleJSONExport = async (fileName = "dexie-export-web.json") => {
   } catch (error) {
     console.error("" + error);
   }
+};
+
+//.put preserves ID, .add omits ID and adds to end 
+export const importJSONWithWebEntryHandling = async (file) => {
+    // Read the file as text
+    const text = await file.text();
+    const exportData = JSON.parse(text);
+    
+    // Close and clear current database
+
+    
+    // Process the export data structure
+    // Dexie export format has a 'data' property with table data
+    if (exportData.data && exportData.data.data) {
+      const tables = exportData.data.data;
+      // console.log("import tables " + tables.friends.length);
+
+// 0   'friends', 
+// 1  'subentries',
+// 2 'attachments',
+// 3  'media',
+// 4 'gamedata;'
+// 5  'events'
+
+const friendsTable = tables.find(t => t.tableName === 'friends');
+const subentriesTable = tables.find(t => t.tableName === 'subentries');
+const mediaTable = tables.find(t => t.tableName === 'media');
+const eventsTable = tables.find(t => t.tableName === 'events');
+const gamedataTable = tables.find(t => t.tableName === 'gamedata');
+
+
+      // Process friends table
+      if (friendsTable) {
+        
+        for (const entry of friendsTable.rows) {
+          if (entry.newWebEntry === true) {
+            // Remove the id property and let Dexie assign a new one
+            const { id, ...entryWithoutId } = entry;
+            console.log("adding: " + entry.title);
+            await db.friends.add(entryWithoutId);
+          } else {
+            // Keep the id and use put to preserve it
+            console.log("putting: " + entry.title)
+            await db.friends.put(entry);
+          }
+        }
+      } else { console.log("no friends");}
+      
+      // Process subentries table
+      if (subentriesTable) {
+        for (const entry of subentriesTable.rows) {
+          if (entry.newWebEntry === true) {
+             const { id, ...entryWithoutId } = entry;
+            await db.subentries.add(entryWithoutId);
+          } else {
+            await db.subentries.put(entry);
+          }
+        }
+      }
+      
+      // Process other tables (media, events, gamedata) normally
+      if (mediaTable) {
+        for (const entry of mediaTable.rows) {
+          await db.media.put(entry);
+        }
+      }
+      
+      if (eventsTable) {
+        for (const entry of eventsTable.rows) {
+          await db.events.put(entry);
+        }
+      }
+      
+      if (gamedataTable) {
+        for (const entry of gamedataTable.rows) {
+          await db.gamedata.put(entry);
+        }
+      }
+    } else { console.log("No data to import.");}
+    
+    // await db.open();
+
+    console.log("Import complete with newWebEntry handling");
+
 };
 
 export const saveAsDefaultDatabase = async () => {

@@ -19,11 +19,9 @@ function HashImport () {
 
 
   const importHash = async () => {
-    console.log("Before trim: '" + hashValue + "'");
-    setHashVal(hashValue.trim());
-    console.log("After Trim: '" + hashValue + "'");
+    const trimmedHash = hashValue.trim();  // Local variable
 
-    const hexHashID = dbHelpers.getIdsFromHexHashes(hashValue)
+    const hexHashID = dbHelpers.getIdsFromHexHashes(trimmedHash)  // Use trimmedHash
 
     if (badHashes.includes(hashValue)) {
       navigate('/bad-gateway')
@@ -110,8 +108,10 @@ function HashImport () {
     //  const result = await findByHashAndUnLock(hashValue);
     //   console.log(result);
     eventManager.showAlert(message)
-    // setHashVal(''); // Clear input field after import
-    //  hashInput = '';
+
+    
+    // document.getElementById("hashinput").reset();
+
   }
 
   const handleChange = e => {

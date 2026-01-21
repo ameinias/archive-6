@@ -49,6 +49,7 @@ const defaultFormValue = {
   unread: true,
   entryRef: [],
   newWebEntry: !isElectron,
+  realEditDate: new Date(),
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -123,6 +124,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           unread: entry.unread || true,
           entryRef: entry.entryRef || [],
           newWebEntry: entry.newWebEntry || false,
+          realEditDate: entry.realEditDate || new Date().toLocaleDateString(),
         });
         savedID = entry.id;
         setNewEntry(false);

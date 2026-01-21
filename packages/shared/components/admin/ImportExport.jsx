@@ -8,7 +8,8 @@ import {
   dbHelpers,
   newGameWithWarning,
   saveAsDefaultDatabase,
-  exportTelemetrisToAppData
+  exportTelemetrisToAppData,
+  importJSONWithWebEntryHandling
 } from "@utils/db"; // import the database
 import "dexie-export-import"; // Import the export/import addon
 import { GameLogic } from "@utils/gamelogic";
@@ -19,11 +20,13 @@ import { subCategories } from "@utils/constants";
 import { eventManager } from "@utils/events";
 // import { setStartAvalability } from "@hooks/dbHooks.js";
 import { DataState } from "../parts/Badges";
-import {applyHexFilter} from "@components/parts/ListingComponent"
+import { applyHexFilter } from "@components/parts/ListingComponent";
 
+const currentFilter = "vingette3";
 
 function ImportExport() {
-  const { isAdmin, toggleAdmin, setStatusMessage, updateGameState } = GameLogic();
+  const { isAdmin, toggleAdmin, setStatusMessage, updateGameState } =
+    GameLogic();
   const [toggleHelp, setToggleHelp] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -34,7 +37,7 @@ function ImportExport() {
 
   const NewGame = async (startHash) => {
     await newGameWithWarning(startHash);
-    setRefreshKey(prev => prev + 1);
+    setRefreshKey((prev) => prev + 1);
     console.log("start game with hex:", startHash);
   };
 
@@ -113,15 +116,14 @@ function ImportExport() {
       });
       dbVersion = resourceVersion;
     } else {
-
     }
 
-          console.log(
-        "Last DB version entry is:",
-        dbVersion,
-        "resource DB version is",
-        resourceVersion,
-      );
+    console.log(
+      "Last DB version entry is:",
+      dbVersion,
+      "resource DB version is",
+      resourceVersion,
+    );
   };
 
   const testio = async () => {
@@ -233,21 +235,18 @@ function ImportExport() {
     }
   };
 
-
   const saveTelemetrics = () => {
     exportTelemetrisToAppData();
-  }
+  };
 
-
-   const handleHashlookup = async () => {
+  const handleHashlookup = async () => {
     try {
       const rawfriends = await db.friends.toArray();
       const rawsubentries = await db.subentries.toArray();
 
       // only current vignette
-     const friends =  applyHexFilter(rawfriends, "vignette2");
-     const subentries =  applyHexFilter(rawsubentries, "vignette2");
-
+      const friends = applyHexFilter(rawfriends, currentFilter);
+      const subentries = applyHexFilter(rawsubentries, currentFilter);
 
       // Process data and convert hexHash IDs to names
       const processedFriends = friends.map((item) => ({
@@ -270,16 +269,16 @@ function ImportExport() {
 
       const selectedFields = [
         "fauxID",
-        "category",
+        // "category",
         "hexHashCodes",
-        "subCategory",
+        // "subCategory",
       ];
 
       // Map field names to display names for CSV headers
       const fieldDisplayNames = {
         fauxID: "ID",
-        category: "RecordType",
-        subCategory: "aRecordType",
+        // category: "RecordType",
+        // subCategory: "aRecordType",
         hexHashCodes: "hexHashCodes",
       };
 
@@ -317,7 +316,7 @@ function ImportExport() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "database-export-backup-1996FINAL.csv";
+      a.download = "database-export-backup-1996FINAL-v1.csv";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -329,7 +328,6 @@ function ImportExport() {
       setStatusMessage("CSV export failed: " + error.message);
     }
   };
-
 
   const handleCSVExport = async () => {
     try {
@@ -410,7 +408,7 @@ function ImportExport() {
       a.href = url;
       const date = new Date().toISOString().split("T")[0];
       a.download = "archiveListing-" + date + ".csv";
-        //  a.download = "archiveListing.csv";
+      //  a.download = "archiveListing.csv";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -423,22 +421,21 @@ function ImportExport() {
     }
   };
 
-
-  const peeak= async (file) => {
-
+  const peeak = async (file) => {
     const importMeta = await peakImportFile(file);
 
-assert.areEqual(importMeta.formatName, "dexie");
-assert.isTrue(importMeta.formatVersion === 1);
-console.log("Database name:", importMeta.data.databaseName);
-console.log("Database version:", importMeta.data.databaseVersion);
-console.log("Database version:", importMeta.data.databaseVersion);
-console.log("Tables:", importMeta.data.tables.map(t =>
-  `${t.name} (${t.rowCount} rows)`
-).join('\n\t'));
-
+    assert.areEqual(importMeta.formatName, "dexie");
+    assert.isTrue(importMeta.formatVersion === 1);
+    console.log("Database name:", importMeta.data.databaseName);
+    console.log("Database version:", importMeta.data.databaseVersion);
+    console.log("Database version:", importMeta.data.databaseVersion);
+    console.log(
+      "Tables:",
+      importMeta.data.tables
+        .map((t) => `${t.name} (${t.rowCount} rows)`)
+        .join("\n\t"),
+    );
   };
-
 
   // MIGHT NOT BE ABLE TO ACTUALLY APPEND https://github.com/dexie/Dexie.js/issues/1123#event-3767742826
   const handleImportAppend = async (file) => {
@@ -465,13 +462,9 @@ console.log("Tables:", importMeta.data.tables.map(t =>
 
       // peeak(importedDb);
 
-      await Dexie.importInto(db, file,
-        {
- acceptChangedPrimaryKey: true,
-
-        }
-      );
-
+      await Dexie.importInto(db, file, {
+        acceptChangedPrimaryKey: true,
+      });
 
       console.log("Import complete");
 
@@ -513,8 +506,6 @@ console.log("Tables:", importMeta.data.tables.map(t =>
         },
       });
 
-
-
       console.log("Import complete");
 
       // Reopen the original database to refresh it
@@ -534,7 +525,6 @@ console.log("Tables:", importMeta.data.tables.map(t =>
 
   //#region handlers
 
-
   const handleDragOver = (event) => {
     event.stopPropagation();
     event.preventDefault();
@@ -546,6 +536,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
     if (file) {
       handleImportReplace(file);
     }
+    setRefreshKey((prev) => prev + 1);
   };
 
   const handleFileAppendChange = (event) => {
@@ -564,6 +555,34 @@ console.log("Tables:", importMeta.data.tables.map(t =>
 
   //#endregion
 
+  //#region ---------- new iomport
+
+const handleFileAppend = async (event) => {
+  const file = event.target.files[0];
+  console.log("append!");
+  
+  if (!file) {
+    console.log("no file to append");
+    return;
+  }
+  
+  try {
+    setStatusMessage("Importing...");
+    await importJSONWithWebEntryHandling(file);
+    setStatusMessage("Import complete!");
+    setRefreshKey((prev) => prev + 1); 
+    event.target.value = ''; 
+    
+  } catch (error) {
+    console.error("Import failed:", error);
+    setStatusMessage(`Import failed: ${error.message}`);
+    event.target.value = ''; 
+  }
+};
+
+
+  //#endregion
+
   return (
     <>
       {/* <HashImport /> */}
@@ -575,7 +594,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
             <button className="db-btn" onClick={() => NewGame(1)}>
               New Game Vingette 1
             </button>
-                        <button className="db-btn" onClick={() => NewGame(10)}>
+            <button className="db-btn" onClick={() => NewGame(10)}>
               New Game Vingette 2
             </button>
           </section>
@@ -598,7 +617,9 @@ console.log("Tables:", importMeta.data.tables.map(t =>
                 <div className="col">
                   <b>Version:</b> {db.verno}
                 </div>
-                <div className="col"><DataState key={refreshKey} refreshTrigger={refreshKey} /></div>
+                <div className="col">
+                  <DataState key={refreshKey} refreshTrigger={refreshKey} />
+                </div>
               </div>
             </article>
             <article role="tabpanel" id="tab-D" hidden>
@@ -623,7 +644,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
                 <button className="db-btn" onClick={saveAsDefaultDatabase}>
                   Save as Default Database
                 </button>
-                                <button className="db-btn" onClick={saveTelemetrics}>
+                <button className="db-btn" onClick={saveTelemetrics}>
                   Save Telemetrics
                 </button>
 
@@ -654,6 +675,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
                 <button
                   className="db-btn"
                   onClick={() => document.getElementById("fileInput").click()}
+                  // onClick={handleFileImport}
                 >
                   Import Database
                 </button>
@@ -661,7 +683,7 @@ console.log("Tables:", importMeta.data.tables.map(t =>
                 <input
                   type="file"
                   accept=".json"
-                  onChange={handleFileAppendChange}
+                  onChange={handleFileAppend} 
                   style={{ display: "none" }}
                   id="fileAppend"
                 />

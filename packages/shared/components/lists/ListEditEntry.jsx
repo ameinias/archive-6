@@ -53,7 +53,7 @@ export function EntryList() {
       // Apply hex filter first - only the items that match the filter are shown
       let filtered = applyHexFilter(items, gameState?.activeFilter);
 
-      console.log("type: entry, column:", column, "direction:", direction);
+      // console.log("type: entry, column:", column, "direction:", direction);
 
       // Sort the filtered items
       filtered.sort((a, b) => {
