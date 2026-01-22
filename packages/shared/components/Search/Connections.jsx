@@ -8,6 +8,9 @@ import Select from "react-select"; // https://react-select.com/home#getting-star
 import VisNetworkReat from "@components/parts/VisNetworkReat"; //https://www.npmjs.com/package/react-graph-vis
 import { SelectEntry } from "@components/parts/FormAssets";
 
+// https://magicui.design/docs/components/animated-beam
+// could be nice sometime
+
 import Graph from "@components/parts/Graph";
 
 export default function TestComp() {

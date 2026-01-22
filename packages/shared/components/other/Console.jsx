@@ -3,6 +3,8 @@ import { db } from '@utils/db' // import the database
 import { useLiveQuery } from 'dexie-react-hooks'
 import { GameLogic } from '@utils/gamelogic'
 
+import { HyperText } from "@utils/motion/hypertext"
+
 const Console = () => {
   const [consoleArray, setConsoleArray] = useState([])
   const { gameState } = GameLogic()
@@ -33,13 +35,15 @@ const Console = () => {
     <>
       <div
         ref={containerRef}
-        className={`console ${!gameState.showConsole && 'hide'}`}
+        // className={`console ${!gameState.showConsole && 'hide'}`}
+        className={`console`}
       >
-        <h2>Console</h2>
+
 
         <div>
+          <HyperText>Hover me</HyperText>
           " at JSXParserMixin.jsxParseAttributeValue
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4637:21)   
+          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4637:21)
           at JSXParserMixin.jsxParseAttribute
           (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4686:38)
           at JSXParserMixin.jsxParseOpeningElementAfterName

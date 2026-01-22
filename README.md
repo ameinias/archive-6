@@ -16,6 +16,7 @@ This is a game. I am doing my best to make it work.
 
 ## put assets
 projects>assets
+Install packages to packages/shared
 
 
 ## todo

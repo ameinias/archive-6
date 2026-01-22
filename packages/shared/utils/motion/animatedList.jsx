@@ -1,5 +1,12 @@
-"use client"
 //https://magicui.design/docs/components/animated-list
+// Call with
+//       <AnimatedList>
+//   <p>Item 1</p>
+//   <p>Item 2</p>
+//   <p>Item 3</p>
+// </AnimatedList>
+
+
 import React, {
   ComponentPropsWithoutRef,
   useEffect,
@@ -8,10 +15,10 @@ import React, {
 } from "react"
 import { AnimatePresence, motion, MotionProps } from "motion/react"
 
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils"
 
-export function AnimatedListItem({ children }: { children: React.ReactNode }) {
-  const animations: MotionProps = {
+export function AnimatedListItem({ children }) {
+  const animations= {
     initial: { scale: 0, opacity: 0 },
     animate: { scale: 1, opacity: 1, originY: 0 },
     exit: { scale: 0, opacity: 0 },
@@ -25,18 +32,16 @@ export function AnimatedListItem({ children }: { children: React.ReactNode }) {
   )
 }
 
-export interface AnimatedListProps extends ComponentPropsWithoutRef<"div"> {
-  children: React.ReactNode
-  delay?: number
-}
+
 
 export const AnimatedList = React.memo(
-  ({ children, className, delay = 1000, ...props }: AnimatedListProps) => {
+  ({ children, className, delay = 1000, ...props }) => {
     const [index, setIndex] = useState(0)
     const childrenArray = useMemo(
       () => React.Children.toArray(children),
       [children]
     )
+
 
     useEffect(() => {
       if (index < childrenArray.length - 1) {
@@ -55,12 +60,12 @@ export const AnimatedList = React.memo(
 
     return (
       <div
-        className={cn(`flex flex-col items-center gap-4`, className)}
+        className={`flex flex-col items-center gap-4`}
         {...props}
       >
         <AnimatePresence>
           {itemsToShow.map((item) => (
-            <AnimatedListItem key={(item as React.ReactElement).key}>
+            <AnimatedListItem key={(item).key}>
               {item}
             </AnimatedListItem>
           ))}

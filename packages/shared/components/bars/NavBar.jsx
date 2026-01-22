@@ -13,6 +13,9 @@ import { TimeLine } from "../lists/TimeLine";
 import Dropdown from "react-bootstrap/Dropdown";
 import { eventManager } from "@utils/events";
 
+// replace back button?
+// https://mtg-dev.tech/blog/building-a-custom-go-back-button-in-react-is-harder-than-you-think
+
 const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
@@ -47,7 +50,11 @@ const NavBar = () => {
 
   const testio = async () => {
     // UpdateDBCount();
-    updateGameState("editAccess", !gameState.editAccess);
+    // updateGameState("editAccess", !gameState.editAccess);
+    // navigate("/test");
+
+    updateGameState("consoleAvailable", true);
+
     console.log("testio done");
   };
 

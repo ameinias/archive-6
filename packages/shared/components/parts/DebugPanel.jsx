@@ -4,8 +4,16 @@ import { db } from "@utils/db"; // import the database
 import { useLiveQuery } from "dexie-react-hooks";
 
 export function DebugPanel({ itemID }) {
-  const { gameState } = GameLogic();
+  const { gameState,updateGameState } = GameLogic();
   const friends = useLiveQuery(() => db.friends.toArray());
+
+
+const updateGameStatesss = (value) => {
+
+  if (value === "consoleAvailable")
+    updateGameState({ consoleAvailable: !gameState.consoleAvailable });
+}
+
 
   return (
     <div>
@@ -23,7 +31,7 @@ export function DebugPanel({ itemID }) {
           <p>
             endgameSequence:{" "}
             {gameState.endgameSequence ? (
-              <span className="bugHi">true</span>
+              <span className="bugHi" onClick={toggleVariable(endgameSequence)}>true</span>
             ) : (
               "false"
             )}
@@ -46,11 +54,15 @@ export function DebugPanel({ itemID }) {
           </p>
           <p>
             consoleAvailable:{" "}
-            {gameState.consoleAvailable ? (
+            {/* <button onClick={updateGameStatesss("consoleAvailable")}>
+            */}
+             {gameState.consoleAvailable ? (
               <span className="bugHi">true</span>
             ) : (
-              "false"
+              <span >false</span>
             )}
+             {/* </button> */}
+
           </p>
                     <p>
             connectionPanel:{" "}
