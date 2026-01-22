@@ -39,7 +39,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
     return () => {
       if (!item || !item.available || !item.unread) return
 
-      console.log(item.fauxID + ' marking as read on unmount')
+      // console.log(item.fauxID + ' marking as read on unmount')
       db.subentries.update(Number(itemID), { unread: false })
 
       CheckConditions(item);
@@ -146,12 +146,12 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
 
           ))}
 
- 
+
 
           <span className='image-subinfo subinfo '>
             <span className="right-text">
             <div>{safeDate(item.displayDate)}</div>
-           {' '} |{' '} 
+           {' '} |{' '}
             {item.lastEditedBy !== null && item.lastEditedBy !== undefined
               ? researcherIDs.find(
                   researcher => researcher.id === parseInt(item.lastEditedBy)

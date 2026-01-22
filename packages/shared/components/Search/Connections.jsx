@@ -24,7 +24,7 @@ export default function TestComp() {
     setFilterAvailable(true);
   }
 }, [isAdmin]);
-  
+
   const changeBool = (e) => {
     const { name, checked } = e.target;
     setFilterAvailable(checked);
@@ -47,7 +47,8 @@ export default function TestComp() {
       )}
       {/* <VisNetworkReat filterAvailable={filterAvailable} /> */}
 
-            <Graph filterAvailable={filterAvailable} />
+            <Graph filterAvailable={filterAvailable}
+ />
     </div>
   );
 }

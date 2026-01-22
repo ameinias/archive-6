@@ -25,7 +25,8 @@ const NavBar = () => {
     setLoggedIn,
     setStatusMessage,
     updateGameState,
-    setAdmin, 
+    setAdmin,
+    resetGameVariables,
   } = GameLogic();
 
   const isElectron = eventManager.isElectron;
@@ -54,8 +55,10 @@ const NavBar = () => {
     await newGame(gameState.defaultStartHash);
     setAdmin(false);
 
-    updateGameState("editAccess", false);
-    updateGameState("endgameSequence", false);
+    // updateGameState("editAccess", false);
+    // updateGameState("endgameSequence", false);
+   resetGameVariables();
+    navigate("/");
     console.log("restartGame");
   };
 
@@ -91,7 +94,7 @@ const NavBar = () => {
           // onClick={() => navigate(localStorage.getItem('secondLastRoute'))}
           to={localStorage.getItem("secondLastRoute")}
         >
-          {"<<"} 
+          {"<<"}
         </Link>
       </li>{" "}
       <li role="menuitem" tabIndex="0" aria-haspopup="true">

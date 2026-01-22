@@ -43,7 +43,7 @@ export function StaticSingleDefault({ itemID }) {
       if (item && item.unread && item.available) {
         try {
           await db.friends.update(Number(id), { unread: false });
-          console.log(item.fauxID + " was unread, now marked as read");
+          // console.log(item.fauxID + " was unread, now marked as read");
         } catch (error) {
           console.error("Error marking as  read:", error);
         }
@@ -62,12 +62,17 @@ export function StaticSingleDefault({ itemID }) {
     }
   }, [item, id]);
 
+
   useEffect(() => {
-    if (gameLogic.gameState.endgameSequence && !item.unread) {
+    if (!item) return;
+    if (gameLogic.gameState.endgameSequence) {
       // Exit condition for the timer
       if (seconds <= 0) {
         navigate(`/convo`);
         return;
+      } else {
+
+        console.log("seconds remaining:", seconds);
       }
 
       // Set up the interval
@@ -75,8 +80,6 @@ export function StaticSingleDefault({ itemID }) {
         setSeconds((prevSeconds) => prevSeconds - 1);
       }, 1000); // 1000 milliseconds = 1 second
 
-      // Cleanup function to clear the interval when the component unmounts
-      // or when the effect needs to re-run (e.g., if initialSeconds changed)
       return () => clearInterval(intervalId);
     }
   }, [seconds, initialSeconds]); // Re-run effect if seconds or initialSeconds changes
@@ -84,7 +87,7 @@ export function StaticSingleDefault({ itemID }) {
 
 
 
-  
+
 
   const getEntryTitle = (entryId) => {
     if (!allFriends) return entryId;
@@ -101,7 +104,7 @@ export function StaticSingleDefault({ itemID }) {
       return db.subentries.where("parentId").equals(numericID).toArray();
     }, [itemID]) || [];
 
-    
+
   const handleRef = (newValue, actionMeta) => {
     switch (actionMeta.action) {
       case "remove-value":
@@ -122,7 +125,7 @@ export function StaticSingleDefault({ itemID }) {
     //   entryRef: newValue,
     // });
 
-     db.friends.update(Number(entryId), {
+     db.friends.update(Number(itemID), {
           entryRef: newValue
         })
 
@@ -258,7 +261,7 @@ export function StaticSingleDefault({ itemID }) {
             filterAvailable={true}
             name="ref"
             includeSubentries={false}
-            label="related entries"
+            label="Add / Remove Connections"
             displayTrueID="true"
           />
               </div>)}{" "}

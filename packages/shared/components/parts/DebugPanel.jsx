@@ -68,6 +68,14 @@ export function DebugPanel({ itemID }) {
               "false"
             )}
           </p>
+                              <p>
+            consoleWasRevealed:{" "}
+            {gameState.consoleWasRevealed ? (
+              <span className="bugHi">true</span>
+            ) : (
+              "false"
+            )}
+          </p>
         </div>
       )}
     </div>

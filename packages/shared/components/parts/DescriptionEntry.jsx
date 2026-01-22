@@ -39,7 +39,7 @@ export const DescriptionEntry = ({ string, className = "default" }) => {
     //   watchFor: "###",
     //   render: (mention) => {
     //     const entryId = mention.substring(3).split(/\s/)[0];
-        
+
     //     const title = getSubentryTitle(entryId);
     //     console.log(entryId + " " +  title);
     //     return (
@@ -47,7 +47,7 @@ export const DescriptionEntry = ({ string, className = "default" }) => {
     //         <Link
     //           to={`/entry/${getParentID(entryId)}`}
     //           title={`View entry ${title}`}
-    //           className="mention-link" 
+    //           className="mention-link"
     //         >
     //           #{title}
     //         </Link>{" "}sfsdf
@@ -60,15 +60,15 @@ export const DescriptionEntry = ({ string, className = "default" }) => {
       watchFor: "###",
       render: (mention) => {
         const entryId = mention.substring(3);
-        
+
         const title = getSubentryTitle(entryId);
-        console.log(entryId + " " +  title);
+        // console.log(entryId + " " +  title);
         return (
           <>
             <Link
               to={`/entry/${getParentID(entryId)}`}
               title={`View entry ${title}`}
-              className="mention-link" 
+              className="mention-link"
             >
               #{title}
             </Link>{" "}
@@ -81,10 +81,10 @@ export const DescriptionEntry = ({ string, className = "default" }) => {
       watchFor: "##",
       render: (mention) => {
         const entryId = mention.substring(2); //.split(/\s/)[0];
-         console.log("desc " + entryId);
+        //  console.log("desc " + entryId);
         // console.log("3 " + mention.substring(3));
         const title = getEntryTitle(entryId);
-        console.log("thiiiing " + entryId + " " +  title);
+        // console.log("thiiiing " + entryId + " " +  title);
         return (
           <>
             <Link

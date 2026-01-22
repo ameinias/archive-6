@@ -12,7 +12,7 @@ const UserInfoButtons = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
     const CallNewGame = newGameWithWarning;
-    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage,updateGameState, gameState } = GameLogic();
+    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage,updateGameState, gameState, resetGameVariables } = GameLogic();
 
       const isElectron = eventManager.isElectron;
 
@@ -21,8 +21,10 @@ const UserInfoButtons = () => {
           if (await eventManager.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
             await newGame(gameState.defaultStartHash);
 
-            updateGameState("editAccess", false);
-            updateGameState("endgameSequence", false);
+            resetGameVariables();
+
+            // updateGameState("editAccess", false);
+            // updateGameState("endgameSequence", false);
             console.log("restart with hash" + gameState.defaultStartHash);
           if (await eventManager.showConfirm('Export telemetry data to app data folder?')) {
             exportTelemetrisToAppData(globalUser.username);}

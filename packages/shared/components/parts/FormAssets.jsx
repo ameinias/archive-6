@@ -187,7 +187,7 @@ export function SelectEntry({
     let foundSubItems = subentries;
     let foundFriends = friends;
 
-    if (filterAvailable) {
+    if (filterAvailable && friends && subentries) {
       foundSubItems = subentries.filter((item) => item.available === true);
       foundFriends = friends.filter((item) => item.available === true);
     }
@@ -205,7 +205,7 @@ export function SelectEntry({
 
           tempItems.push({
             id: nextID,
-            value: nextID, 
+            value: nextID,
             label: theTitle,
             originId: item.id,
             fauxID: item.fauxID,
@@ -238,7 +238,7 @@ export function SelectEntry({
 
         tempItems.push({
           id: nextID,
-          value: nextID, 
+          value: nextID,
           label: theTitle,
           originId: item.id,
           fauxID: item.fauxID,

@@ -225,13 +225,13 @@ export const hexHashes = [
     // V3
 
   {
-    id: 30, 
+    id: 30,
     name: "V3.1.01 - intro",
     hexHashcode: "ddddddddddddddddddddddddddddddd",
   },
 
   {
-    id: 31, 
+    id: 31,
     name: "V3.1.02 - links for console and connection panel",
     hexHashcode: "234ada22c94668dd7ee1c26b42c630ab",
     note: " ",
@@ -245,22 +245,29 @@ export const hexHashes = [
   },
 
     {
-    id: 33, 
+    id: 33,
     name: "V3.1.04 -  connection panel",
     hexHashcode: "48471313e7c8b73e1d0cc7b6a9ef945e",
     note: " enable-connectionPanel",
   },
 
   {
-    id: 34, 
+    id: 34,
     name: "V3.01.04 - unlock connection edit",
     hexHashcode: "4acf43285e01067ea35af33f416fcc69",
     note: " enable-connectionEdit",
   },
 
     {
-    id: 35, 
-    name: "V3.01.04 - new end animation",
+    id: 35,
+    name: "V3.01.04 - add entry request",
+    hexHashcode: "60889e978b9dd56ca47ff36ddae12a07",
+    note: " ",
+  },
+
+      {
+    id: 36,
+    name: "V3.01.05 - new end animation",
     hexHashcode: "7a1b4cfa72de364f2c6259b853288f73",
     note: " ",
   },

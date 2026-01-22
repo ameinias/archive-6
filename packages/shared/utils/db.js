@@ -116,7 +116,7 @@ db.version(5.0).stores({
 });
 
 //add new database for events
-// newWebEntry - if not selected, exports entry without ID number so it becomes a 
+// newWebEntry - if not selected, exports entry without ID number so it becomes a
 db.version(5.1).stores({
   gamedata: "expVersion, uploadedAt, sessionStart",
   friends:
@@ -129,7 +129,7 @@ db.version(5.1).stores({
 
 
 //add new database for events
-// realEditDate - just saving edits. 
+// realEditDate - just saving edits.
 db.version(5.1).stores({
   gamedata: "expVersion, uploadedAt, sessionStart",
   friends:
@@ -249,11 +249,11 @@ export const dbHelpers = {
 
   getIdsFromHexHashes(code) {
     const hash = hexHashes.find((h) => h.hexHashcode === code);
-    console.log(
-      "getIdsFromHexHashes id: ",
-      code,
-      hash ? hash.id : "hash not found",
-    );
+    // console.log(
+    //   "getIdsFromHexHashes id: ",
+    //   code,
+    //   hash ? hash.id : "hash not found",
+    // );
     return hash ? hash.id : code;
   },
 
@@ -366,22 +366,22 @@ export const handleJSONExport = async (fileName = "dexie-export-web.json") => {
   }
 };
 
-//.put preserves ID, .add omits ID and adds to end 
+//.put preserves ID, .add omits ID and adds to end
 export const importJSONWithWebEntryHandling = async (file) => {
     // Read the file as text
     const text = await file.text();
     const exportData = JSON.parse(text);
-    
+
     // Close and clear current database
 
-    
+
     // Process the export data structure
     // Dexie export format has a 'data' property with table data
     if (exportData.data && exportData.data.data) {
       const tables = exportData.data.data;
       // console.log("import tables " + tables.friends.length);
 
-// 0   'friends', 
+// 0   'friends',
 // 1  'subentries',
 // 2 'attachments',
 // 3  'media',
@@ -397,7 +397,7 @@ const gamedataTable = tables.find(t => t.tableName === 'gamedata');
 
       // Process friends table
       if (friendsTable) {
-        
+
         for (const entry of friendsTable.rows) {
           if (entry.newWebEntry === true) {
             // Remove the id property and let Dexie assign a new one
@@ -411,7 +411,7 @@ const gamedataTable = tables.find(t => t.tableName === 'gamedata');
           }
         }
       } else { console.log("no friends");}
-      
+
       // Process subentries table
       if (subentriesTable) {
         for (const entry of subentriesTable.rows) {
@@ -423,27 +423,27 @@ const gamedataTable = tables.find(t => t.tableName === 'gamedata');
           }
         }
       }
-      
+
       // Process other tables (media, events, gamedata) normally
       if (mediaTable) {
         for (const entry of mediaTable.rows) {
           await db.media.put(entry);
         }
       }
-      
+
       if (eventsTable) {
         for (const entry of eventsTable.rows) {
           await db.events.put(entry);
         }
       }
-      
+
       if (gamedataTable) {
         for (const entry of gamedataTable.rows) {
           await db.gamedata.put(entry);
         }
       }
     } else { console.log("No data to import.");}
-    
+
     // await db.open();
 
     console.log("Import complete with newWebEntry handling");

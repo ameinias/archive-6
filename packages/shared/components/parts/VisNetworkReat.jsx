@@ -8,6 +8,24 @@ import { useNavigate } from "react-router-dom";
 import { GameLogic } from "@utils/gamelogic";
 import { applyHexFilter } from "@components/parts/ListingComponent";
 
+
+
+
+
+
+//             THIS IS NOT THE ONE
+
+
+
+
+
+
+
+
+
+
+
+
 const VisNetworkReat = ({
   filterAvailable = true,
   includeSubentries = true,
@@ -118,6 +136,8 @@ const VisNetworkReat = ({
   );
 
   const options = {
+    autoResize: true,
+    configure: { enabled: true, filter: "nodes" },
     groups: {
       entry: { color: { background: "green" }, borderWidth: 3 },
       sub: { color: { background: "blue" }, borderWidth: 1 },
@@ -140,7 +160,7 @@ const VisNetworkReat = ({
       arrows: "middle",
     },
     height: "500px",
-    
+
   };
 
   const events = {
@@ -164,7 +184,17 @@ console.log("ledges:", ledges?.get().map(item => ({ from: item.from, to: item.to
       options={options}
       events={events}
       getNetwork={(network) => {
-        //  if you want access to vis.js network api you can set the state in a parent component using this property
+        // Fit the network to show all nodes with buffer/padding
+        // The animation option makes it smooth, offset gives buffer space
+        network.fit({
+          animation: {
+            duration: 1000,
+            easingFunction: "easeInOutQuad"
+          },
+          offset: { x: 5, y: 0 }, // Center offset
+          minZoomLevel: 0, // Minimum zoom (higher = more zoomed in)
+          maxZoomLevel: 10.0 // Maximum zoom (lower = more zoomed out)
+        });
       }}
     />
   );

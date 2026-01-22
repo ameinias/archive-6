@@ -279,51 +279,7 @@ export function PlayerAddEntryForm ({}) {
 
   //#region   -------   ADD EDIT ENTRY FUNCTIONS  ---------- */
 
-  // async function updateEntry () {
-  //   try {
-  //     const title = formValues.title || 'Untitled'
-  //     if (!title) {
-  //       setStatusMessage('Title is required')
-  //       return
-  //     }
-  //     if (formValues.media.length === 0) {
-  //       eventManager.showAlert('Artifact requires media documentation.')
-  //       return
-  //     }
 
-  //     // if fauxID has changed
-  //     // find subentries with parent ID
-  //     // update child title
-
-  //     let idNumber = Number(itemID)
-  //     if (isNaN(idNumber)) {
-  //       setStatusMessage(savedID + 'is not a number')
-  //       return
-  //     }
-
-  //     db.friends.update(idNumber, FormToEntry()).then(function (updated) {
-  //       if (updated)
-  //         setStatusMessage(
-  //           idNumber +
-  //             ' ' +
-  //             formValues.fauxID +
-  //             ' was updated with ' +
-  //             formValues.media.length +
-  //             ' attachments'
-  //         )
-  //       else setStatusMessage('Nothing was updated - no key:' + idNumber)
-  //     })
-
-  //     loadConfirmEffect()
-
-  //     // setFormValue(defaultFormValue); navigate('/'); // <-- Go to Home
-  //   } catch (error) {
-  //     setStatusMessage(
-  //       `Failed to edit ${title}  & ${formValues.title}: ${error}`
-  //     )
-  //     return
-  //   }
-  // }
 
   // Add the entry to the database
   async function addEntry () {
@@ -345,8 +301,9 @@ export function PlayerAddEntryForm ({}) {
         `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`
       )
       loadConfirmEffect()
-      // TODO - go to static entry first
-      // navigate(`/convo`);
+
+      console.log(`Added entry with ID ${id}`);
+
       updateGameState('endgameSequence', true)
       navigate(`/entry/${id}`)
 

@@ -28,7 +28,7 @@ function HashImport () {
       return
     }
 
-    console.log(hashValue, '  ===================== ', hexHashID)
+    // console.log(hashValue, '  ===================== ', hexHashID)
 
     const foundItems = friends?.filter(item => {
       if (Array.isArray(item.hexHash)) {
@@ -59,7 +59,7 @@ function HashImport () {
     console.warn(`Invalid parentID for subitem ${subItem.id}:`, subItem.parentId);
     continue; // Skip this item
   }
-  
+
   const parentItem = await db.friends.get(Number(parentID))
   if (parentItem && parentItem.available) {
     await db.friends.update(Number(parentID), {
@@ -108,9 +108,7 @@ function HashImport () {
     //   })
     // })
 
-    const message = `Hash: ${hashValue} | ${dbHelpers.getIdsFromHexHashes(
-      hashValue
-    )} | Entries unlocked: ${foundItems.length} | Subentries unlocked: ${
+    const message = `Hash: ${hashValue} | Entries unlocked: ${foundItems.length} | Subentries unlocked: ${
       foundSubItems.length
     }`
 
@@ -118,7 +116,7 @@ function HashImport () {
     //   console.log(result);
     eventManager.showAlert(message)
 
-    
+
     // document.getElementById("hashinput").reset();
 
   }

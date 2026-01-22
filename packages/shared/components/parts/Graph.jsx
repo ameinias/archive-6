@@ -143,13 +143,14 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
     const data = { nodes, edges };
 
     const options = {
+      autoResize: true,
       groups: {
         entry: { color: { background: "green" }, borderWidth: 1 },
         sub: { color: { background: "blue" }, borderWidth: 1 },
       },
       nodes: {
         shape: "dot",
-    
+
         borderWidth: 4,
         widthConstraint: {
           maximum: 250,
@@ -193,6 +194,19 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
 
     // Create network
     networkRef.current = new Network(containerRef.current, data, options);
+
+
+// Wait for stabilization, then fit the network
+networkRef.current.once('stabilizationIterationsDone', () => {
+  networkRef.current.fit({
+    animation: {
+      duration: 1000,
+      easingFunction: "easeInOutQuad"
+    },
+    minZoomLevel: 0.2,
+    maxZoomLevel: 0.4
+  });
+});
 
     // Add event listeners
     networkRef.current.on("select", (params) => {
