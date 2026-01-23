@@ -3,25 +3,58 @@ import { db } from '@utils/db' // import the database
 import { useLiveQuery } from 'dexie-react-hooks'
 import { GameLogic } from '@utils/gamelogic'
 
-import { HyperText } from "@utils/motion/hypertext"
+import { HyperText } from '@utils/motion/hypertext'
+import { AnimatedList } from '@utils/motion/animatedList'
+
+let globalConsoleArray = []
+const consoleUpdateCallbacks = []
+
+// Export this function for use in other scripts
+const addConsoleEntry = entry => {
+  globalConsoleArray = [...globalConsoleArray, entry]
+  consoleUpdateCallbacks.forEach(callback => callback(globalConsoleArray))
+}
+
+const addConsoleEntryHypertext = entry => {
+  const messEntry = (
+    <span className='trapped'>
+      <HyperText
+      duration="80"
+      delay="10"
+  >{entry}</HyperText>
+    </span>
+  )
+
+   globalConsoleArray = [...globalConsoleArray, messEntry]
+  consoleUpdateCallbacks.forEach(callback => callback(globalConsoleArray))
+}
 
 const Console = () => {
-  const [consoleArray, setConsoleArray] = useState([])
+  // const [consoleArray, setConsoleArray] = useState([])
   const { gameState } = GameLogic()
   const friends = useLiveQuery(() => db.friends.toArray())
   const subentries = useLiveQuery(() => db.subentries.toArray())
 
+  const [consoleArray, setConsoleArray] = useState(globalConsoleArray)
+
+  useEffect(() => {
+    consoleUpdateCallbacks.push(setConsoleArray)
+  setConsoleArray([...globalConsoleArray]);
+
+    return () => {
+      const index = consoleUpdateCallbacks.indexOf(setConsoleArray)
+      if (index > -1) consoleUpdateCallbacks.splice(index, 1)
+    }
+  }, [])
+
   useEffect(() => {
     // window.scrollTo(0, 0);
     if (gameState.showConsole) {
-      scrollToBottom
+      scrollToBottom()
       // console.log("use effect");
     }
-  }, [friends, subentries, gameState.showConsole])
+  }, [friends, subentries, gameState.showConsole, consoleArray])
 
-  const addConsoleLog = newLog => {
-    consoleArray.push(newLog)
-  }
   const containerRef = useRef(null)
 
   // Function to scroll to the bottom of the container
@@ -31,6 +64,25 @@ const Console = () => {
     console.log('scroll to bottom')
   }
 
+  const clearConsole = () => {
+    setConsoleArray([])
+  }
+
+  const printLostEntries = () => {
+    // Find friends and subentries that are not available
+    const lostFriends = friends.filter(friend => !friend.available)
+    const lostSubentries = subentries.filter(subentry => !subentry.available)
+
+    // Log lost entries to the console
+    lostFriends.forEach(friend => {
+      addConsoleEntry(`Lost Friend Entry: ${friend.fauxID} - ${friend.title}`)
+    })
+
+    lostSubentries.forEach(subentry => {
+      addConsoleEntry(`Lost Subentry: ${subentry.fauxID} - ${subentry.title}`)
+    })
+  }
+
   return (
     <>
       <div
@@ -38,30 +90,8 @@ const Console = () => {
         // className={`console ${!gameState.showConsole && 'hide'}`}
         className={`console`}
       >
-
-
         <div>
           <HyperText>Hover me</HyperText>
-          " at JSXParserMixin.jsxParseAttributeValue
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4637:21)
-          at JSXParserMixin.jsxParseAttribute
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4686:38)
-          at JSXParserMixin.jsxParseOpeningElementAfterName
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4700:28)
-          at JSXParserMixin.jsxParseOpeningElementAt
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4695:17)
-          at JSXParserMixin.jsxParseElementAt
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4719:33)
-          at JSXParserMixin.jsxParseElementAt
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4731:32)
-          at JSXParserMixin.jsxParseElement
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4782:17)
-          at JSXParserMixin.parseExprAtom
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:4792:19)
-          at JSXParserMixin.parseExprSubscripts
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:11085:23)
-          at JSXParserMixin.parseUpdate
-          (C:\Users\gillian\_Academic\Thesis\archive-5\node_modules\@babel\parser\lib\index.js:11070:21)"
         </div>
 
         {consoleArray.map((item, index) => (
@@ -74,4 +104,4 @@ const Console = () => {
   )
 }
 
-export default Console
+export { Console, addConsoleEntry, addConsoleEntryHypertext }

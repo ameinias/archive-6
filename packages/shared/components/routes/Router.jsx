@@ -46,7 +46,7 @@ import StatusBar from '@components/bars/StatusBar'
 
 // Endgame pages
 import { PlayerAddEntryForm } from '@components/other/PlayerEditPage'
-import Console from '@components/other/Console'
+import {Console} from '@components/other/Console'
 import Conversation from '@components/other/Conversation'
 import TestComp from '../testcomp'
 import { DebugPanel } from '@components/parts/DebugPanel'

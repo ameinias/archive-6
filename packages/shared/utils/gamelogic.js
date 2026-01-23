@@ -57,8 +57,7 @@ let globalUser = (() => {
   try {
     const savedUser = localStorage.getItem("globalUser");
     return savedUser ?
-      JSON.parse(savedUser) :
-      {
+      JSON.parse(savedUser) : {
         username: "playerName",
         password: "password",
         firstname: "firstname",
@@ -135,6 +134,8 @@ export function GameLogic() {
     userUpdateCallbacks.push(setUser);
     adminUserUpdateCallbacks.push(setAdminUser);
 
+
+
     const handleToggleAdmin = () => {
       toggleAdmin();
     };
@@ -168,6 +169,10 @@ export function GameLogic() {
         adminUserUpdateCallbacks.splice(adminUserIndex, 1);
 
       eventManager.removeListener("toggle-admin", handleToggleAdmin);
+
+
+
+
     };
   }, []);
 
@@ -329,8 +334,7 @@ export function GameLogic() {
     }
 
     const events = eventName.includes(",") ?
-      eventName.split(",").map((e) => e.trim()) :
-      [eventName];
+      eventName.split(",").map((e) => e.trim()) : [eventName];
 
     events.forEach(processTrigger);
   };
@@ -350,7 +354,13 @@ export function GameLogic() {
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
-  }
+  };
+
+
+
+
+
+
 
   return {
     gameState,

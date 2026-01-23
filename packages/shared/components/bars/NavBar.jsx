@@ -12,6 +12,7 @@ import {
 import { TimeLine } from "../lists/TimeLine";
 import Dropdown from "react-bootstrap/Dropdown";
 import { eventManager } from "@utils/events";
+import { addConsoleEntry, addConsoleEntryHypertext, Console } from "@components/other/Console";
 
 // replace back button?
 // https://mtg-dev.tech/blog/building-a-custom-go-back-button-in-react-is-harder-than-you-think
@@ -31,6 +32,7 @@ const NavBar = () => {
     setAdmin,
     resetGameVariables,
   } = GameLogic();
+
 
   const isElectron = eventManager.isElectron;
 
@@ -53,9 +55,19 @@ const NavBar = () => {
     // updateGameState("editAccess", !gameState.editAccess);
     // navigate("/test");
 
-    updateGameState("consoleAvailable", true);
+    //  updateGameState("consoleAvailable", true);
+    Console.printLostEntries();
+
+
 
     console.log("testio done");
+  };
+
+    const testio2 = async () => {
+
+        addConsoleEntryHypertext("This is a sfsdf asdfsdf sddfsdf test console entry from NavBar " + new Date().toLocaleString());
+
+    console.log("testio2    done");
   };
 
   const restartGame = async () => {
@@ -197,7 +209,13 @@ const NavBar = () => {
           <li>
             {" "}
             <button className="button-small" onClick={testio}>
-              test
+              consoleA
+            </button>
+          </li>
+                    <li>
+            {" "}
+            <button className="button-small" onClick={testio2}>
+              addConsoleEntry
             </button>
           </li>
         </>

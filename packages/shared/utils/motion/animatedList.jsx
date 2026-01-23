@@ -1,4 +1,8 @@
 //https://magicui.design/docs/components/animated-list
+
+// import { AnimatedList } from '@utils/motion/animatedList'
+
+
 // Call with
 //       <AnimatedList>
 //   <p>Item 1</p>
