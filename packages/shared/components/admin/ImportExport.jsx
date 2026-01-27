@@ -316,7 +316,7 @@ function ImportExport() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "database-export-backup-1996FINAL-v1.csv";
+      a.download = "database-export-backup-1996FINAL-v3.csv";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -557,6 +557,11 @@ function ImportExport() {
 
   //#region ---------- new iomport
 
+  const ClearDatabaseEvents = async () => {
+await db.events.clear();
+console.log("Events database cleared.");
+  };
+
 const handleFileAppend = async (event) => {
   const file = event.target.files[0];
   console.log("append!");
@@ -697,6 +702,7 @@ const handleFileAppend = async (event) => {
                 <button className="db-btn" onClick={clearDatabase}>
                   Clear Database
                 </button>
+                <button className="db-btn" onClick={ClearDatabaseEvents}>Clear Events table</button>
 
                 <button
                   onClick={async () => {

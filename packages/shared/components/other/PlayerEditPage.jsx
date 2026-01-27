@@ -20,6 +20,7 @@ import { UpdateFauxIDAndReorderSubs } from '@hooks/dbHooks'
 import { useLiveQuery } from 'dexie-react-hooks'
 import Webcam from 'react-webcam'
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
+import { EndSequence } from '@components/other/Console'
 
 // default variables - update as needed
 const defaultFauxIDStart = 'OS'
@@ -304,8 +305,8 @@ export function PlayerAddEntryForm ({}) {
 
       console.log(`Added entry with ID ${id}`);
 
-      updateGameState('endgameSequence', true)
-      navigate(`/entry/${id}`)
+
+      EndSequence(id);
 
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {

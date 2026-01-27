@@ -299,7 +299,10 @@ export function SelectEntry({
         name={name}
         isClearable={true}
         placeholder={label}
-      />
+     
+  getOptionValue={(option) => `${option.originId}-${option.type}`}   
+  getOptionLabel={(option) => option.label}   
+/>
     </div>
   );
 }

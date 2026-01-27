@@ -17,6 +17,10 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
   // Ref for the network instance
   const networkRef = useRef(null);
 
+  const nodesRef = useRef(null);
+  const edgesRef = useRef(null);
+  const isFirstRender = useRef(true); // Add this
+
   const filteredFriends = useLiveQuery(() => {
     if (!db.isOpen()) return [];
 
@@ -51,7 +55,7 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
       for (const item of foundFriends) {
         tempItems.push({
           id: nextID,
-          label: item.fauxID + " - " + item.title,
+          label: item.id + " " + item.fauxID + " - " + item.title,
           group: "entry",
           originId: item.id,
           parentId: null,
@@ -64,7 +68,6 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
     return tempItems;
   }, [filterAvailable, friends, subentries, includeSubentries]);
 
-  // Initialize the network
   useEffect(() => {
     if (
       !containerRef.current ||
@@ -74,23 +77,130 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
       return;
     }
 
-    // Create nodes
-    const nodes = new DataSet(
-      filteredFriends.map((item) => ({
-        id: item.id,
-        label: item.label,
-        title: item.label,
-        group: item.group,
-      })),
-    );
+    // If network doesn't exist yet, create it
+    if (!networkRef.current) {
+      nodesRef.current = new DataSet();
+      edgesRef.current = new DataSet();
 
-    // Create edges (you'll need to build this based on your relationships)
-    // const edges = new DataSet([
-    //   { from: 0, to: 2 },
-    //   { from: 0, to: 1 },
-    // ]);
+      const data = { nodes: nodesRef.current, edges: edgesRef.current };
 
-    // Then create a map to convert original IDs to new IDs
+      const options = {
+        autoResize: false,
+          interaction: {
+    zoomView: true,
+  },
+        groups: {
+          entry: { color: { background: "green" }, borderWidth: 1 },
+          sub: { color: { background: "blue" }, borderWidth: 1 },
+        },
+        nodes: {
+          shape: "dot",
+          borderWidth: 4,
+          widthConstraint: {
+            maximum: 250,
+          },
+          color: {
+            border: "#222222",
+            background: "#666666",
+          },
+          font: { color: "#000000ff", size: 25, multi: "html" },
+        },
+        layout: {
+          hierarchical: false,
+          improvedLayout: true,
+        },
+        edges: {
+          color: "#000000",
+          smooth: false,
+          arrows: {
+            to: { enabled: false },
+            from: { enabled: false },
+          },
+        },
+        height: "500px",
+        width: "100%",
+        physics: {
+          enabled: true,
+          barnesHut: {
+            gravitationalConstant: -8000,
+            centralGravity: 0.3,
+            springLength: 120,
+            springConstant: 0.03, //0.04
+            damping: 0.9, //0.4
+            avoidOverlap: 0.6, //0.2
+          },
+          stabilization: {
+            // iterations: 150,
+          },
+        },
+      };
+
+      networkRef.current = new Network(containerRef.current, data, options);
+
+      // Only fit on first render
+      // networkRef.current.once('stabilizationIterationsDone', () => {
+      //   networkRef.current.fit({
+      //     animation: {
+      //       duration: 1000,
+      //       easingFunction: "easeInOutQuad"
+      //     },
+      //       padding: 300
+      //   });
+      // });
+
+      //       networkRef.current.once('stabilizationIterationsDone', () => {
+      //   const scale = 0.8; // 0.8 = zoom out to 80%
+      //   networkRef.current.moveTo({
+      //     scale: scale,
+      //     animation: {
+      //       duration: 1000,
+      //       easingFunction: "easeInOutQuad"
+      //     }
+      //   });
+      // });
+
+      // networkRef.current.once("stabilizationIterationsDone", () => {
+      //   networkRef.current.fit();
+      //   const currentScale = networkRef.current.getScale();
+      //   networkRef.current.moveTo({
+      //     scale: currentScale * 0.8, // Zoom out by 20%
+      //   });
+      // });
+
+networkRef.current.moveTo({ scale: 0.5 });
+
+      // Add event listeners only once
+      networkRef.current.on("select", (params) => {
+        console.log("Selected nodes:", params.nodes);
+        console.log("Selected edges:", params.edges);
+
+        // Navigate if a node is selected
+        if (params.nodes.length > 0) {
+          const selectedId = params.nodes[0];
+          const selectedNode = filteredFriends.find((f) => f.id === selectedId);
+          if (selectedNode?.originId) {
+            // navigate(`/entry/${selectedNode.originId}`);
+          }
+        }
+      });
+    }
+
+    // Disable physics during updates (except first render)
+    // if (!isFirstRender.current) {
+    //   networkRef.current.setOptions({ physics: { enabled: false } });
+    // }
+
+    // Update nodes
+    const nodeData = filteredFriends.map((item) => ({
+      id: item.id,
+      label: item.label,
+      title: item.label,
+      group: item.group,
+    }));
+    nodesRef.current.clear();
+    nodesRef.current.add(nodeData);
+
+    // Build and update edges
     const idMap = new Map();
     filteredFriends.forEach((item) => {
       if (item.originId) {
@@ -112,118 +222,29 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
       // Add edges for entryRef relationships
       if (item.entryRef && Array.isArray(item.entryRef)) {
         item.entryRef.forEach((refObj) => {
-          // Check if the referenced entry exists in our filtered list
-
-          // console.log("nooode ID: " + filteredFriends[0].originId + " type: " + filteredFriends[0].group);
-          // console.log("target ID: " + refObj.originId + " type: " + refObj.type);
-
           // Find the matching node by both originId AND type
           const targetNode = filteredFriends.find(
             (node) =>
               node.originId === refObj.originId && node.group === refObj.type,
           );
 
-          //  if (!targetNode) console.log("no targetnode");
-          //  console.log("ref " + item.id + " - " + refObj.id + " " + targetNode.id);
-
           if (targetNode) {
             edgesArray.push({
               from: item.id,
               to: targetNode.id,
-              color: "#0d0fb9ff", //{ color: '#FF0000' }, // Red for entryRef connections
-               // Make them dashed
+              color: "#0d0fb9ff",
             });
           }
         });
       }
     });
 
-    const edges = new DataSet(edgesArray);
+    isFirstRender.current = false; // Mark that first render is done
 
-    const data = { nodes, edges };
+    edgesRef.current.clear();
+    edgesRef.current.add(edgesArray);
 
-    const options = {
-      autoResize: true,
-      groups: {
-        entry: { color: { background: "green" }, borderWidth: 1 },
-        sub: { color: { background: "blue" }, borderWidth: 1 },
-      },
-      nodes: {
-        shape: "dot",
-
-        borderWidth: 4,
-        widthConstraint: {
-          maximum: 250,
-        },
-        color: {
-          border: "#222222",
-          background: "#666666",
-        },
-        font: { color: "#000000ff", size: 25, multi: "html"},
-      },
-      layout: {
-        hierarchical: false,
-        improvedLayout: true,
-      },
-      edges: {
-        color: "#000000",
-        // arrows: "from",
-        smooth: false, // or { enabled: false }
-          arrows: {
-    to: { enabled: false },
-    from: { enabled: false }
-          }
-      },
-      height: "500px",
-      width: "100%",
-      physics: {
-        enabled: true,
-        barnesHut: {
-          gravitationalConstant: -8000, // Higher = more repulsion
-          centralGravity: 0.7,
-          springLength: 120, // Distance nodes try to maintain
-          springConstant: 0.04,
-          damping: 0.09,
-          avoidOverlap: 0.2, // Critical for boxes! 0-1, higher = stronger
-        },
-        stabilization: {
-          iterations: 150,
-        },
-      },
-    };
-
-    // Create network
-    networkRef.current = new Network(containerRef.current, data, options);
-
-
-// Wait for stabilization, then fit the network
-networkRef.current.once('stabilizationIterationsDone', () => {
-  networkRef.current.fit({
-    animation: {
-      duration: 1000,
-      easingFunction: "easeInOutQuad"
-    },
-    minZoomLevel: 0.2,
-    maxZoomLevel: 0.4
-  });
-});
-
-    // Add event listeners
-    networkRef.current.on("select", (params) => {
-      console.log("Selected nodes:", params.nodes);
-      console.log("Selected edges:", params.edges);
-
-      // Navigate if a node is selected
-      if (params.nodes.length > 0) {
-        const selectedId = params.nodes[0];
-        const selectedNode = filteredFriends.find((f) => f.id === selectedId);
-        if (selectedNode?.originId) {
-          // navigate(`/entry/${selectedNode.originId}`);
-        }
-      }
-    });
-
-    // Cleanup
+    // Cleanup only on unmount
     return () => {
       if (networkRef.current) {
         networkRef.current.destroy();

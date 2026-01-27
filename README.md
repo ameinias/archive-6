@@ -18,6 +18,11 @@ This is a game. I am doing my best to make it work.
 projects>assets
 Install packages to packages/shared
 
+## Lose something?
+newGame in db
+EndSequence in Console
+StatusMessage in gamelogic
+
 
 ## todo
 ### 7.0.4 - 8/12/2025

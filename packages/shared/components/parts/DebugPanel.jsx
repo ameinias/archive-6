@@ -2,36 +2,57 @@ import React, { useState, useEffect } from "react";
 import { GameLogic } from "@utils/gamelogic";
 import { db } from "@utils/db"; // import the database
 import { useLiveQuery } from "dexie-react-hooks";
+import { Link } from "react-router-dom";
 
-export function DebugPanel({ itemID }) {
-  const { gameState,updateGameState } = GameLogic();
+export const DebugPanel = () => {
+  const { gameState, updateGameState } = GameLogic();
   const friends = useLiveQuery(() => db.friends.toArray());
 
+  
+useEffect(() => {
+  const handleToggleDebug = () => {
+    updateGameState('showDebug', !gameState.showDebug);
+  };
+  
+  window.addEventListener('toggleDebug', handleToggleDebug);
+  
+  return () => {
+    window.removeEventListener('toggleDebug', handleToggleDebug);
+  };
+}, [gameState.showDebug, updateGameState]);
 
-const updateGameStatesss = (value) => {
 
-  if (value === "consoleAvailable")
-    updateGameState({ consoleAvailable: !gameState.consoleAvailable });
-}
+  const toggleConsole = (value) => {
+    console.log("toggle: ", value);
+    if (value === "consoleAvailable")
+      updateGameState("consoleAvailable", !gameState.consoleAvailable);
+    if (value === "showConsole")
+      updateGameState("showConsole", !gameState.showConsole);
+    if (value === "connectionPanel")
+      updateGameState("connectionPanel", !gameState.connectionPanel);
+    if (value === "connectionEdit")
+      updateGameState("connectionEdit", !gameState.connectionEdit);
 
+    
+  };
 
   return (
     <div>
       {gameState.showDebug && (
         <div className="debugInfo">
           <p>
-            editAccess:{" "}
+            editAccess: sdfsd
             {gameState.editAccess ? (
               <span className="bugHi">true</span>
             ) : (
-              "false"
+              "fals  e"
             )}
           </p>
           <p>activeFilter: {gameState.activeFilter} </p>
           <p>
             endgameSequence:{" "}
             {gameState.endgameSequence ? (
-              <span className="bugHi" onClick={toggleVariable(endgameSequence)}>true</span>
+              <span className="bugHi">true</span>
             ) : (
               "false"
             )}
@@ -44,8 +65,10 @@ const updateGameStatesss = (value) => {
               "false"
             )}
           </p>
-                    <p>
-            showConsole:{" "}
+          <p>
+            <Link onClick={() => toggleConsole("showConsole")}>
+              show Console:
+            </Link>{" "}{" "}
             {gameState.showConsole ? (
               <span className="bugHi">true</span>
             ) : (
@@ -53,36 +76,40 @@ const updateGameStatesss = (value) => {
             )}
           </p>
           <p>
-            consoleAvailable:{" "}
-            {/* <button onClick={updateGameStatesss("consoleAvailable")}>
-            */}
-             {gameState.consoleAvailable ? (
+           <Link onClick={() => toggleConsole("consoleAvailable")}> consoleAvailable</Link>:{" "}
+            {gameState.consoleAvailable ? (
               <span className="bugHi">true</span>
             ) : (
-              <span >false</span>
+              <span>false</span>
             )}
-             {/* </button> */}
-
           </p>
-                    <p>
-            connectionPanel:{" "}
+          <p>
+            <Link onClick={() => toggleConsole("connectionPanel")}>connectionPanel</Link>:{" "}
             {gameState.connectionPanel ? (
               <span className="bugHi">true</span>
             ) : (
               "false"
             )}
           </p>
-                    <p>
-            connectionEdit:{" "}
+          <p>
+            <Link onClick={() => toggleConsole("connectionEdit")}>connectionEdit</Link>:{" "}
             {gameState.connectionEdit ? (
               <span className="bugHi">true</span>
             ) : (
               "false"
             )}
           </p>
-                              <p>
+          <p>
             consoleWasRevealed:{" "}
             {gameState.consoleWasRevealed ? (
+              <span className="bugHi">true</span>
+            ) : (
+              "false"
+            )}
+          </p>
+          <p>
+            bluescreen:{" "}
+            {gameState.bluescreen ? (
               <span className="bugHi">true</span>
             ) : (
               "false"
@@ -92,6 +119,6 @@ const updateGameStatesss = (value) => {
       )}
     </div>
   );
-}
+};
 
 // export default DebugPanel;

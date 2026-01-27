@@ -32,23 +32,18 @@ const StatusBar = () => {
       <div className='status-bar'>
         <div className='status-bar-field col'>
           {' '}
-                    {/* {isAdmin && ( */}
             <button  onClick={debugWindow}>
               DBI
             </button>
-        {/* )} */}
           {gameState.consoleAvailable && (
             <button  onClick={consoleChange} className="console-button clear-button-style">
               ⛔
             </button>
           )} 
         </div>
-        {/* <div className='status-bar-field col-8'> */}
-          {/* {(globalStatus != "") && (status ||  ${globalStatus} )} */}
           <div className='status-bar-field col-8'>
             {(globalStatus !== '' && 'status || ', globalStatus)}
           </div>
-        {/* </div>{' '} */}
         <div className='status-bar-field'>
           <UserInfoButtons />
         </div>

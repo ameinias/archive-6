@@ -251,7 +251,7 @@ const createWindow = async () => {
     height: windowState.height || 555,
     x: windowState.x,
     y: windowState.y,
-      autoHideMenuBar: true,
+    autoHideMenuBar: true,
     icon: getAssetPath('icons/folder.png'),
     webPreferences: {
       contextIsolation: true,
@@ -678,11 +678,6 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
       relativePath.replace('assets/', ''),
     );
 
-
-
-
-
-
     // diff
 
     // Create appdata  directories if they don't exist
@@ -693,11 +688,9 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
 
     fs.writeFileSync(fullPath, content, 'utf8');
 
-
-
     // Write the file SAVE ASSET TO RESOURCES (WORKS)
 
-        // resources path
+    // resources path
     const projectRoot = app.isPackaged
       ? path.dirname(process.execPath) // When packaged, use exe location
       : path.join(__dirname, '../..'); // In dev, go up from compiled main.js
@@ -715,9 +708,6 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
 
     fs.writeFileSync(resourcePath, content, 'utf8');
 
-
-
-
     return fullPath;
   } catch (error) {
     console.error('Error saving asset file:', error);
@@ -725,34 +715,32 @@ ipcMain.handle('save-asset-file', async (event, relativePath, content) => {
   }
 });
 
+ipcMain.handle(
+  'save-telemetrics-file',
+  async (event, relativePath, content) => {
+    try {
+      // app data path
+      const APP_DATA_PATH = path.join(app.getPath('userData'), 'telemetrics');
+      const fullPath = path.join(APP_DATA_PATH, relativePath);
 
+      //     const fullPath = path.join(appDataPath, relativePath);
 
- ipcMain.handle('save-telemetrics-file', async (event, relativePath, content) => {
-  try {
-    // app data path
-    const APP_DATA_PATH = path.join(app.getPath('userData'), 'telemetrics');
-    const fullPath = path.join(
-      APP_DATA_PATH, relativePath
+      // Create appdata  directories if they don't exist
+      const dir = path.dirname(fullPath);
 
-    );
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
 
-    //     const fullPath = path.join(appDataPath, relativePath);
-
-        // Create appdata  directories if they don't exist
-    const dir = path.dirname(fullPath);
-
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(fullPath, content, 'utf8');
+      console.log('telemetrics dir now:', fullPath);
+      return fullPath;
+    } catch (error) {
+      console.error('Error saving asset file:', error);
+      throw error;
     }
-
-    fs.writeFileSync(fullPath, content, 'utf8');
-    console.log('telemetrics dir now:', fullPath);
-    return fullPath;
-  } catch (error) {
-    console.error('Error saving asset file:', error);
-    throw error;
-  }
-});
+  },
+);
 
 // Get the app's data directory (works in both dev and packaged)
 const getAppDataPath = () => {

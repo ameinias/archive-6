@@ -51,6 +51,7 @@ const Search = () => {
           date: item.date, // Include date if available
           type: 'main', // Mark as main entry
           description: item.description,
+          available: item.available
         });
         nextID = nextID + 1;
       }
@@ -76,6 +77,7 @@ const Search = () => {
           date: subItem.date, // Include date if available
           type: 'sub', // Mark as sub entry
           description: subItem.description,
+          available: subItem.available
         });
         nextID = nextID + 1;
       }

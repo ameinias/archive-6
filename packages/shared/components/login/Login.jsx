@@ -77,7 +77,7 @@ function Login() {
       setPlayerUsername(username);
       setPlayerPassword(password);
       setLoggedIn(true);
-      setStatusMessage(`Logged in as ${username}`);
+      setStatusMessage("[identity manager] " + `Logged in as ${username}`);
       // Don't navigate immediately, let the state update first
       newGame(gameState.defaultStartHash);
 

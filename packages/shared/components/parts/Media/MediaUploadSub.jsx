@@ -90,12 +90,12 @@ export function MediaUploadSub({ mediaSubFiles }) {
     if (selectedMediaIds && selectedMediaIds.length > 0) {
       console.log("Selected media IDs:", selectedMediaIds);
 
-      const updatedFiles = [...files, ...selectedMediaIds];
-      setFiles(updatedFiles);
+      const updatedFiles = [...subFiles, ...selectedMediaIds];
+      setSubFiles(updatedFiles);
 
-      if (mediaFiles) {
-        mediaFiles.length = 0;
-        mediaFiles.push(...updatedFiles);
+      if (mediaSubFiles) {
+        mediaSubFiles.length = 0;
+        mediaSubFiles.push(...updatedFiles);
       }
 
       setStatusMessage(

@@ -30,7 +30,7 @@ export function SearchResults({ results }) {
                 <td width="80%">
                   <>
                     {item.available ? (
-                      <> 
+                      <>
                         {item.type === "sub" ? (
                           <>
                             {" "}
@@ -55,7 +55,7 @@ export function SearchResults({ results }) {
                         )}
                       </>
                     ) : (
-                      <div>{item.fauxID} | NOT AVAILABLE</div>
+                      <div>{item.fauxID} | NOT AVAILABLE </div>
                     )}
                   </>
                 </td>

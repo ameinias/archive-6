@@ -9,7 +9,10 @@ import "dexie-export-import";
 import { setStartAvalability } from "../hooks/dbHooks.js";
 import { eventManager } from "@utils/events";
 import { updateGameState } from "./gamelogic.js";
+import { GameLogic } from "@utils/gamelogic";
 import { Link } from "react-router-dom";
+
+
 
 export const db = new Dexie("gb-current");
   // const gameLogic = GameLogic();
@@ -536,9 +539,12 @@ export const newGame = async (startHash) => {
     dbHelpers.clearEvents();
     await setStartAvalability(startHash);
     await setDefaultParameters();
+    // resetGameVariables();  // you cannot call this here because react is stupid. Call it from where you're calling newGame because life is pain. 
     updateGameState("editAccess", false);
 
     // window.location.reload(); // this did wrk to force datastate refresh
+
+    window.dispatchEvent(new CustomEvent('gameReset'));
 
     console.log("New game started successfully! " + userDbPath);
     return true;

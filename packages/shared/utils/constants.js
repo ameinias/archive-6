@@ -49,19 +49,51 @@ export const metaData = [
 //     : 'Unknown User'
 //   }
 
+export const consoleTaunts = [
+  { id: 0, name: "[SYSTM] Timeout detected." },
+  { id: 1, name: "" },
+  { id: 2, name: "[SYSTM] Timeout detected." },
+  { id: 3, name: "[VIOLET] Can you hear me?" },
+
+
+
+
+
+
+/* 
+Look, I need you to do something for me. 
+
+We need you to add to the legend. 
+
+I've given you access to adding a new entry. Please add something, anything, that implies evidence of an incursion. It's the only way we can patch the holes in the world and stop them leaking through. And maybe it will help free those of us who have been trapped here. 
+
+There should be pens and paper on the desk there if you'd like to draw or write. Or if you're willing to sacrifice something you brought with you, to leave an echo of it behind with us, it could help to set us free. 
+
+I've lit up the button for you. 
+*/
+
+
+
+];
+
 export const researcherIDs = [
-  { id: 0, name: "unknown-user", note: "For the first unlockable scenes." },
+  {
+    id: 0,
+    name: "unknown-user",
+    devName: "unknown-user",
+    note: "For the first unlockable scenes.",
+  },
   {
     id: 1,
     name: "RM",
     devName: "RM",
-    note: "For scenes that are available at the beginning of the game.",
+    note: "I don't use this anymore.",
   },
   {
     id: 2,
     name: "EQ",
     devName: "EQ",
-    note: "For the first unlockable scenes.",
+    note: "I don't use this anymore.",
   },
   {
     id: 3,
@@ -71,8 +103,8 @@ export const researcherIDs = [
   },
   {
     id: 4,
-    name: "rm.Snarley",
-    devName: "historian73-82s",
+    name: "em.Hankal",
+    devName: "historian-em.Hankal-73-82s",
     note: "historian73-82s",
   },
   {
@@ -83,8 +115,8 @@ export const researcherIDs = [
   },
   {
     id: 6,
-    name: "Linus Thompson",
-    devName: "linus-archivist-24-52",
+    name: "Linus Willing",
+    devName: "linus-willing-12-28",
     note: "socieity2-archivist-24-52.",
   },
   {
@@ -95,15 +127,21 @@ export const researcherIDs = [
   },
   {
     id: 8,
-    name: "Violet Thompson",
-    devName: "violet-archivist-24-52",
+    name: "Violet Willing",
+    devName: "violet-willing-24-52",
     note: "socieity2-archivist-24-52.",
   },
   {
     id: 9,
-    name: "R Signifeild",
-    devName: "rebecca-archivist-24-52",
+    name: "R Staunton",
+    devName: "rebecca-archivist-19-52",
     note: "socieity2-archivist-24-52.",
+  },
+    {
+    id: 10,
+    name: "Cauldham University",
+    devName: "Cauldham University",
+    note: "Cauldham University - Where the archives were for a while.",
   },
 ];
 
@@ -222,7 +260,7 @@ export const hexHashes = [
     hexHashcode: "6fdeb0b92a89659aaca2fbe41",
   },
 
-    // V3
+  // V3
 
   {
     id: 30,
@@ -244,7 +282,7 @@ export const hexHashes = [
     note: " enable-consoleAvailable ",
   },
 
-    {
+  {
     id: 33,
     name: "V3.1.04 -  connection panel",
     hexHashcode: "48471313e7c8b73e1d0cc7b6a9ef945e",
@@ -258,14 +296,14 @@ export const hexHashes = [
     note: " enable-connectionEdit",
   },
 
-    {
+  {
     id: 35,
     name: "V3.01.04 - add entry request",
     hexHashcode: "60889e978b9dd56ca47ff36ddae12a07",
     note: " ",
   },
 
-      {
+  {
     id: 36,
     name: "V3.01.05 - new end animation",
     hexHashcode: "7a1b4cfa72de364f2c6259b853288f73",
@@ -297,6 +335,12 @@ export const hexHashes = [
     id: 50,
     name: "junk",
     hexHashcode: "cefb5cdb392e7f6521d82da09d939102",
+    note: "Random fluff entries from testing I don't want to toISOString.",
+  },
+  {
+    id: 53,
+    name: "test unlock",
+    hexHashcode: "test",
     note: "Random fluff entries from testing I don't want to toISOString.",
   },
 ];

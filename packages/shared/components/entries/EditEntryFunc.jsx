@@ -25,7 +25,7 @@ import { FilterList } from "@components/parts/ListingComponent";
 const isElectron = eventManager.isElectron;
 
 // default variables - update as needed
-let defaultFauxIDStart = "QA";
+let defaultFauxIDStart = "LT";
 if(!isElectron){ defaultFauxIDStart = "LL"; }
 const defaultHex = 30;
 
@@ -298,6 +298,40 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     }
   }
 
+
+  async function duplicateCurrentEntry() {
+
+    try {
+      const title = formValues.title || "Untitled";
+      if (!title) {
+        setStatusMessage("Title is required");
+        return;
+      }
+
+      const nid = await db.friends.add(FormToEntry());
+       const newID = await generateNewID(); 
+
+        await  db.friends.update(Number(nid), {
+      devNotes: "Dupe of " + itemID + " code ##" + formValues.fauxID,
+      fauxID: newID,
+      hexHash: [defaultHex],
+    });
+
+    console.log(nid.devNotes + nid.title)
+
+
+      setStatusMessage(
+        `Entry ${title} successfully duplicated. Saved attachments: ${formValues.media.length}`,
+      );
+      loadConfirmEffect();
+      navigate(`/entry/${nid}`); // <-- Reset Page to show subitems
+      // setFormValue(defaultFormValue);  // Reset to defaults
+    } catch (error) {
+      setStatusMessage(`Failed to add ${title}: ${error}`);
+    }
+  }
+
+
   // Add the entry to the database
   async function addEntry() {
     try {
@@ -404,7 +438,6 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
         }
         break;
       case "clear":
-        newValue = filteredFriends.filter((v) => v.isFixed);
         break;
     }
 
@@ -464,7 +497,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   return (
     <div className="Single">
       <div id="blink" className={` ${animate ? "blink-save" : ""}`}></div>
-      {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry</h2>}
+      {isNewEntry ? <h2>Add New Entry</h2> : <h2>Edit Entry - {itemID}</h2>}
       {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
       <div title="entry title" className="row">
         <FormAssets.FormTextBox
@@ -475,7 +508,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           onChange={handleChange}
         />
       </div>
-      <div title="metadata">
+      <div >
         <div className="button-row div-dash">
           <button onClick={setToggleMetaData} className="toggle-button ">
             Metadata
@@ -483,7 +516,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
         </div>
 
         {toggleMetaData && (
-          <div title=" Metadata">
+          <div >
             <div className="row">
               <div className="col">
                 <div className="row">
@@ -561,15 +594,15 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                   ))}
                 />
               </div>
-              <div className="col">
+              <div className="col"> 
                 <FormAssets.FormDropDown
                   label="Last Edit By"
                   name="lastEditedBy"
                   formValue={formValues.lastEditedBy}
                   onChange={handleChange}
                   options={researcherIDs.map((sub, i) => (
-                    <option key={i} value={sub.id}>
-                      {sub.name}
+                    <option key={i} value={sub.id} title={sub.note}>
+                      {sub.devName}
                     </option>
                   ))}
                 />
@@ -578,7 +611,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           </div>
         )}
       </div>
-      <div title="Description" className="row">
+      <div className="row">
         {" "}
         {/*// ------ Description  ------*/}
         {/* <textarea
@@ -761,7 +794,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             </div>
 
             {/*// ------ Template  ------*/}
-            <div className="row">
+            <div className="row"> 
               <div className="col-1 formLabel">Template:</div>
               <select
                 className="form-control form-control-dropdown col"
@@ -823,6 +856,12 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                 onClick={removeCurrentEntry}
               >
                 Remove{" "}
+              </button>
+                            <button
+                className="btn-save-add-item  btn-taller"
+                onClick={duplicateCurrentEntry}
+              >
+                Duplicate Entry{" "}
               </button>
             </div>
           </>

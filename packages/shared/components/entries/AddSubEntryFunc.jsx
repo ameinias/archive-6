@@ -521,13 +521,13 @@ export function AddSubEntryForm ({
   const handleIDChange = e => {
     const { name, value } = e.target
     // Ensure the ID starts with 'MX' and is followed by numbers
-    if (!/^MX\d+$/.test(value)) {
-      setIDValidWithMessage(
-        false,
-        `ID ${value} must start with "MX" followed by numbers.`
-      )
-      return
-    }
+    // if (!/^MX\d+$/.test(value)) {
+    //   setIDValidWithMessage(
+    //     false,
+    //     `ID ${value} must start with "MX" followed by numbers.`
+    //   )
+    //   return
+    // }
     //check if the ID is unique
     db.subentries
       .where('fauxID')
@@ -733,7 +733,7 @@ export function AddSubEntryForm ({
                   ))}
                 />
               </div>
-              <div title='last edit' className='col'>
+              <div title='last edit' className='col'> sfsdf
                 <FormAssets.FormDropDown
                   label='Last Edit By'
                   name='lastEditedBy'

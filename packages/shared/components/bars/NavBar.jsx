@@ -12,7 +12,7 @@ import {
 import { TimeLine } from "../lists/TimeLine";
 import Dropdown from "react-bootstrap/Dropdown";
 import { eventManager } from "@utils/events";
-import { addConsoleEntry, addConsoleEntryHypertext, Console } from "@components/other/Console";
+import { addConsoleEntry, addConsoleEntryHypertext, Console, EndSequence, makeConnection } from "@components/other/Console";
 
 // replace back button?
 // https://mtg-dev.tech/blog/building-a-custom-go-back-button-in-react-is-harder-than-you-think
@@ -20,8 +20,6 @@ import { addConsoleEntry, addConsoleEntryHypertext, Console } from "@components/
 const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
-  // const CallNewGame = newGameWithWarning
-  // const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage } = GameLogic();
   const {
     gameState,
     globalUser,
@@ -50,13 +48,17 @@ const NavBar = () => {
     }
   };
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const testio = async () => {
     // UpdateDBCount();
     // updateGameState("editAccess", !gameState.editAccess);
     // navigate("/test");
 
     //  updateGameState("consoleAvailable", true);
-    Console.printLostEntries();
+    // Console.printLostEntries();
+// navigate(`/entry/91`);
+  await delay(100);
+    makeConnection(91, 96);
 
 
 
@@ -65,10 +67,16 @@ const NavBar = () => {
 
     const testio2 = async () => {
 
-        addConsoleEntryHypertext("This is a sfsdf asdfsdf sddfsdf test console entry from NavBar " + new Date().toLocaleString());
+        EndSequence(navigate, 91);
 
     console.log("testio2    done");
   };
+
+
+
+
+
+
 
   const restartGame = async () => {
     await newGame(gameState.defaultStartHash);
@@ -115,7 +123,7 @@ const NavBar = () => {
         >
           {"<<"}
         </Link>
-      </li>{" "}
+      </li>{" "} 
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link to={!gameState.endgameSequence ? "/" : null} title="home-button">
           Home
@@ -163,9 +171,6 @@ const NavBar = () => {
               <li role="menuitem">
                 <Link to="/timeline">Timeline</Link>
               </li>
-              {/* <li role='menuitem'>
-                <Link to='/hex'>Hex List</Link>
-              </li> */}
               <li role="menuitem">
                 <Link className="dropdown-item" to="/import-export">
                   Database Actions
@@ -189,14 +194,8 @@ const NavBar = () => {
               </li>
             </div>
           )}
-
-          {/* <li role='menuitem'>
-                <Link to='/convo'>Convo</Link>
-              </li> */}
         </>
       )}
-      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
-                <Link  onClick={FauxLogOut }>FauxLogOut</Link></li> */}
       {(gameState.showDebug || isAdmin) && (
         <>
           <li>
@@ -215,7 +214,7 @@ const NavBar = () => {
                     <li>
             {" "}
             <button className="button-small" onClick={testio2}>
-              addConsoleEntry
+              End sequence
             </button>
           </li>
         </>

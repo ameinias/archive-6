@@ -23,6 +23,7 @@ import { safeRender, safeDate } from '@utils/helper';
 export function StaticSubListItem ({ itemID, parentID, meta = false }) {
   const { id } = useParams() // get the id from the route
   const gameState = GameLogic()
+  const gameLogic = GameLogic();
   const navigate = useNavigate()
   const [statusMessage, setStatusMessage] = useState('')
   const [freshUnread, setFreshUnread] = useState(true)
@@ -45,6 +46,15 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
       CheckConditions(item);
     }
   }, [item, itemID]) // Runs cleanup when component unmounts
+
+    useEffect(() => {
+    if (!item) return;
+
+    if (item.triggerEvent && item.unread) {
+      //item.triggerEvent.length > 0
+      gameLogic.triggerEvent(item.triggerEvent);
+    }
+  }, [item, id]);
 
   async function unlockHex (hexes) {
     try {

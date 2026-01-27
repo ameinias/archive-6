@@ -5,6 +5,9 @@ import React, {
 import {
   eventManager
 } from "@utils/events";
+import { clearConsole, addConsoleEntry } from "@components/other/Console";
+import { consoleTaunts } from "./constants";
+import { dbHelpers } from "./db";
 
 //#region -------- gloabal
 // Simple global state using module-level variables. This was pulled from Copilot, so may need a massage.
@@ -48,7 +51,9 @@ let globalGameState = {
   showConsole: false,
   connectionPanel: false,
   connectionEdit: false,
-  consoleWasRevealed: false
+  consoleWasRevealed: false,
+  bluescreen: false,
+  tauntIndex:0
 };
 let globalStatus = "";
 
@@ -189,7 +194,9 @@ export function GameLogic() {
       consoleAvailable: false,
       connectionPanel: false,
       connectionEdit: false,
-      consoleWasRevealed: false
+      consoleWasRevealed: false,
+      bluescreen: false,
+      tauntIndex: 0
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));
@@ -224,6 +231,10 @@ export function GameLogic() {
     console.log(`${globalStatus}`);
     setStatus(globalStatus);
     gameStatusUpdateCallbacks.forEach((callback) => callback(globalStatus));
+
+    window.dispatchEvent(new CustomEvent('statusMessage', { 
+  detail:  thestatus
+}));
 
     // Clear status after 3 seconds (statusTimeOut)
     setTimeout(() => {
@@ -302,16 +313,35 @@ export function GameLogic() {
     "enable-connectionEdit": () => updateGameState("connectionEdit", true),
     "disable-connectionEdit": () => updateGameState("connectionEdit", false),
 
+        "enable-bluescreen": () => updateGameState("bluescreen", true),
+    "disable-bluescreen": () => updateGameState("bluescreen", false),
+    "consoleTaunt": () => triggerConsoleTaunt()
 
     // Add more triggers as needed
   };
 
   const revealConsole = () => {
+    setStatusMessage("[SYSTM] CONSOLE AVAILABLE")
     updateGameState("consoleAvailable", true);
     if (!gameState.consoleWasRevealed) {
       updateGameState("consoleWasRevealed", true);
       updateGameState("showConsole", true);
     }
+  }
+
+  
+  const triggerConsoleTaunt = () => {
+
+    
+     gameState.tauntIndex++;
+
+     if(consoleTaunts[gameState.tauntIndex].name != null) {
+    setStatusMessage(consoleTaunts[gameState.tauntIndex].name)
+
+    const message = 'taunt ' + gameState.tauntIndex + ": " + consoleTaunts[gameState.tauntIndex].name + " at " + location.pathname;
+    console.log(message);
+    dbHelpers.addEvent(message);
+     } else {console.log("can't find taunt.");}
   }
 
 
@@ -322,6 +352,8 @@ export function GameLogic() {
       handler();
     } else {
       console.warn(`Unknown trigger: ${eventName}`);
+      addConsoleEntry(eventName);
+
     }
   };
 
@@ -340,6 +372,9 @@ export function GameLogic() {
   };
 
   const resetGameVariables = () => {
+
+    clearConsole(); 
+
     globalGameState = {
       ...globalGameState,
       editAccess: false,
@@ -350,7 +385,9 @@ export function GameLogic() {
       showConsole: false,
       connectionPanel: false,
       connectionEdit: false,
-      consoleWasRevealed: false
+      consoleWasRevealed: false,
+      bluescreen: false,
+      tauntIndex: 0
     };
     // Update all components
     gameStateUpdateCallbacks.forEach((callback) => callback(globalGameState));

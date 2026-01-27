@@ -51,7 +51,7 @@ export default function TestComp() {
       {/* <VisNetworkReat filterAvailable={filterAvailable} /> */}
 
             <Graph filterAvailable={filterAvailable}
- />
+ />  
     </div>
   );
 }

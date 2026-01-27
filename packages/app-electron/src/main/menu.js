@@ -4,7 +4,7 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  MenuItem
+  MenuItem,
 } from 'electron';
 import { saveDefaultDatabase } from './main';
 
@@ -29,7 +29,7 @@ export default class MenuBuilder {
         label: '&File',
         submenu: [
           {
-          label: '&Close',
+            label: '&Close',
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();
@@ -37,11 +37,10 @@ export default class MenuBuilder {
           },
         ],
       },
-
     ];
 
     const fakeMenu = Menu.buildFromTemplate(fakeTemplate);
-     Menu.setApplicationMenu(fakeMenu);   // APP MENUU TODO
+    Menu.setApplicationMenu(fakeMenu); // APP MENUU TODO
 
     return fakeMenu;
   }
@@ -49,36 +48,37 @@ export default class MenuBuilder {
   // This is where to control the right click menu for development.
   setupDevelopmentEnvironment() {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
-       const { x, y, misspelledWord, dictionarySuggestions } = props;
+      const { x, y, misspelledWord, dictionarySuggestions } = props;
 
+      const menuTemplate = [];
 
+      // Add spelling suggestions if word is misspelled
+      if (misspelledWord) {
+        for (const suggestion of dictionarySuggestions.slice(0, 5)) {
+          menuTemplate.push({
+            label: suggestion,
+            click: () =>
+              this.mainWindow.webContents.replaceMisspelling(suggestion),
+          });
+        }
 
-    const menuTemplate = [];
+        // Add separator
+        menuTemplate.push({ type: 'separator' });
 
-    // Add spelling suggestions if word is misspelled
-    if (misspelledWord) {
-      for (const suggestion of dictionarySuggestions.slice(0, 5)) {
+        // Add to dictionary option
         menuTemplate.push({
-          label: suggestion,
-          click: () => this.mainWindow.webContents.replaceMisspelling(suggestion)
+          label: 'Add to dictionary',
+          click: () =>
+            this.mainWindow.webContents.session.addWordToSpellCheckerDictionary(
+              misspelledWord,
+            ),
         });
+
+        menuTemplate.push({ type: 'separator' });
       }
 
-      // Add separator
-      menuTemplate.push({ type: 'separator' });
-
-      // Add to dictionary option
-      menuTemplate.push({
-        label: 'Add to dictionary',
-        click: () => this.mainWindow.webContents.session.addWordToSpellCheckerDictionary(misspelledWord)
-      });
-
-      menuTemplate.push({ type: 'separator' });
-    }
-
-    // Add your existing menu items
-    menuTemplate.push(
-
+      // Add your existing menu items
+      menuTemplate.push(
         {
           label: 'Inspect element',
           click: () => {
@@ -133,6 +133,13 @@ export default class MenuBuilder {
               },
             },
             {
+              label: 'Toggle Debug',
+              click: () => {
+                mainWindow.webContents.send('toggle-debug');
+              },
+            },
+
+            {
               label: 'Undo',
               accelerator: 'Command+Z',
               selector: 'undo:',
@@ -167,10 +174,7 @@ export default class MenuBuilder {
             },
           ],
         },
-
-
-    );
-
+      );
 
       Menu.buildFromTemplate(menuTemplate).popup({
         window: this.mainWindow,

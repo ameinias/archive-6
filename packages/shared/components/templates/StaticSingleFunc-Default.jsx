@@ -56,12 +56,11 @@ export function StaticSingleDefault({ itemID }) {
   useEffect(() => {
     if (!item) return;
 
-    if (item.triggerEvent && !item.unread) {
+    if (item.triggerEvent && item.unread) {
       //item.triggerEvent.length > 0
       gameLogic.triggerEvent(item.triggerEvent);
     }
   }, [item, id]);
-
 
   useEffect(() => {
     if (!item) return;
@@ -71,7 +70,6 @@ export function StaticSingleDefault({ itemID }) {
         navigate(`/convo`);
         return;
       } else {
-
         console.log("seconds remaining:", seconds);
       }
 
@@ -83,11 +81,6 @@ export function StaticSingleDefault({ itemID }) {
       return () => clearInterval(intervalId);
     }
   }, [seconds, initialSeconds]); // Re-run effect if seconds or initialSeconds changes
-
-
-
-
-
 
   const getEntryTitle = (entryId) => {
     if (!allFriends) return entryId;
@@ -104,7 +97,6 @@ export function StaticSingleDefault({ itemID }) {
       return db.subentries.where("parentId").equals(numericID).toArray();
     }, [itemID]) || [];
 
-
   const handleRef = (newValue, actionMeta) => {
     switch (actionMeta.action) {
       case "remove-value":
@@ -114,23 +106,14 @@ export function StaticSingleDefault({ itemID }) {
         }
         break;
       case "clear":
-        newValue = filteredFriends.filter((v) => v.isFixed);
+       // newValue = filteredFriends.filter((v) => v.isFixed);
         break;
     }
 
-    // setSelected(newValue);
-
-    // setFormValue({
-    //   ...formValues,
-    //   entryRef: newValue,
-    // });
-
-     db.friends.update(Number(itemID), {
-          entryRef: newValue
-        })
-
+    db.friends.update(Number(itemID), {
+      entryRef: newValue,
+    });
   };
-
 
   if (item === undefined) {
     return <div>Loading...</div>;
@@ -182,7 +165,6 @@ export function StaticSingleDefault({ itemID }) {
             <span className="parentTitleSpan">{item.title}</span>
           </div>
         </div>
-
         <div id="Metadata">
           <div>
             <b>Category:</b> {item.category}{" "}
@@ -212,29 +194,31 @@ export function StaticSingleDefault({ itemID }) {
             <DescriptionEntry string={item.description} />
           </div>
         </div>
-
         <MediaEntryDisplay itemID={item.id} type="entry" />
 
-        {item.entryRef && item.entryRef.length != 0 && (
-          <div className="subentry-add-list flex">
-            <h2>Related </h2>
-            {item.entryRef.map((ref, index) => (
-              <span key={index}>
-                <Link
-                  to={`/entry/${ref.originId}`}
-                  title={
-                    ref.available ? `View entry ${ref.title}` : "NOT AVAILABLE"
-                  }
-                  className="mention-link"
-                >
-                  {ref.fauxID}{" "}
-                </Link>
-                {index < item.entryRef.length - 1 && ", "}
-              </span>
-            ))}
-          </div>
-        )}
-
+        {item.entryRef &&
+          Array.isArray(item.entryRef) &&
+          item.entryRef.length != 0 && (
+            <div className="subentry-add-list flex">
+              <h2>Related </h2>
+              {item.entryRef.map((ref, index) => (
+                <span key={index}>
+                  <Link
+                    to={`/entry/${ref.originId}`}
+                    title={
+                      ref.available
+                        ? `View entry ${ref.title}`
+                        : "NOT AVAILABLE"
+                    }
+                    className="mention-link"
+                  >
+                    {ref.fauxID}{" "}
+                  </Link>
+                  {index < item.entryRef.length - 1 && ", "}
+                </span>
+              ))}
+            </div>
+          )}
         {/* Show subentries if they exist */}
         {subEntryOfParent.filter(
           (item) => item.subCategory.toLowerCase() !== "metadata",
@@ -253,19 +237,21 @@ export function StaticSingleDefault({ itemID }) {
               ))}
           </div>
         )}
-               {gameLogic.gameState.connectionEdit && (
-              <div>
-                          <SelectEntry
-            value={item.entryRef}
-            onChange={handleRef}
-            filterAvailable={true}
-            name="ref"
-            includeSubentries={false}
-            label="Add / Remove Connections"
-            displayTrueID="true"
-          />
-              </div>)}{" "}
+        {gameLogic.gameState.connectionEdit && (
+          <div>
+            <SelectEntry
+              value={item.entryRef}
+              onChange={handleRef}
+              filterAvailable={true}
+              name="ref"
+              includeSubentries={false}
+              label="Add / Remove Connections"
+              displayTrueID="true"
+            />
+          </div>
+        )}{" "}
       </div>
+      {gameLogic.gameState.showDebug && (<>{item.devNotes}</>)}
     </div>
   );
 }
