@@ -135,7 +135,7 @@ export default class MenuBuilder {
             {
               label: 'Toggle Debug',
               click: () => {
-                mainWindow.webContents.send('toggle-debug');
+                this.mainWindow.webContents.send('toggle-debug');
               },
             },
 

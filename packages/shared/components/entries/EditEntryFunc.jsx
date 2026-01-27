@@ -16,11 +16,15 @@ import { MediaUpload } from "@components/parts/Media/MediaUpload";
 import * as FormAssets from "@components/parts/FormAssets";
 import { eventManager } from "@utils/events";
 import { useToggle } from "@hooks/hooks";
-import { UpdateFauxIDAndReorderSubs } from "@hooks/dbHooks";
+import { UpdateFauxIDAndReorderSubs, GetMediaCount } from "@hooks/dbHooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import { SelectEntry } from "@components/parts/FormAssets";
 import { FilterList } from "@components/parts/ListingComponent";
-
+import {
+  MediaCountCell,
+  SubentryCountCell,
+  AvailableCell,
+} from "@components/parts/Badges";
 
 const isElectron = eventManager.isElectron;
 
@@ -641,7 +645,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             <div className="button-row div-dash">
         <button onClick={setToggleMedia} className="toggle-button">
           {" "}
-          Media
+          Media {GetMediaCount(itemID, "entry")}
         </button>
       </div>
 
@@ -684,7 +688,13 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
         <div className="button-row div-dash">
           <button onClick={setToggleAdminSection} className="toggle-button">
             {" "}
-            Admin
+            Admin {formValues.triggerEvent != "" && formValues.triggerEvent != null && (
+                        <a title={formValues.triggerEvent}>⚡|</a>
+                      )} {formValues.hexHash
+                            ? Array.isArray(formValues.hexHash)
+                              ? formValues.hexHash.join(", ")
+                              : formValues.hexHash.toString()
+                            : ""}
           </button>
         </div>
 
@@ -811,7 +821,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               </select>{" "}
             </div>
           </div>
-        )}
+        ) }
       </div>
       <div title="subentries" key={dbKey}>
         {/* Only show Add Subentry button when not already a subentry. */}

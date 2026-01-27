@@ -160,16 +160,18 @@ export default function RouterPath () {
         <DebugPanel />
 
         <StatusBar />
+        {eventManager.isElectron && (<>
 
         <Separator className={`seperator ${!gameState.showConsole && 'hide'}`} />
-        {/* <Panel maxSize={200}  className={` ${!gameState.showConsole && 'hide'}`}>
 
-           */}
+
+        
         <Panel maxSize={` ${gameState.showConsole ? '200' : '0'}`}>
           <Console />
         </Panel>
+        </>)
+}
 
-        {/* {gameState.showConsole ? 'SHOW' : 'HIDE'} */}
       </Group>
     </>
   )

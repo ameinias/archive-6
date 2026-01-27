@@ -32,9 +32,10 @@ const StatusBar = () => {
       <div className='status-bar'>
         <div className='status-bar-field col'>
           {' '}
-            <button  onClick={debugWindow}>
+          {/* this has moved to the context menu. */}
+            {/* <button  onClick={debugWindow}>
               DBI
-            </button>
+            </button> */}
           {gameState.consoleAvailable && (
             <button  onClick={consoleChange} className="console-button clear-button-style">
               ⛔

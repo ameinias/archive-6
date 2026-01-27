@@ -785,7 +785,13 @@ export function AddSubEntryForm ({
         <div className='button-row div-dash'>
           <button onClick={setToggleAdminSection} className='toggle-button'>
             {' '}
-            Admin
+             Admin {formValues.triggerEvent != "" && formValues.triggerEvent != null && (
+                        <a title={formValues.triggerEvent}>⚡|</a>
+                      )} {formValues.hexHash
+                            ? Array.isArray(formValues.hexHash)
+                              ? formValues.hexHash.join(", ")
+                              : formValues.hexHash.toString()
+                            : ""}
           </button>
         </div>
 

@@ -294,6 +294,7 @@ const Console = () => {
         // className={`console ${!gameState.showConsole && 'hide'}`}
         className={`console`}
       >
+        [SYSTM] System check complete. ok. 
         {globalConsoleArray.map((item, index) => (
           <div key={index}>
             <span>{item}</span>
