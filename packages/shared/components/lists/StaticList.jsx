@@ -89,7 +89,7 @@ export function StaticList() {
                     </td>
                     <td>
                       <Link to={`/entry/${item.id}`}>
-                        {item.fauxID} : {item.title} {item.available ? 'true':'false'}
+                        {item.fauxID} : {item.title}
                       </Link>
                     </td>
                     <td width="75px">

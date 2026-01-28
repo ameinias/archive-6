@@ -38,7 +38,7 @@ const defaultFormValue = {
   title: "Entry",
   description: "",
   category: "Object",
-  date: new Date(), // real date i added things
+  date: new Date().toISOString().split('T')[0], // real date i added things
   available: true,
   media: [],
   template: "default",
@@ -53,7 +53,7 @@ const defaultFormValue = {
   unread: true,
   entryRef: [],
   newWebEntry: !isElectron,
-  realEditDate: new Date(),
+  realEditDate: new Date().toISOString().split('T')[0],
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -141,6 +141,26 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     fetchData();
   }, [itemID, dbKey]);
 
+  const NormalizeDate = (dateString) => {
+
+
+
+ // Normalize date to ISO format
+  let normalizedDate = formValues.date;
+  try {
+    const dateObj = new Date(dateString);
+    if (!isNaN(dateObj.getTime())) {
+      normalizedDate = dateObj.toISOString().split('T')[0];
+    }
+  } catch (e) {
+    normalizedDate = dateString;
+  }
+
+
+return normalizedDate;
+  };
+
+
   //#region ---------------    CREATE ENTRY  ------------- */
   const FormToEntry = () => {
     let hexHashValue = formValues.hexHash;
@@ -158,20 +178,26 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
     } else if (typeof hexHashValue === "string") {
       hexHashValue = parseInt(hexHashValue, 10);
     }
-    //toLocaleDateString()
+
+
+
+
+
+
+
     return {
       title: formValues.title,
       fauxID: formValues.fauxID,
       hexHash: hexHashValue,
       description: formValues.description,
       category: formValues.category,
-      date: formValues.date,
+      date: NormalizeDate(formValues.date),
       available: formValues.available,
       media: formValues.media,
       template: formValues.template,
       bookmark: formValues.bookmark,
       devNotes: formValues.devNotes,
-      modEditDate: formValues.modEditDate,
+      modEditDate: NormalizeDate(formValues.modEditDate),
       modEdit: formValues.modEdit,
       displayDate: formValues.displayDate,
       lastEditedBy: parseInt(formValues.lastEditedBy, 10),
@@ -313,12 +339,13 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       }
 
       const nid = await db.friends.add(FormToEntry());
-       const newID = await generateNewID(); 
+       const newID = await generateNewID();
 
         await  db.friends.update(Number(nid), {
       devNotes: "Dupe of " + itemID + " code ##" + formValues.fauxID,
       fauxID: newID,
       hexHash: [defaultHex],
+      date: new Date().toISOString().split('T')[0]
     });
 
     console.log(nid.devNotes + nid.title)
@@ -334,6 +361,22 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
       setStatusMessage(`Failed to add ${title}: ${error}`);
     }
   }
+
+    async function fixCreationDate() {
+
+formValues.date = new Date().toISOString().split('T')[0];
+
+        await  db.friends.update(Number(itemID), {
+
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    console.log("Update " + itemID + "Creation date to today.");
+
+
+
+  }
+
 
 
   // Add the entry to the database
@@ -598,7 +641,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
                   ))}
                 />
               </div>
-              <div className="col"> 
+              <div className="col">
                 <FormAssets.FormDropDown
                   label="Last Edit By"
                   name="lastEditedBy"
@@ -804,7 +847,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             </div>
 
             {/*// ------ Template  ------*/}
-            <div className="row"> 
+            <div className="row">
               <div className="col-1 formLabel">Template:</div>
               <select
                 className="form-control form-control-dropdown col"
@@ -847,6 +890,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
             {" "}
             <div className="button-row">
               {" "}
+              <div style={{display: "inline-flex"}}>
               <button
                 className="btn-save-add-item btn-taller"
                 onClick={updateEntry}
@@ -854,6 +898,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               >
                 Save
               </button>{" "}
+              </div><div>
               <button
                 className="btn-save-add-item btn-taller"
                 onClick={handleRenumberSubs}
@@ -873,6 +918,14 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
               >
                 Duplicate Entry{" "}
               </button>
+
+                            <button
+                className="btn-save-add-item  btn-taller"
+                onClick={fixCreationDate}
+              >
+                Update Date To Now{" "}
+              </button>
+</div>
             </div>
           </>
         )}

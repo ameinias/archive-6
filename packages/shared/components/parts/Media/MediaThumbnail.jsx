@@ -136,7 +136,7 @@ export const MediaThumbnail = ({
   if (loading) {
     return (
       <div className="media media-img" style={{ maxHeight }}>
-        <span>Loading...</span>
+        <span></span>
       </div>
     );
   }

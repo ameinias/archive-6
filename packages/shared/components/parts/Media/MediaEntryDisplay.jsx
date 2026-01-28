@@ -5,7 +5,7 @@ import { MediaThumbnail } from "@components/parts/Media/MediaThumbnail.jsx";
 
 export function MediaEntryDisplay({ itemID, type = "entry" }) {
   const [refreshKey, setRefreshKey] = useState(0);
-    const [selectedIndex, setSelectedIndex] = useState(0); 
+    const [selectedIndex, setSelectedIndex] = useState(0);
 
 
   const item = useLiveQuery(async () => {
@@ -19,7 +19,7 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
 
 
   if (!item) {
-    return <div>Loading....</div>;
+    return <div className="media-temp-loading subentry-add-list flex">Loading....</div>;
   }
 
   if (!item.media || item.media.length === 0) {
@@ -59,20 +59,21 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
   }
 
   return (
-    <div className='subentry-add-list flex'>
+    <div className='subentry-add-list flex '>
+       <div className='' style={{ minHeight:"330px" }}>
            <MediaThumbnail
         fileRef={item.media[selectedIndex]}
         maxHeight={"500px"}
         hasData={true}
         key={refreshKey}
-      /> 
+      /></div>
 {/* // selectedIndex */}
       {item.media.map((file, index) => {
         return(
         <div
           key={index}
           className="media-thumbnail"
-          style={{ maxWidth: "150px" }}
+          style={{ maxWidth: "100px" }}
           onClick={() => makeDefault(index)}
         >
           <MediaThumbnail
@@ -83,12 +84,12 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
             isThumb={true}
             // onClick={() => makeDefault(index)}
           />
-          
+
           {/* {file.name} ({(file.size / 1024).toFixed(2)} KB) */}
-      
+
         </div>
         );
-     })} 
+     })}
     </div>
   );
 }

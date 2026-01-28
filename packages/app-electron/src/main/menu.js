@@ -123,13 +123,16 @@ export default class MenuBuilder {
             {
               label: 'Toggle Admin',
               click: () => {
-                // Execute in renderer context
-                this.mainWindow.webContents.executeJavaScript(`
-      const currentAdmin = localStorage.getItem('isAdmin') === 'true';
-      const newAdmin = !currentAdmin;
-      localStorage.setItem('isAdmin', newAdmin.toString());
-      window.location.reload(); // Force React to re-read the value
-    `);
+
+               this.mainWindow.webContents.executeJavaScript(`
+  (() => {
+    const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+    localStorage.setItem('isAdmin', (!currentAdmin).toString());
+    window.dispatchEvent(new CustomEvent('toggle-admin'));
+  })();
+`);
+
+
               },
             },
             {
@@ -236,12 +239,13 @@ export default class MenuBuilder {
               label: 'Toggle Admin',
               click: () => {
                 // Execute in renderer context
-                this.mainWindow.webContents.executeJavaScript(`
-      const currentAdmin = localStorage.getItem('isAdmin') === 'true';
-      const newAdmin = !currentAdmin;
-      localStorage.setItem('isAdmin', newAdmin.toString());
-      window.location.reload(); // Force React to re-read the value
-    `);
+              this.mainWindow.webContents.executeJavaScript(`
+  (() => {
+    const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+    localStorage.setItem('isAdmin', (!currentAdmin).toString());
+    window.dispatchEvent(new CustomEvent('toggle-admin'));
+  })();
+`);
               },
             },
             {

@@ -17,18 +17,17 @@ import { researcherIDs } from '@utils/constants'
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
 import { BookMarkCheck } from '@components/parts/Badges'
 import DescriptionEntry from './DescriptionEntry'
-import { safeRender, safeDate } from '@utils/helper';
-
+import { safeRender, safeDate } from '@utils/helper'
 
 export function StaticSubListItem ({ itemID, parentID, meta = false }) {
   const { id } = useParams() // get the id from the route
   const gameState = GameLogic()
-  const gameLogic = GameLogic();
+  const gameLogic = GameLogic()
   const navigate = useNavigate()
   const [statusMessage, setStatusMessage] = useState('')
   const [freshUnread, setFreshUnread] = useState(true)
   const itemRef = useRef(null)
-  const [template, useTemplate] = useState('default');
+  const [template, useTemplate] = useState('default')
 
   const item = useLiveQuery(async () => {
     if (!itemID) return null
@@ -43,18 +42,18 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
       // console.log(item.fauxID + ' marking as read on unmount')
       db.subentries.update(Number(itemID), { unread: false })
 
-      CheckConditions(item);
+      CheckConditions(item)
     }
   }, [item, itemID]) // Runs cleanup when component unmounts
 
-    useEffect(() => {
-    if (!item) return;
+  useEffect(() => {
+    if (!item) return
 
     if (item.triggerEvent && item.unread) {
       //item.triggerEvent.length > 0
-      gameLogic.triggerEvent(item.triggerEvent);
+      gameLogic.triggerEvent(item.triggerEvent)
     }
-  }, [item, id]);
+  }, [item, id])
 
   async function unlockHex (hexes) {
     try {
@@ -71,17 +70,17 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
 
   // eventually these might switch to entirely different returns, but for now
   // they'll just change css attributes
- const CheckConditions = (item) => {
-  if(item.template && item.template.length > 0){
-    useTemplate(item.template);
+  const CheckConditions = item => {
+    if (item.template && item.template.length > 0) {
+      useTemplate(item.template)
 
-    if(item.template === 'trapped' && item.unread && item.available){
-
-      db.subentries.update(Number(itemID), { displayDate: new Date().toLocaleString() });
-      console.log('trapped subentry accessed,   date set to now');
-
+      if (item.template === 'trapped' && item.unread && item.available) {
+        db.subentries.update(Number(itemID), {
+          displayDate: new Date().toLocaleString()
+        })
+        console.log('trapped subentry accessed,   date set to now')
+      }
     }
-  }
   }
 
   if (item.available === false) {
@@ -90,23 +89,32 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
         ref={itemRef}
         className='subentry-staticentry subEntry-not-available'
       >
-       <div className='entry-header'>
-                    <div style={{}}>
-            <BookMarkCheck itemID={item.id} type='entry' />
-          </div>  <div className='entry-title'>
-          <span className='subIDSpan'> <h3>{item.fauxID} </h3>{' '} </span>
+        <div className='entry-header'>
+          <div style={{}}>
+            <BookMarkCheck itemID={item.id} type='subentry' />
+          </div>{' '}
+          <div className='entry-title'>
+            <span className='subIDSpan'>
+              {' '}
+              <h3>{item.fauxID} </h3>{' '}
+            </span>
           </div>
-       </div>
+        </div>
         <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}
-        {/* Abandoned feature for now */}
-        {/* {!gameState.cheatCode ?    (
-        <button title="add or remove"
+        <span>
+          {' '}
+          {gameLogic.gameState.showDebug && (
+            <>
+              {item.devNotes}
 
-          className='button-small'
-          onClick={() => unlockHex(item.hexHash)}
-        >
-          Import
-        </button>) : (<>sfsdf {gameState.cheatCode} </>)}  */}
+              {item.hexHash
+                ? Array.isArray(item.hexHash)
+                  ? item.hexHash.join(', ')
+                  : dbHelpers.getHexHashCodesFromIds(item.hexHash)
+                : ''}
+            </>
+          )}
+        </span>
       </div>
     )
   }
@@ -147,28 +155,28 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
             </div>
           </div>
         </div>
-        <div className='subentry-desc'  style={{ whiteSpace: 'pre-wrap' }}>
-          <DescriptionEntry string={item.description} className={item.template} />
+        <div className='subentry-desc' style={{ whiteSpace: 'pre-wrap' }}>
+          <DescriptionEntry
+            string={item.description}
+            className={item.template}
+          />
           {item.mediaSub?.map((file, index) => (
             <div key={index}>
               <MediaThumbnail key={index} fileRef={file} maxWidth={'700px'} />
             </div>
-
           ))}
 
-
-
           <span className='image-subinfo subinfo '>
-            <span className="right-text">
-            <div>{safeDate(item.displayDate)}</div>
-           {' '} |{' '}
-            {item.lastEditedBy !== null && item.lastEditedBy !== undefined
-              ? researcherIDs.find(
-                  researcher => researcher.id === parseInt(item.lastEditedBy)
-                )?.name || 'Unknown'
-              : 'Unknown User'}
-              </span>
+            <span className='right-text'>
+              <div>{safeDate(item.displayDate)}</div> |{' '}
+              {item.lastEditedBy !== null && item.lastEditedBy !== undefined
+                ? researcherIDs.find(
+                    researcher => researcher.id === parseInt(item.lastEditedBy)
+                  )?.name || 'Unknown'
+                : 'Unknown User'}
+            </span>
           </span>
+          {gameLogic.gameState.showDebug && <>{item.devNotes}</>}
         </div>
       </div>
     </div>

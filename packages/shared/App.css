@@ -183,6 +183,8 @@ h4 {
   clear: both;
 }
 
+
+
 /* General styles */
 
 .image-edit-buttons {
@@ -352,6 +354,7 @@ select[multiple] option:checked {
 
 .description {
   margin: 3px;
+  padding-top: 20px;
   white-space: pre-wrap;
 }
 
@@ -489,7 +492,7 @@ table.entryTable td {
 
   border: --div-border-color;
   border-radius: 5px;
-  padding: 5px;
+  /* padding: 5px; */
   margin-bottom: 10px;
   display: inline-block;
   align-items: center;
@@ -1215,7 +1218,7 @@ ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
 .debugInfo {
   position: fixed;
   top: 45px;
-  left: 10px;
+  right: 10px;
   background-color: rgba(255, 255, 255, 0.9);
   border: 1px solid #ccc;
   padding: 10px;
@@ -1610,3 +1613,29 @@ textarea {
 }
 
 .voice {}
+
+.metadata-section{
+  display:flex;
+  gap:5px;
+}
+
+.metadata-subsection {
+
+  margin: 10px;
+  padding: 10px;
+  border: var(--div-border);
+  border-radius: 5px;
+
+  background-color: var(--div-island-bg);
+  /* width: 100%;
+  clear: both; */
+}
+
+.media-temp-loading {
+    padding: 5px;
+    margin: 5px;
+    border: var(--div-border);
+    max-width: 550px;
+    height:500px;
+
+}

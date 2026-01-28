@@ -168,7 +168,7 @@ export function AddSubEntryForm ({
     async function returnParentHexHash () {
     const parent = await db.friends.get(Number(parentID))
     const parentHash = ensureArray(parent?.hexHash || defaultHex)
-    
+
 
     return parentHash
   }
@@ -733,7 +733,7 @@ export function AddSubEntryForm ({
                   ))}
                 />
               </div>
-              <div title='last edit' className='col'> sfsdf
+              <div title='last edit' className='col'>
                 <FormAssets.FormDropDown
                   label='Last Edit By'
                   name='lastEditedBy'
@@ -771,9 +771,9 @@ export function AddSubEntryForm ({
       </div>
 
       <div className='row'>
-        <SelectEntry 
+        <SelectEntry
         value={formValues.entryRef}
-        onChange={handleRef} 
+        onChange={handleRef}
         filterAvailable = {false}
         name="ref"
         includeSubentries = {false}

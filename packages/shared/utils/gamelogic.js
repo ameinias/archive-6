@@ -31,6 +31,8 @@ let globalIsLoggedIn = (() => {
   }
 })();
 
+let isToggleAdminListenerRegistered = false;
+
 let globalGameState = {
   defaultStartHash: 30, //   Game with start with this hash on new game or logout
   score: 0,
@@ -146,7 +148,11 @@ export function GameLogic() {
     };
 
     //  Works in both environments
-    eventManager.on("toggle-admin", handleToggleAdmin);
+// Only register once globally
+if (!isToggleAdminListenerRegistered) {
+  window.addEventListener("toggle-admin", handleToggleAdmin);
+  isToggleAdminListenerRegistered = true;
+}
 
     // Cleanup when component unmounts
     return () => {
@@ -173,8 +179,8 @@ export function GameLogic() {
       if (adminUserIndex > -1)
         adminUserUpdateCallbacks.splice(adminUserIndex, 1);
 
-      eventManager.removeListener("toggle-admin", handleToggleAdmin);
-
+      // eventManager.removeListener("toggle-admin", handleToggleAdmin);
+window.removeEventListener("toggle-admin", handleToggleAdmin);
 
 
 
@@ -232,7 +238,7 @@ export function GameLogic() {
     setStatus(globalStatus);
     gameStatusUpdateCallbacks.forEach((callback) => callback(globalStatus));
 
-    window.dispatchEvent(new CustomEvent('statusMessage', { 
+    window.dispatchEvent(new CustomEvent('statusMessage', {
   detail:  thestatus
 }));
 
@@ -329,10 +335,10 @@ export function GameLogic() {
     }
   }
 
-  
+
   const triggerConsoleTaunt = () => {
 
-    
+
      gameState.tauntIndex++;
 
      if(consoleTaunts[gameState.tauntIndex].name != null) {
@@ -373,13 +379,12 @@ export function GameLogic() {
 
   const resetGameVariables = () => {
 
-    clearConsole(); 
+    clearConsole();
 
     globalGameState = {
       ...globalGameState,
       editAccess: false,
       endgameSequence: false,
-      showDebug: false,
       endGameTimer: false,
       consoleAvailable: false,
       showConsole: false,
