@@ -173,7 +173,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
                 ? researcherIDs.find(
                     researcher => researcher.id === parseInt(item.lastEditedBy)
                   )?.name || 'Unknown'
-                : 'Unknown User'}
+                : 'Unknown User'}     {gameLogic.gameState.showDebug && <>{item.lastEditedBy}</>}
             </span>
           </span>
           {gameLogic.gameState.showDebug && <>{item.devNotes}</>}

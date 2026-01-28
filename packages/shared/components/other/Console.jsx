@@ -125,59 +125,59 @@ messagesEnd();
   makeConnection(id, 110);
   await delay(1500); // Wait for 2 seconds
 
-  navigate(`/entry/92`);
+  navigate(`/entry/116`);
   await delay(1500);
 
-  makeConnection(92, 94);
+  makeConnection(116, 111);
   await delay(1500);
-  makeConnection(92, 100);
+  makeConnection(116, 126);
 
   await delay(1500);
 
-  navigate(`/entry/95`);
+  navigate(`/entry/121`);
   await delay(500);
-  makeConnection(95, 92);
+  makeConnection(121, 95);
     await delay(500);
 
   // addConsoleEntryHypertext("thank you for letting us use you");
   await delay(1200);
 
-  navigate(`/entry/100`);
+  navigate(`/entry/117`);
   await delay(1500);
 
-  navigate(`/entry/91`);
+  navigate(`/entry/114`);
   await delay(800);
-  navigate(`/entry/94`);
+  navigate(`/entry/118`);
   await delay(300);
-  navigate(`/entry/91`);
+  navigate(`/entry/116`);
   await delay(300);
   // addConsoleEntryHypertext("your sacrifice is appreciated");
   await delay(300);
-  navigate(`/entry/92`);
+    navigate(`/entry/114`);
   await delay(300);
-  navigate(`/entry/91`);
+  navigate(`/entry/118`);
+  await delay(300);
+  navigate(`/entry/116`);
   await delay(100);
-  navigate(`/entry/92`);
+  navigate(`/entry/121`);
   await delay(100);
-  navigate(`/entry/91`);
-  await delay(100);
-  navigate(`/entry/92`);
+  navigate(`/entry/111`);
   await delay(100);
     // addConsoleEntryHypertext("as is your connection");
-  navigate(`/entry/91`);
+  navigate(`/entry/115`);
   await delay(100);
-  navigate(`/entry/92`);
+  navigate(`/entry/120`);
   await delay(100);
-  navigate(`/entry/91`);
+  navigate(`/entry/116`);
   await delay(100);
-  navigate(`/entry/92`);
+  navigate(`/entry/114`);
       addConsoleEntryHypertext("to us");
   await delay(50);
-  navigate(`/entry/91`);
+  navigate(`/entry/95`);
   await delay(50);
-  navigate(`/entry/92`);
+  navigate(`/entry/97`);
   await delay(50);
-  navigate(`/entry/91`);
+  navigate(`/entry/115`);
   await delay(50);
     // addConsoleEntryHypertext("and to everyone");
   navigate(`/connections`);
@@ -206,6 +206,14 @@ messagesEnd();
   //  navigate(`/convo`);
   updateGameState("showConsole", false);
   updateGameState("bluescreen", true);
+   if (await eventManager.showConfirm('Connection cannot continue as it has. Exiting... \n Would you like to save telemetry to data folder?')) {
+            exportTelemetrisToAppData(globalUser.username);
+          await newGame(gameState.defaultStartHash);
+
+            resetGameVariables();
+          } else {await newGame(gameState.defaultStartHash);
+
+            resetGameVariables(); } 
 
 };
 

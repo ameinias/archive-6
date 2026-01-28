@@ -315,6 +315,8 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
     },
     "disable-consoleAvailable": () => updateGameState("consoleAvailable", false),
     "enable-connectionPanel": () => updateGameState("connectionPanel", true),
+    "enable-showConsole": () => updateGameState("showConsole", true),
+    "disable-showConsole": () => updateGameState("showConsole", false),
     "disable-connectionPanel": () => updateGameState("connectionPanel", false),
     "enable-connectionEdit": () => updateGameState("connectionEdit", true),
     "disable-connectionEdit": () => updateGameState("connectionEdit", false),
@@ -335,6 +337,12 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
       updateGameState("showConsole", true);
     }
   }
+
+// EMHAN - fix on xray page
+// give me a new artifact - keep this as it is.
+// change display date on new entry to todays date
+// navigate is not a function? 
+
 
 
   const triggerConsoleTaunt = () => {

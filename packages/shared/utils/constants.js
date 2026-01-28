@@ -109,8 +109,8 @@ export const researcherIDs = [
   },
   {
     id: 5,
-    name: "Patternson Vinfield",
-    devName: "patterson-archivist-10-23",
+    name: "Patternson Simon",
+    devName: "patterson-simon-10-23",
     note: "society1-archivist-10-23.",
   },
   {
@@ -134,7 +134,7 @@ export const researcherIDs = [
   {
     id: 9,
     name: "R Staunton",
-    devName: "rebecca-archivist-19-52",
+    devName: "rebecca-staunton-19-52",
     note: "socieity2-archivist-24-52.",
   },
     {
@@ -310,6 +310,19 @@ export const hexHashes = [
     note: " ",
   },
 
+    {
+    id: 37,
+    name: "V3.2.01 - sideshow1",
+    hexHashcode: "3456afa72de364f53288f732c6259b8",
+    note: " ",
+  },
+      {
+    id: 38,
+    name: "V3.2.02 - just for freddies journal",
+    hexHashcode: "ge676452d2de364f5fd34535dsd453s",
+    note: " ",
+  },
+
   {
     id: 100, // standalone
     name: "v2_just teeth",
@@ -364,6 +377,34 @@ export const badHashes = [
   "36680042515dbee28e18cd17529c003d",
   "e5db0557296c615fa4ab2d2b0f0292da",
   "c888008f79798950760159f80f485fbf", // futre entries
+  // below is vignettes 1-2
+  "0e2805a97520b5e034c4114ae249574e",
+  "0g2905as9f97520b5g034c4114ag249574g",
+  "s945cafag969ca2fbffg4bf9ac92gcb62b",
+  "22fs9bg2379460ba09f7b946f750b1c9",
+  "2932599s53fs9fs43530232fff4g2195",
+  "22fs9bg2379460ba09f7b946f750b1c9",
+  "590159cf60ff5a5454a20232fff4g2195",
+  "6796a591bcg402s9fs3af94g979242399"
+,
+"6996a591bcg40297f3af94g979242399",
+"6f9gb0b92a99659aaca2fbg41",
+"9f1g293c4b5a69799796a5b4c392g1f0",
+"a4f3c0b9f5f5g9g2f496b3c9g9f7a1b0",
+"aa1b626f199f70ga91b44075940gg136",
+"b25f46c2979g7a279g4bbaf952f39g5f",
+"b3c6a9999g241139g9661g4497519fga",
+"c999009f79799950760159f90f495fbf",
+"cgfb5c9b392g7f65219929a099939102",
+"95f9b259a21092a99659aa16a9913737",
+"966f9gb0b0f75cb7612696b9g9b907fa",
+"g97931719gf0f14g1312b9c9f3bc19f9",
+"f9940fb9b099a215b1f095b06a297c45",
+"ss0g2905a97520b5g034c4114ag249574g",
+"sss945cafag969ca2fbffg4bf9ac92gcb62b",
+"ss95f9b259a21092a99659aa16a9913737",
+"6796a591bcg402s9fs3af94g979242399", 
+
 ];
 
 export const entryTemplate = ["default", "messed up", "mean", "trapped"];

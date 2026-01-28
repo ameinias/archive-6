@@ -22,7 +22,7 @@ import { eventManager } from "@utils/events";
 import { DataState } from "../parts/Badges";
 import { applyHexFilter } from "@components/parts/ListingComponent";
 
-const currentFilter = "vingette3";
+const currentFilter = "vignette3";
 
 function ImportExport() {
   const { isAdmin, toggleAdmin, setStatusMessage, updateGameState } =

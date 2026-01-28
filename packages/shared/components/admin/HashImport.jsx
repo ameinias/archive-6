@@ -90,7 +90,7 @@ function HashImport() {
           .replace("T", " ")
           .substring(0, 19),
         modEdit: "migrated",
-        lastEditedBy: globalUser.username,
+        // lastEditedBy: globalUser.username,
       });
     });
 

@@ -40,7 +40,7 @@ const defaultFormValue = {
   devNotes: '',
   modEditDate: '2008-07-21', // date modified in database
   modEdit: 'added',
-  displayDate: '1970-01-01', // date added to archive
+  displayDate: new Date().toISOString().split('T')[0],
   lastEditedBy: researcherIDs[0] || 0,
   triggerEvent: ''
 }
@@ -306,7 +306,7 @@ export function PlayerAddEntryForm ({}) {
       console.log(`Added entry with ID ${id}`);
 
 
-      EndSequence(id);
+      EndSequence(navigate, id);
 
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
