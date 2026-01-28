@@ -37,7 +37,7 @@ export default class MenuBuilder {
           },
                {
               label: 'Toggle Admin',
-              accelerator: 'Ctrl+N',
+              accelerator: 'Ctrl+Q',
               click: () => {
 
                this.mainWindow.webContents.executeJavaScript(`

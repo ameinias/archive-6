@@ -93,11 +93,13 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
           <div style={{}}>
             <BookMarkCheck itemID={item.id} type='subentry' />
           </div>{' '}
-          <div className='entry-title'>
-            <span className='subIDSpan'>
-              {' '}
-              <h3>{item.fauxID} </h3>{' '}
-            </span>
+          <div className='entry-title'style={{ display: 'flex' }}>
+            <div className="tab">  </div>
+            <span className='subIDSpan' >
+
+              <h3>{item.fauxID} </h3>
+
+            </span>{' '}
           </div>
         </div>
         <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}

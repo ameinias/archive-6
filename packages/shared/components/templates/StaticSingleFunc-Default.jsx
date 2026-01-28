@@ -237,6 +237,7 @@ export function StaticSingleDefault ({ itemID }) {
               ))}
             </div>
           )}
+
         {/* Show subentries if they exist */}
         {subEntryOfParent.filter(
           item => item.subCategory.toLowerCase() !== 'metadata'
@@ -255,19 +256,7 @@ export function StaticSingleDefault ({ itemID }) {
               ))}
           </div>
         )}
-        {gameLogic.gameState.connectionEdit && (
-          <div>
-            <SelectEntry
-              value={item.entryRef}
-              onChange={handleRef}
-              filterAvailable={true}
-              name='ref'
-              includeSubentries={false}
-              label='Add / Remove Connections'
-              displayTrueID='true'
-            />
-          </div>
-        )}{' '}
+
       </div>
       {gameLogic.gameState.showDebug && <>{item.devNotes}</>}
     </div>

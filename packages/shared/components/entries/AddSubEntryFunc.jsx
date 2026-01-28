@@ -599,7 +599,13 @@ const number = parseInt(parts[parts.length-1])
         >
           {collapsed ? '▷' : '▽'}
         </button>{' '}
-        {formValues.fauxID} : {formValues.title}
+        {(formValues.triggerEvent != "" && formValues.triggerEvent != null) ? (
+                        <a title={formValues.triggerEvent}>⚡|</a>
+                      ) : (<><div className="tab"> </div>{'   '}|</>)} {formValues.hexHash
+                            ? Array.isArray(formValues.hexHash)
+                              ? formValues.hexHash.join(", ")
+                              : formValues.hexHash.toString()
+                            : ""} | {formValues.fauxID} : {formValues.title}
         <span className='subentry-meta right'>
           {safeDate(formValues.displayDate)}
             {/* ? typeof formValues.displayDate === 'string'

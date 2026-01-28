@@ -265,7 +265,7 @@ export const hexHashes = [
   {
     id: 30,
     name: "V3.1.00 - intro",
-    hexHashcode: "ddddddddddddddddddddddddddddddd",
+    hexHashcode: "5dcf36529cbfde76237b34326e34ddff",
   },
 
   {
@@ -403,7 +403,7 @@ export const badHashes = [
 "ss0g2905a97520b5g034c4114ag249574g",
 "sss945cafag969ca2fbffg4bf9ac92gcb62b",
 "ss95f9b259a21092a99659aa16a9913737",
-"6796a591bcg402s9fs3af94g979242399", 
+"6796a591bcg402s9fs3af94g979242399",
 
 ];
 
