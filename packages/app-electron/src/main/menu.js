@@ -35,6 +35,29 @@ export default class MenuBuilder {
               this.mainWindow.close();
             },
           },
+               {
+              label: 'Toggle Admin',
+              accelerator: 'Ctrl+N',
+              click: () => {
+
+               this.mainWindow.webContents.executeJavaScript(`
+  (() => {
+    const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+    localStorage.setItem('isAdmin', (!currentAdmin).toString());
+    window.dispatchEvent(new CustomEvent('toggle-admin'));
+  })();
+`);
+
+
+              },
+            },
+            {
+              label: 'Toggle Debug',
+              accelerator: 'Ctrl+D',
+              click: () => {
+                this.mainWindow.webContents.send('toggle-debug');
+              },
+            },
         ],
       },
     ];
@@ -122,6 +145,7 @@ export default class MenuBuilder {
           submenu: [
             {
               label: 'Toggle Admin',
+              accelerator: 'Command+A',
               click: () => {
 
                this.mainWindow.webContents.executeJavaScript(`
@@ -137,8 +161,20 @@ export default class MenuBuilder {
             },
             {
               label: 'Toggle Debug',
+              accelerator: 'Command+D',
               click: () => {
                 this.mainWindow.webContents.send('toggle-debug');
+              },
+            },
+
+             {
+              label: 'Refresh',
+              click: () => {
+                               this.mainWindow.webContents.executeJavaScript(`
+  (() => {
+    location.reload();
+  })();
+`);
               },
             },
 

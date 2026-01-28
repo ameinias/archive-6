@@ -60,16 +60,16 @@ export const consoleTaunts = [
 
 
 
-/* 
-Look, I need you to do something for me. 
+/*
+Look, I need you to do something for me.
 
-We need you to add to the legend. 
+We need you to add to the legend.
 
-I've given you access to adding a new entry. Please add something, anything, that implies evidence of an incursion. It's the only way we can patch the holes in the world and stop them leaking through. And maybe it will help free those of us who have been trapped here. 
+I've given you access to adding a new entry. Please add something, anything, that implies evidence of an incursion. It's the only way we can patch the holes in the world and stop them leaking through. And maybe it will help free those of us who have been trapped here.
 
-There should be pens and paper on the desk there if you'd like to draw or write. Or if you're willing to sacrifice something you brought with you, to leave an echo of it behind with us, it could help to set us free. 
+There should be pens and paper on the desk there if you'd like to draw or write. Or if you're willing to sacrifice something you brought with you, to leave an echo of it behind with us, it could help to set us free.
 
-I've lit up the button for you. 
+I've lit up the button for you.
 */
 
 
@@ -264,48 +264,48 @@ export const hexHashes = [
 
   {
     id: 30,
-    name: "V3.1.01 - intro",
+    name: "V3.1.00 - intro",
     hexHashcode: "ddddddddddddddddddddddddddddddd",
   },
 
   {
     id: 31,
-    name: "V3.1.02 - links for console and connection panel",
+    name: "V3.1.01 - links for console and connection panel",
     hexHashcode: "234ada22c94668dd7ee1c26b42c630ab",
     note: " ",
   },
 
   {
     id: 32,
-    name: "V3.1.03 - unlock console",
+    name: "V3.1.02 - unlock console",
     hexHashcode: "bad48f5d47b68ca3059ac646d0320808",
     note: " enable-consoleAvailable ",
   },
 
   {
     id: 33,
-    name: "V3.1.04 -  connection panel",
+    name: "V3.1.03 -  connection panel",
     hexHashcode: "48471313e7c8b73e1d0cc7b6a9ef945e",
     note: " enable-connectionPanel",
   },
 
   {
     id: 34,
-    name: "V3.01.04 - unlock connection edit",
+    name: "V3.1.04 - unlock connection edit",
     hexHashcode: "4acf43285e01067ea35af33f416fcc69",
     note: " enable-connectionEdit",
   },
 
   {
     id: 35,
-    name: "V3.01.04 - add entry request",
+    name: "V3.1.05 - add entry request",
     hexHashcode: "60889e978b9dd56ca47ff36ddae12a07",
     note: " ",
   },
 
   {
     id: 36,
-    name: "V3.01.05 - new end animation",
+    name: "V3.1.06 - new end animation",
     hexHashcode: "7a1b4cfa72de364f2c6259b853288f73",
     note: " ",
   },

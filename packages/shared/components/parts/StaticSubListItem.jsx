@@ -49,7 +49,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
   useEffect(() => {
     if (!item) return
 
-    if (item.triggerEvent && item.unread) {
+    if (item.triggerEvent && item.unread && item.available) {
       //item.triggerEvent.length > 0
       gameLogic.triggerEvent(item.triggerEvent)
     }
@@ -101,7 +101,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
           </div>
         </div>
         <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}
-        <span>
+        <div className="subentry-desc">
           {' '}
           {gameLogic.gameState.showDebug && (
             <>
@@ -114,7 +114,7 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
                 : ''}
             </>
           )}
-        </span>
+        </div>
       </div>
     )
   }

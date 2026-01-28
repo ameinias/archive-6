@@ -328,6 +328,7 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
 
   const revealConsole = () => {
     setStatusMessage("[SYSTM] CONSOLE AVAILABLE")
+    setStatusMessage("[????] Can any□□��□□□ �ar □�?")
     updateGameState("consoleAvailable", true);
     if (!gameState.consoleWasRevealed) {
       updateGameState("consoleWasRevealed", true);
@@ -341,7 +342,7 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
 
      gameState.tauntIndex++;
 
-     if(consoleTaunts[gameState.tauntIndex].name != null) {
+     if(consoleTaunts[gameState.tauntIndex] != null && consoleTaunts[gameState.tauntIndex].name != null) {
     setStatusMessage(consoleTaunts[gameState.tauntIndex].name)
 
     const message = 'taunt ' + gameState.tauntIndex + ": " + consoleTaunts[gameState.tauntIndex].name + " at " + location.pathname;

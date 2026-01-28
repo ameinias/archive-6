@@ -146,12 +146,12 @@ export function StaticSingleDefault ({ itemID }) {
           </div>
         </div>
         <span>*****NOT AVAILABLE : DATA CORRUPTED*******</span>{' '}
-                <span>
+               <div className="subentry-desc">
           {' '}
           {gameLogic.gameState.showDebug && (
             <>
               {item.devNotes}
-
+<br></br>
               {item.hexHash
                 ? Array.isArray(item.hexHash)
                   ? item.hexHash.join(', ')
@@ -159,7 +159,7 @@ export function StaticSingleDefault ({ itemID }) {
                 : ''}
             </>
           )}
-        </span>
+        </div>
       </div>
     )
   }

@@ -99,10 +99,14 @@ export function AddSubEntryForm ({
       const parentFauxID = parent?.fauxID || ''
       setparentFauxID(parentFauxID)
 
-      const lengthOfSiblings = await db.subentries
+      console.log('Parent fauxID: ' + parentFauxID );
+
+      const siblings = await db.subentries
         .where('parentId')
         .equals(Number(parentID))
         .toArray()
+
+        console.log('siblings:', siblings.length)
 
       function findLowestGap (siblings) {
         // Extract numbers after the '-' from fauxIDs
@@ -110,10 +114,25 @@ export function AddSubEntryForm ({
           .map(sibling => {
             const fauxID = sibling.fauxID || ''
             const parts = fauxID.split('-')
-            if (parts.length >= 2) {
-              const number = parseInt(parts[1])
+
+const number = parseInt(parts[parts.length-1])
               return isNaN(number) ? null : number
-            }
+
+            // if (parts.length == 2) {
+            //   const number = parseInt(parts[1])
+            //   return isNaN(number) ? null : number
+            // } else if (parts.length == 3) {
+            //   // Handle cases with multiple dashes
+            //   const number = parseInt(parts[2])
+            //   return isNaN(number) ? null : number
+            // }
+            // else if (parts.length == 4) {
+            //   // Handle cases with multiple dashes
+            //   const number = parseInt(parts[3])
+            //   return isNaN(number) ? null : number
+            // }
+
+
             return null
           })
           .filter(num => num !== null) // Remove null values
@@ -137,7 +156,7 @@ export function AddSubEntryForm ({
         return Math.max(...existingNumbers) + 1
       }
 
-      const nextNumber = findLowestGap(lengthOfSiblings)
+      const nextNumber = findLowestGap(siblings)
       console.log('Next available number:', nextNumber)
 
       return `${parentFauxID || 'PARENT'}-${nextNumber || 1}`
