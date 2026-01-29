@@ -165,8 +165,8 @@ export default function RouterPath () {
         <Separator className={`seperator ${!gameState.showConsole && 'hide'}`} />
 
 
-        
-        <Panel maxSize={` ${gameState.showConsole ? '200' : '0'}`}>
+
+        <Panel maxSize={` ${gameState.showConsole ? '50' : '0'}`}>
           <Console />
         </Panel>
         </>)

@@ -220,8 +220,8 @@ export function StaticSingleDefault ({ itemID }) {
             <div className='subentry-add-list flex'>
               <h2>Related </h2>
               {item.entryRef.map((ref, index) => (
-                <span key={index}>
-                  <Link
+                <span className = "addedRef" key={index}>
+                 <span className="col-10"> <Link
                     to={`/entry/${ref.originId}`}
                     title={
                       ref.available
@@ -231,12 +231,28 @@ export function StaticSingleDefault ({ itemID }) {
                     className='mention-link'
                   >
                     {ref.fauxID}{' '}
-                  </Link>
-                  {index < item.entryRef.length - 1 && ', '}
+                  </Link></span>
+                  <span className="col-2">sfsds</span>
                 </span>
               ))}
             </div>
           )}
+
+          {/* where is add entry ref? */}
+           {gameLogic.gameState.connectionEdit && (
+          <div>
+            <SelectEntry
+              value={item.entryRef}
+              onChange={handleRef}
+              filterAvailable={true}
+              name='ref'
+              includeSubentries={false}
+              label='Add / Remove Connections'
+              displayTrueID='true'
+            />
+          </div>
+)}{" "}
+
 
         {/* Show subentries if they exist */}
         {subEntryOfParent.filter(

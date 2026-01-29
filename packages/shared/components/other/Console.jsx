@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { db } from "@utils/db"; // import the database
+import { db,newGame, newGameWithWarning, exportTelemetrisToAppData } from "@utils/db"; // import the database
 import { useLiveQuery } from "dexie-react-hooks";
 import { GameLogic, updateGameState } from "@utils/gamelogic";
 
 import { HyperText } from "@utils/motion/hypertext";
 import { AnimatedList } from "@utils/motion/animatedList";
 import { useNavigate } from "react-router-dom";
+import { eventManager } from "@utils/events";
 
 let globalConsoleArray = [];
 const consoleUpdateCallbacks = [];
@@ -117,7 +118,7 @@ const messagesEnd = async () => {
 
 const EndSequence = async (navigate, id) => {
   updateGameState("endgameSequence", true);
-messagesEnd(); 
+messagesEnd();
   //unlock connections in case it was missed
   updateGameState("connectionEdit", true);
   navigate(`/entry/${id}`);
@@ -206,14 +207,7 @@ messagesEnd();
   //  navigate(`/convo`);
   updateGameState("showConsole", false);
   updateGameState("bluescreen", true);
-   if (await eventManager.showConfirm('Connection cannot continue as it has. Exiting... \n Would you like to save telemetry to data folder?')) {
-            exportTelemetrisToAppData(globalUser.username);
-          await newGame(gameState.defaultStartHash);
-
-            resetGameVariables();
-          } else {await newGame(gameState.defaultStartHash);
-
-            resetGameVariables(); } 
+   eventManager.showAlert('Connection cannot continue as it has. Exiting... ');
 
 };
 
@@ -250,7 +244,7 @@ const Console = () => {
 
   useEffect(() => {
     const handleGameReset = () => {
-      
+
     };
 
     window.addEventListener("gameReset", handleGameReset);
@@ -302,7 +296,7 @@ const Console = () => {
         // className={`console ${!gameState.showConsole && 'hide'}`}
         className={`console`}
       >
-        [SYSTM] System check complete. ok. 
+        [SYSTM] System check complete. ok.
         {globalConsoleArray.map((item, index) => (
           <div key={index}>
             <span>{item}</span>
