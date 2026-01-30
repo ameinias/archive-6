@@ -573,7 +573,7 @@ export function PlayerAddEntryForm ({}) {
               rows={4}
               className='form-control '
               name='description'
-              placeholder='Description'
+              placeholder='Describe your artifact, and how you feel it is relevant to the collection.'
               value={formValues.description}
               onChange={handleChange}
             />
