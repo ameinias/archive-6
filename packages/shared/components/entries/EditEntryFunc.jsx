@@ -723,6 +723,7 @@ formValues.date = new Date().toISOString().split('T')[0];
             includeSubentries={true}
             label="related entries"
             displayTrueID="true"
+            author=""
           />
         </div>
       )}

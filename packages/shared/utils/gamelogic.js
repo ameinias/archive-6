@@ -182,7 +182,7 @@ if (!isToggleAdminListenerRegistered) {
       // eventManager.removeListener("toggle-admin", handleToggleAdmin);
 window.removeEventListener("toggle-admin", handleToggleAdmin);
 
-
+// isToggleAdminListenerRegistered = false;
 
     };
   }, []);
@@ -341,7 +341,7 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
 // EMHAN - fix on xray page
 // give me a new artifact - keep this as it is.
 // change display date on new entry to todays date
-// navigate is not a function? 
+// navigate is not a function?
 
 
 

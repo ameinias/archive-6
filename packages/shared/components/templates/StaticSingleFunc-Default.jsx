@@ -17,6 +17,7 @@ import { SelectEntry } from '@components/parts/FormAssets'
 export function StaticSingleDefault ({ itemID }) {
   const { id } = useParams() // get the id from the route
   const gameLogic = GameLogic()
+  const { gameState, globalUser } = GameLogic()
 
   // For the final animation
   const initialSeconds = 5 // Set the initial countdown time in seconds
@@ -232,13 +233,13 @@ export function StaticSingleDefault ({ itemID }) {
                   >
                     {ref.fauxID}{' '}
                   </Link></span>
-                  <span className="col-2">sfsds</span>
+                  <span className="col-2">{ref.author}</span>
                 </span>
               ))}
             </div>
           )}
 
-          {/* where is add entry ref? */}
+          {/* TODO - update this to select author from dropdown before adding.  */}
            {gameLogic.gameState.connectionEdit && (
           <div>
             <SelectEntry
@@ -249,6 +250,7 @@ export function StaticSingleDefault ({ itemID }) {
               includeSubentries={false}
               label='Add / Remove Connections'
               displayTrueID='true'
+              author={gameLogic.globalUser.username}
             />
           </div>
 )}{" "}
