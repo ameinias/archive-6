@@ -126,24 +126,24 @@ messagesEnd();
   makeConnection(id, 110);
   await delay(1500); // Wait for 2 seconds
 
-  navigate(`/entry/116`);
+  navigate(`/entry/122`);
   await delay(1500);
 
-  makeConnection(116, 111);
+  makeConnection(122, 111);
   await delay(1500);
-  makeConnection(116, 126);
+  makeConnection(122, 126);
 
   await delay(1500);
 
-  navigate(`/entry/121`);
+  navigate(`/entry/117`);
   await delay(500);
-  makeConnection(121, 95);
+  makeConnection(117, 95);
     await delay(500);
 
   // addConsoleEntryHypertext("thank you for letting us use you");
   await delay(1200);
 
-  navigate(`/entry/117`);
+  navigate(`/entry/111`);
   await delay(1500);
 
   navigate(`/entry/114`);

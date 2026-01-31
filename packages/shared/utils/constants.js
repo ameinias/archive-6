@@ -353,7 +353,7 @@ export const hexHashes = [
   {
     id: 53,
     name: "test unlock",
-    hexHashcode: "test",
+    hexHashcode: "testtest",
     note: "Random fluff entries from testing I don't want to toISOString.",
   },
 ];

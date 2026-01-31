@@ -249,7 +249,7 @@ export function StaticSingleDefault ({ itemID }) {
               name='ref'
               includeSubentries={false}
               label='Add / Remove Connections'
-              displayTrueID='true'
+              displayTrueID='false'
               author={gameLogic.globalUser.username}
             />
           </div>

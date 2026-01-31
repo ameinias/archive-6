@@ -23,7 +23,7 @@ import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
 import { EndSequence } from '@components/other/Console'
 
 // default variables - update as needed
-const defaultFauxIDStart = 'OS'
+const defaultFauxIDStart = 'YOU-A-'
 const defaultHex = 51
 
 const defaultFormValue = {
@@ -268,10 +268,11 @@ export function PlayerAddEntryForm ({}) {
       }
 
       setStatusMessage(`Generated new ID: ${defaultFauxIDStart}${newID}`)
-      return defaultFauxIDStart + newID
+      const randomID = Math.floor(Math.random() * 900) + 100
+      return defaultFauxIDStart + randomID
     } catch (error) {
       console.error('Error generating ID:', error)
-      const randomID = Math.floor(Math.random() * 9000) + 1000
+      const randomID = Math.floor(Math.random() * 900) + 100
       return defaultFauxIDStart + randomID
     }
   }
@@ -303,7 +304,7 @@ export function PlayerAddEntryForm ({}) {
       )
       loadConfirmEffect()
 
-      console.log(`Added entry with ID ${id}`);
+      console.log(`Added entry with ID ${id} and title ${title}`);
 
 
       EndSequence(navigate, id);

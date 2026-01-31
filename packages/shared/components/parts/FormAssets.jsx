@@ -278,7 +278,7 @@ export function SelectEntry({
     }
 
     setSelected(newValue);
-    console.log("change the   value!!!");
+    console.log("change the   value!!!" + JSON.stringify(newValue));
   };
 
   return (

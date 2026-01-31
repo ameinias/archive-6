@@ -166,7 +166,7 @@ export default function RouterPath () {
 
 
 
-        <Panel maxSize={` ${gameState.showConsole ? '50' : '0'}`}>
+        <Panel maxSize={` ${gameState.showConsole ? '150px' : '0'}`}>
           <Console />
         </Panel>
         </>)
