@@ -267,7 +267,7 @@ export function PlayerAddEntryForm ({}) {
         newID++
       }
 
-      setStatusMessage(`Generated new ID: ${defaultFauxIDStart}${newID}`)
+      // setStatusMessage(`Generated new ID: ${defaultFauxIDStart}${newID}`)
       const randomID = Math.floor(Math.random() * 900) + 100
       return defaultFauxIDStart + randomID
     } catch (error) {

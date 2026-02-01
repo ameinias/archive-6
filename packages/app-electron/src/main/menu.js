@@ -227,12 +227,12 @@ export default class MenuBuilder {
       const { x, y } = props;
 
       Menu.buildFromTemplate([
-        {
-          label: 'Inspect element',
-          click: () => {
-            this.mainWindow.webContents.inspectElement(x, y);
-          },
-        },
+        // {
+        //   label: 'Inspect element',
+        //   click: () => {
+        //     this.mainWindow.webContents.inspectElement(x, y);
+        //   },
+        // },
         {
           label: 'Excuse me, what are you doing?',
         },
@@ -271,19 +271,19 @@ export default class MenuBuilder {
         {
           label: 'Edit',
           submenu: [
-            {
-              label: 'Toggle Admin',
-              click: () => {
-                // Execute in renderer context
-              this.mainWindow.webContents.executeJavaScript(`
-  (() => {
-    const currentAdmin = localStorage.getItem('isAdmin') === 'true';
-    localStorage.setItem('isAdmin', (!currentAdmin).toString());
-    window.dispatchEvent(new CustomEvent('toggle-admin'));
-  })();
-`);
-              },
-            },
+//             {
+//               label: 'Toggle Admin',
+//               click: () => {
+//                 // Execute in renderer context
+//               this.mainWindow.webContents.executeJavaScript(`
+//   (() => {
+//     const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+//     localStorage.setItem('isAdmin', (!currentAdmin).toString());
+//     window.dispatchEvent(new CustomEvent('toggle-admin'));
+//   })();
+// `);
+//               },
+//             },
             {
               label: 'Undo',
               accelerator: 'Command+Z',

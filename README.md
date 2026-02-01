@@ -25,6 +25,9 @@ StatusMessage in gamelogic
 
 
 ## todo
+### 8.0.0 - 31/1/2026
+[ ] 
+
 ### 7.0.4 - 8/12/2025
 Missed a few version numbers here?
 [x] Big clean up to make writing subentries way faster - again. Obsessed with my own writing workflow
