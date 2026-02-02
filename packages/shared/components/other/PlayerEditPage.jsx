@@ -80,6 +80,9 @@ export function PlayerAddEntryForm ({}) {
   const [imgSrc, setImageSrc] = useState(null)
   const [files, setFiles] = useState([])
   const [mediaFiles, setMediaFiles] = useState([])
+  const [devices, setDevices] = useState([])
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null)
+    const [showCameraSelect, setShowCameraSelect] = useState(false)
 
   // const WebcamComponent = () => <Webcam />;
 
@@ -108,10 +111,27 @@ export function PlayerAddEntryForm ({}) {
     await handleImport(file)
   }, [webcamRef])
 
+  // Enumerate video devices on mount
+  useEffect(() => {
+    const getDevices = async () => {
+      try {
+        const deviceList = await navigator.mediaDevices.enumerateDevices()
+        const videoDevices = deviceList.filter(device => device.kind === 'videoinput')
+        setDevices(videoDevices)
+        if (videoDevices.length > 0 && !selectedDeviceId) {
+          setSelectedDeviceId(videoDevices[0].deviceId)
+        }
+      } catch (error) {
+        console.error('Error enumerating devices:', error)
+      }
+    }
+    getDevices()
+  }, [])
+
   const videoConstraints = {
     width: 720,
-    height: 650
-    // facingMode: "user"
+    height: 650,
+    deviceId: selectedDeviceId ? { exact: selectedDeviceId } : undefined
   }
 
   const handleImport = async file => {
@@ -416,6 +436,11 @@ export function PlayerAddEntryForm ({}) {
     return count > 0
   }
 
+  const showCameraModal = () => {
+      setShowCameraSelect(!showCameraSelect);
+      console.log("showCameraModal hit " + showCameraSelect);
+  }
+
   //#endregion
 
   //*    ----------------    RETURN  -------------- */
@@ -476,11 +501,33 @@ export function PlayerAddEntryForm ({}) {
           </div>
         </div>
       )}
+<div className="cameraChangeParent">
+  <div><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
+  {showCameraSelect && (
 
+      <div>        {devices.length > 1 && (
+          <div className='row' style={{ marginBottom: '10px' }}>
+            <label htmlFor='camera-select'>Select Camera: </label>
+            <select
+              id='camera-select'
+              className='form-control'
+              value={selectedDeviceId || ''}
+              onChange={(e) => setSelectedDeviceId(e.target.value)}
+            >
+              {devices.map((device) => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label || `Camera ${devices.indexOf(device) + 1}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )} </div>)}
+</div>
       <div className='row'>
         {' '}
         {/*// ------ Media   ------*/}
         {/* 640 x 480 */}
+
         <div className='row filter-buttons'>
           <Webcam
             audio={false}
