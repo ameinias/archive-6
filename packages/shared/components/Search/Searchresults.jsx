@@ -23,7 +23,7 @@ export function SearchResults({ results, searchterm=""}) {
       {results.length === 0 ? (
         <>
          {searchterm ? <> '{searchterm}' did not return any results. </> : <> No results to show. </>}
-       
+
         </>
       ) : (
         <table>
@@ -32,7 +32,7 @@ export function SearchResults({ results, searchterm=""}) {
               <tr key={item.id}>
                 <td width="80%">
                   <>
-                    {item.available ? (
+                    {item.available && (
                       <>
                         {item.type === "sub" ? (
                           <>
@@ -57,9 +57,11 @@ export function SearchResults({ results, searchterm=""}) {
                           </>
                         )}
                       </>
-                    ) : (
-                      <div>{item.fauxID} | NOT AVAILABLE </div>
-                    )}
+                    )
+                    // : (
+                    //   <div>{item.fauxID} | NOT AVAILABLE </div>
+                    // )
+                    }
                   </>
                 </td>
               </tr>

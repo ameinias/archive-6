@@ -950,9 +950,49 @@ content:"Capture Artifact";
   float: right;
 }
 
+.searchbox button:hover {
+  background-size:20px!important;
+
+}
+
 .searchbox button {
   margin: 0px;
   border: none;
+  border-radius: 1px;
+  height: 38px;
+  width: 30px;
+  /* border: 1px solid #ccc; */
+  padding: 5px;
+  border: none!important;
+  background:none!important;
+  animation:none;
+  box-shadow: none;
+
+}
+
+
+
+.searchbox input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 1px;
+  height: 40px;
+}
+
+.searchbox{
+      width: 80vw;
+    margin: 0px 20px;
+    height:40px;
+}
+
+.search-empty  {
+  width: 90vw;
+  height: 70vh;
+  /* padding: 5px; */
+  /* border: 1px solid #ccc; */
+  border-radius: 4px;
+  align-content: center;
 }
 
 .inner {

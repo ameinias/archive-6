@@ -87,7 +87,7 @@ setSentTerm(searchTerm);
       console.log("search " + searchTerm);
     if (foundItems && foundItems.length > 0) {
       setResults(tempItems); // update state!
-      
+
     } else {
       setResults([]); // clear results if nothing foun
 
@@ -105,6 +105,27 @@ setSentTerm(searchTerm);
     <>
     <h2>Search</h2>
       {/* <InputGroup className="searchboxr"> */}
+      {!sentTerm ? (
+        <>
+        <div className='search-empty'>
+      <div className="searchbox">
+        <input
+          type="search"
+          onChange={handleChange}
+          className="form-control"
+          placeholder="Search by entry title"
+          onKeyDown={handleKeyDown}
+          title="search entries"
+          value={val}
+        />
+        <button aria-label="search" onClick={() => searchItem(val)}>
+
+        </button>
+      {/* </InputGroup> */}
+      </div>
+</div>
+ </> ):(<>
+
       <div className="searchbox">
         <input
           type="search"
@@ -124,6 +145,7 @@ setSentTerm(searchTerm);
 
       <SearchResults results={results} searchterm={sentTerm}/>
 
+     </>)}
     </>
   );
 };

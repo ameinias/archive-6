@@ -485,7 +485,7 @@ let badword='';
 
       {(gameState.editAccess || isDemo) ? (
         <div title='entry title' className='row'>
-          <div className='col-2'>
+          <div className='col-3'>
             <input
               className={`form-control match col`}
               type='text'
@@ -499,7 +499,7 @@ let badword='';
           <div className='col'>
             <FormAssets.FormTextBox
               label=''
-              className={`form-control match col`}
+              className={`form-control match col-6`}
               name='title'
               formValue={formValues.title}
               readOnly={false}
@@ -510,7 +510,7 @@ let badword='';
       ) : (
         <div title='No Edit Access' className='row'>
           <h2>No edit access.</h2>
-          <div className='col-2'>
+          <div className='col-4'>
             <input
               className={`form-control match col`}
               type='text'
@@ -526,7 +526,7 @@ let badword='';
               label=''
               name='title'
               formValue={formValues.title}
-              className={`form-control match col`}
+              className={`form-control match col-6`}
               onChange={handleChange}
               disabled={true}
             />
