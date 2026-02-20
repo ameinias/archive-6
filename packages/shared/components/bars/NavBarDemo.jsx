@@ -7,6 +7,7 @@ import {
   dbHelpers,
   newGame,
   saveAsDefaultDatabase,
+  saveAsDemoDatabase,
   handleJSONExport,
 } from "@utils/db";
 import { TimeLine } from "../lists/TimeLine";
@@ -51,7 +52,7 @@ export const NavBarDemo = () => {
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const testio = async () => {
-    
+
     toggleDemo();
   };
 
@@ -69,7 +70,7 @@ export const NavBarDemo = () => {
 
 
   const restartGame = async () => {
-    await newGame(gameState.defaultStartHash);
+    await newGame("demo");
     setAdmin(false);
 
     // updateGameState("editAccess", false);
@@ -93,11 +94,11 @@ export const NavBarDemo = () => {
 
     if (isElectron)
       if (await eventManager.showConfirm("Overwrite?")) {
-        saveAsDefaultDatabase();
+        saveAsDemoDatabase();
       } else {
         console.log("canceled overwrite.");
       }
-    else handleJSONExport("dexie-export-web.json");
+    else handleJSONExport("dexie-export-demo.json");
   };
 
   return (
@@ -113,8 +114,8 @@ export const NavBarDemo = () => {
         >
           {"<<"}
         </Link>
-      </li>{" "} 
-         {isAdmin &&   <li role="menuitem" tabIndex="0" aria-haspopup="true">
+      </li>{" "}
+         {(gameState.showDebug || isAdmin)  &&   <li role="menuitem" tabIndex="0" aria-haspopup="true">
         {" "}
         <Link to="/list" >List</Link>
       </li>}
@@ -179,7 +180,7 @@ export const NavBarDemo = () => {
           </li>
           {isElectron ? (
             <li role="menuitem" tabIndex="0" aria-haspopup="true">
-              <Link onClick={SaveOut}>Dev Backup</Link>
+              <Link onClick={SaveOut}>Demo Backup</Link>
             </li>
           ) : (
             <div>

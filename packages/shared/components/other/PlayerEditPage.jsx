@@ -24,8 +24,11 @@ import { EndSequence } from '@components/other/Console'
 import { array } from 'badwords-list';
 
 // default variables - update as needed
+const {isDemo} = GameLogic();
 const defaultFauxIDStart = 'YOU-A-'
-const defaultHex = 51
+const defaultHex = () => {
+  if(isDemo) {55} else {51};
+}
 
 const defaultFormValue = {
   fauxID: 'MX0000',

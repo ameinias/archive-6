@@ -14,7 +14,7 @@
   --bg-remove-color: #9b313a;
   --bg-add-color: #50885d;
   --bg-save-color: #5e3783;
-
+    --w7-font: 11pt "Segoe UI", "SegoeUI", "Noto Sans", sans-serif;
 
 
 }
@@ -1695,4 +1695,13 @@ textarea {
 {
   display:flex;
   width:100%;
+}
+
+.rev-infobox{
+  border: var(--div-border);
+  border-radius: 5px;
+  padding: 10px;
+  background-color: var(--div-island-bg);
+  width: 100%;
+  text-align: justify;
 }

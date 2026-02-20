@@ -144,7 +144,7 @@ export function GameLogic() {
     console.log("should toggle admin " + globalIsAdmin);
   };
 
-  
+
   const toggleDemo = () => {
     globalIsDemo = !globalIsDemo;
     // Update all components that use this state

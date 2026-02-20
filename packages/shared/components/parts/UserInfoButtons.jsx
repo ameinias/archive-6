@@ -12,7 +12,7 @@ const UserInfoButtons = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
     const navigate = useNavigate();
     const CallNewGame = newGameWithWarning;
-    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage,updateGameState, gameState, resetGameVariables } = GameLogic();
+    const { globalUser, isLoggedIn, setLoggedIn, setStatusMessage,updateGameState, gameState, resetGameVariables, isDemo } = GameLogic();
 
       const isElectron = eventManager.isElectron;
 
@@ -46,7 +46,10 @@ const UserInfoButtons = () => {
 
         {isElectron &&
         <div>
-         <div className='login-info'><span> Logged in as:
+         <div className='login-info'>
+          {isDemo ? (<div><span> Logged in as: <Link to="/user-profile">guestuser</Link></span></div>) :
+(<div>
+          <span> Logged in as:
           <Link to="/user-profile">
 
         {isAdmin ? 'Admin' : `${globalUser.username}`}</Link></span>{' '}
@@ -58,6 +61,8 @@ const UserInfoButtons = () => {
           >
             {isAdmin ? 'Log Out' : 'Log Out '}
           </button> {' '}
+</div>)}
+
            </div>
         </div>
 }

@@ -8,7 +8,7 @@ import { GameLogic } from '@utils/gamelogic';
 const UserProfile = () => {
   const [restoreLastRoute, setRestoreLastRoute] = useState(true); // default true
     const { isLoggedIn, setLoggedIn } = GameLogic();
-    const { globalUser } = GameLogic();
+    const { globalUser, isDemo } = GameLogic();
     const { setStatusMessage } = GameLogic();
       const navigate = useNavigate();
 
@@ -24,22 +24,27 @@ const UserProfile = () => {
     return (
           <>
           <div className='row'>
-            <h1>User profile.</h1>
+            <h2>User profile</h2>
+
+{isDemo ? (<div><p> Logged in as: guestuser</p>
+
+</div>) :(<div><div>
 
               <p>Username: {globalUser.username}</p>
               <p>Password: ***********</p>
-            {/*  Not working - not needed probably.
-            <p>Restore last route: {restoreLastRoute ? "Enabled" : "Disabled"}</p>
-            <Button variant="outline-primary" onClick={() => setRestoreLastRoute(!restoreLastRoute)}>
-              Toggle Restore Last Route
-            </Button> */}
             <br />
-              <Link to={`http://blekkenhorst.ca`} target="_blank" rel="noopener noreferrer">blekkenhorst.ca</Link>
-          </div>
+      </div>
           <div className='row'>
-            <Button className="btn-save-add-itemn" onClick={handleSubmit}>
+            <Link className="btn-save-add-itemn" onClick={handleSubmit}>
             Log Out
-          </Button>
+          </Link>
+            </div>
+            </div>)}
+            <div className='rev-infobox'>
+<p>Thank you for visiting the archive. We are currently seeking volunteers to help with the archive revitalization project. </p>
+
+<p>If you would like to volunteer, please visit <Link to={`http://blekkenhorst.ca/bleed`} target="_blank" rel="noopener noreferrer">archive revitalization project website</Link>.</p>
+</div>
             </div>
           </>
     )

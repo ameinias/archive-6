@@ -356,6 +356,18 @@ export const hexHashes = [
     hexHashcode: "testtest",
     note: "Random fluff entries from testing I don't want to toISOString.",
   },
+    {
+    id: 54,
+    name: "DEMO",
+    hexHashcode: "demodemodemo",
+    note: "For the demo.",
+  },
+  {
+    id: 55,
+    name: "DEMO - player made",
+    hexHashcode: "demodemodemo-player",
+    note: "For the demo.",
+  },
 ];
 
 export const badHashes = [

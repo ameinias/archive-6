@@ -477,6 +477,30 @@ export const saveAsDefaultDatabase = async () => {
   }
 };
 
+export const saveAsDemoDatabase = async () => {
+  try {
+    // {
+    //   await setDefaultParameters();
+    // }
+    const blob = await db.export({ prettyJson: true });
+
+    const content = await blob.text();
+
+    // doesn't seem to be updating app data right now
+    await eventManager.saveAssetFile(
+      "assets/databases/demo-backup.json",
+      content,
+    );
+
+    const fullPath = await eventManager.getAssetPath(
+      "databases/demo-backup.json",
+    );
+    console.log("Database saved successfully to:", fullPath);
+  } catch (error) {
+    console.error("Error saving default database:", error);
+  }
+};
+
 // eventually will need a way to list entries by modEditDate - that is what is saving when entries were unlocked.
 export const exportTelemetrisToAppData = async (username) => {
   try {
@@ -514,7 +538,11 @@ export const newGame = async (startHash) => {
     // takes resources db to appdata db
     const userDbPath = await eventManager.setupUserDatabase();
 
-    const relativePath = "assets/databases/dexie-import.json";
+    let relativePath = "assets/databases/dexie-import.json";
+
+    if(startHash == "demo") {
+      const relativePath = "assets/databases/demo-backup.json";
+    }
     const fileContents = await eventManager.readAssetFile(relativePath);
 
     await db.close();
@@ -528,6 +556,8 @@ export const newGame = async (startHash) => {
       },
     });
 
+
+
     await db.open();
 
     // TODO this doesn't seem to be working yet. iF FACT IT BREAKS THE APP IF UNCOMMENTED. i'LL DEAL WIH THIS LATER.
@@ -537,9 +567,14 @@ export const newGame = async (startHash) => {
 
     // reset states
     dbHelpers.clearEvents();
+    if(startHash == "demo") {
+await setStartAvalability(54);
+await setStartAvalability(55);
+    }else {
     await setStartAvalability(startHash);
+    }
     await setDefaultParameters();
-    // resetGameVariables();  // you cannot call this here because react is stupid. Call it from where you're calling newGame because life is pain. 
+    // resetGameVariables();  // you cannot call this here because react is stupid. Call it from where you're calling newGame because life is pain.
     updateGameState("editAccess", false);
 
     // window.location.reload(); // this did wrk to force datastate refresh
