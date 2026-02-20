@@ -21,6 +21,16 @@ let globalIsAdmin = (() => {
   }
 })();
 
+let globalIsDemo = (() => {
+  try {
+    return localStorage.getItem("isDemo") === "true";
+  } catch (error) {
+    // Fallback for SSR or environments without localStorage
+    console.warn("localStorage not available:", error);
+    return false;
+  }
+})();
+
 let globalIsLoggedIn = (() => {
   try {
     return localStorage.getItem("isLoggedIn") === "true";
@@ -32,6 +42,7 @@ let globalIsLoggedIn = (() => {
 })();
 
 let isToggleAdminListenerRegistered = false;
+let isToggleDemoListenerRegistered = false;
 
 let globalGameState = {
   defaultStartHash: 30, //   Game with start with this hash on new game or logout
@@ -90,6 +101,7 @@ let globalAdminUser = {
 
 // Array to store all update functions from components
 const adminUpdateCallbacks = [];
+const demoUpdateCallbacks = [];
 const loggedInUpdateCallbacks = [];
 const gameStateUpdateCallbacks = [];
 const gameStatusUpdateCallbacks = [];
@@ -113,6 +125,7 @@ export const updateGameState = (variableName, state) => {
 
 export function GameLogic() {
   const [isAdmin, setAdmin] = useState(globalIsAdmin);
+  const [isDemo, setDemo] = useState(globalIsDemo);
   const [isLoggedIn, setLoggedIn] = useState(globalIsLoggedIn);
   const [gameState, setGameState] = useState(globalGameState);
   const [status, setStatus] = useState(globalStatus);
@@ -131,6 +144,15 @@ export function GameLogic() {
     console.log("should toggle admin " + globalIsAdmin);
   };
 
+  
+  const toggleDemo = () => {
+    globalIsDemo = !globalIsDemo;
+    // Update all components that use this state
+    localStorage.setItem("isDemo", JSON.stringify(globalIsDemo));
+    demoUpdateCallbacks.forEach((callback) => callback(globalIsDemo));
+    console.log("should toggle demo " + globalIsDemo);
+  };
+
   // Register  update functions - so they can work globally in other scripts.
   useEffect(() => {
     adminUpdateCallbacks.push(setAdmin);
@@ -140,11 +162,16 @@ export function GameLogic() {
     loggedInUpdateCallbacks.push(setLoggedIn);
     userUpdateCallbacks.push(setUser);
     adminUserUpdateCallbacks.push(setAdminUser);
+    demoUpdateCallbacks.push(setDemo);
 
 
 
     const handleToggleAdmin = () => {
       toggleAdmin();
+    };
+
+        const handleToggleDemo = () => {
+      toggleDemo();
     };
 
     //  Works in both environments
@@ -154,10 +181,18 @@ if (!isToggleAdminListenerRegistered) {
   isToggleAdminListenerRegistered = true;
 }
 
+if (!isToggleDemoListenerRegistered) {
+  window.addEventListener("toggle-demo", handleToggleDemo);
+  isToggleDemoListenerRegistered = true;
+}
+
     // Cleanup when component unmounts
     return () => {
       const adminIndex = adminUpdateCallbacks.indexOf(setAdmin);
       if (adminIndex > -1) adminUpdateCallbacks.splice(adminIndex, 1);
+
+        const demoIndex = demoUpdateCallbacks.indexOf(setDemo);
+      if (demoIndex > -1) demoUpdateCallbacks.splice(demoIndex, 1);
 
       const gameIndex = gameStateUpdateCallbacks.indexOf(setGameState);
       if (gameIndex > -1) gameStateUpdateCallbacks.splice(gameIndex, 1);
@@ -181,6 +216,7 @@ if (!isToggleAdminListenerRegistered) {
 
       // eventManager.removeListener("toggle-admin", handleToggleAdmin);
 window.removeEventListener("toggle-admin", handleToggleAdmin);
+window.removeEventListener("toggle-demo", handleToggleDemo);
 
 // isToggleAdminListenerRegistered = false;
 
@@ -295,6 +331,13 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
     // Update localStorage and all components
     localStorage.setItem("isAdmin", JSON.stringify(globalIsAdmin));
     adminUpdateCallbacks.forEach((callback) => callback(globalIsAdmin));
+  };
+
+    const setDemoState = (demoState) => {
+    globalIsDemo = demoState;
+    // Update localStorage and all components
+    localStorage.setItem("isDemo", JSON.stringify(globalIsDemo));
+    adminUpdateCallbacks.forEach((callback) => callback(globalIsDemo));
   };
 
 
@@ -435,6 +478,7 @@ window.removeEventListener("toggle-admin", handleToggleAdmin);
     setCheatCode,
     updateGameState,
     triggerEvent,
-    resetGameVariables
+    resetGameVariables,
+    isDemo, toggleDemo, setDemo: setDemoState
   };
 }

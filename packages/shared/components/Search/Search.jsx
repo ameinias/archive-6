@@ -11,6 +11,7 @@ import {eventManager} from '@utils/events';
 
 const Search = () => {
   const [val, setVal] = React.useState('');
+  const [sentTerm, setSentTerm] = React.useState('');
   const {isAdmin} = GameLogic();
   const [results, setResults] = React.useState([]);
 
@@ -82,11 +83,14 @@ const Search = () => {
         nextID = nextID + 1;
       }
     }
-
+setSentTerm(searchTerm);
+      console.log("search " + searchTerm);
     if (foundItems && foundItems.length > 0) {
       setResults(tempItems); // update state!
+      
     } else {
       setResults([]); // clear results if nothing foun
+
     }
   };
 
@@ -118,7 +122,7 @@ const Search = () => {
       </div>
 
 
-      <SearchResults results={results} />
+      <SearchResults results={results} searchterm={sentTerm}/>
 
     </>
   );

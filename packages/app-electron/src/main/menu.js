@@ -35,29 +35,39 @@ export default class MenuBuilder {
               this.mainWindow.close();
             },
           },
-               {
-              label: 'Toggle Admin',
-              accelerator: 'Ctrl+Q',
-              click: () => {
-
-               this.mainWindow.webContents.executeJavaScript(`
+          {
+            label: 'Toggle Admin',
+            accelerator: 'Ctrl+Q',
+            click: () => {
+              this.mainWindow.webContents.executeJavaScript(`
   (() => {
     const currentAdmin = localStorage.getItem('isAdmin') === 'true';
     localStorage.setItem('isAdmin', (!currentAdmin).toString());
     window.dispatchEvent(new CustomEvent('toggle-admin'));
   })();
 `);
-
-
-              },
             },
-            {
-              label: 'Toggle Debug',
-              accelerator: 'Ctrl+D',
-              click: () => {
-                this.mainWindow.webContents.send('toggle-debug');
-              },
+          },
+                    {
+            label: 'Toggle Demo',
+            accelerator: 'Ctrl+E',
+            click: () => {
+              this.mainWindow.webContents.executeJavaScript(`
+  (() => {
+    const currentDemo = localStorage.getItem('isDemo') === 'true';
+    localStorage.setItem('isDemo', (!currentDemo).toString());
+    window.dispatchEvent(new CustomEvent('toggle-demo'));
+  })();
+`);
             },
+          },
+          {
+            label: 'Toggle Debug',
+            accelerator: 'Ctrl+D',
+            click: () => {
+              this.mainWindow.webContents.send('toggle-debug');
+            },
+          },
         ],
       },
     ];
@@ -147,18 +157,30 @@ export default class MenuBuilder {
               label: 'Toggle Admin',
               accelerator: 'Command+A',
               click: () => {
-
-               this.mainWindow.webContents.executeJavaScript(`
+                this.mainWindow.webContents.executeJavaScript(`
   (() => {
     const currentAdmin = localStorage.getItem('isAdmin') === 'true';
     localStorage.setItem('isAdmin', (!currentAdmin).toString());
     window.dispatchEvent(new CustomEvent('toggle-admin'));
   })();
 `);
-
-
               },
             },
+
+                 {
+            label: 'Toggle Demo',
+            accelerator: 'Command+E',
+            click: () => {
+              this.mainWindow.webContents.executeJavaScript(`
+  (() => {
+    const currentDemo = localStorage.getItem('isDemo') === 'true';
+    localStorage.setItem('isDemo', (!currentDemo).toString());
+    window.dispatchEvent(new CustomEvent('toggle-demo'));
+  })();
+`);
+            },
+          },
+
             {
               label: 'Toggle Debug',
               accelerator: 'Command+D',
@@ -167,10 +189,10 @@ export default class MenuBuilder {
               },
             },
 
-             {
+            {
               label: 'Refresh',
               click: () => {
-                               this.mainWindow.webContents.executeJavaScript(`
+                this.mainWindow.webContents.executeJavaScript(`
   (() => {
     location.reload();
   })();
@@ -271,19 +293,19 @@ export default class MenuBuilder {
         {
           label: 'Edit',
           submenu: [
-//             {
-//               label: 'Toggle Admin',
-//               click: () => {
-//                 // Execute in renderer context
-//               this.mainWindow.webContents.executeJavaScript(`
-//   (() => {
-//     const currentAdmin = localStorage.getItem('isAdmin') === 'true';
-//     localStorage.setItem('isAdmin', (!currentAdmin).toString());
-//     window.dispatchEvent(new CustomEvent('toggle-admin'));
-//   })();
-// `);
-//               },
-//             },
+            //             {
+            //               label: 'Toggle Admin',
+            //               click: () => {
+            //                 // Execute in renderer context
+            //               this.mainWindow.webContents.executeJavaScript(`
+            //   (() => {
+            //     const currentAdmin = localStorage.getItem('isAdmin') === 'true';
+            //     localStorage.setItem('isAdmin', (!currentAdmin).toString());
+            //     window.dispatchEvent(new CustomEvent('toggle-admin'));
+            //   })();
+            // `);
+            //               },
+            //             },
             {
               label: 'Undo',
               accelerator: 'Command+Z',

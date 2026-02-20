@@ -17,7 +17,7 @@ import { addConsoleEntry, addConsoleEntryHypertext, Console, EndSequence, makeCo
 // replace back button?
 // https://mtg-dev.tech/blog/building-a-custom-go-back-button-in-react-is-harder-than-you-think
 
-const NavBar = () => {
+export const NavBarDemo = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
   const {
@@ -29,7 +29,7 @@ const NavBar = () => {
     updateGameState,
     setAdmin,
     resetGameVariables,
-    isDemo, toggleDemo
+     isDemo, toggleDemo
   } = GameLogic();
 
 
@@ -50,10 +50,9 @@ const NavBar = () => {
   };
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
- 
   const testio = async () => {
-    console.log("Demo");
-toggleDemo();
+    
+    toggleDemo();
   };
 
     const testio2 = async () => {
@@ -115,11 +114,15 @@ toggleDemo();
           {"<<"}
         </Link>
       </li>{" "} 
-      <li role="menuitem" tabIndex="0" aria-haspopup="true">
+         {isAdmin &&   <li role="menuitem" tabIndex="0" aria-haspopup="true">
+        {" "}
+        <Link to="/list" >List</Link>
+      </li>}
+      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link to={!gameState.endgameSequence ? "/" : null} title="home-button">
           Home
         </Link>
-      </li>{" "}
+      </li>{" "} */}
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         {" "}
         <Link to={!gameState.endgameSequence ? "/search" : null}>Search</Link>
@@ -135,7 +138,7 @@ toggleDemo();
         </Link>
       </li>
       {/* )} */}
-      <li role="menuitem" tabIndex="0" aria-haspopup="true">
+      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link to={!gameState.endgameSequence ? "/bookmarks" : null}>
           Bookmarks
         </Link>
@@ -150,7 +153,7 @@ toggleDemo();
         <Link to={!gameState.endgameSequence ? "/connections" : null}>
           Connections
         </Link>
-      </li>)}{" "}
+      </li>)}{" "} */}
       {(isAdmin || !isElectron) && (
         <>
           <li role="menuitem" tabIndex="0" aria-haspopup="true">
@@ -217,4 +220,4 @@ toggleDemo();
   );
 };
 
-export default NavBar;
+export default NavBarDemo;

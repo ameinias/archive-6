@@ -9,7 +9,7 @@ import { AddSubEntryForm } from "@components/entries/AddSubEntryFunc";
 import { GameLogic } from "@utils/gamelogic";
 import { SearchPageItem } from "@components/parts/ListingComponent";
 
-export function SearchResults({ results }) {
+export function SearchResults({ results, searchterm=""}) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
 
   const navigate = useNavigate();
@@ -21,7 +21,10 @@ export function SearchResults({ results }) {
   return (
     <div className="subentry-add-list">
       {results.length === 0 ? (
-        <> No results to show. </>
+        <>
+         {searchterm ? <> '{searchterm}' did not return any results. </> : <> No results to show. </>}
+       
+        </>
       ) : (
         <table>
           <tbody>

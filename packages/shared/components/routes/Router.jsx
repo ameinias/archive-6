@@ -14,6 +14,7 @@ import Login from '@components/login/Login'
 import NavBar from '@components/bars/NavBar'
 import NavBarWin from '@components/bars/NavBarWin'
 import NavBarWeb from '@components/bars/NavBarWeb'
+import NavBarDemo from '@components/bars/NavBarDemo'
 
 import ImportExport from '@components/admin/ImportExport'
 import HashImport from '@components/admin/HashImport'
@@ -69,7 +70,7 @@ function RouteTracker () {
 }
 
 export default function RouterPath () {
-  const { isAdmin, setAdmin, gameState } = GameLogic()
+  const { isAdmin, setAdmin, gameState, isDemo, setDemo } = GameLogic()
   const [dbKey, setDbKey] = useState(0)
   const [refreshKey, setRefreshKey] = useState(0)
   const { isLoggedIn, setLoggedIn } = GameLogic()
@@ -107,13 +108,17 @@ export default function RouterPath () {
   return (
     <>
       <Group className='min-h-30' orientation='vertical'>
-        {eventManager.isElectron ? <NavBar /> : <NavBarWeb />}
+        {eventManager.isElectron ? (
+          isDemo ? <NavBarDemo /> : <NavBar />
+        ) : <NavBarWeb />} Demo {isDemo ? <>'yes'</>:<>'no'</>}
+        Admin {isAdmin ? <>'yes'</>:<>'no'</>}
         <Panel minSize={100}>
           <div className='content window-body has-space'>
             <div className='container'>
               <Routes>
-                <Route path='/' element={<Home />} />
-
+                {/* <Route path='/' element={<Home />} /> */}
+{isDemo ? <Route path='/' element={<Search />} /> : <Route path='/' element={<Home />} />}
+<Route path='/list' element={<Home />}/>
                 {/* Entries ---------------------------------------------------------- */}
                 <Route path='/edit-item/:id' element={<AddEntry />} />
                 <Route

@@ -5,7 +5,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 
 export const DebugPanel = () => {
-  const { gameState, updateGameState } = GameLogic();
+  const { gameState, updateGameState, isDemo } = GameLogic();
   const friends = useLiveQuery(() => db.friends.toArray());
 
   
@@ -110,6 +110,15 @@ useEffect(() => {
           <p>
             bluescreen:{" "}
             {gameState.bluescreen ? (
+              <span className="bugHi">true</span>
+            ) : (
+              "false"
+            )}
+          </p>
+
+                    <p>
+            demo:{" "}
+            {isDemo ? (
               <span className="bugHi">true</span>
             ) : (
               "false"
