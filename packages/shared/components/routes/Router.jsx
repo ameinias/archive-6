@@ -110,8 +110,7 @@ export default function RouterPath () {
       <Group className='min-h-30' orientation='vertical'>
         {eventManager.isElectron ? (
           isDemo ? <NavBarDemo /> : <NavBar />
-        ) : <NavBarWeb />} Demo {isDemo ? <>'yes'</>:<>'no'</>}
-        Admin {isAdmin ? <>'yes'</>:<>'no'</>}
+        ) : <NavBarWeb />} 
         <Panel minSize={100}>
           <div className='content window-body has-space'>
             <div className='container'>

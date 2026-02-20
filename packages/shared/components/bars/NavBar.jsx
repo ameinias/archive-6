@@ -17,6 +17,8 @@ import { addConsoleEntry, addConsoleEntryHypertext, Console, EndSequence, makeCo
 // replace back button?
 // https://mtg-dev.tech/blog/building-a-custom-go-back-button-in-react-is-harder-than-you-think
 
+
+
 const NavBar = () => {
   const { isAdmin, toggleAdmin } = GameLogic();
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ const NavBar = () => {
   };
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
- 
+
   const testio = async () => {
     console.log("Demo");
 toggleDemo();
@@ -114,7 +116,7 @@ toggleDemo();
         >
           {"<<"}
         </Link>
-      </li>{" "} 
+      </li>{" "}
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link to={!gameState.endgameSequence ? "/" : null} title="home-button">
           Home

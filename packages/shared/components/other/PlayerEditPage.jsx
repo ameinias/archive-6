@@ -21,6 +21,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import Webcam from 'react-webcam'
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
 import { EndSequence } from '@components/other/Console'
+import { array } from 'badwords-list';
 
 // default variables - update as needed
 const defaultFauxIDStart = 'YOU-A-'
@@ -56,6 +57,7 @@ export function PlayerAddEntryForm ({}) {
   const [dbKey, setDbKey] = useState(0)
   const [animate, setAnimate] = useState(false)
 
+
   const triggerAnimation = () => {
     setAnimate(true)
     setTimeout(() => {
@@ -74,7 +76,8 @@ export function PlayerAddEntryForm ({}) {
     toggleAdmin,
     globalUser,
     gameState,
-    updateGameState
+    updateGameState,
+    isDemo
   } = GameLogic()
   const navigate = useNavigate()
   const [imgSrc, setImageSrc] = useState(null)
@@ -83,8 +86,11 @@ export function PlayerAddEntryForm ({}) {
   const [devices, setDevices] = useState([])
   const [selectedDeviceId, setSelectedDeviceId] = useState(null)
     const [showCameraSelect, setShowCameraSelect] = useState(false)
+    const blockedTerms = array;
+
 
   // const WebcamComponent = () => <Webcam />;
+  // YOU-A-389
 
   const webcamRef = React.useRef(null)
 
@@ -275,6 +281,10 @@ export function PlayerAddEntryForm ({}) {
     try {
       const items = await db.friends.toArray()
       const existingIDs = items.map(item => item.fauxID)
+      let theID;
+      if(!isDemo) theID = "DM-";
+        else theID = globalUser.userName;
+
       const numericIDs = existingIDs
         .filter(id => id.startsWith(defaultFauxIDStart))
         .map(id => parseInt(id.replace(defaultFauxIDStart, '')))
@@ -326,8 +336,9 @@ export function PlayerAddEntryForm ({}) {
 
       console.log(`Added entry with ID ${id} and title ${title}`);
 
-
-      EndSequence(navigate, id);
+if(!isDemo)
+      {  EndSequence(navigate, id);}
+    else {navigate(`/entry/${id}`);}
 
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
@@ -375,7 +386,28 @@ export function PlayerAddEntryForm ({}) {
 
   // Manage state and input field
   const handleChange = e => {
-    const { name, value } = e.target
+    let { name, value } = e.target
+
+let badword='';
+
+  // Check for blocked words using word boundaries
+  const containsBlocked = blockedTerms.some(term => {
+    const regex = new RegExp(`\\b${term}\\b`, 'gi');
+    const found = regex.test(value);
+    if (found) badword = term;
+    return found;
+  });
+
+  if (containsBlocked) {
+    // Remove all instances of the bad word with word boundaries
+    const regex = new RegExp(`\\b${badword}\\b`, 'gi');
+    value = value.replace(regex, '');
+
+    setStatusMessage(
+      `${name} contained unacceptable language. it has been removed`
+    );
+  }
+
     setFormValue({
       ...formValues,
       [name]: value
@@ -451,7 +483,7 @@ export function PlayerAddEntryForm ({}) {
 
       {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
 
-      {gameState.editAccess ? (
+      {(gameState.editAccess || isDemo) ? (
         <div title='entry title' className='row'>
           <div className='col-2'>
             <input
@@ -538,7 +570,7 @@ export function PlayerAddEntryForm ({}) {
             videoConstraints={videoConstraints}
           />
         </div>
-        {gameState.editAccess ? (
+        {(gameState.editAccess || isDemo)  ? (
           <div className='row center' title='No Edit Access'>
             <button
               onClick={capture}
@@ -602,7 +634,7 @@ export function PlayerAddEntryForm ({}) {
         </div>
       )}
 
-      {gameState.editAccess && (
+      {(gameState.editAccess || isDemo)  && (
         <>
           <div className='row'>
             <FormAssets.FormTextBox
