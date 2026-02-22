@@ -7,7 +7,6 @@ import {
   dbHelpers,
   newGame,
   saveAsDefaultDatabase,
-  saveAsDemoDatabase,
   handleJSONExport,
 } from "@utils/db";
 import { TimeLine } from "../lists/TimeLine";
@@ -72,12 +71,9 @@ export const NavBarDemo = () => {
   const restartGame = async () => {
     await newGame("demo");
     setAdmin(false);
-
-    // updateGameState("editAccess", false);
-    // updateGameState("endgameSequence", false);
    resetGameVariables();
     navigate("/");
-    console.log("restartGame");
+    console.log("restart demo Game");
   };
 
   const debugWindow = async () => {
@@ -94,7 +90,8 @@ export const NavBarDemo = () => {
 
     if (isElectron)
       if (await eventManager.showConfirm("Overwrite?")) {
-        saveAsDemoDatabase();
+        saveAsDefaultDatabase();
+        console.log("save demo.");
       } else {
         console.log("canceled overwrite.");
       }
@@ -102,14 +99,12 @@ export const NavBarDemo = () => {
   };
 
   return (
-    <ul role="menubar" className="can-hover">
+    <ul role="menubar" className="can-hover demo">
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         <Link
           variant="outline-primary"
           style={{ width: "25px", padding: "2px" }}
-          // to=''
-          // onClick={() => navigate(-1)}
-          // onClick={() => navigate(localStorage.getItem('secondLastRoute'))}
+
           to={localStorage.getItem("secondLastRoute")}
         >
           {"<<"}
@@ -119,11 +114,7 @@ export const NavBarDemo = () => {
         {" "}
         <Link to="/list" >List</Link>
       </li>}
-      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
-        <Link to={!gameState.endgameSequence ? "/" : null} title="home-button">
-          Home
-        </Link>
-      </li>{" "} */}
+
       <li role="menuitem" tabIndex="0" aria-haspopup="true">
         {" "}
         <Link to={!gameState.endgameSequence ? "/search" : null}>Search</Link>
@@ -138,23 +129,7 @@ export const NavBarDemo = () => {
           Add Entry
         </Link>
       </li>
-      {/* )} */}
-      {/* <li role="menuitem" tabIndex="0" aria-haspopup="true">
-        <Link to={!gameState.endgameSequence ? "/bookmarks" : null}>
-          Bookmarks
-        </Link>
-      </li>
-      <li role="menuitem" tabIndex="0" aria-haspopup="true">
-        <Link to={!gameState.endgameSequence ? "/hashImport" : null}>
-          Import
-        </Link>
-      </li>{" "}
-       {gameState.connectionPanel && (
-      <li role="menuitem" tabIndex="0" aria-haspopup="true">
-        <Link to={!gameState.endgameSequence ? "/connections" : null}>
-          Connections
-        </Link>
-      </li>)}{" "} */}
+
       {(isAdmin || !isElectron) && (
         <>
           <li role="menuitem" tabIndex="0" aria-haspopup="true">

@@ -295,7 +295,7 @@ export function EntryList() {
                     {gameState?.sortColumn === "date" &&
                       (gameState?.sortDirection === "asc" ? "▲" : "▼")}
                   </th>
-                  <th width="30px" onClick={() => handleSort("hexHash")}>
+                  <th width="50px" onClick={() => handleSort("hexHash")}>
                     Hex{" "}
                     {gameState?.sortColumn === "date" &&
                       (gameState?.sortDirection === "asc" ? "▲" : "▼")}

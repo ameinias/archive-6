@@ -969,7 +969,9 @@ content:"Capture Artifact";
   box-shadow: none;
 
 }
-
+.demo li a{
+  font-size:16px;
+}
 
 
 .searchbox input {

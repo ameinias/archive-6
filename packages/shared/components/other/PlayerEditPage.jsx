@@ -24,11 +24,9 @@ import { EndSequence } from '@components/other/Console'
 import { array } from 'badwords-list';
 
 // default variables - update as needed
-const {isDemo} = GameLogic();
+
 const defaultFauxIDStart = 'YOU-A-'
-const defaultHex = () => {
-  if(isDemo) {55} else {51};
-}
+const defaultHex = 51;
 
 const defaultFormValue = {
   fauxID: 'MX0000',
@@ -40,7 +38,7 @@ const defaultFormValue = {
   media: [],
   template: 'default',
   bookmark: false,
-  hexHash: [defaultHex],
+  hexHash: defaultHex,
   devNotes: '',
   modEditDate: '2008-07-21', // date modified in database
   modEdit: 'added',
@@ -60,6 +58,14 @@ export function PlayerAddEntryForm ({}) {
   const [dbKey, setDbKey] = useState(0)
   const [animate, setAnimate] = useState(false)
 
+
+
+const assignHex = () =>{
+let hex;
+
+  if(isDemo) {return [54,55]} else {return defaultHex};
+
+}
 
   const triggerAnimation = () => {
     setAnimate(true)
@@ -242,8 +248,10 @@ export function PlayerAddEntryForm ({}) {
 
   //#endregion
 
-  useEffect(() => {
-    async function fetchData () {
+  // On mount, restore if exists
+useEffect(() => {
+
+      async function fetchData () {
       // if (!itemID || itemID === "new") {
       const newID = await generateNewID()
       setFormValue({
@@ -254,8 +262,31 @@ export function PlayerAddEntryForm ({}) {
       return
     }
 
-    fetchData()
-  }, [dbKey])
+fetchData()
+// starting a feature to save a draft. I dont htink it's worth the trouble. 
+//   const saved = localStorage.getItem('playerFormDraft')
+//   if (saved) {
+//     setFormValue(JSON.parse(saved))
+//   } else {
+// fetchData()
+    
+//   }
+}, [])
+
+  // useEffect(() => {
+  //   async function fetchData () {
+  //     // if (!itemID || itemID === "new") {
+  //     const newID = await generateNewID()
+  //     setFormValue({
+  //       ...defaultFormValue,
+  //       fauxID: newID
+  //     })
+  //     setNewEntry(true)
+  //     return
+  //   }
+
+  //   fetchData()
+  // }, [dbKey])
 
   //#region ---------------    CREATE ENTRY  ------------- */
   const FormToEntry = () => {
@@ -263,7 +294,7 @@ export function PlayerAddEntryForm ({}) {
     return {
       title: formValues.title,
       fauxID: formValues.fauxID,
-      hexHash: defaultHex,
+      hexHash: assignHex(),
       description: formValues.description,
       category: 'Object',
       date: new Date(), // real date i added things
@@ -314,7 +345,16 @@ export function PlayerAddEntryForm ({}) {
 
   //#region   -------   ADD EDIT ENTRY FUNCTIONS  ---------- */
 
+async function clearEntry() {
+      const newID = await generateNewID()
+      setFiles([]);
+      setFormValue({
+        ...defaultFormValue,
+        fauxID: newID
+      })
+      setNewEntry(true)
 
+}
 
   // Add the entry to the database
   async function addEntry () {
@@ -411,10 +451,9 @@ let badword='';
     );
   }
 
-    setFormValue({
-      ...formValues,
-      [name]: value
-    })
+  const updated = { ...formValues, [name]: value }
+  setFormValue(updated)
+  localStorage.setItem('playerFormDraft', JSON.stringify(updated))
   }
 
   const handleArrayChange = e => {
@@ -432,14 +471,6 @@ let badword='';
   // Manage state and input field
   const handleIDChange = e => {
     const { name, value } = e.target
-    // Ensure the ID starts with 'MX' and is followed by numbers
-    // if (!/^MX\d+$/.test(value)) {
-    //   setIDValidWithMessage(
-    //     false,
-    //     `ID ${value} must start with "MX" followed by numbers.`,
-    //   );
-    //   return;
-    // }
     //check if the ID is unique
     db.friends
       .where('fauxID')
@@ -574,12 +605,12 @@ let badword='';
           />
         </div>
         {(gameState.editAccess || isDemo)  ? (
-          <div className='row center' title='No Edit Access'>
+          <div className='row center'>
             <button
               onClick={capture}
               disabled={false}
               className='capture-button btn-save-add-item button '
-              title='No Edit Access'
+             
             >
               capture artifact
             </button>
@@ -668,6 +699,13 @@ let badword='';
               disabled={!isFormValid}
             >
               Add
+            </button>
+                        <button
+              className='btn-save-add-item'
+              onClick={clearEntry}
+              disabled={!isFormValid}
+            >
+              Clear
             </button>
           </div>
         </>

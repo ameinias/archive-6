@@ -41,8 +41,8 @@ let globalIsLoggedIn = (() => {
   }
 })();
 
-let isToggleAdminListenerRegistered = false;
-let isToggleDemoListenerRegistered = false;
+let toggleAdminListenerRefCount = 0;
+let toggleDemoListenerRefCount = 0;
 
 let globalGameState = {
   defaultStartHash: 30, //   Game with start with this hash on new game or logout
@@ -176,15 +176,15 @@ export function GameLogic() {
 
     //  Works in both environments
 // Only register once globally
-if (!isToggleAdminListenerRegistered) {
+if (toggleAdminListenerRefCount === 0) {
   window.addEventListener("toggle-admin", handleToggleAdmin);
-  isToggleAdminListenerRegistered = true;
 }
+toggleAdminListenerRefCount++;
 
-if (!isToggleDemoListenerRegistered) {
+if (toggleDemoListenerRefCount === 0) {
   window.addEventListener("toggle-demo", handleToggleDemo);
-  isToggleDemoListenerRegistered = true;
 }
+toggleDemoListenerRefCount++;
 
     // Cleanup when component unmounts
     return () => {
@@ -215,10 +215,16 @@ if (!isToggleDemoListenerRegistered) {
         adminUserUpdateCallbacks.splice(adminUserIndex, 1);
 
       // eventManager.removeListener("toggle-admin", handleToggleAdmin);
-window.removeEventListener("toggle-admin", handleToggleAdmin);
-window.removeEventListener("toggle-demo", handleToggleDemo);
+toggleAdminListenerRefCount--;
+if (toggleAdminListenerRefCount === 0) {
+  window.removeEventListener("toggle-admin", handleToggleAdmin);
+}
 
-// isToggleAdminListenerRegistered = false;
+toggleDemoListenerRefCount--;
+if (toggleDemoListenerRefCount === 0) {
+  window.removeEventListener("toggle-demo", handleToggleDemo);
+}
+// isToggleDemoListenerRegistered = false;
 
     };
   }, []);
@@ -337,7 +343,7 @@ window.removeEventListener("toggle-demo", handleToggleDemo);
     globalIsDemo = demoState;
     // Update localStorage and all components
     localStorage.setItem("isDemo", JSON.stringify(globalIsDemo));
-    adminUpdateCallbacks.forEach((callback) => callback(globalIsDemo));
+    demoUpdateCallbacks.forEach((callback) => callback(globalIsDemo));
   };
 
 

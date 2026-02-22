@@ -155,7 +155,7 @@ export default class MenuBuilder {
           submenu: [
             {
               label: 'Toggle Admin',
-              accelerator: 'Command+A',
+              accelerator: 'Ctrl+Q',
               click: () => {
                 this.mainWindow.webContents.executeJavaScript(`
   (() => {
@@ -169,7 +169,7 @@ export default class MenuBuilder {
 
                  {
             label: 'Toggle Demo',
-            accelerator: 'Command+E',
+            accelerator: 'Ctrl+E',
             click: () => {
               this.mainWindow.webContents.executeJavaScript(`
   (() => {
@@ -183,7 +183,7 @@ export default class MenuBuilder {
 
             {
               label: 'Toggle Debug',
-              accelerator: 'Command+D',
+              accelerator: 'Ctrl+D',
               click: () => {
                 this.mainWindow.webContents.send('toggle-debug');
               },

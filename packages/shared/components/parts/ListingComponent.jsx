@@ -27,6 +27,11 @@ export function applyHexFilter(items, activeFilter) {
       const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
       return hexes.some((hex) => hex >= 100 && hex <= 200);
     });
+  } else if (activeFilter === "demo") {
+    filtered = items.filter((item) => {
+      const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
+      return hexes.some((hex) => hex >= 54 && hex <= 55);
+    });
   } else if (activeFilter === "future") {
     filtered = items.filter((item) => {
       const hexes = Array.isArray(item.hexHash) ? item.hexHash : [item.hexHash];
@@ -85,6 +90,13 @@ export function FilterList({ onFilterChange, activeFilter = "all" }) {
 
       <div className="strip">
         <span
+          className={activeFilter === "demo" ? "active" : ""}
+          onClick={() => onFilterChange("demo")}
+          style={{ cursor: "pointer", margin: "0 10px" }}
+        >
+          Demo (Hex 54-55)
+        </span>
+                <span
           className={activeFilter === "future" ? "active" : ""}
           onClick={() => onFilterChange("future")}
           style={{ cursor: "pointer", margin: "0 10px" }}
