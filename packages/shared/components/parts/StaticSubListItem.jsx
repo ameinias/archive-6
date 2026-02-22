@@ -19,7 +19,7 @@ import { BookMarkCheck } from '@components/parts/Badges'
 import DescriptionEntry from './DescriptionEntry'
 import { safeRender, safeDate } from '@utils/helper'
 
-export function StaticSubListItem ({ itemID, parentID, meta = false }) {
+export function StaticSubListItem ({ itemID, parentID, meta = false, key=0 }) {
   const { id } = useParams() // get the id from the route
   const gameState = GameLogic()
   const gameLogic = GameLogic()
@@ -145,9 +145,9 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
   return (
     <div
       ref={itemRef}
-      className={`subentry-staticentry ${
+      className={`sub-${key} subentry-staticentry ${
         gameState.gameState.level > 0 ? 'haunted' : ''
-      } ${item.unread ? 'unread-display' : 'dickie'}`}
+      } ${(item.unread && !gameLogic.isDemo) ? 'unread-display' : 'dickie'}`}
     >
       <div className='subentry-item'>
         {/* <div > */}

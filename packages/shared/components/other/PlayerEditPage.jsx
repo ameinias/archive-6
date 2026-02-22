@@ -305,7 +305,8 @@ fetchData()
       devNotes: 'player addition ',
       modEditDate: formValues.modEditDate,
       modEdit: globalUser.username,
-      displayDate: formValues.displayDate
+      displayDate: formValues.displayDate,
+      available: !formValues.available
       // lastEditedBy: parseInt(formValues.lastEditedBy, 10),
       //  triggerEvent: endGameTimer,
     }
@@ -568,7 +569,7 @@ let badword='';
         </div>
       )}
 <div className="cameraChangeParent">
-  <div><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
+  {/* <div><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
   {showCameraSelect && (
 
       <div>        {devices.length > 1 && (
@@ -587,7 +588,7 @@ let badword='';
               ))}
             </select>
           </div>
-        )} </div>)}
+        )} </div>)} */}
 </div>
       <div className='row'>
         {' '}
@@ -671,13 +672,48 @@ let badword='';
       {(gameState.editAccess || isDemo)  && (
         <>
           <div className='row'>
-            <FormAssets.FormTextBox
-              label='Display Date:'
-              name='displayDate'
-              className='form-control match'
-              formValue={formValues.displayDate.toString()}
-              onChange={handleChange}
-            />
+            <div className="col-5">
+              <FormAssets.FormTextBox
+                label='Intake Date'
+                name='displayDate'
+                className='form-control match'
+                formValue={formValues.displayDate.toString()}
+                onChange={handleChange}
+              />
+            </div>
+                          <div className="col">
+                {" "}
+                {/*// ------ available  ------*/}
+                
+                <input
+                  type="checkbox"
+                  className="formLabel"
+                  checked={formValues.available}
+                  onChange={handleCheckboxChange}
+                  name="available"
+                />
+                <label className="subFormLabel">exclude from search</label>
+              </div>
+              <div className="col-1 cameraIcon"><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
+  {showCameraSelect && (
+
+      <div  className="cameraChangeParent">        {devices.length > 1 && (
+          <div className="row" style={{ marginBottom: '10px' }}>
+            <label htmlFor='camera-select'>Select Camera: </label>
+            <select
+              id='camera-select'
+              className='form-control'
+              value={selectedDeviceId || ''}
+              onChange={(e) => setSelectedDeviceId(e.target.value)}
+            >
+              {devices.map((device) => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label || `Camera ${devices.indexOf(device) + 1}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )} </div>)}
           </div>
 
           <div title='Description' className='row'>

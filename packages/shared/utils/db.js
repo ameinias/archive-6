@@ -143,6 +143,18 @@ db.version(5.1).stores({
   events: "++id, name, type, timestamp",
 });
 
+
+// add excluse from search
+db.version(5.2).stores({
+  gamedata: "expVersion, uploadedAt, sessionStart",
+  friends:
+    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef, newWebEntry, realEditDate",
+  subentries:
+    "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef, newWebEntry, realEditDate",
+  media: "++id, name, type, size, path, uploadedAt, realEditDate",
+  events: "++id, name, type, timestamp",
+});
+
 //#endregion
 
 // Helper functions for working with entries and subentries. Some of these have switched to hooks in src/hooks/dbhooks.js

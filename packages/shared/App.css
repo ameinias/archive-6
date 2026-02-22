@@ -291,6 +291,57 @@ select[multiple] option:checked {
   width: auto;
 }
 
+.subFormLabel
+ {
+  font-weight: normal;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  margin-left:10px;
+  display: inline-block;
+  /* display: block; */
+  width: auto;
+}
+
+.subFormLabel:before {
+      /* background: none;
+    border: none;
+     box-shadow: none;
+     
+         box-sizing: none;
+    content: "";
+    display: inline-block;
+    height: auto;
+    transition: none;
+    width: auto; */
+    display:none;
+    margin-left:3px;
+}
+
+
+.subFormLabel:hover:before {
+      /* background: none;
+    border: none;
+     box-shadow: none;
+     margin-right:3px;
+         box-sizing: none;
+    content: "";
+    display: inline-block;
+    height: auto;
+    transition: none;
+    width: auto; */
+    display:none;
+}
+
+.cameraChangeParent{
+
+
+}
+
+.cameraIcon button{
+  vertical-align:middle;
+  font-size: larger;
+}
+
 .form-control {
   width: 100%;
 
@@ -807,6 +858,81 @@ content:"Capture Artifact";
   rotate: 90deg;
 }
 
+.haunted .subentry-add-list{
+display: grid;
+}
+
+.haunted .subentry-staticentry{
+/* max-width: 200px; */
+background-color:rgba(245, 245, 245, 0.5) ;
+
+}
+
+/* CSS */
+ .scattered-item {
+  /* position: absolute; */
+  background-color:none; 
+  max-width: 250px; 
+}
+
+
+/*
+.scattered-item:nth-child(1) { top: 10vh; left: 15vw; background-color:rgba(245, 245, 245, 1) ; 
+max-width: 200px;}
+.scattered-item:nth-child(2) { top: 60vh; left: 70vw; 
+background-color:rgba(245, 245, 245, 0.7) ;
+max-width: 350px;}
+.scattered-item:nth-child(3) { top: 30vh; left: 45vw; 
+  background-color:rgba(245, 245, 245, 0.7) ;
+max-width: 300px;}
+.scattered-item:nth-child(4) { top: 75vh; left: 20vw;
+max-width: 200px;  }
+.scattered-item:nth-child(5) { top: 2vh; left: 1vw; 
+max-width: 200px; } */
+
+
+
+
+/* .subentry-staticentry :nth-child(2) {
+  background-color: red;
+}
+
+.subentry-staticentry :nth-child(3) {
+  background-color: rgb(22, 218, 38);
+} */
+
+.sublist div:nth-child(1):nth-child(odd) {   border: 5px solid rgb(161, 22, 131); }
+
+.sublist div:nth-child(1):nth-child(even) { border: 5px solid  rgb(25, 22, 218); }
+
+/* 
+.subentry-staticentry:nth-child(1) {
+  border: 1px solid rgb(161, 22, 131);
+}
+
+.subentry-staticentry:nth-child(2) {
+  border: 1px solid  red;
+}
+
+.subentry-staticentry:nth-child(3) {
+  border: 1px solid  rgb(22, 218, 38);
+}
+
+.subentry-staticentry:nth-child(4) {
+  border: 1px solid  rgb(25, 22, 218);
+}
+
+.subentry-staticentry:nth-child(5) {
+  border: 1px solid  rgb(22, 218, 38);
+} */
+
+/* .metadata-section:nth-child(2) {
+  background-color: red;
+}
+
+.metadata-section:nth-child(3) {
+  background-color: rgb(22, 218, 38);
+} */
 
 
 /*   -------------------   TABLES ----------------------- */

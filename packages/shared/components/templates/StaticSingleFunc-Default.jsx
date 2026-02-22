@@ -133,7 +133,7 @@ export function StaticSingleDefault ({ itemID }) {
     )
   }
 
-  if (item.available === false) {
+  if (item.available === false && !isDemo) {
     return (
       <div className='subentry-staticentry subEntry-not-available '>
         <div className='entry-header'>
@@ -177,7 +177,7 @@ export function StaticSingleDefault ({ itemID }) {
             <BookMarkCheck itemID={item.id} type='entry' />
           </div>
           <div className='entry-title'>
-            <span className='parentIDSpan'>{item.fauxID}</span>
+            <span className='parentIDSpan'>{item.fauxID} | {(item.available === false && isDemo) && <>PRIVATE</>}</span>
             <span className='parentTitleSpan'>{item.title}</span>
           </div>
         </div>
