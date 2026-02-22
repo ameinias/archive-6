@@ -51,9 +51,14 @@ const Entry = () => {
       
       console.log(" hex 50: ", id);
       return(<div>NO ENTRY</div>);
+    } else if (entryData.template === 'messed up') {
+      return (<StaticSingleMess itemID={id} />);
     } else {
-      return (<><StaticSingleDefault itemID={id} /></> );
+      return (<StaticSingleDefault itemID={id} />);
     }
+
+      // return (<><StaticSingleDefault itemID={id} /></> );
+    
   }
 
 

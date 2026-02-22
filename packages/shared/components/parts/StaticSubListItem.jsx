@@ -107,13 +107,18 @@ export function StaticSubListItem ({ itemID, parentID, meta = false }) {
           {' '}
           {gameLogic.gameState.showDebug && (
             <>
-              {item.devNotes}
-
-              {item.hexHash
+            <p>  {item.devNotes} </p>
+             <p>  {item.description} </p>
+<p>    {item.lastEditedBy !== null && item.lastEditedBy !== undefined
+                ? researcherIDs.find(
+                    researcher => researcher.id === parseInt(item.lastEditedBy)
+                  )?.name || 'Unknown'
+                : 'Unknown User'} </p>
+           <p>   {item.hexHash
                 ? Array.isArray(item.hexHash)
                   ? item.hexHash.join(', ')
                   : dbHelpers.getHexHashCodesFromIds(item.hexHash)
-                : ''}
+                : ''}</p>
             </>
           )}
         </div>

@@ -72,6 +72,7 @@ export const NavBarDemo = () => {
     await newGame("demo");
     setAdmin(false);
    resetGameVariables();
+   updateGameState("consoleAvailable", true);
     navigate("/");
     console.log("restart demo Game");
   };

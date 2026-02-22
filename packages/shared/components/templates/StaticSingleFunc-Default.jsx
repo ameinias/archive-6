@@ -17,7 +17,7 @@ import { SelectEntry } from '@components/parts/FormAssets'
 export function StaticSingleDefault ({ itemID }) {
   const { id } = useParams() // get the id from the route
   const gameLogic = GameLogic()
-  const { gameState, globalUser } = GameLogic()
+  const { gameState, globalUser, isDemo } = GameLogic()
 
   // For the final animation
   const initialSeconds = 5 // Set the initial countdown time in seconds
@@ -56,6 +56,7 @@ export function StaticSingleDefault ({ itemID }) {
 
   useEffect(() => {
     if (!item) return
+    if(isDemo) return
 
     if (item.triggerEvent && item.unread) {
       //item.triggerEvent.length > 0

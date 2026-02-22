@@ -238,7 +238,7 @@ const number = parseInt(parts[parts.length-1])
       hexHash: hexHashValue,
       description: formValues.description,
       date: formValues.date, // real date i added things
-      parentId: formValues.parentId,
+      parentId: parseInt(formValues.parentId, 10),
       mediaSub: formValues.mediaSub,
       subCategory: formValues.subCategory,
       available: formValues.available,
@@ -775,7 +775,7 @@ const number = parseInt(parts[parts.length-1])
           </div>
         )}
       </div>
-      <div title='descrioptn' className='row'>
+      <div  className='row'>
         {' '}
         {/*// ------ Description  ------*/}
         <textarea
