@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import audioIcon from "@assets/icons/audio.png";
 import videoIcon from "@assets/icons/film.png";
 import pdfIcon from "@assets/icons/docs.png";
+import PDFembed from "@components/parts/Media/pdf"
 
 export const MediaThumbnail = ({
   fileRef,
@@ -323,7 +324,14 @@ export const MediaThumbnail = ({
     }
 
     return (
-      <div className="media media-pdf">
+
+
+
+
+      <div className="media media-pdf row">
+        {/* <div className="media media-pdf">
+  <PDFembed samplePDF={mediaDataUrl} />
+</div> */}
         <embed
           src={mediaDataUrl}
           type="application/pdf"
@@ -335,9 +343,9 @@ export const MediaThumbnail = ({
             borderRadius: "4px",
           }}
         />
-        <span className="image-subinfo">
+        <div className="image-subinfo row">
           {fileName} ({(fileSize / 1024).toFixed(2)} KB)
-        </span>
+        </div>
       </div>
     );
   }

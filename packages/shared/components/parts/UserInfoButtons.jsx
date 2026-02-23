@@ -59,7 +59,7 @@ const UserInfoButtons = () => {
             onClick={LogOut}
             title="This will delete your progress!"
           >
-            {isAdmin ? 'Log Out' : 'Log Out '}
+            {/* {isAdmin ? 'Log Out' : 'Log Out '} */} End Session
           </button> {' '}
 </div>)}
 

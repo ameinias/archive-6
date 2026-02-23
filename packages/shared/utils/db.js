@@ -148,7 +148,7 @@ db.version(5.1).stores({
 db.version(5.2).stores({
   gamedata: "expVersion, uploadedAt, sessionStart",
   friends:
-    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef, newWebEntry, realEditDate",
+    "++id, fauxID, title, description, media, category, date, displayDate, available, template, unread, hexHash, related, modEditDate, modEdit, lastEditedBy, devNotes, triggerEvent, entryRef, newWebEntry, realEditDate, transcript",
   subentries:
     "++id, fauxID, parentFauxID, subID, title, description, mediaSub, subCategory, date, displayDate,  parentId, available, template, unread, hexHash, modEditDate, modEdit, lastEditedBy, devNotes, related, triggerEvent, entryRef, newWebEntry, realEditDate",
   media: "++id, name, type, size, path, uploadedAt, realEditDate",

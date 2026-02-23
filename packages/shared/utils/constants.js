@@ -419,4 +419,4 @@ export const badHashes = [
 
 ];
 
-export const entryTemplate = ["default", "messed up", "mean", "trapped"];
+export const entryTemplate = ["default", "messed up", "mean", "trapped","PDF"];

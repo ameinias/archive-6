@@ -108,6 +108,8 @@ Missed a few version numbers here?
 <br>
 <a href="https://www.flaticon.com/free-icons/close" title="close icons">Close icons created by Bankume - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/hide" title="hide icons">Hide icons created by gravisio - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/down-arrow" title="down arrow icons">Down arrow icons created by th studio - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by iconixar - Flaticon</a>
 
 ## Starting Development
 

@@ -12,12 +12,16 @@ import { MediaDisplay } from '@components/parts/Media/MediaDisplay'
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
 import DescriptionEntry from '@components/parts/DescriptionEntry'
 import { MediaEntryDisplay } from '@components/parts/Media/MediaEntryDisplay'
-import { SelectEntry } from '@components/parts/FormAssets'
+import { SelectEntry, Arrow } from '@components/parts/FormAssets'
+import { useToggle } from "@hooks/hooks";
+
 
 export function StaticSingleDefault ({ itemID }) {
   const { id } = useParams() // get the id from the route
   const gameLogic = GameLogic()
   const { gameState, globalUser, isDemo } = GameLogic()
+    const [toggleTranscript, setToggleTranscript] = useToggle(false);
+
 
   // For the final animation
   const initialSeconds = 5 // Set the initial countdown time in seconds
@@ -103,6 +107,7 @@ export function StaticSingleDefault ({ itemID }) {
     switch (actionMeta.action) {
       case 'remove-value':
       case 'pop-value':
+        console.log("pop");
         if (actionMeta.removedValue.isFixed) {
           return
         }
@@ -111,7 +116,7 @@ export function StaticSingleDefault ({ itemID }) {
         // newValue = filteredFriends.filter((v) => v.isFixed);
         break
     }
-
+console.log("change the   value!!!" + JSON.stringify(newValue));
     db.friends.update(Number(itemID), {
       entryRef: newValue
     })
@@ -181,7 +186,7 @@ export function StaticSingleDefault ({ itemID }) {
             <span className='parentTitleSpan'>{item.title}</span>
           </div>
         </div>
-        <div id='Metadata' className="flex metadata-section">
+        <div id='Metadata' className={`${item.template?.includes('PDF') ? 'pdfParent' : 'flex'} butts metadata-section`}>
           <div className='metadata-subentries metadata-subsection  col-4'>
             <div>
               <b>Category:</b> {item.category}{' '}
@@ -212,6 +217,17 @@ export function StaticSingleDefault ({ itemID }) {
                 <DescriptionEntry string={item.description} />
               </div>
             )}
+
+                    {/* <div className="button-row div-dash"> */}
+          <button onClick={setToggleTranscript} className="toggle-button"><Arrow collapsed={toggleTranscript} />Transcript</button>
+          {/* </div> */}
+            {toggleTranscript && (
+        <div className="metadata-subsection">
+          <DescriptionEntry string={item.transcript} />
+         
+        </div>
+      )}
+
           </div>
 
           <MediaEntryDisplay itemID={item.id} type='entry' maxWidth='900px' />
@@ -235,7 +251,7 @@ export function StaticSingleDefault ({ itemID }) {
                   >
                     {ref.fauxID}{' '}
                   </Link></span>
-                  <span className="col-2">{ref.author}</span>
+                  <span className="col-2">by: {ref.author}</span>
                 </span>
               ))}
             </div>

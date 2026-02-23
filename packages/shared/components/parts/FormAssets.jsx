@@ -9,6 +9,9 @@ import { useLiveQuery } from "dexie-react-hooks";
 import Select from "react-select"; // https://react-select.com/home#getting-started
 import { applyHexFilter } from "@components/parts/ListingComponent";
 
+import closedIcon from "@assets/icons/left-and-right.png";
+import openIcon from "@assets/icons/down-arrow.png";
+
 import Quill from 'quill';
 // Or if you only need the core build
 // import Quill from 'quill/core';
@@ -168,6 +171,7 @@ export function SelectEntry({
   filterGameState = false,
   includeSubentries = true,
   displayTrueID = true,
+  author="admin"
 }) {
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
@@ -220,6 +224,7 @@ export function SelectEntry({
             lastEditedBy: item.lastEditedBy,
             triggerEvent: item.triggerEvent,
             available: item.available,
+            author: "admin"
           });
           nextID = nextID + 1;
         }
@@ -253,6 +258,7 @@ export function SelectEntry({
           lastEditedBy: item.lastEditedBy,
           triggerEvent: item.triggerEvent,
           available: item.available,
+          author: "admin"
         });
         nextID = nextID + 1;
       }
@@ -268,6 +274,7 @@ export function SelectEntry({
     switch (actionMeta.action) {
       case "remove-value":
       case "pop-value":
+        console.log("pop");
         if (actionMeta.removedValue.isFixed) {
           return;
         }
@@ -307,10 +314,32 @@ export function SelectEntry({
   );
 }
 
+export function Arrow({ collapsed = true }){
 
+  // import closedIcon / openIcon 
+
+
+
+  if(!collapsed) { return (       <>   <img
+              src={closedIcon}
+              alt='open'
+              style={{ width: "10px", height: "10px", float:"left" }}
+              className="thumb-symbol"
+            /></>);}
+  else {return  (      <>    <img
+              src={openIcon}
+              alt='close'
+              style={{ width: "10px", height: "10px", float:"left"  }}
+              className="thumb-symbol"
+            /></>);}
+
+
+}
 export function DescriptionBox({
             value = "",
           onChange = () => {},
+          placeholder="Description",
+          name="description"
 
 }){
 
@@ -318,8 +347,8 @@ export function DescriptionBox({
             <textarea
           rows={4}
           className="form-control"
-          name="description"
-          placeholder="Description"
+          name={name}
+          placeholder={placeholder}
           value={value}
           onChange={onChange}
         />

@@ -265,20 +265,18 @@ function ImportExport() {
         type: "sub_entry",
       }));
 
+ 
+
       const combinedData = [...processedFriends, ...processedSubentries];
 
       const selectedFields = [
         "fauxID",
-        // "category",
         "hexHashCodes",
-        // "subCategory",
       ];
 
       // Map field names to display names for CSV headers
       const fieldDisplayNames = {
         fauxID: "ID",
-        // category: "RecordType",
-        // subCategory: "aRecordType",
         hexHashCodes: "hexHashCodes",
       };
 
@@ -316,7 +314,7 @@ function ImportExport() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "database-export-backup-1996FINAL-v3.csv";
+      a.download = "database-export-backup-1996FINAL-v4.csv";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -421,6 +419,7 @@ function ImportExport() {
     }
   };
 
+  // I dont think this is in use right now. 
   const peeak = async (file) => {
     const importMeta = await peakImportFile(file);
 
@@ -523,7 +522,7 @@ function ImportExport() {
     }
   };
 
-  //#region handlers
+  //#region ----------- handlers
 
   const handleDragOver = (event) => {
     event.stopPropagation();
@@ -587,6 +586,8 @@ const handleFileAppend = async (event) => {
 
 
   //#endregion
+
+ //#region --------- REETURN 
 
   return (
     <>
@@ -730,6 +731,6 @@ const handleFileAppend = async (event) => {
     </>
   );
 }
-
+  //#endregion
 // export newGame;
 export default ImportExport;

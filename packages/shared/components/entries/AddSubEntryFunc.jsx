@@ -20,7 +20,7 @@ import { eventManager } from '@utils/events'
 import { useToggle } from '@hooks/hooks'
 import * as EditableFields from '@components/parts/EditableFields'
 import { safeRender, safeDate, ensureArray } from '@utils/helper';
-import {SelectEntry} from "@components/parts/FormAssets";
+import {SelectEntry,Arrow} from "@components/parts/FormAssets";
 
 // onFinishEdit calls back to ListSubEntries to close the toggle
 export function AddSubEntryForm ({
@@ -597,7 +597,8 @@ const number = parseInt(parts[parts.length-1])
           className='button-small'
           onClick={() => setCollapsed(!collapsed)}
         >
-          {collapsed ? '▷' : '▽'}
+          {/* {collapsed ? '▷' : '▽'} */}
+          <Arrow collapsed={collapsed} />
         </button>{' '}
         {(formValues.triggerEvent != "" && formValues.triggerEvent != null) ? (
                         <a title={formValues.triggerEvent}>⚡|</a>
@@ -636,7 +637,7 @@ const number = parseInt(parts[parts.length-1])
             className='button-small'
             onClick={() => setCollapsed(!collapsed)}
           >
-            {collapsed ? '▷' : '▽'}
+            <Arrow collapsed={false} /> 
           </button>
         </div>
         <div className='col-3'>

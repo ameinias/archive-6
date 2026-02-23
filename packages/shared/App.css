@@ -1309,6 +1309,8 @@ ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
   width: 100%;
   height: 620px;
   /* border:#18db43 1px solid;  */
+   max-width: 1250px;
+   padding-bottom:20px;
 }
 
 .media-thumbnail>.media-pdf {
@@ -1437,6 +1439,7 @@ ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
     top: 10px;
     right: 10px; */
   z-index: 1000;
+  width:60px;
 }
 
 .debugInfo {
@@ -1844,6 +1847,15 @@ textarea {
 }
 
 .voice {}
+.pdfParent{
+  display: block!important;
+}
+
+.pdfParent .metadata-subsection{
+width:100%;
+
+}
+
 
 .metadata-section{
   display:flex;

@@ -54,6 +54,7 @@ const defaultFormValue = {
   entryRef: [],
   newWebEntry: !isElectron,
   realEditDate: new Date().toISOString().split('T')[0],
+  transcript:""
 };
 
 export function AddEntryForm({ itemID, parentID, isSubEntry }) {
@@ -67,6 +68,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   const [dbKey, setDbKey] = useState(0);
   const [animate, setAnimate] = useState(false);
 
+
   const triggerAnimation = () => {
     setAnimate(true);
     setTimeout(() => {
@@ -79,6 +81,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
   const [toggleAdminSection, setToggleAdminSection] = useToggle(false);
   const [toggleEntryRef, setToggleEntryRef] = useToggle(false);
     const [toggleMedia, setToggleMedia] = useToggle(false);
+  const [toggleTranscript, setToggleTranscript] = useToggle(false);
 
   // import functions
   const { setStatusMessage, isAdmin, toggleAdmin, gameState, updateGameState } =
@@ -129,6 +132,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           entryRef: entry.entryRef || [],
           newWebEntry: entry.newWebEntry || false,
           realEditDate: entry.realEditDate || new Date().toLocaleDateString(),
+          transcript: entry.transcript || ""
         });
         savedID = entry.id;
         setNewEntry(false);
@@ -205,6 +209,7 @@ return normalizedDate;
       unread: formValues.unread,
       entryRef: formValues.entryRef,
       newWebEntry: formValues.newWebEntry,
+      transcript: formValues.transcript
     };
   };
 
@@ -254,6 +259,7 @@ return normalizedDate;
       unread: formValues.unread,
       entryRef: formValues.entryRef,
       newWebEntry: formValues.newWebEntry,
+      transcript: formValues.transcript
     };
   };
 
@@ -673,6 +679,7 @@ formValues.date = new Date().toISOString().split('T')[0];
         <FormAssets.DescriptionBox
          value={formValues.description}
           onChange={handleChange}
+          name="description"
           />
               {/* <Editor
         ref={quillRef}
@@ -723,10 +730,27 @@ formValues.date = new Date().toISOString().split('T')[0];
             includeSubentries={true}
             label="related entries"
             displayTrueID="true"
-            author=""
+            author="admin"
           />
         </div>
       )}
+
+        <div className="button-row div-dash">
+          <button onClick={setToggleTranscript} className="toggle-button">Transcript</button>
+          </div>
+            {toggleTranscript && (
+        <div id="entryRef" className="row">
+          <FormAssets.DescriptionBox
+         value={formValues.transcript}
+          onChange={handleChange}
+          placeholder="Transcript"
+          name="transcript"
+          />
+         
+        </div>
+      )}
+
+      
 
       <div title="admin">
         <div className="button-row div-dash">
