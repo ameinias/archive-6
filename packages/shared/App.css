@@ -875,6 +875,58 @@ background-color:rgba(245, 245, 245, 0.5) ;
   max-width: 250px; 
 }
 
+.mason{
+max-width: 250px; 
+min-height: 50px;
+min-width: 50px;
+
+
+}
+.mason-header
+{
+  width:250px;
+  min-height: 50px;
+
+}
+
+.masonMini{
+  width:50px;
+   rotate: 30deg;
+
+}
+
+.masonRotate{
+rotate: 90deg;
+
+}
+
+.short-desc
+{
+
+/* rotate: 90deg; */
+max-width: 200px; 
+max-height: 200px; 
+}
+
+.short-desc .subentry-desc
+{
+
+rotate: 90deg;
+max-width: 230px; 
+max-height: 200px; 
+}
+
+
+
+.long-desc
+{
+  max-width: 700px; 
+}
+
+.med-desc
+{
+  max-width: 300px; 
+}
 
 /*
 .scattered-item:nth-child(1) { top: 10vh; left: 15vw; background-color:rgba(245, 245, 245, 1) ; 
@@ -901,9 +953,9 @@ max-width: 200px; } */
   background-color: rgb(22, 218, 38);
 } */
 
-.sublist div:nth-child(1):nth-child(odd) {   border: 5px solid rgb(161, 22, 131); }
+/* .sublist div:nth-child(1):nth-child(odd) {   border: 5px solid rgb(161, 22, 131); }
 
-.sublist div:nth-child(1):nth-child(even) { border: 5px solid  rgb(25, 22, 218); }
+.sublist div:nth-child(1):nth-child(even) { border: 5px solid  rgb(25, 22, 218); } */
 
 /* 
 .subentry-staticentry:nth-child(1) {

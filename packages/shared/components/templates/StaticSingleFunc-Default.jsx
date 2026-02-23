@@ -214,7 +214,8 @@ export function StaticSingleDefault ({ itemID }) {
             )}
           </div>
 
-          <MediaEntryDisplay itemID={item.id} type='entry' />
+          <MediaEntryDisplay itemID={item.id} type='entry' maxWidth='900px' />
+
         </div>
         {item.entryRef &&
           Array.isArray(item.entryRef) &&

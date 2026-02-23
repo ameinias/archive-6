@@ -3,7 +3,7 @@ import { db, dbHelpers } from "@utils/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { MediaThumbnail } from "@components/parts/Media/MediaThumbnail.jsx";
 
-export function MediaEntryDisplay({ itemID, type = "entry" }) {
+export function MediaEntryDisplay({ itemID, type = "entry", maxWidth="400px" }) {
   const [refreshKey, setRefreshKey] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -42,12 +42,12 @@ export function MediaEntryDisplay({ itemID, type = "entry" }) {
             <div
               key={index}
               className="media-thumbnail"
-              style={{ maxWidth: "400px" }}
+              style={{ maxWidth: maxWidth }}
             >
               <MediaThumbnail
                 key={index}
                 fileRef={file}
-                maxHeight={"400px"}
+                maxHeight={maxWidth}
                 hasData={false}
               />
               {/* {file.name} ({(file.size / 1024).toFixed(2)} KB) */}

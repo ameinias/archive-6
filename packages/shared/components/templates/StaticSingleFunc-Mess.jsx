@@ -45,6 +45,14 @@ const masonryOptions = {
 
   const allFriends = useLiveQuery(() => db.friends.toArray(), [])
 
+  const [randomizedItems, setRandomizedItems] = useState([]);
+
+// useEffect(() => {
+//   const shuffled = [...allItems].sort(() => Math.random() - 0.5);
+//   setRandomizedItems(shuffled);
+// }, [allItems]);
+
+
   // trying makeTrue-playerAddEntry for now
   useEffect(() => {
     const markAsRead = async () => {
@@ -173,12 +181,9 @@ const masonryOptions = {
     )
   }
 
-  return (
-    <div className='haunted' key={item.id}>
-      {/* <h1>Time Remaining: {seconds}s</h1> */}
-      {/* {friend.map((item) => ( */}
-
-        <div className='entry-header'>
+  const allItems = [
+  // Header item
+          <div className=' mason-header'>
           {' '}
           <div style={{}}>
             <BookMarkCheck itemID={item.id} type='entry' />
@@ -187,49 +192,64 @@ const masonryOptions = {
             <span className='parentIDSpan'>{item.fauxID}</span>
             <span className='parentTitleSpan'>{item.title}</span>
           </div>
-        </div>
-        <div id='Metadata' className="flex metadata-section">
-          <div className='metadata-subentries metadata-subsection  col-4'>
-            <div>
+        </div>,
+
+            <div className="mason">
               <b>Category:</b> {item.category}{' '}
-            </div>
-            <div>
+            </div>,
+
+            <div className="mason">
               <b>Circa:</b>{' '}
               {item.displayDate
                 ? typeof item.displayDate === 'string'
                   ? item.displayDate
                   : new Date(item.displayDate).toLocaleDateString()
                 : 'unknown'}
-            </div>
+            </div>,
 
-            {subEntryOfParent
+             <div className="mason">
+                <DescriptionEntry string={item.description} />
+              </div>,
+
+
+            //  <div className="mason"><MediaEntryDisplay itemID={item.id} type='entry' /></div>,
+
+            ...item.media.map((file, index) => {
+          return (
+            <div
+              key={index}
+              className="media-thumbnail"
+              style={{ maxWidth: "300px" }}
+            >
+              <MediaThumbnail
+                key={index}
+                fileRef={file}
+                maxHeight={"400px"}
+                hasData={false}
+              />
+              {/* {file.name} ({(file.size / 1024).toFixed(2)} KB) */}
+            </div>
+          );
+        }),
+
+
+
+
+
+...subEntryOfParent
               .filter(item => item.subCategory.toLowerCase() === 'metadata')
               .map(item => (
-                <div className="subcage" key={item.id}>asda
+                <div className="mason" key={item.id}>
                   <StaticSubListItem
                     itemID={item.id}
                     parentID={item.parentId}
                     meta={true}
                   />
                 </div>
-              ))}
+              )),
 
-            {item.description && (
-              <div className=' flex'>
-                <DescriptionEntry string={item.description} />
-              </div>
-            )}
-          </div>
-
-          <MediaEntryDisplay itemID={item.id} type='entry' />
-        </div>
-        {item.entryRef &&
-          Array.isArray(item.entryRef) &&
-          item.entryRef.length != 0 && (
-            <div className='subentry-add-list flex'>
-              <h2>Related </h2>
-              {item.entryRef.map((ref, index) => (
-                <span className = "addedRef" key={index}>
+          ...item.entryRef.map((ref, index) => (
+                <div className = "mason masonMini" key={index}>
                  <span className="col-10"> <Link
                     to={`/entry/${ref.originId}`}
                     title={
@@ -242,61 +262,156 @@ const masonryOptions = {
                     {ref.fauxID}{' '}
                   </Link></span>
                   <span className="col-2">{ref.author}</span>
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* TODO - update this to select author from dropdown before adding.  */}
-           {gameLogic.gameState.connectionEdit && (
-          <div>
-            <SelectEntry
-              value={item.entryRef}
-              onChange={handleRef}
-              filterAvailable={true}
-              name='ref'
-              includeSubentries={false}
-              label='Add / Remove Connections'
-              displayTrueID='false'
-              author={gameLogic.globalUser.username}
-            />
-          </div>
-)}{" "}
-
-
-        {/* Show subentries if they exist */}
-        {subEntryOfParent.filter(
-          item => item.subCategory.toLowerCase() !== 'metadata'
-        ).length != 0 && (
-          <div id='subentries' className='subentry-add-list flex'>
-            <h2>Logs </h2>
-            <div className="scatter-parent" >
-            <Masonry
-                className={'my-gallery-class'} // default ''
-               options={masonryOptions} // default {}
-            >
-            {subEntryOfParent
-              .filter(item => item.subCategory.toLowerCase() !== 'metadata')
-              .map(item => (
-
-
-                <div key={item.id} className="scattered-item">
-                  <StaticSubListItem
-                    itemID={item.id}
-                    parentID={item.parentId}
-                  />
                 </div>
+              )),
 
 
-              ))}
-</Masonry>
 
-              </div>
-          </div>
-        )}
-
- 
-      {gameLogic.gameState.showDebug && <>{item.devNotes}</>}
+  
+  // Dynamic items
+  ...subEntryOfParent.filter(item => item.subCategory.toLowerCase() !== 'metadata').map(item => (
+    <div key={item.id} className={`scattered-item ${
+  item.description.length > 600 ? 'long-desc' : 
+  item.description.length > 400 ? 'med-desc' : 'short-desc'
+}`} >
+      <StaticSubListItem itemID={item.id} parentID={item.parentId} />
     </div>
-  )
+  )),
+  
+];
+
+
+
+  return (
+        <div className='haunted' key={item.id}>
+  <Masonry options={masonryOptions}>
+          {[...allItems].sort(() => Math.random() - 0.5)}
+  </Masonry>
+  </div>
+);
+
+
+//   return (
+//     <div className='haunted' key={item.id}>
+//       {/* <h1>Time Remaining: {seconds}s</h1> */}
+//       {/* {friend.map((item) => ( */}
+
+//         <div className='entry-header'>
+//           {' '}
+//           <div style={{}}>
+//             <BookMarkCheck itemID={item.id} type='entry' />
+//           </div>
+//           <div className='entry-title'>
+//             <span className='parentIDSpan'>{item.fauxID}</span>
+//             <span className='parentTitleSpan'>{item.title}</span>
+//           </div>
+//         </div>
+//         <div id='Metadata' className="flex metadata-section">
+//           <div className='metadata-subentries metadata-subsection  col-4'>
+//             <div>
+//               <b>Category:</b> {item.category}{' '}
+//             </div>
+//             <div>
+//               <b>Circa:</b>{' '}
+//               {item.displayDate
+//                 ? typeof item.displayDate === 'string'
+//                   ? item.displayDate
+//                   : new Date(item.displayDate).toLocaleDateString()
+//                 : 'unknown'}
+//             </div>
+
+//             {subEntryOfParent
+//               .filter(item => item.subCategory.toLowerCase() === 'metadata')
+//               .map(item => (
+//                 <div className="subcage" key={item.id}>asda
+//                   <StaticSubListItem
+//                     itemID={item.id}
+//                     parentID={item.parentId}
+//                     meta={true}
+//                   />
+//                 </div>
+//               ))}
+
+//             {item.description && (
+//               <div className=' flex'>
+//                 <DescriptionEntry string={item.description} />
+//               </div>
+//             )}
+//           </div>
+
+//           <MediaEntryDisplay itemID={item.id} type='entry' />
+//         </div>
+//         {item.entryRef &&
+//           Array.isArray(item.entryRef) &&
+//           item.entryRef.length != 0 && (
+//             <div className='subentry-add-list flex'>
+//               <h2>Related </h2>
+//               {item.entryRef.map((ref, index) => (
+//                 <span className = "addedRef" key={index}>
+//                  <span className="col-10"> <Link
+//                     to={`/entry/${ref.originId}`}
+//                     title={
+//                       ref.available
+//                         ? `View entry ${ref.title}`
+//                         : 'NOT AVAILABLE'
+//                     }
+//                     className='mention-link'
+//                   >
+//                     {ref.fauxID}{' '}
+//                   </Link></span>
+//                   <span className="col-2">{ref.author}</span>
+//                 </span>
+//               ))}
+//             </div>
+//           )}
+
+//           {/* TODO - update this to select author from dropdown before adding.  */}
+//            {gameLogic.gameState.connectionEdit && (
+//           <div>
+//             <SelectEntry
+//               value={item.entryRef}
+//               onChange={handleRef}
+//               filterAvailable={true}
+//               name='ref'
+//               includeSubentries={false}
+//               label='Add / Remove Connections'
+//               displayTrueID='false'
+//               author={gameLogic.globalUser.username}
+//             />
+//           </div>
+// )}{" "}
+
+//             <Masonry
+//                 className={'my-gallery-class'} // default ''
+//                options={masonryOptions} // default {}
+//             >
+//         {/* Show subentries if they exist */}
+//         {subEntryOfParent.length != 0 && (
+//           <>
+//             <h2>Logs </h2>
+//             <div className="scatter-parent" >
+
+//             {subEntryOfParent
+//               .map(item => (
+
+
+//                 <div key={item.id} className="scattered-item">
+//                   <StaticSubListItem
+//                     itemID={item.id}
+//                     parentID={item.parentId}
+//                   />
+//                 </div>
+
+
+//               ))}
+
+//               </div>
+//           </>
+//         )}
+
+//  </Masonry>
+
+//       {gameLogic.gameState.showDebug && <>{item.devNotes}</>}
+//     </div>
+//   )
 }
