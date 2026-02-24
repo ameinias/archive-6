@@ -517,6 +517,9 @@ export const saveAsDefaultDatabase = async () => {
 // eventually will need a way to list entries by modEditDate - that is what is saving when entries were unlocked.
 export const exportTelemetrisToAppData = async (username) => {
   try {
+
+    newTelemetrics(username);
+    return;
     const blob = await db.export({ prettyJson: true });
 
     const content = await blob.text();
@@ -543,6 +546,96 @@ export const exportTelemetrisToAppData = async (username) => {
     console.error("Error saving telemetrics:", error);
   }
 };
+
+  const newTelemetrics = async (username) => {
+    try {
+      const events = await db.events.toArray();
+
+
+      // // Process data and convert hexHash IDs to names
+      // const processedFriends = friends.map((item) => ({
+      //   ...item,
+      //   hexHashCodes: item.hexHash
+      //     ? dbHelpers.getHexHashCodesFromIds(item.hexHash).join(", ")
+      //     : "",
+      //   type: "main_entry",
+      // }));
+
+
+      // const combinedData = [...processedFriends, ...processedSubentries];
+
+      const selectedFields = [
+        "id",
+        "name",
+        "type",
+        "timestamp",
+      ];
+
+
+
+      // Create CSV content with custom headers
+      let csvContent =
+        selectedFields.join(",") +
+        "\n";
+
+      events.forEach((row) => {
+        const values = selectedFields.map((field) => {
+          let value = row[field];
+
+          // Handle arrays/objects by converting to string
+          if (Array.isArray(value)) {
+            value = value.join("; "); // Join array elements with semicolon
+          } else if (typeof value === "object" && value !== null) {
+            value = JSON.stringify(value);
+          }
+
+          // Escape commas and quotes for CSV
+          if (
+            typeof value === "string" &&
+            (value.includes(",") || value.includes('"'))
+          ) {
+            value = `"${value.replace(/"/g, '""')}"`;
+          }
+
+          return value || "";
+        });
+        csvContent += values.join(",") + "\n";
+      });
+
+      // Create and download CSV file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      // const url = URL.createObjectURL(blob);
+      // const a = document.createElement("a");
+      // a.href = url;
+      // const date = new Date().toISOString().split("T")[0];
+      // a.download = "archiveListing-" + date + ".csv";
+      // //  a.download = "archiveListing.csv";
+      // document.body.appendChild(a);
+      // a.click();
+      // a.remove();
+      // URL.revokeObjectURL(url);
+
+          const content = await blob.text();
+
+    const now = new Date();
+
+    // Get date string and replace slashes with hyphens
+    const datePart = now.toLocaleDateString().replace(/\//g, "-");
+
+    // Get time string
+    const timePart = now.toLocaleTimeString().replace(/:/g, "-");
+
+    const combined = `${datePart} ${timePart}`;
+const filename = "telemetrics-" + username + "-" + combined + ".csv";
+
+       await eventManager.saveTelemetricsFile(filename, content);
+
+      console.log("CSV export with events complete");
+    } catch (error) {
+      console.error("CSV Export error:", error);
+      console.log("CSV export failed: " + error.message);
+    }
+  };
 
 export const newGame = async (startHash) => {
   try {

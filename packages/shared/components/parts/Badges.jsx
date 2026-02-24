@@ -79,6 +79,7 @@ const entry = dbHooks.useReturnEntryOrSubentry(itemID, type);
       console.log(`Toggling bookmark for itemID ${itemID} to ${newBookmarkState}`);
 
       await dbHooks.updateEntryProperty(itemID, type, { bookmark: newBookmarkState });
+          dbHelpers.addEvent('bookmarked: ' + entry.title + " available: " + entry.available, 'bookmark');
 
     //   }
  } catch (error) {

@@ -303,17 +303,17 @@ select[multiple] option:checked {
 }
 
 .subFormLabel:before {
-      /* background: none;
+       background: none;
     border: none;
      box-shadow: none;
-     
+
          box-sizing: none;
     content: "";
     display: inline-block;
     height: auto;
     transition: none;
-    width: auto; */
-    display:none;
+    width: auto;
+    display:none!important;
     margin-left:3px;
 }
 
@@ -871,12 +871,12 @@ background-color:rgba(245, 245, 245, 0.5) ;
 /* CSS */
  .scattered-item {
   /* position: absolute; */
-  background-color:none; 
-  max-width: 250px; 
+  background-color:none;
+  max-width: 250px;
 }
 
 .mason{
-max-width: 250px; 
+max-width: 250px;
 min-height: 50px;
 min-width: 50px;
 
@@ -904,42 +904,42 @@ rotate: 90deg;
 {
 
 /* rotate: 90deg; */
-max-width: 200px; 
-max-height: 200px; 
+max-width: 200px;
+max-height: 200px;
 }
 
 .short-desc .subentry-desc
 {
 
 rotate: 90deg;
-max-width: 230px; 
-max-height: 200px; 
+max-width: 230px;
+max-height: 200px;
 }
 
 
 
 .long-desc
 {
-  max-width: 700px; 
+  max-width: 700px;
 }
 
 .med-desc
 {
-  max-width: 300px; 
+  max-width: 300px;
 }
 
 /*
-.scattered-item:nth-child(1) { top: 10vh; left: 15vw; background-color:rgba(245, 245, 245, 1) ; 
+.scattered-item:nth-child(1) { top: 10vh; left: 15vw; background-color:rgba(245, 245, 245, 1) ;
 max-width: 200px;}
-.scattered-item:nth-child(2) { top: 60vh; left: 70vw; 
+.scattered-item:nth-child(2) { top: 60vh; left: 70vw;
 background-color:rgba(245, 245, 245, 0.7) ;
 max-width: 350px;}
-.scattered-item:nth-child(3) { top: 30vh; left: 45vw; 
+.scattered-item:nth-child(3) { top: 30vh; left: 45vw;
   background-color:rgba(245, 245, 245, 0.7) ;
 max-width: 300px;}
 .scattered-item:nth-child(4) { top: 75vh; left: 20vw;
 max-width: 200px;  }
-.scattered-item:nth-child(5) { top: 2vh; left: 1vw; 
+.scattered-item:nth-child(5) { top: 2vh; left: 1vw;
 max-width: 200px; } */
 
 
@@ -957,7 +957,7 @@ max-width: 200px; } */
 
 .sublist div:nth-child(1):nth-child(even) { border: 5px solid  rgb(25, 22, 218); } */
 
-/* 
+/*
 .subentry-staticentry:nth-child(1) {
   border: 1px solid rgb(161, 22, 131);
 }

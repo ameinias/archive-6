@@ -3,7 +3,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { EntryList } from '../lists/ListEditEntry';
 import {StaticList} from '../lists/StaticList';
 import React from 'react';
-import { db } from '@utils/db'; // import the database
+import { dbHelpers, db } from '@utils/db'; // import the database
 import { useLiveQuery } from 'dexie-react-hooks';
 import { SearchResults } from './Searchresults';
 import { GameLogic } from '@utils/gamelogic';
@@ -12,7 +12,7 @@ import {eventManager} from '@utils/events';
 const Search = () => {
   const [val, setVal] = React.useState('');
   const [sentTerm, setSentTerm] = React.useState('');
-  const {isAdmin} = GameLogic();
+  const {isAdmin, isDemo} = GameLogic();
   const [results, setResults] = React.useState([]);
 
   const friends = useLiveQuery(() => db.friends.toArray());
@@ -66,7 +66,7 @@ const Search = () => {
           item.description.toLowerCase().includes(searchTermLower)),
     );
 
-    if (foundSubItems) {
+    if (foundSubItems && !isDemo) {
       for (const subItem of foundSubItems) {
         // Add the subitem to the results with its parentId
         tempItems.push({
@@ -84,6 +84,9 @@ const Search = () => {
       }
     }
 setSentTerm(searchTerm);
+
+dbHelpers.addEvent('searched: ' + searchTerm, 'search');
+
       console.log("search " + searchTerm);
     if (foundItems && foundItems.length > 0) {
       setResults(tempItems); // update state!

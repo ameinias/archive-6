@@ -8,14 +8,14 @@ export const DebugPanel = () => {
   const { gameState, updateGameState, isDemo } = GameLogic();
   const friends = useLiveQuery(() => db.friends.toArray());
 
-  
+
 useEffect(() => {
   const handleToggleDebug = () => {
     updateGameState('showDebug', !gameState.showDebug);
   };
-  
+
   window.addEventListener('toggleDebug', handleToggleDebug);
-  
+
   return () => {
     window.removeEventListener('toggleDebug', handleToggleDebug);
   };
@@ -32,8 +32,10 @@ useEffect(() => {
       updateGameState("connectionPanel", !gameState.connectionPanel);
     if (value === "connectionEdit")
       updateGameState("connectionEdit", !gameState.connectionEdit);
+        if (value === "editAccess")
+      updateGameState("editAccess", !gameState.editAccess);
 
-    
+
   };
 
   return (
@@ -41,11 +43,11 @@ useEffect(() => {
       {gameState.showDebug && (
         <div className="debugInfo">
           <p>
-            editAccess: sdfsd
+            <Link onClick={() => toggleConsole("editAccess")}>editAccess:</Link>
             {gameState.editAccess ? (
               <span className="bugHi">true</span>
             ) : (
-              "fals  e"
+              "false"
             )}
           </p>
           <p>activeFilter: {gameState.activeFilter} </p>

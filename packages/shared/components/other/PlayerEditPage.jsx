@@ -21,12 +21,12 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import Webcam from 'react-webcam'
 import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx'
 import { EndSequence } from '@components/other/Console'
-import { array } from 'badwords-list';
+import { array } from 'badwords-list'
 
 // default variables - update as needed
 
 const defaultFauxIDStart = 'YOU-A-'
-const defaultHex = 51;
+const defaultHex = 51
 
 const defaultFormValue = {
   fauxID: 'MX0000',
@@ -58,14 +58,15 @@ export function PlayerAddEntryForm ({}) {
   const [dbKey, setDbKey] = useState(0)
   const [animate, setAnimate] = useState(false)
 
+  const assignHex = () => {
+    let hex
 
-
-const assignHex = () =>{
-let hex;
-
-  if(isDemo) {return [54,55]} else {return defaultHex};
-
-}
+    if (isDemo) {
+      return [54, 55]
+    } else {
+      return defaultHex
+    }
+  }
 
   const triggerAnimation = () => {
     setAnimate(true)
@@ -94,9 +95,8 @@ let hex;
   const [mediaFiles, setMediaFiles] = useState([])
   const [devices, setDevices] = useState([])
   const [selectedDeviceId, setSelectedDeviceId] = useState(null)
-    const [showCameraSelect, setShowCameraSelect] = useState(false)
-    const blockedTerms = array;
-
+  const [showCameraSelect, setShowCameraSelect] = useState(false)
+  const blockedTerms = array
 
   // const WebcamComponent = () => <Webcam />;
   // YOU-A-389
@@ -131,7 +131,9 @@ let hex;
     const getDevices = async () => {
       try {
         const deviceList = await navigator.mediaDevices.enumerateDevices()
-        const videoDevices = deviceList.filter(device => device.kind === 'videoinput')
+        const videoDevices = deviceList.filter(
+          device => device.kind === 'videoinput'
+        )
         setDevices(videoDevices)
         if (videoDevices.length > 0 && !selectedDeviceId) {
           setSelectedDeviceId(videoDevices[0].deviceId)
@@ -249,9 +251,8 @@ let hex;
   //#endregion
 
   // On mount, restore if exists
-useEffect(() => {
-
-      async function fetchData () {
+  useEffect(() => {
+    async function fetchData () {
       // if (!itemID || itemID === "new") {
       const newID = await generateNewID()
       setFormValue({
@@ -262,16 +263,16 @@ useEffect(() => {
       return
     }
 
-fetchData()
-// starting a feature to save a draft. I dont htink it's worth the trouble. 
-//   const saved = localStorage.getItem('playerFormDraft')
-//   if (saved) {
-//     setFormValue(JSON.parse(saved))
-//   } else {
-// fetchData()
-    
-//   }
-}, [])
+    fetchData()
+    // starting a feature to save a draft. I dont htink it's worth the trouble.
+    //   const saved = localStorage.getItem('playerFormDraft')
+    //   if (saved) {
+    //     setFormValue(JSON.parse(saved))
+    //   } else {
+    // fetchData()
+
+    //   }
+  }, [])
 
   // useEffect(() => {
   //   async function fetchData () {
@@ -316,9 +317,9 @@ fetchData()
     try {
       const items = await db.friends.toArray()
       const existingIDs = items.map(item => item.fauxID)
-      let theID;
-      if(!isDemo) theID = "DM-";
-        else theID = globalUser.userName;
+      let theID
+      if (!isDemo) theID = 'DM-'
+      else theID = globalUser.userName
 
       const numericIDs = existingIDs
         .filter(id => id.startsWith(defaultFauxIDStart))
@@ -346,16 +347,15 @@ fetchData()
 
   //#region   -------   ADD EDIT ENTRY FUNCTIONS  ---------- */
 
-async function clearEntry() {
-      const newID = await generateNewID()
-      setFiles([]);
-      setFormValue({
-        ...defaultFormValue,
-        fauxID: newID
-      })
-      setNewEntry(true)
-
-}
+  async function clearEntry () {
+    const newID = await generateNewID()
+    setFiles([])
+    setFormValue({
+      ...defaultFormValue,
+      fauxID: newID
+    })
+    setNewEntry(true)
+  }
 
   // Add the entry to the database
   async function addEntry () {
@@ -373,16 +373,36 @@ async function clearEntry() {
 
       const id = await db.friends.add(FormToEntry())
 
+      let medialistTitles = " media: ";
+
+    for (const mediaId of formValues.media) {
+  const mediaItem = await db.media.get(mediaId);
+  medialistTitles = medialistTitles + ", " + mediaItem.name;
+}
+
+
+      dbHelpers.addEvent(
+        formValues.fauxID +
+          ' title: ' +
+          formValues.title +
+          ' desc: ' +
+          formValues.description +
+          medialistTitles,
+        'player entry'
+      )
+
       setStatusMessage(
         `Entry ${title} successfully added. Saved attachments: ${formValues.media.length}`
       )
       loadConfirmEffect()
 
-      console.log(`Added entry with ID ${id} and title ${title}`);
+      console.log(`Added entry with ID ${id} and title ${title}`)
 
-if(!isDemo)
-      {  EndSequence(navigate, id);}
-    else {navigate(`/entry/${id}`);}
+      if (!isDemo) {
+        EndSequence(navigate, id)
+      } else {
+        navigate(`/entry/${id}`)
+      }
 
       // setFormValue(defaultFormValue);  // Reset to defaults
     } catch (error) {
@@ -432,29 +452,29 @@ if(!isDemo)
   const handleChange = e => {
     let { name, value } = e.target
 
-let badword='';
+    let badword = ''
 
-  // Check for blocked words using word boundaries
-  const containsBlocked = blockedTerms.some(term => {
-    const regex = new RegExp(`\\b${term}\\b`, 'gi');
-    const found = regex.test(value);
-    if (found) badword = term;
-    return found;
-  });
+    // Check for blocked words using word boundaries
+    const containsBlocked = blockedTerms.some(term => {
+      const regex = new RegExp(`\\b${term}\\b`, 'gi')
+      const found = regex.test(value)
+      if (found) badword = term
+      return found
+    })
 
-  if (containsBlocked) {
-    // Remove all instances of the bad word with word boundaries
-    const regex = new RegExp(`\\b${badword}\\b`, 'gi');
-    value = value.replace(regex, '');
+    if (containsBlocked) {
+      // Remove all instances of the bad word with word boundaries
+      const regex = new RegExp(`\\b${badword}\\b`, 'gi')
+      value = value.replace(regex, '')
 
-    setStatusMessage(
-      `${name} contained unacceptable language. it has been removed`
-    );
-  }
+      setStatusMessage(
+        `${name} contained unacceptable language. it has been removed`
+      )
+    }
 
-  const updated = { ...formValues, [name]: value }
-  setFormValue(updated)
-  localStorage.setItem('playerFormDraft', JSON.stringify(updated))
+    const updated = { ...formValues, [name]: value }
+    setFormValue(updated)
+    localStorage.setItem('playerFormDraft', JSON.stringify(updated))
   }
 
   const handleArrayChange = e => {
@@ -504,8 +524,8 @@ let badword='';
   }
 
   const showCameraModal = () => {
-      setShowCameraSelect(!showCameraSelect);
-      console.log("showCameraModal hit " + showCameraSelect);
+    setShowCameraSelect(!showCameraSelect)
+    console.log('showCameraModal hit ' + showCameraSelect)
   }
 
   //#endregion
@@ -518,7 +538,7 @@ let badword='';
 
       {/* {status} {isFormValid ? 'Form is valid' : 'Form is invalid'} */}
 
-      {(gameState.editAccess || isDemo) ? (
+      {gameState.editAccess || isDemo ? (
         <div title='entry title' className='row'>
           <div className='col-3'>
             <input
@@ -568,8 +588,8 @@ let badword='';
           </div>
         </div>
       )}
-<div className="cameraChangeParent">
-  {/* <div><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
+      <div className='cameraChangeParent'>
+        {/* <div><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
   {showCameraSelect && (
 
       <div>        {devices.length > 1 && (
@@ -589,12 +609,11 @@ let badword='';
             </select>
           </div>
         )} </div>)} */}
-</div>
+      </div>
       <div className='row'>
         {' '}
         {/*// ------ Media   ------*/}
         {/* 640 x 480 */}
-
         <div className='row filter-buttons'>
           <Webcam
             audio={false}
@@ -605,13 +624,12 @@ let badword='';
             videoConstraints={videoConstraints}
           />
         </div>
-        {(gameState.editAccess || isDemo)  ? (
+        {gameState.editAccess || isDemo ? (
           <div className='row center'>
             <button
               onClick={capture}
               disabled={false}
               className='capture-button btn-save-add-item button '
-             
             >
               capture artifact
             </button>
@@ -669,10 +687,10 @@ let badword='';
         </div>
       )}
 
-      {(gameState.editAccess || isDemo)  && (
+      {(gameState.editAccess || isDemo) && (
         <>
           <div className='row'>
-            <div className="col-5">
+            <div className='col-5'>
               <FormAssets.FormTextBox
                 label='Intake Date'
                 name='displayDate'
@@ -681,39 +699,49 @@ let badword='';
                 onChange={handleChange}
               />
             </div>
-                          <div className="col">
-                {" "}
-                {/*// ------ available  ------*/}
-                
-                <input
-                  type="checkbox"
-                  className="formLabel"
-                  checked={formValues.available}
-                  onChange={handleCheckboxChange}
-                  name="available"
-                />
-                <label className="subFormLabel">exclude from search</label>
+            <div className='col'>
+              {' '}
+              {/*// ------ available  ------*/}
+              <input
+                type='checkbox'
+                className='formLabel'
+                checked={formValues.available}
+                onChange={handleCheckboxChange}
+                name='available'
+              />
+              <label className='subFormLabel'>exclude from search</label>
+            </div>
+            <div className='col-1 cameraIcon'>
+              <button
+                onClick={showCameraModal}
+                className='clear-button-style btn-sm'
+              >
+                📷
+              </button>
+            </div>
+            {showCameraSelect && (
+              <div className='cameraChangeParent'>
+                {' '}
+                {devices.length > 1 && (
+                  <div className='row' style={{ marginBottom: '10px' }}>
+                    <label htmlFor='camera-select'>Select Camera: </label>
+                    <select
+                      id='camera-select'
+                      className='form-control'
+                      value={selectedDeviceId || ''}
+                      onChange={e => setSelectedDeviceId(e.target.value)}
+                    >
+                      {devices.map(device => (
+                        <option key={device.deviceId} value={device.deviceId}>
+                          {device.label ||
+                            `Camera ${devices.indexOf(device) + 1}`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}{' '}
               </div>
-              <div className="col-1 cameraIcon"><button onClick={showCameraModal} className='clear-button-style btn-sm'>📷</button></div>
-  {showCameraSelect && (
-
-      <div  className="cameraChangeParent">        {devices.length > 1 && (
-          <div className="row" style={{ marginBottom: '10px' }}>
-            <label htmlFor='camera-select'>Select Camera: </label>
-            <select
-              id='camera-select'
-              className='form-control'
-              value={selectedDeviceId || ''}
-              onChange={(e) => setSelectedDeviceId(e.target.value)}
-            >
-              {devices.map((device) => (
-                <option key={device.deviceId} value={device.deviceId}>
-                  {device.label || `Camera ${devices.indexOf(device) + 1}`}
-                </option>
-              ))}
-            </select>
-          </div>
-        )} </div>)}
+            )}
           </div>
 
           <div title='Description' className='row'>
@@ -736,7 +764,7 @@ let badword='';
             >
               Add
             </button>
-                        <button
+            <button
               className='btn-save-add-item'
               onClick={clearEntry}
               disabled={!isFormValid}

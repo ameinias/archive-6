@@ -265,7 +265,7 @@ function ImportExport() {
         type: "sub_entry",
       }));
 
- 
+
 
       const combinedData = [...processedFriends, ...processedSubentries];
 
@@ -321,6 +321,81 @@ function ImportExport() {
       URL.revokeObjectURL(url);
 
       setStatusMessage("CSV export with hex hash names complete");
+    } catch (error) {
+      console.error("CSV Export error:", error);
+      setStatusMessage("CSV export failed: " + error.message);
+    }
+  };
+
+    const newTelemetrics = async () => {
+    try {
+      const events = await db.events.toArray();
+
+
+      // // Process data and convert hexHash IDs to names
+      // const processedFriends = friends.map((item) => ({
+      //   ...item,
+      //   hexHashCodes: item.hexHash
+      //     ? dbHelpers.getHexHashCodesFromIds(item.hexHash).join(", ")
+      //     : "",
+      //   type: "main_entry",
+      // }));
+
+
+      // const combinedData = [...processedFriends, ...processedSubentries];
+
+      const selectedFields = [
+        "id",
+        "name",
+        "type",
+        "timestamp",
+      ];
+
+
+
+      // Create CSV content with custom headers
+      let csvContent =
+        selectedFields.join(",") +
+        "\n";
+
+      events.forEach((row) => {
+        const values = selectedFields.map((field) => {
+          let value = row[field];
+
+          // Handle arrays/objects by converting to string
+          if (Array.isArray(value)) {
+            value = value.join("; "); // Join array elements with semicolon
+          } else if (typeof value === "object" && value !== null) {
+            value = JSON.stringify(value);
+          }
+
+          // Escape commas and quotes for CSV
+          if (
+            typeof value === "string" &&
+            (value.includes(",") || value.includes('"'))
+          ) {
+            value = `"${value.replace(/"/g, '""')}"`;
+          }
+
+          return value || "";
+        });
+        csvContent += values.join(",") + "\n";
+      });
+
+      // Create and download CSV file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const date = new Date().toISOString().split("T")[0];
+      a.download = "archiveListing-" + date + ".csv";
+      //  a.download = "archiveListing.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      setStatusMessage("CSV export with events complete");
     } catch (error) {
       console.error("CSV Export error:", error);
       setStatusMessage("CSV export failed: " + error.message);
@@ -419,7 +494,7 @@ function ImportExport() {
     }
   };
 
-  // I dont think this is in use right now. 
+  // I dont think this is in use right now.
   const peeak = async (file) => {
     const importMeta = await peakImportFile(file);
 
@@ -564,30 +639,30 @@ console.log("Events database cleared.");
 const handleFileAppend = async (event) => {
   const file = event.target.files[0];
   console.log("append!");
-  
+
   if (!file) {
     console.log("no file to append");
     return;
   }
-  
+
   try {
     setStatusMessage("Importing...");
     await importJSONWithWebEntryHandling(file);
     setStatusMessage("Import complete!");
-    setRefreshKey((prev) => prev + 1); 
-    event.target.value = ''; 
-    
+    setRefreshKey((prev) => prev + 1);
+    event.target.value = '';
+
   } catch (error) {
     console.error("Import failed:", error);
     setStatusMessage(`Import failed: ${error.message}`);
-    event.target.value = ''; 
+    event.target.value = '';
   }
 };
 
 
   //#endregion
 
- //#region --------- REETURN 
+ //#region --------- REETURN
 
   return (
     <>
@@ -689,7 +764,7 @@ const handleFileAppend = async (event) => {
                 <input
                   type="file"
                   accept=".json"
-                  onChange={handleFileAppend} 
+                  onChange={handleFileAppend}
                   style={{ display: "none" }}
                   id="fileAppend"
                 />
@@ -720,7 +795,7 @@ const handleFileAppend = async (event) => {
                   Clear All App Data
                 </button>
 
-                <button className="db-btn" onClick={testio}>
+                <button className="db-btn" onClick={newTelemetrics}>
                   Test Something
                 </button>
               </div>

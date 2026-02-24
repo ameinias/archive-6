@@ -106,6 +106,7 @@ function HashImport() {
 
     //  const result = await findByHashAndUnLock(hashValue);
     //   console.log(result);
+    dbHelpers.addEvent('imported: ' + message, 'hashimport');
     eventManager.showAlert(message);
     setStatusMessage("[HEXHASH] " + message);
 

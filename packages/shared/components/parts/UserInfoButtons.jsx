@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { dbHelpers, newGame, newGameWithWarning, exportTelemetrisToAppData } from '@utils/db';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { eventManager } from '@utils/events';
+import ImportExport  from '@components/admin/ImportExport';
 
 
 const UserInfoButtons = () => {
@@ -19,13 +20,7 @@ const UserInfoButtons = () => {
 
       const  LogOut = async () => {
           if (await eventManager.showConfirm('Logging out will delete your progress. Proceed anyway?')) {
-            await newGame(gameState.defaultStartHash);
 
-            resetGameVariables();
-
-            // updateGameState("editAccess", false);
-            // updateGameState("endgameSequence", false);
-            console.log("restart with hash" + gameState.defaultStartHash);
           if (await eventManager.showConfirm('Export telemetry data to app data folder?')) {
             exportTelemetrisToAppData(globalUser.username);}
 
@@ -33,7 +28,13 @@ const UserInfoButtons = () => {
             setLoggedIn(false);
             setStatusMessage(`Logged out`);
           }
+            await newGame(gameState.defaultStartHash);
 
+            resetGameVariables();
+
+            // updateGameState("editAccess", false);
+            // updateGameState("endgameSequence", false);
+            console.log("restart with hash" + gameState.defaultStartHash);
     };
 
 

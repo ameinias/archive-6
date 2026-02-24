@@ -11,7 +11,7 @@ import { useEffect } from 'react'; //
 //  ------------- DO NOT USE! StaticSingleDefault instead for now
 const StaticSingle = () => {
   const { id } = useParams();
-  const { isAdmin } = GameLogic();
+  const { isAdmin, isDemo } = GameLogic();
 
 
   const entryData = useLiveQuery(async () => {
@@ -62,7 +62,7 @@ const StaticSingle = () => {
       return <StaticSingleDefault itemID={id} />;
     }
 
-    if (entryData.triggerEvent) {
+    if (entryData.triggerEvent && !isDemo) {
       GameLogic().triggerEvent(event);
     }
   };

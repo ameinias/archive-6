@@ -14,7 +14,10 @@ const consoleUpdateCallbacks = [];
 
 // Export this function for use in other scripts
 const addConsoleEntry = (entry) => {
-  globalConsoleArray = [...globalConsoleArray, entry];
+  const fentry = `[${new Date() .toISOString()
+          .replace("T", " ")
+          .substring(0, 19)}] ${entry}`;
+  globalConsoleArray = [...globalConsoleArray, fentry];
   consoleUpdateCallbacks.forEach((callback) => callback(globalConsoleArray));
 };
 

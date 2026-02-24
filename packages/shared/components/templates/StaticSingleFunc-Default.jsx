@@ -70,6 +70,7 @@ export function StaticSingleDefault ({ itemID }) {
 
   useEffect(() => {
     if (!item) return
+     if(isDemo) return
     if (gameLogic.gameState.endgameSequence) {
       // Exit condition for the timer
       if (seconds <= 0) {
@@ -218,15 +219,19 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
               </div>
             )}
 
+{item.transcript && (
+  <>
                     {/* <div className="button-row div-dash"> */}
           <button onClick={setToggleTranscript} className="toggle-button"><Arrow collapsed={toggleTranscript} />Transcript</button>
           {/* </div> */}
             {toggleTranscript && (
         <div className="metadata-subsection">
           <DescriptionEntry string={item.transcript} />
-         
+
         </div>
       )}
+      </>
+    )}
 
           </div>
 

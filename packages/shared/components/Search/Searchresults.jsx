@@ -28,7 +28,9 @@ export function SearchResults({ results, searchterm=""}) {
       ) : (
         <table>
           <tbody>
-            {results.map((item) => (
+            {results.filter(
+      (item) => item.available === true,
+    ).map((item) => (
               <tr key={item.id}>
                 <td width="80%">
                   <>
