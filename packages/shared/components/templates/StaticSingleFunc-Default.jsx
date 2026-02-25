@@ -183,7 +183,7 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
             <BookMarkCheck itemID={item.id} type='entry' />
           </div>
           <div className='entry-title'>
-            <span className='parentIDSpan'>{item.fauxID} | {(item.available === false && isDemo) && <>PRIVATE</>}</span>
+            <span className='parentIDSpan'>{item.fauxID}{(item.available === false && isDemo) && <> | PRIVATE</>}</span>
             <span className='parentTitleSpan'>{item.title}</span>
           </div>
         </div>
@@ -254,9 +254,15 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
                     }
                     className='mention-link'
                   >
-                    {ref.fauxID}{' '}
+                    {ref.fauxID} - {
+                      ref.available
+                        ? `${ref.title}`
+                        : 'NOT AVAILABLE'
+                    }{' '}
                   </Link></span>
-                  <span className="col-2">by: {ref.author}</span>
+                  <span className="col-2">
+                    {ref.author === "" ? "em Hankal" : typeof ref.author === 'object' ? ref.author.author : ref.author}
+                  </span>
                 </span>
               ))}
             </div>
@@ -264,7 +270,7 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
 
           {/* TODO - update this to select author from dropdown before adding.  */}
            {gameLogic.gameState.connectionEdit && (
-          <div>
+          <div id="connect">
             <SelectEntry
               value={item.entryRef}
               onChange={handleRef}

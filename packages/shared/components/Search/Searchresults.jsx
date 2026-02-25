@@ -9,7 +9,7 @@ import { AddSubEntryForm } from "@components/entries/AddSubEntryFunc";
 import { GameLogic } from "@utils/gamelogic";
 import { SearchPageItem } from "@components/parts/ListingComponent";
 
-export function SearchResults({ results, searchterm=""}) {
+export function SearchResults({ results, searchterm="", showUnavailable=false}) {
   const [toggleShowNewSubEntry, setToggleShowNewSubEntry] = useState(false);
 
   const navigate = useNavigate();
@@ -29,12 +29,12 @@ export function SearchResults({ results, searchterm=""}) {
         <table>
           <tbody>
             {results.filter(
-      (item) => item.available === true,
+      (item) => showUnavailable || item.available === true,
     ).map((item) => (
               <tr key={item.id}>
                 <td width="80%">
                   <>
-                    {item.available && (
+                    {(showUnavailable || item.available) && (
                       <>
                         {item.type === "sub" ? (
                           <>

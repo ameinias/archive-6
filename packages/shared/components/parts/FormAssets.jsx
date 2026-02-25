@@ -224,7 +224,7 @@ export function SelectEntry({
             lastEditedBy: item.lastEditedBy,
             triggerEvent: item.triggerEvent,
             available: item.available,
-            author: "admin"
+            author: author
           });
           nextID = nextID + 1;
         }
@@ -258,7 +258,7 @@ export function SelectEntry({
           lastEditedBy: item.lastEditedBy,
           triggerEvent: item.triggerEvent,
           available: item.available,
-          author: "admin"
+          author: author
         });
         nextID = nextID + 1;
       }
@@ -316,7 +316,7 @@ export function SelectEntry({
 
 export function Arrow({ collapsed = true }){
 
-  // import closedIcon / openIcon 
+  // import closedIcon / openIcon
 
 
 

@@ -57,7 +57,7 @@ export const NavBarDemo = () => {
 
     const testio2 = async () => {
 
-        EndSequence(navigate, 91);
+        EndSequence(navigate, 91, globalUser.username);
 
     console.log("testio2    done");
   };

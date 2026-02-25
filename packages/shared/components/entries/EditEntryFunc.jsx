@@ -730,7 +730,7 @@ formValues.date = new Date().toISOString().split('T')[0];
             includeSubentries={true}
             label="related entries"
             displayTrueID="true"
-            author="admin"
+            author="em Hankal"
           />
         </div>
       )}
@@ -746,11 +746,11 @@ formValues.date = new Date().toISOString().split('T')[0];
           placeholder="Transcript"
           name="transcript"
           />
-         
+
         </div>
       )}
 
-      
+
 
       <div title="admin">
         <div className="button-row div-dash">

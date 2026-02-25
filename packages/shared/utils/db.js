@@ -170,6 +170,7 @@ export const dbHelpers = {
   },
 
   async addEvent(eventName, type = "default") {
+if (!db.isOpen()) return;
     return await db.events.add({
       name: eventName,
       type: type,
@@ -314,44 +315,7 @@ export const dbHelpers = {
     return theTitle;
   },
 
-  //   urlDirect(item) {
-  //     let url;
 
-  //     if (item.type === "entry") {
-  //       url = !gameLog.isAdmin ? "entry" : "edit-item";
-  //     } else {
-  //       url = "edit-subitem";
-  //     }
-
-  //     return url;
-  //   },
-
-  //   generateEntryLink(item) {
-
-  //     const URL = urlDirect(item);
-
-  //     if (item.type === "sub") {
-  //       return (
-  //         <>
-  //           <div className="tab"></div>
-  //           <Link to={`/${URL}/${item.parentId}/`}>
-  //             {dbHelpers.generateTitle(item)}
-  //           </Link>
-  //         </>
-  //       );
-  //     } else {
-  //       return (
-  //         <>
-  //           <Link
-  //             to={`/${URL}/${item.origin}`}
-  //             className="log-parent-title"
-  //           >
-  //             {dbHelpers.generateTitle(item)} sdfsdf fsd sfsd
-  //           </Link>
-  //         </>
-  //       );
-  //     }
-  //   },
 };
 
 export const handleJSONExport = async (fileName = "dexie-export-web.json") => {
@@ -489,30 +453,7 @@ export const saveAsDefaultDatabase = async () => {
   }
 };
 
-//just use the regular one
-// export const saveAsDemoDatabase = async () => {
-//   try {
-//     // {
-//     //   await setDefaultParameters();
-//     // }
-//     const blob = await db.export({ prettyJson: true });
 
-//     const content = await blob.text();
-
-//     // doesn't seem to be updating app data right now
-//     await eventManager.saveAssetFile(
-//       "assets/databases/demo-backup.json",
-//       content,
-//     );
-
-//     const fullPath = await eventManager.getAssetPath(
-//       "databases/demo-backup.json",
-//     );
-//     console.log("Database saved successfully to:", fullPath);
-//   } catch (error) {
-//     console.error("Error saving default database:", error);
-//   }
-// };
 
 // eventually will need a way to list entries by modEditDate - that is what is saving when entries were unlocked.
 export const exportTelemetrisToAppData = async (username) => {

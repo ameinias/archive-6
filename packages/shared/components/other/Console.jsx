@@ -21,6 +21,9 @@ const addConsoleEntry = (entry) => {
   consoleUpdateCallbacks.forEach((callback) => callback(globalConsoleArray));
 };
 
+
+
+
 export const clearConsole = () => {
   globalConsoleArray = [];
   consoleUpdateCallbacks.forEach((callback) => callback(globalConsoleArray));
@@ -39,9 +42,10 @@ const addConsoleEntryHypertext = (entry) => {
   consoleUpdateCallbacks.forEach((callback) => callback(globalConsoleArray));
 };
 
-const makeConnection = async (firstID, secondID) => {
+const makeConnection = async (firstID, secondID, author = "") => {
   const entry = await db.friends.get(Number(firstID));
   const secondEntry = await db.friends.get(Number(secondID));
+
 
   if (!entry || !secondEntry || firstID <= 0 || secondID <= 0) {
     // console.log("cants find one of the entries.");
@@ -63,6 +67,7 @@ const makeConnection = async (firstID, secondID) => {
     title: secondEntry.title,
     type: "entry", // Graph.jsx looks for this
     available: secondEntry.available,
+    author: author
   };
 
   // Check if secondID is already in the array
@@ -119,30 +124,33 @@ const messagesEnd = async () => {
 }
 
 
-const EndSequence = async (navigate, id) => {
+const EndSequence = async (navigate, id, author = "System") => {
   updateGameState("endgameSequence", true);
 messagesEnd();
   //unlock connections in case it was missed
   updateGameState("connectionEdit", true);
   navigate(`/entry/${id}`);
   await delay(500);
-  makeConnection(id, 110);
+  navigate('/entry/${id}#connect');
+  makeConnection(id, 110, author);
   await delay(1500); // Wait for 2 seconds
 
-  navigate(`/entry/122`);
+  navigate(`/entry/114`);
+  await delay(1500);
+navigate('/entry/114#connect');
+  makeConnection(114, 111, author);
   await delay(1500);
 
-  makeConnection(122, 111);
-  await delay(1500);
-  makeConnection(122, 126);
+  makeConnection(114, 126, author);
 
   await delay(1500);
 
-  navigate(`/entry/117`);
+  navigate(`/entry/124`); //22
   await delay(500);
-  makeConnection(117, 95);
+  navigate('/entry/124#connect');
+  makeConnection(124, 111, author);
     await delay(500);
-
+makeConnection(124, 95, author);
   // addConsoleEntryHypertext("thank you for letting us use you");
   await delay(1200);
 
@@ -175,7 +183,6 @@ messagesEnd();
   navigate(`/entry/116`);
   await delay(100);
   navigate(`/entry/114`);
-      addConsoleEntryHypertext("to us");
   await delay(50);
   navigate(`/entry/95`);
   await delay(50);
@@ -194,16 +201,16 @@ messagesEnd();
   const lowestId = Math.min(...filteredFriends.map((f) => f.id));
   const highestId = Math.max(...filteredFriends.map((f) => f.id));
 
-  makeConnection(lowestId, highestId);
-  makeConnection(lowestId + 1, highestId - 1);
+  makeConnection(lowestId, highestId, author);
+  makeConnection(lowestId + 1, highestId - 1, author);
 
   for (const element of filteredFriends) {
-    await makeConnection(element.id, element.id - 1);
+    await makeConnection(element.id, element.id - 1, author);
 
     await delay(500);
   }
     for (const element of filteredFriends) {
-    await makeConnection(element.id, element.id + 1);
+    await makeConnection(element.id, element.id + 1, author);
 
     await delay(250);
   }
@@ -217,7 +224,7 @@ messagesEnd();
 const Console = () => {
   // const [consoleArray, setConsoleArray] = useState([])
   const navigate = useNavigate();
-  const { gameState } = GameLogic();
+  const { gameState, globalUser } = GameLogic();
   const friends = useLiveQuery(() => db.friends.toArray());
   const subentries = useLiveQuery(() => db.subentries.toArray());
 

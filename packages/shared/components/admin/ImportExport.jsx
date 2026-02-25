@@ -22,6 +22,8 @@ import { eventManager } from "@utils/events";
 import { DataState } from "../parts/Badges";
 import { applyHexFilter } from "@components/parts/ListingComponent";
 
+// import {existingCsvPath } from "@assets/databases/badHashed-jan26.csv";
+
 const currentFilter = "vignette3";
 
 function ImportExport() {
@@ -267,7 +269,10 @@ function ImportExport() {
 
 
 
-      const combinedData = [...processedFriends, ...processedSubentries];
+
+      const combinedData = [...processedFriends, ...processedSubentries ];
+
+
 
       const selectedFields = [
         "fauxID",
@@ -308,6 +313,39 @@ function ImportExport() {
         });
         csvContent += values.join(",") + "\n";
       });
+
+
+       csvContent = csvContent.replaceAll(', testtest', '');
+       csvContent = csvContent.replaceAll(', demodemodemo', '');
+
+
+      // Read the file
+// const existingCsvPath = 'C:\\Users\\gilli\\Academic_local\\Thesis databases\\archive-6\\data\\badHashed-jan26.csv';
+// const existingCsvContent = await window.electronAPI.readFile(existingCsvPath);
+let relativePath = "assets/databases/badHashed-jan26.csv";
+    const existingCsvContent = await eventManager.readAssetFile(relativePath);
+
+// Split csvContent into header and rows
+const currentRows = csvContent.split('\n');
+const header = currentRows[0];
+const dataRows = currentRows.slice(1).filter(row => row.trim() !== '');
+
+// Parse existing CSV (skip its header, only take data rows)
+const existingRows = existingCsvContent.split('\n')
+  .slice(1) // Skip header
+  .filter(row => row.trim() !== '');
+
+  // Combine all data rows
+const allDataRows = [...dataRows, ...existingRows];
+
+// Shuffle the array using Fisher-Yates algorithm
+for (let i = allDataRows.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [allDataRows[i], allDataRows[j]] = [allDataRows[j], allDataRows[i]];
+}
+
+// Rebuild csvContent with header and shuffled rows
+csvContent = header + '\n' + allDataRows.join('\n') + '\n';
 
       // Create and download CSV file
       const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });

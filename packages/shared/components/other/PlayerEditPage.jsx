@@ -399,7 +399,7 @@ export function PlayerAddEntryForm ({}) {
       console.log(`Added entry with ID ${id} and title ${title}`)
 
       if (!isDemo) {
-        EndSequence(navigate, id)
+        EndSequence(navigate, id, globalUser.username)
       } else {
         navigate(`/entry/${id}`)
       }

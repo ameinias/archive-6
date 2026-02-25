@@ -1306,7 +1306,7 @@ ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
 }
 
 .media-pdf {
-  width: 100%;
+      width: 675px;
   height: 620px;
   /* border:#18db43 1px solid;  */
    max-width: 1250px;
