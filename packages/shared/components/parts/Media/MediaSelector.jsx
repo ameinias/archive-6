@@ -6,7 +6,8 @@ import { MediaThumbnail } from '@components/parts/Media/MediaThumbnail.jsx';
 
 export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) {
   const [selectedIds, setSelectedIds] = useState([]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+const ITEMS_PER_PAGE = 20;
   const allMedia = useLiveQuery(() => db.media.toArray());
 
   // Sort by upload date
@@ -18,9 +19,14 @@ export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) 
       })
     : [];
 
+    const totalPages = Math.ceil(sortedMedia.length / ITEMS_PER_PAGE);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+const paginatedMedia = sortedMedia.slice(startIndex, endIndex);
+
   const toggleSelect = (mediaId) => {
     if (allowMultiple) {
-      setSelectedIds(prev => 
+      setSelectedIds(prev =>
         prev.includes(mediaId)
           ? prev.filter(id => id !== mediaId)
           : [...prev, mediaId]
@@ -46,7 +52,7 @@ export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) 
       <Modal.Header closeButton>
         <Modal.Title>Select Media from Gallery</Modal.Title>
       </Modal.Header>
-      
+
       <Modal.Body style={{ maxHeight: '70vh', overflowY: 'auto' }}>
         {!sortedMedia || sortedMedia.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: '#666' }}>
@@ -58,8 +64,8 @@ export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) 
             <div style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
               <strong>Selected: {selectedIds.length}</strong>
               {selectedIds.length > 0 && (
-                <Button 
-                  variant="link" 
+                <Button
+                  variant="link"
                   size="sm"
                   onClick={() => setSelectedIds([])}
                   style={{ marginLeft: '10px' }}
@@ -68,15 +74,35 @@ export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) 
                 </Button>
               )}
             </div>
+            <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <Button
+    size="sm"
+    disabled={currentPage === 1}
+    onClick={() => setCurrentPage(p => p - 1)}
+  >
+    Previous
+  </Button>
+  <span>Page {currentPage} of {totalPages}</span>
+  <Button
+    size="sm"
+    disabled={currentPage === totalPages}
+    onClick={() => setCurrentPage(p => p + 1)}
+  >
+    Next
+  </Button>
+  <span style={{ marginLeft: 'auto' }}>
+    Total: {sortedMedia.length} files
+  </span>
+</div>
 
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
               gap: '15px'
             }}>
-              {sortedMedia.map((media) => {
+              {paginatedMedia.map((media) => {
                 const isSelected = selectedIds.includes(media.id);
-                
+
                 return (
                   <div
                     key={media.id}
@@ -111,13 +137,13 @@ export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) 
                       </div>
                     )}
 
-                    <MediaThumbnail 
+                    <MediaThumbnail
                       fileRef={media.id}
                       maxWidth={'100%'}
                     />
 
-                    <div style={{ 
-                      marginTop: '8px', 
+                    <div style={{
+                      marginTop: '8px',
                       fontSize: '12px',
                       wordBreak: 'break-word'
                     }}>
@@ -136,13 +162,13 @@ export function MediaSelector({ show, onHide, onSelect, allowMultiple = true }) 
           </>
         )}
       </Modal.Body>
-      
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCancel}>
           Cancel
         </Button>
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           onClick={handleConfirm}
           disabled={selectedIds.length === 0}
         >

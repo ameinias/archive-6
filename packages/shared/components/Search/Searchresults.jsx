@@ -58,7 +58,7 @@ export function SearchResults({ results, searchterm="", showUnavailable=false}) 
                         ) : (
                           <>
                             <Link to={`/${urlDirect}/${item.origin}`}>
-                            {item.available && isAdmin ? 'Y' : 'N'}   {dbHelpers.generateTitle(item)}
+                           {(isAdmin) && <>{item.available  ? 'Y' : 'N'}</>}    {dbHelpers.generateTitle(item)}
                             </Link>
                           </>
                         )}

@@ -25,7 +25,7 @@ export function StaticSingleMess ({ itemID }) {
   const initialSeconds = 5 // Set the initial countdown time in seconds
   const [seconds, setSeconds] = useState(initialSeconds)
 
-  
+
 const masonryOptions = {
     transitionDuration: 0
 };
@@ -71,9 +71,14 @@ const masonryOptions = {
 
   useEffect(() => {
     if (!item) return
-    if(isDemo) return
 
-    if (item.triggerEvent && item.unread) {
+
+    if (!isDemo && item.triggerEvent && item.unread) {
+      //item.triggerEvent.length > 0
+      gameLogic.triggerEvent(item.triggerEvent)
+    }
+
+        if (isDemo && item.triggerEvent) {
       //item.triggerEvent.length > 0
       gameLogic.triggerEvent(item.triggerEvent)
     }
@@ -267,17 +272,17 @@ const masonryOptions = {
 
 
 
-  
+
   // Dynamic items
   ...subEntryOfParent.filter(item => item.subCategory.toLowerCase() !== 'metadata').map(item => (
     <div key={item.id} className={`scattered-item ${
-  item.description.length > 600 ? 'long-desc' : 
+  item.description.length > 600 ? 'long-desc' :
   item.description.length > 400 ? 'med-desc' : 'short-desc'
 }`} >
       <StaticSubListItem itemID={item.id} parentID={item.parentId} />
     </div>
   )),
-  
+
 ];
 
 

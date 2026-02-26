@@ -12,7 +12,7 @@ import {eventManager} from '@utils/events';
 const Search = () => {
   const [val, setVal] = React.useState('');
   const [sentTerm, setSentTerm] = React.useState('');
-  const {isAdmin, isDemo} = GameLogic();
+  const {isAdmin, isDemo, isDebug} = GameLogic();
   const [results, setResults] = React.useState([]);
 
   const friends = useLiveQuery(() => db.friends.toArray());
@@ -28,6 +28,11 @@ const Search = () => {
       return;
     }
 
+        if (searchTerm.length < 3) {
+      eventManager.showAlert('Please enter a search term of at least three characters.');
+      return;
+    }
+
     let searchTermLower = searchTerm.toLowerCase();
     const foundItems = friends?.filter(
       (item) =>
@@ -35,7 +40,7 @@ const Search = () => {
         item.fauxID.toLowerCase().includes(searchTermLower) ||
         (item.description &&
           item.description.toLowerCase().includes(searchTermLower)),
-    ).filter((item) => item.available === true || isAdmin,);
+    ).filter((item) => item.available === true || isAdmin || isDebug,);
 
     let tempItems = [];
     let nextID = 0;
@@ -88,8 +93,7 @@ setSentTerm(searchTerm);
 dbHelpers.addEvent('searched: ' + searchTerm, 'search');
 
       console.log("search " + searchTerm);
-      {console.log('isAdmin:', isAdmin, 'results:', results.length)}
-    if (foundItems && foundItems.length > 0) {
+   if (foundItems && foundItems.length > 0) {
       setResults(tempItems); // update state!
 
     } else {

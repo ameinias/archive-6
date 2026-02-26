@@ -94,7 +94,9 @@ export function PlayerAddEntryForm ({}) {
   const [files, setFiles] = useState([])
   const [mediaFiles, setMediaFiles] = useState([])
   const [devices, setDevices] = useState([])
-  const [selectedDeviceId, setSelectedDeviceId] = useState(null)
+  const [selectedDeviceId, setSelectedDeviceId] = useState(
+    () => localStorage.getItem('lastUsedCameraId') || null
+  )
   const [showCameraSelect, setShowCameraSelect] = useState(false)
   const blockedTerms = array
 
@@ -136,6 +138,7 @@ export function PlayerAddEntryForm ({}) {
         )
         setDevices(videoDevices)
         if (videoDevices.length > 0 && !selectedDeviceId) {
+          console.log('No saved ID, selecting default');
           setSelectedDeviceId(videoDevices[0].deviceId)
         }
       } catch (error) {
@@ -528,6 +531,12 @@ export function PlayerAddEntryForm ({}) {
     console.log('showCameraModal hit ' + showCameraSelect)
   }
 
+  const handleDeviceChange = (deviceId) => {
+    setSelectedDeviceId(deviceId);
+    localStorage.setItem('lastUsedCameraId', deviceId);
+    console.log('Camera changed to device ID:', deviceId);
+  }
+
   //#endregion
 
   //*    ----------------    RETURN  -------------- */
@@ -729,7 +738,7 @@ export function PlayerAddEntryForm ({}) {
                       id='camera-select'
                       className='form-control'
                       value={selectedDeviceId || ''}
-                      onChange={e => setSelectedDeviceId(e.target.value)}
+                      onChange={e => handleDeviceChange(e.target.value)}
                     >
                       {devices.map(device => (
                         <option key={device.deviceId} value={device.deviceId}>

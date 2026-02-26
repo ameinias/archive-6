@@ -34,7 +34,7 @@ export const MediaThumbnail = ({
         const mediaFile = await db.media.get(fileRef);
 
         if (!mediaFile) {
-          console.error("Media file not found:", fileRef);
+          console.error("Media file not found in DB - ID:", fileRef);
           setLoading(false);
           return;
         }
@@ -67,7 +67,7 @@ export const MediaThumbnail = ({
               mediaFile.path,
             );
             if (result.error) {
-              console.error("Failed to get media data:", result.error);
+              console.error("❌ Failed to get media data:", result.error, "| File:", mediaFile.name, "| Path:", mediaFile.path);
               setLoading(false);
               return;
             }
@@ -83,7 +83,7 @@ export const MediaThumbnail = ({
 
         setLoading(false);
       } catch (error) {
-        console.error("Error loading media:", error);
+        console.error("❌ Error loading media - ID:", fileRef, "| Name:", fileName || "unknown", "| Error:", error.message);
         setLoading(false);
       }
     };

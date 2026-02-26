@@ -38,9 +38,9 @@ const StatusBar = () => {
             </button> */}
           {gameState.consoleAvailable && (
             <button  onClick={consoleChange} className="console-button clear-button-style">
-              ⛔
+              ⚠️
             </button>
-          )} 
+          )}
         </div>
           <div className='status-bar-field col-8'>
             {(globalStatus !== '' && 'status || ', globalStatus)}
