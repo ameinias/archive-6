@@ -14,9 +14,12 @@ export function SearchResults({ results, searchterm="", showUnavailable=false}) 
 
   const navigate = useNavigate();
   const gameLog = GameLogic();
+  const {isAdmin, isDemo, isDebug} = GameLogic();
 
   const urlDirect = !gameLog.isAdmin ? "entry" : "edit-item";
   const urlSubDirect = "edit-subitem"; // Same for both admin and non-admin
+
+     {console.log('isAdmin:', isAdmin, 'results:', results.length)}
 
   return (
     <div className="subentry-add-list">
@@ -28,33 +31,34 @@ export function SearchResults({ results, searchterm="", showUnavailable=false}) 
       ) : (
         <table>
           <tbody>
+
             {results.filter(
-      (item) => showUnavailable || item.available === true,
+      (item) => showUnavailable || isAdmin || isDebug || item.available === true,
     ).map((item) => (
               <tr key={item.id}>
                 <td width="80%">
                   <>
-                    {(showUnavailable || item.available) && (
+                    {(showUnavailable || isAdmin || isDebug || item.available) && (
                       <>
                         {item.type === "sub" ? (
                           <>
                             {" "}
                             {!gameLog.isAdmin ? (
                               <Link to={`/entry/${item.parentId}/`}>
-                                {dbHelpers.generateTitle(item)}
+                               {dbHelpers.generateTitle(item)}
                               </Link>
                             ) : (
                               <Link
                                 to={`/${urlSubDirect}/${item.parentId}/${item.origin}`}
                               >
-                                {item.fauxID} | {item.title}
+                             {item.available ? 'Y' : 'N'}    {item.fauxID} | {item.title}
                               </Link>
                             )}{" "}
                           </>
                         ) : (
                           <>
                             <Link to={`/${urlDirect}/${item.origin}`}>
-                              {dbHelpers.generateTitle(item)}
+                            {item.available && isAdmin ? 'Y' : 'N'}   {dbHelpers.generateTitle(item)}
                             </Link>
                           </>
                         )}

@@ -35,7 +35,7 @@ const Search = () => {
         item.fauxID.toLowerCase().includes(searchTermLower) ||
         (item.description &&
           item.description.toLowerCase().includes(searchTermLower)),
-    ).filter((item) => item.available === true,);
+    ).filter((item) => item.available === true || isAdmin,);
 
     let tempItems = [];
     let nextID = 0;
@@ -88,6 +88,7 @@ setSentTerm(searchTerm);
 dbHelpers.addEvent('searched: ' + searchTerm, 'search');
 
       console.log("search " + searchTerm);
+      {console.log('isAdmin:', isAdmin, 'results:', results.length)}
     if (foundItems && foundItems.length > 0) {
       setResults(tempItems); // update state!
 
