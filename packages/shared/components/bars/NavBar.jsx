@@ -89,8 +89,25 @@ const NavBar = () => {
     console.log('testio2    done')
   }
 
+
+
   const restartGame = async () => {
-    await newGame(gameState.defaultStartHash)
+
+
+    if (
+      await eventManager.showConfirm(
+        'Logging out will delete your progress. Proceed anyway?'
+      )
+    ) {
+      if (
+        await eventManager.showConfirm(
+          'Export telemetry data to app data folder?'
+        )
+      ) {
+        exportTelemetrisToAppData(globalUser.username)
+      }
+
+            await newGame(gameState.defaultStartHash)
     setAdmin(false)
 
     // updateGameState("editAccess", false);
@@ -98,7 +115,17 @@ const NavBar = () => {
     resetGameVariables()
     navigate('/')
     console.log('restartGame')
-  }
+    }
+
+  };
+
+
+
+
+
+
+
+
 
   const debugWindow = async () => {
     updateGameState('showDebug', !gameState.showDebug)

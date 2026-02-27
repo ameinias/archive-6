@@ -52,6 +52,7 @@ export const NavBarDemo = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const testio = async () => {
 
+
     toggleDemo();
   };
 
@@ -69,12 +70,29 @@ export const NavBarDemo = () => {
 
 
   const restartGame = async () => {
-    await newGame("demo");
+
+
+    if (
+      await eventManager.showConfirm(
+        'Logging out will delete your progress. Proceed anyway?'
+      )
+    ) {
+      if (
+        await eventManager.showConfirm(
+          'Export telemetry data to app data folder?'
+        )
+      ) {
+        exportTelemetrisToAppData(globalUser.username)
+      }
+
+          await newGame("demo");
     setAdmin(false);
    resetGameVariables();
    updateGameState("consoleAvailable", true);
     navigate("/");
     console.log("restart demo Game");
+    }
+
   };
 
   const debugWindow = async () => {
