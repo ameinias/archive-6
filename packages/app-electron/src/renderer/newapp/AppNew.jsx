@@ -20,6 +20,7 @@ import Login from '@components/login/Login';
 // import Register from '../../main/components/Login/Register';
 import StatusBar from '@components/bars/StatusBar';
 import { eventManager } from '@utils/events';
+import { DebugPanel } from '@components/parts/DebugPanel'
 
 // import { ImportExport } from 'ImportExport';
 
@@ -186,7 +187,7 @@ export default function App() {
       <Router initialEntries={[initialRoute]}>
         <div className="wrapper" key={dbKey}>
           <RouteTracker />
-          {!isLoggedIn ? <Login /> : <RouterPath />}
+          {!isLoggedIn ? <><Login />        <DebugPanel /></> : <RouterPath />}
         </div>
       </Router>
     </>

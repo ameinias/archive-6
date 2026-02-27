@@ -1438,9 +1438,18 @@ ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
   /* position: fixed;
     top: 10px;
     right: 10px; */
-  z-index: 1000;
+  /* z-index: 1000; */
   width:60px;
 }
+
+.btn-logout-debug {
+  /* position: fixed;
+    top: 10px;
+    right: 10px; */
+  z-index: 100000;
+  width:60px;
+}
+
 
 .debugInfo {
   position: fixed;

@@ -55,7 +55,7 @@ const Graph = ({ filterAvailable = true, includeSubentries = true }) => {
       for (const item of foundFriends) {
         tempItems.push({
           id: nextID,
-          label: item.id + " " + item.fauxID + " - " + item.title,
+          label: item.fauxID + " - " + item.title,
           group: "entry",
           originId: item.id,
           parentId: null,

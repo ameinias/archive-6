@@ -18,7 +18,7 @@ function Login() {
   const navigate = useNavigate();
   const { isLoggedIn, setLoggedIn } = GameLogic();
   const { globalStatus, setStatusMessage } = GameLogic();
-  const { globalUser, setPlayerUsername, setPlayerPassword, gameState } =
+  const { globalUser, setPlayerUsername, setPlayerPassword, gameState, isAdmin, isDemo } =
     GameLogic();
 
     const [showPassword, setShowPassword] = useState(false)
@@ -122,7 +122,7 @@ function Login() {
   return (
     <div className="login">
       <div className=" row login-info-text">
-        Please register your user name and password. 
+        Please register your user name and password.
       </div>
       <div className=" row">
         {" "}
@@ -159,7 +159,7 @@ function Login() {
             : (<button className="auth-icon-password-eye" onClick={handleShowPassword} ><img
             src={invisible}
             alt="show password"
-          
+
             // className="auth-icon-password-eye"
           />
         </button>)
@@ -177,6 +177,11 @@ function Login() {
       </div>
       <div className="row text-center">
         <p className="errorStatus">{globalStatus}</p>
+
+         {/* {gameState.showDebug  <strong style={{color: 'red'}}> DEBUG MODE </strong> : <>not debug</>} */}
+
+         {isDemo && <p><strong>Open Access</strong></p>}
+          {isAdmin && <p>admin privileges enabled</p>}
       </div>
     </div>
   );
