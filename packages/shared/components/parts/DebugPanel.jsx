@@ -34,6 +34,10 @@ useEffect(() => {
       updateGameState("connectionEdit", !gameState.connectionEdit);
         if (value === "editAccess")
       updateGameState("editAccess", !gameState.editAccess);
+            if (value === "bluescreen")
+      updateGameState("bluescreen", !gameState.bluescreen);
+                if (value === "endgameSequence")
+      updateGameState("endgameSequence", !gameState.endgameSequence);
 
 
   };
@@ -52,7 +56,7 @@ useEffect(() => {
           </p>
           <p>activeFilter: {gameState.activeFilter} </p>
           <p>
-            endgameSequence:{" "}
+            <Link onClick={() => toggleConsole("endgameSequence")}>endgameSequence</Link>::{" "}
             {gameState.endgameSequence ? (
               <span className="bugHi">true</span>
             ) : (
@@ -110,7 +114,7 @@ useEffect(() => {
             )}
           </p>
           <p>
-            bluescreen:{" "}
+                  <Link onClick={() => toggleConsole("bluescreen")}>bluescreen</Link>:{" "}
             {gameState.bluescreen ? (
               <span className="bugHi">true</span>
             ) : (
@@ -126,6 +130,9 @@ useEffect(() => {
               "false"
             )}
           </p>
+
+
+          gameState.bluescreen
         </div>
       )}
     </div>
