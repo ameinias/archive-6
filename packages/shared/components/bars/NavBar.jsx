@@ -7,7 +7,8 @@ import {
   dbHelpers,
   newGame,
   saveAsDefaultDatabase,
-  handleJSONExport
+  handleJSONExport,
+  exportTelemetrisToAppData
 } from '@utils/db'
 import { TimeLine } from '../lists/TimeLine'
 import Dropdown from 'react-bootstrap/Dropdown'

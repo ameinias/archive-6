@@ -696,7 +696,7 @@ export function PlayerAddEntryForm ({}) {
         </div>
       )}
 
-      {(gameState.editAccess || isDemo) && (
+      {(gameState.editAccess || isDemo) ? (
         <>
           <div className='row'>
             <div className='col-5'>
@@ -782,7 +782,38 @@ export function PlayerAddEntryForm ({}) {
             </button>
           </div>
         </>
-      )}
+      ) : (   <>         <div className='col-1 cameraIcon'>
+              <button
+                onClick={showCameraModal}
+                className='clear-button-style btn-sm'
+              >
+                {/* 📷 */}
+              </button>
+            </div>
+                        {showCameraSelect && (
+              <div className='cameraChangeParent'>
+                {' '}
+                {devices.length > 1 && (
+                  <div className='row' style={{ marginBottom: '10px' }}>
+                    <label htmlFor='camera-select'>Select Camera: </label>
+                    <select
+                      id='camera-select'
+                      className='form-control'
+                      value={selectedDeviceId || ''}
+                      onChange={e => handleDeviceChange(e.target.value)}
+                    >
+                      {devices.map(device => (
+                        <option key={device.deviceId} value={device.deviceId}>
+                          {device.label ||
+                            `Camera ${devices.indexOf(device) + 1}`}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}{' '}
+              </div>
+            )}
+            </>)}
     </div>
   )
 }
