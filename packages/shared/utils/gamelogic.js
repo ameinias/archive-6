@@ -367,7 +367,14 @@ if (toggleDemoListenerRefCount === 0) {
     "enable-showConsole": () => updateGameState("showConsole", true),
     "disable-showConsole": () => updateGameState("showConsole", false),
     "disable-connectionPanel": () => updateGameState("connectionPanel", false),
-    "enable-connectionEdit": () => updateGameState("connectionEdit", true),
+    "enable-connectionEdit": () => 
+      
+      => {
+      connectionEdit();
+    },
+      
+      
+
     "disable-connectionEdit": () => updateGameState("connectionEdit", false),
 
         "enable-bluescreen": () => updateGameState("bluescreen", true),
@@ -385,6 +392,11 @@ if (toggleDemoListenerRefCount === 0) {
       updateGameState("consoleWasRevealed", true);
       updateGameState("showConsole", true);
     }
+  }
+
+    const connectionEdit = () => {
+      
+            updateGameState("connectionEdit", true);
   }
 
 // EMHAN - fix on xray page

@@ -42,7 +42,7 @@ function Login() {
   //   console.log("navigating to register");
   // };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Will eventually check database but for now just checks for admin
 
     try {
@@ -79,7 +79,8 @@ function Login() {
       setLoggedIn(true);
       setStatusMessage("[identity manager] " + `Logged in as ${username}`);
       // Don't navigate immediately, let the state update first
-      newGame(gameState.defaultStartHash);
+      await newGame(gameState.defaultStartHash);
+      navigate('/');
 
       // handleClose();
       // setFormValue(defaultFormValue);  // Reset to defaults
