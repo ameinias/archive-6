@@ -1296,7 +1296,8 @@ ul[role=menubar]>[role=menuitem][aria-haspopup=true]:hover {
   padding: 5px;
   margin: 5px;
   border: var(--div-border);
-  max-width: 550px;
+  max-width: 450px;
+  /* max-height: 450px; didnt work, falls off bottom */
 }
 
 .media-thumbnail-list>.pdf {

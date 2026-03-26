@@ -401,10 +401,12 @@ export function PlayerAddEntryForm ({}) {
 
       console.log(`Added entry with ID ${id} and title ${title}`)
 
-      if (!isDemo || !isAdmin) {
+      if (!isDemo && !isAdmin) {
+        console.log('main narrative game, triggering end sequence')
         EndSequence(navigate, id, globalUser.username)
       } else {
         navigate(`/entry/${id}`)
+        console.log('Demo or admin, skipping end sequence')
       }
 
       // setFormValue(defaultFormValue);  // Reset to defaults

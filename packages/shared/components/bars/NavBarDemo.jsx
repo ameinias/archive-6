@@ -86,7 +86,7 @@ export const NavBarDemo = () => {
       ) {
         exportTelemetrisToAppData("demo")
       }
-
+saveAsDefaultDatabase();
           await newGame("demo");
     setAdmin(false);
    resetGameVariables();
@@ -174,7 +174,12 @@ export const NavBarDemo = () => {
               </li>
             </ul>
           </li>
-          {isElectron ? (
+
+        </>
+      )}
+      {(gameState.showDebug || isAdmin) && (
+        <>
+                  {isElectron ? (
             <li role="menuitem" tabIndex="0" aria-haspopup="true">
               <Link onClick={SaveOut}>Demo Backup</Link>
             </li>
@@ -185,10 +190,6 @@ export const NavBarDemo = () => {
               </li>
             </div>
           )}
-        </>
-      )}
-      {(gameState.showDebug || isAdmin) && (
-        <>
           <li>
             {" "}
             <button className="button-small top" onClick={restartGame}>

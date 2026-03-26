@@ -732,6 +732,33 @@ formValues.date = new Date().toISOString().split('T')[0];
             displayTrueID="true"
             author="em Hankal"
           />
+
+               {/* connections */}
+        {formValues.entryRef &&
+          Array.isArray(formValues.entryRef) &&
+          formValues.entryRef.length != 0 && (
+            <div className=' flex related' style={{  marginTop: "auto" }}>
+              <h2>Related </h2>
+              {formValues.entryRef.map((ref, index) => (
+                <span className = "addedRef" key={index}>
+                 <span className="col-10 refTitle"> 
+                    {ref.fauxID} - {
+                      ref.available
+                        ? `${ref.title}`
+                        : 'NOT AVAILABLE'
+                    }{' '}
+                  </span>
+                  <span className="col-2">
+                    {ref.author === "" ? "em Hankal" : typeof ref.author === 'object' ? ref.author.author : ref.author}
+                  </span>
+                </span>
+              ))}
+            </div>
+          )}
+
+
+
+{/* end connections */}
         </div>
       )}
 
