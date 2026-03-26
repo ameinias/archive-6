@@ -187,8 +187,8 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
             <span className='parentTitleSpan'>{item.title}</span>
           </div>
         </div>
-        <div id='Metadata' className={`${item.template?.includes('PDF') ? 'pdfParent' : 'flex'} butts metadata-section`}>
-          <div className='metadata-subentries metadata-subsection  col-4'>
+        <div id='Metadata' className={`${item.template?.includes('PDF') ? 'pdfParent' : 'flex'} butts metadata-section `} s>
+          <div className='metadata-subentries metadata-subsection hasBottom col-4'>
             <div>
               <b>Category:</b> {item.category}{' '}
             </div>
@@ -232,13 +232,63 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
       )}
       </>
     )}
+     {/* connections */}
+        {item.entryRef &&
+          Array.isArray(item.entryRef) &&
+          item.entryRef.length != 0 && (
+            <div className=' flex related' style={{  marginTop: "auto" }}>
+              <h2>Related </h2>
+              {item.entryRef.map((ref, index) => (
+                <span className = "addedRef" key={index}>
+                 <span className="col-10 refTitle"> <Link
+                    to={`/entry/${ref.originId}`}
+                    title={
+                      ref.available
+                        ? `View entry ${ref.title}`
+                        : 'NOT AVAILABLE'
+                    }
+                    className='mention-link'
+                  >
+                    {ref.fauxID} - {
+                      ref.available
+                        ? `${ref.title}`
+                        : 'NOT AVAILABLE'
+                    }{' '}
+                  </Link></span>
+                  <span className="col-2">
+                    {ref.author === "" ? "em Hankal" : typeof ref.author === 'object' ? ref.author.author : ref.author}
+                  </span>
+                </span>
+              ))}
+            </div>
+          )}
 
+
+
+{/* end connections */}
           </div>
 
           <MediaEntryDisplay itemID={item.id} type='entry' maxWidth='900px' />
 
         </div>
-        {item.entryRef &&
+          {/* TODO - update this to select author from dropdown before adding.  */}
+           {gameLogic.gameState.connectionEdit && (
+          <div id="connect">
+            <SelectEntry
+              value={item.entryRef}
+              onChange={handleRef}
+              filterAvailable={true}
+              name='ref'
+              includeSubentries={false}
+              label='Add / Remove Connections'
+              displayTrueID='false'
+              author={gameLogic.globalUser.username}
+            />
+          </div>
+)}{" "}
+
+     {/* connections */}
+        {/* {item.entryRef &&
           Array.isArray(item.entryRef) &&
           item.entryRef.length != 0 && (
             <div className='subentry-add-list flex'>
@@ -266,10 +316,10 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
                 </span>
               ))}
             </div>
-          )}
+          )} */}
 
           {/* TODO - update this to select author from dropdown before adding.  */}
-           {gameLogic.gameState.connectionEdit && (
+           {/* {gameLogic.gameState.connectionEdit && (
           <div id="connect">
             <SelectEntry
               value={item.entryRef}
@@ -282,7 +332,9 @@ console.log("change the   value!!!" + JSON.stringify(newValue));
               author={gameLogic.globalUser.username}
             />
           </div>
-)}{" "}
+)}{" "} */}
+
+{/* end connections */}
 
 
         {/* Show subentries if they exist */}

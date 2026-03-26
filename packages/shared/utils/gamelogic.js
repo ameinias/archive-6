@@ -359,17 +359,23 @@ if (toggleDemoListenerRefCount === 0) {
     endGameTimer: () => updateGameState("endGameTimer", true),
     endGameTimerReset: () => updateGameState("endGameTimer", false),
     endGameTimerReset: () => updateGameState("endGameTimer", false),
+
+
     "enable-consoleAvailable": () => {
       revealConsole();
     },
+
+
     "disable-consoleAvailable": () => updateGameState("consoleAvailable", false),
     "enable-connectionPanel": () => updateGameState("connectionPanel", true),
     "enable-showConsole": () => updateGameState("showConsole", true),
     "disable-showConsole": () => updateGameState("showConsole", false),
     "disable-connectionPanel": () => updateGameState("connectionPanel", false),
+
+
     "enable-connectionEdit": () => 
       
-      => {
+     {
       connectionEdit();
     },
       

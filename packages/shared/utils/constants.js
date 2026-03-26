@@ -54,6 +54,7 @@ export const consoleTaunts = [
   { id: 1, name: "" },
   { id: 2, name: "[SYSTM] Timeout detected." },
   { id: 3, name: "[VIOLET] Can you hear me?" },
+  { id: 4, name: "[EMHAN] They've been whispering to us before the earth learned it's name."}
 
 
 
@@ -153,7 +154,7 @@ export const hexHashes = [
   {
     id: 1,
     name: "startHash",
-    hexHashcode: "e5db0557296c615fa4ab2d2b0f0292da",
+    hexHashcode: "e5db0557296c615fa4ab2d2dsb0f0292da",
     note: "Articles that are already there. ",
   },
   {
@@ -342,7 +343,7 @@ export const hexHashes = [
   {
     id: 52, // move to a future update
     name: "future entries",
-    hexHashcode: "c888008f79798950760159f80f485fbf",
+    hexHashcode: "c888008f7979895076sfsfd0159f80f485fbf",
   },
   {
     id: 51, // things players have made
@@ -387,24 +388,23 @@ export const badHashes = [
   "fdd40fb8b099a215b1f085b06a287c45", // v1
   "ee92875a012afe4539c1e3d64665bf78",
   "b25f46c2979e7a27de4bbaf952f39e5f",
-  "cefb5cdb392e7f6521d82da09d939102",
+  "cefb5cdb392e7f6521d3482da09d939102",
   "4d295cbc94335cf3cc1b31c37bd3e1c2",
   "a4f3c0b8f5f5e8e2f4d6b3c9e8f7a1b0",
   "9f1e2d3c4b5a69788796a5b4c3d2e1f0",
   "9f296b3481b3c8704f947a4110125a26",
   "36680042515dbee28e18cd17529c003d",
   "e5db0557296c615fa4ab2d2b0f0292da",
-  "c888008f79798950760159f80f485fbf", // futre entries
   // below is vignettes 1-2
-  "0e2805a97520b5e034c4114ae249574e",
-  "0g2905as9f97520b5g034c4114ag249574g",
-  "s945cafag969ca2fbffg4bf9ac92gcb62b",
-  "22fs9bg2379460ba09f7b946f750b1c9",
-  "2932599s53fs9fs43530232fff4g2195",
-  "22fs9bg2379460ba09f7b946f750b1c9",
-  "590159cf60ff5a5454a20232fff4g2195",
-  "6796a591bcg402s9fs3af94g979242399"
-,
+//   "0e2805a97520b5e034c4114ae249574e",
+//   "0g2905as9f97520b5g034c4114ag249574g",
+//   "s945cafag969ca2fbffg4bf9ac92gcb62b",
+//   "22fs9bg2379460ba09f7b946f750b1c9",
+//   "2932599s53fs9fs43530232fff4g2195",
+//   "22fs9bg2379460ba09f7b946f750b1c9",
+//   "590159cf60ff5a5454a20232fff4g2195",
+//   "6796a591bcg402s9fs3af94g979242399"
+// ,
 "6996a591bcg40297f3af94g979242399",
 "6f9gb0b92a99659aaca2fbg41",
 "9f1g293c4b5a69799796a5b4c392g1f0",
@@ -420,7 +420,7 @@ export const badHashes = [
 "f9940fb9b099a215b1f095b06a297c45",
 "ss0g2905a97520b5g034c4114ag249574g",
 "sss945cafag969ca2fbffg4bf9ac92gcb62b",
-"ss95f9b259a21092a99659aa16a9913737",
+"ss95f349b259a21092a99659aa16a9913737",
 "6796a591bcg402s9fs3af94g979242399",
 
 ];

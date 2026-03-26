@@ -8,6 +8,7 @@ import { AnimatedList } from "@utils/motion/animatedList";
 import { useNavigate } from "react-router-dom";
 import { eventManager } from "@utils/events";
 
+
 let globalConsoleArray = [];
 const consoleUpdateCallbacks = [];
 // const navigate = useNavigate();
@@ -126,6 +127,7 @@ const messagesEnd = async () => {
 
 const EndSequence = async (navigate, id, author = "System") => {
   updateGameState("endgameSequence", true);
+
 messagesEnd();
   //unlock connections in case it was missed
   updateGameState("connectionEdit", true);

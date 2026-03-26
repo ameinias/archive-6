@@ -703,7 +703,7 @@ formValues.date = new Date().toISOString().split('T')[0];
       <div title="media" className="row">
         {" "}
         {/*// ------ Media   ------*/}
-        <MediaUpload mediaFiles={formValues.media} />
+        <MediaUpload mediaFiles={formValues.media} fauxID={formValues.fauxID} />
       </div>
         )}
 

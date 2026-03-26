@@ -1896,6 +1896,8 @@ width:100%;
 {
   display:flex;
   width:100%;
+  
+    font-size: small;
 }
 
 .rev-infobox{
@@ -1905,4 +1907,24 @@ width:100%;
   background-color: var(--div-island-bg);
   width: 100%;
   text-align: justify;
+}
+
+.hasBottom{
+    display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.refTitle{
+  border-right: 1px black solid;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.related {
+  font-size:smaller;
+}
+
+.related h2 {
+  font-size:smaller;
 }

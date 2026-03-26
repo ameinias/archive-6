@@ -1,4 +1,5 @@
-import { DragEvent, useState, useEffect } from "react";
+import React, { DragEvent, useState, useEffect,useRef  } from "react";
+
 import Button from "react-bootstrap/Button";
 import { GameLogic } from "@utils/gamelogic";
 import { db } from "@utils/db"; // import the database
@@ -7,12 +8,20 @@ import { useActionState } from "react";
 import { eventManager } from "@utils/events";
 import { MediaThumbnail } from "@components/parts/Media/MediaThumbnail.jsx";
 import { MediaSelector } from "@components/parts/Media/MediaSelector.jsx";
+import Webcam from 'react-webcam'
 
-export function MediaUpload({ mediaFiles }) {
+export function MediaUpload({ mediaFiles, fauxID="capture" }) {
   //#region ---------    HOOKS   -------- */
   const [isOver, setIsOver] = useState(false);
   const [files, setFiles] = useState([]);
   const [showGalleryModal, setShowGalleryModal] = useState(false);
+
+    const [devices, setDevices] = useState([])
+  const [selectedDeviceId, setSelectedDeviceId] = useState(
+    () => localStorage.getItem('lastUsedCameraId') || null
+  )
+  const [showCameraSelect, setShowCameraSelect] = useState(false)
+
 
   const { setStatusMessage, gameLogic, isAdmin } = GameLogic();
 
@@ -68,6 +77,70 @@ export function MediaUpload({ mediaFiles }) {
     }
     setShowGalleryModal(false);
   };
+
+  /*--- region WEBCAM STUFF ---*/
+    const webcamRef = React.useRef(null)
+
+  const capture = React.useCallback(async () => {
+    const screenshot = webcamRef.current.getScreenshot()
+
+    if (!screenshot) {
+      console.error('No screenshot  captured')
+      return
+    }
+
+    // Convert base64 data URL to File object
+    const response = await fetch(screenshot)
+    const blob = await response.blob()
+    const file = new File(
+      [blob],
+      `webcam-${fauxID}-${Date.now()}.png`,
+      {
+        type: 'image/png'
+      }
+    )
+
+    // Now pass the File object to handleImport (this will update formValues.media with the ID)
+    await handleImport(file)
+  }, [webcamRef])
+
+  // Enumerate video devices on mount
+  useEffect(() => {
+    const getDevices = async () => {
+      try {
+        const deviceList = await navigator.mediaDevices.enumerateDevices()
+        const videoDevices = deviceList.filter(
+          device => device.kind === 'videoinput'
+        )
+        setDevices(videoDevices)
+        if (videoDevices.length > 0 && !selectedDeviceId) {
+          console.log('No saved ID, selecting default');
+          setSelectedDeviceId(videoDevices[0].deviceId)
+        }
+      } catch (error) {
+        console.error('Error enumerating devices:', error)
+      }
+    }
+    getDevices()
+  }, [])
+
+  const videoConstraints = {
+    width: 720,
+    height: 650,
+    deviceId: selectedDeviceId ? { exact: selectedDeviceId } : undefined
+  }
+
+    const showCameraModal = () => {
+    setShowCameraSelect(!showCameraSelect)
+    console.log('showCameraModal hit ' + showCameraSelect)
+  }
+
+    const handleDeviceChange = (deviceId) => {
+    setSelectedDeviceId(deviceId);
+    localStorage.setItem('lastUsedCameraId', deviceId);
+    console.log('Camera changed to device ID:', deviceId);
+  }
+  /*--- endregion ---*/
 
   const handleImport = async (file) => {
     try {
@@ -169,6 +242,11 @@ export function MediaUpload({ mediaFiles }) {
     setShowGalleryModal(true);
   };
 
+    const captureAttachments = async () => {
+    // select from gallery here!!
+    setShowGalleryModal(true);
+  };
+
   const removeFile = (index) => {
     const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);
@@ -183,6 +261,16 @@ export function MediaUpload({ mediaFiles }) {
 
   return (
     <div>
+              <div className='row filter-buttons'>
+          <Webcam
+            audio={false}
+            height={360}
+            ref={webcamRef}
+            screenshotFormat='image/jpeg'
+            width={640}
+            videoConstraints={videoConstraints}
+          />
+        </div>
       {files.length === 0 ? (
         <div className="subentry-add-list">
           {isAdmin ? <>No Attachments.</> : <></>}
@@ -244,6 +332,9 @@ export function MediaUpload({ mediaFiles }) {
         </button>
         <button className="btn-add-item" onClick={selectFromGallery}>
           Select Attachments
+        </button>
+                <button className="btn-add-item" onClick={capture}>
+          Capture Attachments
         </button>
       </div>
 

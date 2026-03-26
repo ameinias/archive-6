@@ -8,6 +8,8 @@ import {
   newGame,
   saveAsDefaultDatabase,
   handleJSONExport,
+  exportTelemetrisToAppData
+
 } from "@utils/db";
 import { TimeLine } from "../lists/TimeLine";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -82,7 +84,7 @@ export const NavBarDemo = () => {
           'Export telemetry data to app data folder?'
         )
       ) {
-        exportTelemetrisToAppData(globalUser.username)
+        exportTelemetrisToAppData("demo")
       }
 
           await newGame("demo");

@@ -85,7 +85,14 @@ const NavBar = () => {
   }
 
   const testio2 = async () => {
-    EndSequence(navigate, 91, globalUser.username)
+      // if (!isAdmin) {
+      //   await eventManager.showAlert(
+      //     "cannot end in admin mode. toggle admin off to proceed."
+      //   );
+      // }
+
+      toggleAdmin(false);
+    EndSequence(navigate, 95, globalUser.username)
 
     console.log('testio2    done')
   }
