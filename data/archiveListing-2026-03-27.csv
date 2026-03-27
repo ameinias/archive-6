@@ -1,0 +1,158 @@
+index,ID,title,RecordType,hexHashCodes,aRecordType
+,MX0000,Template,Object,cefb5cdb392e7f6521d82da09d939102,
+1,MX0001,Mother of Orphans,Object,cefb5cdb392e7f6521d82da09d939102,
+40,MX6725,1927 Remington Standard Typewriter,Object,ff887d1e66aac9cec2dbce8790a07576,
+41,MX6726,green ceramic bowl ,Object,cefb5cdb392e7f6521d82da09d939102,
+42,MX6727,oracle machine,Document,2800044c8003e9eec1be25d88682231c,
+43,MX6728,oracle machine 2,Document,ff887d1e66aac9cec2dbce8790a07576,
+44,MX6729,mining cores - large,Object,e5db0557296c615fa4ab2d2dsb0f0292da,
+45,MX-6730-sm,Mold,Object,"2ee3a8bd9d4bb57643c38635f3fbdb50, demodemodemo",
+46,MX6731,QVS core sample fragments,Object,2ee3a8bd9d4bb57643c38635f3fbdb50,
+47,MX-6732-SM,Coral,Object,"e5db0557296c615fa4ab2d2dsb0f0292da, demodemodemo",
+48,MX6733,three stones - grey and green,Object,"e5db0557296c615fa4ab2d2dsb0f0292da, demodemodemo",
+49,MX6734,stone carved statue,Object,"4acf43285e01067ea35af33f416fcc69, demodemodemo",
+50,MX7359,Obituary of Emily Mildred Hankal,Document,63a5b8ab25ece1f3657cf4af94a2019d,
+58,MX7365,navigation and edit test,Object,cefb5cdb392e7f6521d82da09d939102,
+59,MX736988,Entry - i am updated,Object,cefb5cdb392e7f6521d82da09d939102,
+60,MX1366,77 a new entry thing from JSON,Object,621f1cea8a2e201cbebdbf0358d5f577,
+61,MX1564,88 a new entry thing from JSON,Object,621f1cea8a2e201cbebdbf0358d5f577,
+62,QA0698,"Ficus Elastica - ""Audrey""",Object,1145cafae869ca2fbe4bf8ac92ecb62b,
+63,QA0543,"Aglaonema - ""Red Siam""",Object,1145cafae869ca2fbe4bf8ac92ecb62b,
+64,QA0132,"Ficus Elastica - ""Tineke""",Object,d5f9b259a21092a89659aa16a9913737,
+65,QA0343,"Ficus Elastica leaf - ""Golden Gem""",Object,ssd5f9b259a21092a89659aa16a9913737,
+66,MX7369,oracle machine #3,Object,c888008f7979895076sfsfd0159f80f485fbf,
+67,QA3694,"Craterellus cornucopioides - ""Black trumpet""",Object,0e2805a97520b5e034c4114ae249574e,
+69,QA0960,driftwood with termite and other unidentified damage,Object,"1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",
+70,QA0232,driftwood with crimson infection,Object,"0e2805a97520b5e034c4114ae249574e, demodemodemo",
+71,LT-C-012,"woodcut illustration - ""Language rising from the earth""",Object,"234ada22c94668dd7ee1c26b42c630ab, demodemodemo",
+72,LT-D-246,QVS Minutes 1927,Document,"bad48f5d47b68ca3059ac646d0320808, demodemodemo",
+73,LT-A-127,fibula  - human,Object,"4acf43285e01067ea35af33f416fcc69, testtest, demodemodemo",
+83,QA-1043,claws - reptile - caiman,Object,"d5f9b259a21092a89659aa16a9913737, demodemodemo",
+84,LT-A-275,teeth,Object,"4acf43285e01067ea35af33f416fcc69, demodemodemo",
+85,QA2396,"spinal column, red fox",Object,d66fdeb0b0f75cb7612686b9edbd07fa,
+86,QA3952,Jar of wildflowers,Object,"1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",
+87,OS1000,Evidence of something,Object,,
+88,QA1105,pelvis - human,Object,e87931718ef0f14e1312b8c8f3bc1df9,
+89,QA-3995,"Peperomia quadragularis - ""Diamond""",Object,"ss1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",
+90,QA3996,Ficus Altissima - ???,Object,e87931718ef0f14e1312b8c8f3bc1df9,
+95,LT-A-056,Series of x-rays,Object,"4acf43285e01067ea35af33f416fcc69, testtest, demodemodemo",
+97,HELP,give me a new artifact,Object,"60889e978b9dd56ca47ff36ddae12a07, testtest",
+110,QX-D-435,News report about the disappearance of Emily Mildred Hankal,Document,"48471313e7c8b73e1d0cc7b6a9ef945e, testtest, demodemodemo",
+111,LT-M-011,mining cores - large,Object,"234ada22c94668dd7ee1c26b42c630ab, testtest, demodemodemo",
+112,LT-M-021,QVS core sample fragments,Object,"5dcf36529cbfde76237b34326e34ddff, demodemodemo",
+113,LT-V-012,"Aglaonema - ""Red Siam""",Object,,
+114,LT-A-126,pelvis - human,Object,"bad48f5d47b68ca3059ac646d0320808, demodemodemo",
+115,LT-V-015,"Ficus Elastica - ""Tineke""",Object,cefb5cdb392e7f6521d82da09d939102,
+116,LT-F-135,"Craterellus cornucopioides - ""Black trumpet""",Object,"234ada22c94668dd7ee1c26b42c630ab, testtest, demodemodemo",
+118,LT-D-245,QVS Minutes ,Document,cefb5cdb392e7f6521d82da09d939102,
+119,LT-D-132,"Diary entry, Linus Willing 1912",Document,"48471313e7c8b73e1d0cc7b6a9ef945e, demodemodemo",
+120,ff-01,freddie log sept 96,Object,"bad48f5d47b68ca3059ac646d0320808, testtest, demodemodemo",
+121,ff-02,freddie log - 97,Document,"ge676452d2de364f5fd34535dsd453s, testtest, demodemodemo",
+122,LT-H-02,altar stone,Object,"4acf43285e01067ea35af33f416fcc69, testtest, demodemodemo",
+123,OS1001,New Entry,Object,,
+124,LT-A-237,"spinal column, red fox",Object,"48471313e7c8b73e1d0cc7b6a9ef945e, testtest, demodemodemo",
+125,OS1002,New Entry,Object,,
+126,YOU-A-389,haunted cookie,Object,"demodemodemo, demodemodemo-player",
+127,MX-6737-M,Adder stones,Object,"5dcf36529cbfde76237b34326e34ddff, testtest, demodemodemo",
+128,LR-D-023,Rejection Letter,Document,"234ada22c94668dd7ee1c26b42c630ab, testtest, demodemodemo",
+129,YOU-D-MISC,Miscellaneous Guest Documents,Object,"demodemodemo, demodemodemo-player",
+130,YOU-D-157,ancient art of an infection,Object,"demodemodemo, demodemodemo-player",
+131,YOU-A-318,New Entry,Object,"demodemodemo, demodemodemo-player",
+132,YOU-A-465,New Entry,Object,"demodemodemo, demodemodemo-player",
+133,YOU-A-290,New Entry,Object,"demodemodemo, demodemodemo-player",
+134,YOU-A-487,Flowers,Object,"demodemodemo, demodemodemo-player",
+135,YOU-A-181,New Entry,Object,"demodemodemo, demodemodemo-player",
+136,YOU-A-930,New Entry,Object,"demodemodemo, demodemodemo-player",
+137,YOU-A-835,New Entry,Object,"demodemodemo, demodemodemo-player",
+138,YOU-A-524,New Entry,Object,"demodemodemo, demodemodemo-player",
+139,YOU-A-460,"""congratulations"" teeth",Object,"demodemodemo, demodemodemo-player",
+140,YOU-A-238,Enlarged fossilized DNA,Object,"demodemodemo, demodemodemo-player",
+141,YOU-A-641,SUSPICIOUS TINY STATUE OF THOTH (the ??? of wisdom),Object,"demodemodemo, demodemodemo-player",
+142,JJK-AO-888,Geto Leaf,Object,"demodemodemo, demodemodemo-player",
+44,MX6727-1,original artifact lost,,1a950780e461e4d3d694b9f11858dbf6,TextLog
+45,MX6725-1,location,,e5db0557296c615fa4ab2d2dsb0f0292da,MetaData
+46,MX6725-2,source,,e5db0557296c615fa4ab2d2dsb0f0292da,MetaData
+47,MX6725-3,date-submitted,,e5db0557296c615fa4ab2d2dsb0f0292da,MetaData
+48,MX6725-4,,,2ee3a8bd9d4bb57643c38635f3fbdb50,TextLog
+49,MX6725-5,,,e5db0557296c615fa4ab2d2dsb0f0292da,TextLog
+50,MX6729-1,location,,e5db0557296c615fa4ab2d2dsb0f0292da,MetaData
+51,MX6729-2,accrual-method,,e5db0557296c615fa4ab2d2dsb0f0292da,TextLog
+52,MX6729-3,,,ff887d1e66aac9cec2dbce8790a07576,TextLog
+53,MX6729-4,,,ff887d1e66aac9cec2dbce8790a07576,TextLog
+54,MX6729-5,lost records,,e5db0557296c615fa4ab2d2dsb0f0292da,TextLog
+55,MX6731-1,Chemical analysis lab report ,,1a950780e461e4d3d694b9f11858dbf6,MediaItem
+56,MX6731-2,dead end,,2ee3a8bd9d4bb57643c38635f3fbdb50,TextLog
+57,MX6731-3,illiterate historian?,,2ee3a8bd9d4bb57643c38635f3fbdb50,TextLog
+58,MX-6730-sm-1,,,"d8a346fd2f0d08779bff76102f7b32fd, demodemodemo",TextLog
+59,MX6733-1,stone with copper content,,"e5db0557296c615fa4ab2d2dsb0f0292da, demodemodemo",MediaItem
+60,MX6733-2,stones with less copper content,,"e5db0557296c615fa4ab2d2dsb0f0292da, demodemodemo",MediaItem
+61,MX6731-4,,,d8a346fd2f0d08779bff76102f7b32fd,TextLog
+62,MX6734-1,,,"4acf43285e01067ea35af33f416fcc69, demodemodemo",TextLog
+63,MX6734-2,,,"4acf43285e01067ea35af33f416fcc69, demodemodemo",TextLog
+64,MX6734-3,,,60889e978b9dd56ca47ff36ddae12a07,TextLog
+66,MX6727-2,[lost artifacts],,2800044c8003e9eec1be25d88682231c,TextLog
+67,MX6727-3,,,d8a346fd2f0d08779bff76102f7b32fd,TextLog
+68,MX6727-4,,,63a5b8ab25ece1f3657cf4af94a2019d,TextLog
+69,MX7359-1,Media lost,,63a5b8ab25ece1f3657cf4af94a2019d,TextLog
+70,MX7359-2,,,63a5b8ab25ece1f3657cf4af94a2019d,TextLog
+71,MX7359-3,finished,,c7ce0a5377c89ab055a95ffb5caac583,TextLog
+85,MX7365-1,navigation and function test,,cefb5cdb392e7f6521d82da09d939102,TextLog
+86,QA0698-1,,,0e2805a97520b5e034c4114ae249574e,TextLog
+87,QA0698-2,related item,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+95,QA0132-1,,,ss1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+97,LT-D-246-1,,,"48471313e7c8b73e1d0cc7b6a9ef945e, demodemodemo",TextLog
+98,QA3694-1,,,ss0e2805a97520b5e034c4114ae249574e,TextLog
+99,QA0343-1,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+100,QA0343-2,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+101,QA0343-3,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+102,QA0343-4,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+103,QA0343-5,,,ssd5f9b259a21092a89659aa16a9913737,TextLog
+104,QA3694-2,,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+105,LT-D-246-2,,,"bad48f5d47b68ca3059ac646d0320808, demodemodemo",TextLog
+106,QA3952-1,letter of donation,,"d5f9b259a21092a89659aa16a9913737, demodemodemo",TextLog
+107,QA3952-2,,,"1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",TextLog
+108,QA3952-3,,,"1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",TextLog
+109,QA1043-1,,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+110,QA2396-1,,,d66fdeb0b0f75cb7612686b9edbd07fa,TextLog
+111,QA2396-2,,,e87931718ef0f14e1312b8c8f3bc1df9,TextLog
+112,QA2396-3,,,d66fdeb0b0f75cb7612686b9edbd07fa,TextLog
+113,QA3996-1,,,377c89ab055a9377c89a77c89ab055a9,TextLog
+114,QA3996-2,,,377c89ab055a9377c89a77c89ab055a9,TextLog
+115,QA3996-3,,,6fdeb0b92a89659aaca2fbe41,TextLog
+116,LT-A-275-1,,,"aef56afa72de364f535345625fds423, demodemodemo",TextLog
+117,LT-A-275-2,,,"4acf43285e01067ea35af33f416fcc69, demodemodemo",TextLog
+118,QA-3995-1,,,"ss1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",TextLog
+119,QA3694-3,,,1145cafae869ca2fbe4bf8ac92ecb62b,TextLog
+120,QA0960-1,,,"1145cafae869ca2fbe4bf8ac92ecb62b, demodemodemo",TextLog
+121,QA0232-1,,,"d5f9b259a21092a89659aa16a9913737, demodemodemo",TextLog
+122,QA0232-2,,,"0e2805a97520b5e034c4114ae249574e, demodemodemo",TextLog
+123,MX1564-1,,,621f1cea8a2e201cbebdbf0358d5f577,TextLog
+124,MX1564-2,location,,621f1cea8a2e201cbebdbf0358d5f577,MetaData
+126,LT-V-015-1,,,cefb5cdb392e7f6521d82da09d939102,TextLog
+127,LT-V-015-3,,,cefb5cdb392e7f6521d82da09d939102,TextLog
+128,LT-V-015-2,,,cefb5cdb392e7f6521d82da09d939102,TextLog
+129,LT-C-012-1,media lost,,"bad48f5d47b68ca3059ac646d0320808, demodemodemo",TextLog
+130,LT-A-126-1,,,"48471313e7c8b73e1d0cc7b6a9ef945e, demodemodemo",TextLog
+132,LT-M-021-1,,,"5dcf36529cbfde76237b34326e34ddff, demodemodemo",TextLog
+133,LT-M-021-2,,,234ada22c94668dd7ee1c26b42c630ab,TextLog
+134,LT-F-135-1,,,"bad48f5d47b68ca3059ac646d0320808, demodemodemo",TextLog
+135,LT-M-021-3,,,5dcf36529cbfde76237b34326e34ddff,TextLog
+136,LT-M-021-4,,,"234ada22c94668dd7ee1c26b42c630ab, demodemodemo",TextLog
+138,QX-D-435-1,,,4acf43285e01067ea35af33f416fcc69,TextLog
+139,LT-M-011-1,,,234ada22c94668dd7ee1c26b42c630ab,TextLog
+140,LT-D-132-2,,,48471313e7c8b73e1d0cc7b6a9ef945e,TextLog
+141,LT-D-132-3,,,48471313e7c8b73e1d0cc7b6a9ef945e,TextLog
+142,LT-D-132-4,,,"3456afa72de364f53288f732c6259b8, demodemodemo",TextLog
+143,LT-A-056-1,,,"4acf43285e01067ea35af33f416fcc69, testtest, demodemodemo",TextLog
+145,QA4003-1,,,"60889e978b9dd56ca47ff36ddae12a07, testtest",TextLog
+146,QA4003-2,,,"60889e978b9dd56ca47ff36ddae12a07, testtest",TextLog
+147,ff-02-1,,,cefb5cdb392e7f6521d82da09d939102,TextLog
+148,ff-02-2,,,cefb5cdb392e7f6521d82da09d939102,TextLog
+149,ff-02-3,,,cefb5cdb392e7f6521d82da09d939102,TextLog
+150,LT-A-275-3,,,"aef56afa72de364f535345625fds423, demodemodemo",TextLog
+151,LT-A-127-1,date-submitted,,"4acf43285e01067ea35af33f416fcc69, demodemodemo",MetaData
+152,LT-A-127-2,accrual-method,,"4acf43285e01067ea35af33f416fcc69, testtest, demodemodemo",MetaData
+153,MX-6737-M-1,,,"5dcf36529cbfde76237b34326e34ddff, demodemodemo",TextLog
+154,MX6733-3,,,"e5db0557296c615fa4ab2d2dsb0f0292da, demodemodemo",TextLog
+155,LR-D-023-1,source,,"234ada22c94668dd7ee1c26b42c630ab, demodemodemo",MetaData
+156,LR-D-023-2,,,"234ada22c94668dd7ee1c26b42c630ab, testtest, demodemodemo",TextLog
