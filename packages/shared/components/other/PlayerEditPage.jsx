@@ -30,7 +30,7 @@ const defaultHex = 51
 
 const defaultFormValue = {
   fauxID: 'MX0000',
-  title: 'New Entry',
+  title: 'Untitled Artifact',
   description: '',
   category: 'Object',
   date: new Date(), // real date i added things
@@ -551,52 +551,12 @@ export function PlayerAddEntryForm ({}) {
 
       {gameState.editAccess || isDemo ? (
         <div title='entry title' className='row'>
-          <div className='col-3'>
-            <input
-              className={`form-control match col`}
-              type='text'
-              name='fauxID'
-              placeholder='ID'
-              value={formValues.fauxID}
-              onChange={handleIDChange}
-              // readOnly={!isNewEntry && !isAdmin}
-            />
-          </div>
-          <div className='col'>
-            <FormAssets.FormTextBox
-              label=''
-              className={`form-control match col-6`}
-              name='title'
-              formValue={formValues.title}
-              readOnly={false}
-              onChange={handleChange}
-            />
-          </div>
+<h2>NEW ENTRY</h2>
         </div>
       ) : (
         <div title='No Edit Access' className='row'>
           <h2>No edit access.</h2>
-          <div className='col-4'>
-            <input
-              className={`form-control match col`}
-              type='text'
-              name='fauxID'
-              placeholder='ID'
-              value={formValues.fauxID}
-              onChange={handleIDChange}
-              disabled={true}
-            />
-          </div>
-          <div className='col'>
-            <FormAssets.FormTextBox
-              label=''
-              name='title'
-              formValue={formValues.title}
-              className={`form-control match col-6`}
-              onChange={handleChange}
-              disabled={true}
-            />
-          </div>
+
         </div>
       )}
       <div className='cameraChangeParent'>
@@ -697,11 +657,63 @@ export function PlayerAddEntryForm ({}) {
           ))}
         </div>
       )}
-
+      {gameState.editAccess || isDemo ? (
+        <div title='entry title' className='row'>
+          <div className='col-3'>
+            <input
+              className={`form-control match col`}
+              type='text'
+              name='fauxID'
+              placeholder='ID'
+              value={formValues.fauxID}
+              onChange={handleIDChange}
+              // readOnly={!isNewEntry && !isAdmin}
+            />
+          </div>
+          <div className='col'>
+            <FormAssets.FormTextBox
+              label=''
+              className={`form-control match col-6`}
+              name='title'
+              formValue={formValues.title}
+              readOnly={false}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+      ) : (
+        <div title='No Edit Access' className='row'>
+          <h2>No edit access.</h2>
+          <div className='col-4'>
+            <h4>entry id</h4>
+            <input
+              className={`form-control match col`}
+              type='text'
+              name='fauxID'
+              placeholder='ID'
+              value={formValues.fauxID}
+              onChange={handleIDChange}
+              disabled={true}
+            />
+          </div>
+          <div className='col'>
+            <h4>entry title</h4>
+            <FormAssets.FormTextBox
+              label=''
+              name='title'
+              formValue={formValues.title}
+              className={`form-control match col-6`}
+              onChange={handleChange}
+              disabled={true}
+            />
+          </div>
+        </div>
+      )}
       {(gameState.editAccess || isDemo) ? (
         <>
           <div className='row'>
             <div className='col-5'>
+           
               <FormAssets.FormTextBox
                 label='Intake Date'
                 name='displayDate'

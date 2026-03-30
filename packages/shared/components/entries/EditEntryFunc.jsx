@@ -30,12 +30,12 @@ const isElectron = eventManager.isElectron;
 
 // default variables - update as needed
 let defaultFauxIDStart = "LT";
-if(!isElectron){ defaultFauxIDStart = "LL"; }
-const defaultHex = 30;
+if(!isElectron){ defaultFauxIDStart = "DX"; }
+const defaultHex = 55;
 
 const defaultFormValue = {
   fauxID: "MX0000",
-  title: "Entry",
+  title: "Untitled Artifact",
   description: "",
   category: "Object",
   date: new Date().toISOString().split('T')[0], // real date i added things
@@ -47,7 +47,7 @@ const defaultFormValue = {
   devNotes: "",
   modEditDate: "2008-07-21", // date modified in database
   modEdit: "added",
-  displayDate: "1970-01-01", // date added to archive
+  displayDate: "3/30/2026", // date added to archive
   lastEditedBy: researcherIDs[0] || 0,
   triggerEvent: "",
   unread: true,
@@ -125,7 +125,7 @@ export function AddEntryForm({ itemID, parentID, isSubEntry }) {
           devNotes: entry.devNotes || "",
           modEditDate: entry.modEditDate || "1996-07-21",
           modEdit: entry.modEdit,
-          displayDate: entry.displayDate || "1970-01-01",
+          displayDate: entry.displayDate || "3/30/2026",
           lastEditedBy: entry.lastEditedBy,
           triggerEvent: entry.triggerEvent,
           unread: entry.unread || true,
